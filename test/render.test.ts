@@ -55,9 +55,12 @@ describe('getScreenshotPath', () => {
     expect(result).toMatch(/\.png$/);
   });
 
-  it('includes output/verification/screenshots in path', () => {
+  it('includes output verification screenshots directory in path', () => {
     const result = getScreenshotPath('brand-elements', 90);
-    expect(result).toContain('output/verification/screenshots');
+    // Use path.sep-agnostic check for cross-platform compatibility
+    expect(result).toContain('output');
+    expect(result).toContain('verification');
+    expect(result).toContain('screenshots');
     expect(result).toContain('brand-elements');
     expect(result).toContain('frame-90');
   });
