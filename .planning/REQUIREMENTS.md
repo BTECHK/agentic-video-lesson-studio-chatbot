@@ -24,14 +24,14 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **INFRA-03**: FFmpeg for video post-processing, scene concatenation, and format validation
 - [ ] **INFRA-04**: Deterministic rendering — same storyboard input produces identical video output
 - [x] **INFRA-05**: Headed browser mode available for visual verification — screenshots captured at each scene for human + AI review
-- [ ] **INFRA-06**: Pre-render and post-render validation checks (file size < 1.8GB, resolution correct, font rendering verified, no blank frames)
+- [x] **INFRA-06**: Pre-render and post-render validation checks (file size < 1.8GB, resolution correct, font rendering verified, no blank frames)
 
 ### Visual Verification
 
 - [x] **VERI-01**: Every rendered scene produces verification screenshots viewable by human reviewer
 - [x] **VERI-02**: Headed browser mode for development — see the actual animations during authoring, not just headless output
 - [ ] **VERI-03**: Side-by-side comparison of storyboard intent vs rendered output for QA
-- [ ] **VERI-04**: No feature or animation reported as "complete" without human-verified visual confirmation
+- [x] **VERI-04**: No feature or animation reported as "complete" without human-verified visual confirmation
 
 ### Content Repository
 
@@ -100,11 +100,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-03 | Phase 1 | Complete (01-01) |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Complete (01-02) |
-| INFRA-06 | Phase 1 | Pending |
+| INFRA-06 | Phase 1 | Complete (01-03) |
 | VERI-01 | Phase 1 | Complete (01-02) |
 | VERI-02 | Phase 1 | Complete (01-01) |
 | VERI-03 | Phase 1 | Pending |
-| VERI-04 | Phase 1 | Pending |
+| VERI-04 | Phase 1 | Complete (01-03) |
 | ANIM-01 | Phase 2 | Pending |
 | ANIM-02 | Phase 2 | Pending |
 | ANIM-03 | Phase 2 | Pending |
