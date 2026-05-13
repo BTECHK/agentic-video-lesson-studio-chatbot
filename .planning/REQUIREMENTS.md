@@ -22,7 +22,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **INFRA-01**: Docker container with Remotion + headless Chrome on node:22-bookworm-slim for rendering
 - [x] **INFRA-02**: Docker Compose configuration with shared volumes for content, storyboards, and rendered output
 - [x] **INFRA-03**: FFmpeg for video post-processing, scene concatenation, and format validation
-- [ ] **INFRA-04**: Deterministic rendering — same storyboard input produces identical video output
+- [x] **INFRA-04**: Deterministic rendering — same storyboard input produces identical video output
 - [x] **INFRA-05**: Headed browser mode available for visual verification — screenshots captured at each scene for human + AI review
 - [x] **INFRA-06**: Pre-render and post-render validation checks (file size < 1.8GB, resolution correct, font rendering verified, no blank frames)
 
@@ -30,7 +30,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **VERI-01**: Every rendered scene produces verification screenshots viewable by human reviewer
 - [x] **VERI-02**: Headed browser mode for development — see the actual animations during authoring, not just headless output
-- [ ] **VERI-03**: Side-by-side comparison of storyboard intent vs rendered output for QA
+- [x] **VERI-03**: Side-by-side comparison of storyboard intent vs rendered output for QA
 - [x] **VERI-04**: No feature or animation reported as "complete" without human-verified visual confirmation
 
 ### Content Repository
@@ -98,12 +98,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-01 | Phase 1 | Complete (01-01) |
 | INFRA-02 | Phase 1 | Complete (01-01) |
 | INFRA-03 | Phase 1 | Complete (01-01) |
-| INFRA-04 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Complete (01-04) |
 | INFRA-05 | Phase 1 | Complete (01-02) |
 | INFRA-06 | Phase 1 | Complete (01-03) |
 | VERI-01 | Phase 1 | Complete (01-02) |
 | VERI-02 | Phase 1 | Complete (01-01) |
-| VERI-03 | Phase 1 | Pending |
+| VERI-03 | Phase 1 | Complete (01-04) |
 | VERI-04 | Phase 1 | Complete (01-03) |
 | ANIM-01 | Phase 2 | Pending |
 | ANIM-02 | Phase 2 | Pending |
