@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap delivers Sample Academy's AI content system in five phases. The stakeholder demo (Phases 1-2) is the critical path. Phase 1 establishes the containerized rendering pipeline with visual verification. Phase 2 produces the polished Module 1 video using the course outline's first section as the storyboard base. Phase 3 (Content Repository) runs in parallel with Phase 2 since they are independent — the content schema can be designed while animation work proceeds. Phase 4 (Content Ingestion) and Phase 5 (Chatbot) can also overlap once their dependencies are met.
+This roadmap delivers Sample Academy's AI content system in five phases. Phase 1 (complete) established the rendering pipeline. Phase 2 (animation) is deferred until Instructor provides final lesson scripts — the animation design system is locked via the Claude Design session output. Phase 3 (Content Repository) and Phase 5 (Chatbot) now run in parallel as the active critical path. Phase 3 also includes animation architecture prep (JSON schema, scene dispatcher, Remotion primitives) so content can be rendered immediately when scripts arrive. Phase 4 (Content Ingestion) follows Phase 3.
 
 **Cross-cutting concerns applied to ALL phases:**
 - **Test-driven development**: Tests written before implementation for every component
@@ -19,7 +19,7 @@ This roadmap delivers Sample Academy's AI content system in five phases. The sta
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Rendering Environment & Verification** - Docker + Remotion + headless Chrome pipeline with visual verification workflow (completed 2026-05-13)
-- [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - Polished Module 1 MP4 with brand-consistent spring-physics animations
+- [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - DEFERRED until Instructor provides final lesson scripts. Design system locked.
 - [ ] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping
 - [ ] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings
 - [ ] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations
@@ -45,7 +45,8 @@ Plans:
 
 ### Phase 2: Module 1 Animation & Stakeholder Demo
 **Goal**: A polished, stakeholder-demo-quality Module 1 animated video in the warm-minimalist style with brand-consistent design and smooth spring-physics motion. Uses the course outline's first section as the storyboard base alongside the Module 1 HTML mockup.
-**Depends on**: Phase 1
+**Status**: DEFERRED — waiting on Instructor's final lesson scripts. Animation design system fully locked via Claude Design session (`Claude design work in session-SampleAcademy/animated-lesson-skill/`).
+**Depends on**: Phase 1 (complete), Phase 3 (content schema + animation architecture prep), Instructor's final content
 **Requirements**: ANIM-01, ANIM-02, ANIM-03, ANIM-04, ANIM-05, ANIM-06, ANIM-07
 **Success Criteria** (what must be TRUE):
   1. Module 1 renders as a polished 1080p MP4 at 30fps with smooth spring-physics animations — no choppy transitions, no slideshow feel
@@ -53,20 +54,22 @@ Plans:
   3. Visual tethers connect concept states — continuous visual elements guide the viewer through data flow and state changes
   4. Individual scenes can be re-rendered without rebuilding the entire video
   5. Storyboard JSON includes timestamps, narration cues, and pause points ready for future voiceover integration
-**Storyboard Source**: Course outline first section (sample-course-outline.docx Topic 1) + Module 1 Slides HTML mockup as design reference
-**Design Approach**: Apply frontend-design skill with Apple/Google/Anthropic product design research
-**Plans**: TBD
+**Design Reference**: Claude Design session output — 13 scene types, motion contract (Anthropic glide easing), brand primitives, JSON content schema
+**Animation Architecture Prep** (done in Phase 3): JSON content loader, Zod schema, scene type dispatcher, Remotion primitives ported from design system
+**Plans**: TBD — will be planned when content scripts are available
 **UI hint**: yes
 
 ### Phase 3: Content Repository & Schemas
-**Goal**: A structured, validated, Git-versioned knowledge base of AI tool capabilities that maps directly to video scenes
-**Depends on**: Nothing (runs in PARALLEL with Phase 2)
+**Goal**: A structured, validated, Git-versioned knowledge base of AI tool capabilities that maps directly to video scenes. Includes animation architecture prep (JSON content loader, Zod lesson schema, scene type dispatcher) so Phase 2 can execute immediately when content arrives.
+**Depends on**: Phase 1 (complete)
 **Requirements**: CONT-01, CONT-02, CONT-03, CONT-04, CONT-05
 **Success Criteria** (what must be TRUE):
   1. AI tool capabilities for all 11 categories across P0/P1 tools are stored in structured schema with Zod validation catching errors before render
   2. Every factual claim has official source attribution with URL and verification date
   3. Content changes are Git-versioned with structured change history showing what changed and why
   4. Content nodes map to specific video sections — changing a content node identifies exactly which scenes need re-rendering
+  5. Lesson content JSON schema validated with Zod and consumable by the Remotion rendering pipeline
+  6. Scene type dispatcher maps JSON scene types to Remotion components
 **Plans**: TBD
 
 ### Phase 4: Content Ingestion & Freshness
@@ -92,14 +95,14 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phase 1 → Phase 2 + Phase 3 (parallel) → Phase 4 + Phase 5 (parallel, once Phase 3 complete)
+Phase 1 (complete) → Phase 3 + Phase 5 (parallel, NOW) → Phase 4 (after Phase 3) → Phase 2 (when Instructor's content ready)
 
-Note: Phase 5 chatbot architecture can begin early alongside Phase 2/3 since RAG patterns are well-established. Full data grounding depends on Phase 3 completion.
+Phase 2 deferred — animation design locked, waiting on final lesson scripts. Phase 3 includes animation architecture prep so Phase 2 executes fast when unblocked.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
-| 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Not started | - |
-| 3. Content Repository & Schemas | 0/TBD | Not started | - |
+| 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
+| 3. Content Repository & Schemas | 0/TBD | Starting | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
-| 5. TA Chatbot | 0/TBD | Not started | - |
+| 5. TA Chatbot | 0/TBD | Starting | - |
