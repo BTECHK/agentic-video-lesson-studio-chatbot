@@ -669,19 +669,19 @@ ${sceneBlocks}
 | A4 | `path.join()` is preferred over `require.resolve()` for entry points in Remotion v4 | State of the Art | Low -- both work; path.join is ESM-compatible |
 | A5 | Font verification can be done by rendering a single frame and checking text regions with sharp | Pitfall 2 | Medium -- may need more sophisticated OCR or visual comparison approach |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Remotion Licensing for Sample Academy**
+1. **Remotion Licensing for Sample Academy** (RESOLVED -- does not block Phase 1)
    - What we know: Free for individuals and orgs with 3 or fewer employees [CITED: remotion.dev/docs/license]
    - What's unclear: Sample Academy's exact employee/contractor count
    - Recommendation: Verify employee count. If >3, budget for company license (visit remotion.pro). This does not block Phase 1 development.
 
-2. **Dev Service Docker Image Weight**
+2. **Dev Service Docker Image Weight** (RESOLVED -- separate Dockerfiles with same base, per D-03)
    - What we know: Remotion Studio needs Chrome for preview, same as render service
    - What's unclear: Whether the dev service should use the same Dockerfile as render (heavier but simpler) or a lighter image
    - Recommendation: Use the same base Dockerfile with different CMD. Avoids maintaining two sets of Chrome dependencies. The dev Dockerfile adds `--port 3000` to the studio command.
 
-3. **Browser Instance Reuse for Screenshot Capture**
+3. **Browser Instance Reuse for Screenshot Capture** (RESOLVED -- start with separate calls, optimize later)
    - What we know: `renderStill()` can accept an existing `puppeteerInstance` to avoid opening/closing browser per screenshot [VERIFIED: Context7]
    - What's unclear: Whether browser reuse across renderStill + renderMedia calls is safe and provides meaningful speedup
    - Recommendation: Start with separate calls (simpler). Optimize with shared browser instance if screenshot capture becomes a bottleneck.
@@ -724,7 +724,7 @@ ${sceneBlocks}
 | INFRA-04 | Same input produces identical frames across two runs | unit | `npx vitest run test/determinism.test.ts` | Wave 0 |
 | INFRA-05 | renderStill captures screenshots at specified frames | unit | `npx vitest run test/render.test.ts` | Wave 0 |
 | INFRA-06 | Validation catches oversized file, wrong resolution, blank frames | unit | `npx vitest run test/validation.test.ts` | Wave 0 |
-| VERI-01 | Screenshots produced for every scene (start/mid/end) | integration | `npx vitest run test/verification.test.ts` | Wave 0 |
+| VERI-01 | Screenshots produced for every scene (start/mid/end) | integration | `npx vitest run test/render.test.ts` | Wave 0 |
 | VERI-02 | Remotion Studio accessible at localhost:3000 | smoke/manual | Manual -- open browser to localhost:3000 | Manual |
 | VERI-03 | HTML gallery extensible for side-by-side | unit | `npx vitest run test/gallery.test.ts` | Wave 0 |
 | VERI-04 | Render workflow blocked without passing validation | integration | `npx vitest run test/pipeline.test.ts` | Wave 0 |
