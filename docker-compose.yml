@@ -1,0 +1,22 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    environment:
+      - NODE_ENV=development
+
+  render:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.render
+    volumes:
+      - ./output:/app/output
+    shm_size: '2gb'
+    environment:
+      - NODE_ENV=production
