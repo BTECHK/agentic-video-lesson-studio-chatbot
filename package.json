@@ -1,0 +1,37 @@
+{
+  "name": "agentic-video-lesson-studio-chatbot",
+  "version": "1.0.0",
+  "description": "AI content production system for Sample Academy",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render src/index.ts",
+    "build": "remotion bundle src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "dependencies": {
+    "@fontsource/syne": "^5.2.7",
+    "@remotion/bundler": "^4.0.460",
+    "@remotion/cli": "^4.0.460",
+    "@remotion/google-fonts": "^4.0.460",
+    "@remotion/renderer": "^4.0.460",
+    "@remotion/transitions": "^4.0.460",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "remotion": "^4.0.460",
+    "sharp": "^0.34.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
+  }
+}
