@@ -36,7 +36,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Every rendered scene produces verification screenshots viewable by a human reviewer
   4. Rendering is deterministic — same storyboard input produces identical video output across runs
   5. Post-render validation catches file size, resolution, and blank-frame errors before output is accepted
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffold, Docker two-service architecture, brand tokens, font bundling
+- [ ] 01-02-PLAN.md — Brand Showcase test composition (3 scenes) and render script with screenshot capture
+- [ ] 01-03-PLAN.md — Post-render validation pipeline (TDD: file size, resolution, fps, blank frames, font, duration)
+- [ ] 01-04-PLAN.md — HTML verification gallery, deterministic frame comparison, pipeline orchestrator, visual checkpoint
 
 ### Phase 2: Module 1 Animation & Stakeholder Demo
 **Goal**: A polished, stakeholder-demo-quality Module 1 animated video in the warm-minimalist style with brand-consistent design and smooth spring-physics motion. Uses the course outline's first section as the storyboard base alongside the Module 1 HTML mockup.
@@ -93,7 +98,7 @@ Note: Phase 5 chatbot architecture can begin early alongside Phase 2/3 since RAG
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Rendering Environment & Verification | 0/TBD | Not started | - |
+| 1. Rendering Environment & Verification | 0/4 | Planning complete | - |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Not started | - |
 | 3. Content Repository & Schemas | 0/TBD | Not started | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
