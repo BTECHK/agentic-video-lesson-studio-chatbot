@@ -16,6 +16,6 @@
     "moduleResolution": "node16",
     "noEmit": true
   },
-  "include": ["src/**/*", "remotion.config.ts"],
+  "include": ["src/**/*", "scripts/**/*", "test/**/*", "remotion.config.ts"],
   "exclude": ["node_modules", "dist", "output"]
 }
