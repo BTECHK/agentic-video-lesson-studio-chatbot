@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "node16",
+    "module": "ES2022",
     "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx",
     "strict": true,
@@ -13,7 +13,7 @@
     "declarationMap": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "noEmit": true
   },
   "include": ["src/**/*", "scripts/**/*", "test/**/*", "remotion.config.ts"],

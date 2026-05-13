@@ -8,7 +8,7 @@ import {
 } from 'remotion';
 import { BRAND } from '../../brand/tokens';
 
-const CIRCLE_SIZE = 50;
+const CIRCLE_SIZE = 120;
 // Deterministic random offset for visual variety (NOT Math.random)
 const VERTICAL_OFFSET = random('motion-seed') * 20 - 10;
 

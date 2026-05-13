@@ -34,16 +34,16 @@ describe('Render Script Configuration', () => {
 });
 
 describe('getScreenshotFrames', () => {
-  it('returns start, midpoint, end for typography scene', () => {
-    expect(getScreenshotFrames(SCENES[0])).toEqual([0, 45, 89]);
+  it('returns quarter, midpoint, three-quarter for typography scene', () => {
+    expect(getScreenshotFrames(SCENES[0])).toEqual([22, 45, 67]);
   });
 
-  it('returns start, midpoint, end for brand-elements scene', () => {
-    expect(getScreenshotFrames(SCENES[1])).toEqual([90, 135, 179]);
+  it('returns quarter, midpoint, three-quarter for brand-elements scene', () => {
+    expect(getScreenshotFrames(SCENES[1])).toEqual([112, 135, 157]);
   });
 
-  it('returns start, midpoint, end for motion-test scene', () => {
-    expect(getScreenshotFrames(SCENES[2])).toEqual([180, 240, 299]);
+  it('returns quarter, midpoint, three-quarter for motion-test scene', () => {
+    expect(getScreenshotFrames(SCENES[2])).toEqual([210, 240, 270]);
   });
 });
 

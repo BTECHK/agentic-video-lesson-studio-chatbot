@@ -38,7 +38,7 @@ const REQUIRED_WIDTH = 1920;
 const REQUIRED_HEIGHT = 1080;
 const REQUIRED_FPS = 30;
 const DURATION_TOLERANCE = 0.5; // seconds
-const BLANK_FRAME_THRESHOLD = 0.98; // 98% same color = blank
+const BLANK_FRAME_THRESHOLD = 0.997; // 99.7% same color = blank (allows small elements like motion circles)
 const FONT_STDDEV_THRESHOLD = 25;
 
 // Shell metacharacter pattern for path sanitization (T-01-06)

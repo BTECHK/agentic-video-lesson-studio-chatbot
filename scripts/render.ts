@@ -17,8 +17,11 @@ export function getScreenshotFrames(
   const start = scene.startFrame;
   const end = scene.endFrame;
   const duration = end - start + 1;
-  const mid = start + Math.floor(duration / 2);
-  return [start, mid, end];
+  // Offset by 25% to let spring animations settle (opacity 0 at frame 0)
+  const quarter = start + Math.floor(duration * 0.25);
+  const mid = start + Math.floor(duration * 0.5);
+  const threeQuarter = start + Math.floor(duration * 0.75);
+  return [quarter, mid, threeQuarter];
 }
 
 export function getScreenshotPath(sceneName: string, frame: number): string {
