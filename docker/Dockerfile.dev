@@ -12,16 +12,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY public/fonts/*.ttf /usr/share/fonts/syne/
 RUN fc-cache -fv
 
-RUN useradd -m -u 1000 remotion
+# Use built-in non-root node user (uid 1000) for security (T-01-01)
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 RUN npx remotion browser ensure
 
 COPY . .
-RUN chown -R remotion:remotion /app
+RUN chown -R node:node /app
 
-USER remotion
+USER node
 # Remotion Studio per D-02/VERI-02: headed browser mode with hot reload, timeline scrubbing, composition selection
 CMD ["npx", "remotion", "studio", "--port", "3000"]

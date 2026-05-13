@@ -12,19 +12,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY public/fonts/*.ttf /usr/share/fonts/syne/
 RUN fc-cache -fv
 
-# Non-root user for security (T-01-01)
-RUN useradd -m -u 1000 remotion
+# Use built-in non-root node user (uid 1000) for security (T-01-01)
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install --omit=dev
 
 # Install Chrome Headless Shell for Remotion
 RUN npx remotion browser ensure
 
 COPY . .
 RUN mkdir -p output/video output/verification/screenshots output/validation
-RUN chown -R remotion:remotion /app
+RUN chown -R node:node /app
 
-USER remotion
+USER node
 CMD ["npx", "remotion", "render", "src/index.ts", "BrandShowcase", "--output", "output/video/brand-showcase.mp4"]
