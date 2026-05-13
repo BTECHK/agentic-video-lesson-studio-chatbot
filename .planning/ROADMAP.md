@@ -18,7 +18,7 @@ This roadmap delivers Sample Academy's AI content system in five phases. The sta
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Rendering Environment & Verification** - Docker + Remotion + headless Chrome pipeline with visual verification workflow
+- [x] **Phase 1: Rendering Environment & Verification** - Docker + Remotion + headless Chrome pipeline with visual verification workflow (completed 2026-05-13)
 - [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - Polished Module 1 MP4 with brand-consistent spring-physics animations
 - [ ] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping
 - [ ] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings
@@ -98,7 +98,7 @@ Note: Phase 5 chatbot architecture can begin early alongside Phase 2/3 since RAG
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Rendering Environment & Verification | 4/4 | Awaiting human verification | - |
+| 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Not started | - |
 | 3. Content Repository & Schemas | 0/TBD | Not started | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
