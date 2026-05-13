@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Post-render validation catches file size, resolution, and blank-frame errors before output is accepted
 **Plans:** 4 plans
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold, Docker two-service architecture, brand tokens, font bundling
+- [x] 01-01-PLAN.md — Project scaffold, Docker two-service architecture, brand tokens, font bundling
 - [ ] 01-02-PLAN.md — Brand Showcase test composition (3 scenes) and render script with screenshot capture
 - [ ] 01-03-PLAN.md — Post-render validation pipeline (TDD: file size, resolution, fps, blank frames, font, duration)
 - [ ] 01-04-PLAN.md — HTML verification gallery, deterministic frame comparison, pipeline orchestrator, visual checkpoint
@@ -98,7 +98,7 @@ Note: Phase 5 chatbot architecture can begin early alongside Phase 2/3 since RAG
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Rendering Environment & Verification | 0/4 | Planning complete | - |
+| 1. Rendering Environment & Verification | 1/4 | Executing | - |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Not started | - |
 | 3. Content Repository & Schemas | 0/TBD | Not started | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |

@@ -19,9 +19,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Docker container with Remotion + headless Chrome on node:22-bookworm-slim for rendering
-- [ ] **INFRA-02**: Docker Compose configuration with shared volumes for content, storyboards, and rendered output
-- [ ] **INFRA-03**: FFmpeg for video post-processing, scene concatenation, and format validation
+- [x] **INFRA-01**: Docker container with Remotion + headless Chrome on node:22-bookworm-slim for rendering
+- [x] **INFRA-02**: Docker Compose configuration with shared volumes for content, storyboards, and rendered output
+- [x] **INFRA-03**: FFmpeg for video post-processing, scene concatenation, and format validation
 - [ ] **INFRA-04**: Deterministic rendering — same storyboard input produces identical video output
 - [ ] **INFRA-05**: Headed browser mode available for visual verification — screenshots captured at each scene for human + AI review
 - [ ] **INFRA-06**: Pre-render and post-render validation checks (file size < 1.8GB, resolution correct, font rendering verified, no blank frames)
@@ -29,7 +29,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Visual Verification
 
 - [ ] **VERI-01**: Every rendered scene produces verification screenshots viewable by human reviewer
-- [ ] **VERI-02**: Headed browser mode for development — see the actual animations during authoring, not just headless output
+- [x] **VERI-02**: Headed browser mode for development — see the actual animations during authoring, not just headless output
 - [ ] **VERI-03**: Side-by-side comparison of storyboard intent vs rendered output for QA
 - [ ] **VERI-04**: No feature or animation reported as "complete" without human-verified visual confirmation
 
@@ -95,14 +95,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
+| INFRA-01 | Phase 1 | Complete (01-01) |
+| INFRA-02 | Phase 1 | Complete (01-01) |
+| INFRA-03 | Phase 1 | Complete (01-01) |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
 | INFRA-06 | Phase 1 | Pending |
 | VERI-01 | Phase 1 | Pending |
-| VERI-02 | Phase 1 | Pending |
+| VERI-02 | Phase 1 | Complete (01-01) |
 | VERI-03 | Phase 1 | Pending |
 | VERI-04 | Phase 1 | Pending |
 | ANIM-01 | Phase 2 | Pending |
