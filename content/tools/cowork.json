@@ -1,0 +1,335 @@
+{
+  "id": "cowork",
+  "name": "Cowork",
+  "vendor": "Anthropic",
+  "priority": "P0",
+  "description": "Anthropic's multi-agent orchestration platform that enables background agents to work on tasks in parallel, with a web-based IDE environment for code editing, file management, and autonomous task execution using Claude models.",
+  "url": "https://www.anthropic.com/news/cowork",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Cowork provides a web-based chat interface integrated with a development environment, allowing users to converse with Claude while simultaneously viewing and editing code, files, and terminal output.",
+      "subFeatures": [
+        {
+          "name": "Integrated Chat and IDE",
+          "description": "Side-by-side chat interface with a full development environment including file explorer, code editor, and terminal"
+        },
+        {
+          "name": "Task-Oriented Conversations",
+          "description": "Start conversations that become background tasks, with Claude autonomously working through multi-step coding objectives"
+        },
+        {
+          "name": "Multi-Agent Chat",
+          "description": "Launch multiple agents simultaneously, each handling a different task, with unified status tracking and result viewing"
+        }
+      ],
+      "limitations": [
+        "Web-only interface — no CLI access for Cowork-specific features",
+        "Requires Claude Pro or Team subscription",
+        "Agent conversations are task-scoped, not persistent across tasks",
+        "Currently in early access with evolving feature set"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Pro ($20/mo)", "details": "Access to Cowork with background agents and limited concurrent tasks" },
+        { "tier": "Claude Max ($100/mo)", "details": "Higher concurrency limits for parallel background agents" },
+        { "tier": "Claude Max ($200/mo)", "details": "Maximum concurrency and usage limits for intensive workflows" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent orchestration platform with background agents and web-based IDE" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Cowork agents can browse the web and search for information as part of their task execution, combining code-focused research with broader web research capabilities.",
+      "subFeatures": [
+        {
+          "name": "Web Browsing in Agent Tasks",
+          "description": "Background agents can browse the web to research libraries, APIs, documentation, and best practices as part of coding tasks"
+        },
+        {
+          "name": "Codebase Exploration",
+          "description": "Agents navigate and search project files, understand architecture, and trace dependencies within the development environment"
+        }
+      ],
+      "limitations": [
+        "Web browsing limited to agent task context",
+        "Cannot access authenticated or paywalled content",
+        "Research results integrated into task output, not standalone research reports",
+        "Browser capabilities still maturing in agent environment"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Web research included as part of agent task execution" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Web browsing integrated into background agent capabilities" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Cowork provides a full file explorer and editor within its web-based IDE, allowing agents and users to read, analyze, and navigate project files with syntax highlighting and project structure awareness.",
+      "subFeatures": [
+        {
+          "name": "Web-Based File Explorer",
+          "description": "Visual file tree navigator with the ability to browse, open, and read any file in the project workspace"
+        },
+        {
+          "name": "Code Editor with Analysis",
+          "description": "Syntax-highlighted code editor that agents use to read, understand, and modify files during task execution"
+        },
+        {
+          "name": "Terminal Output Analysis",
+          "description": "Integrated terminal where agents run commands and analyze build output, test results, and error messages"
+        }
+      ],
+      "limitations": [
+        "File access limited to the workspace environment",
+        "Large binary files may not be viewable in the web editor",
+        "Analysis capabilities depend on the underlying Claude model",
+        "No specialized tooling for database or image file analysis"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "File analysis included in all Cowork-enabled plans" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Web-based IDE with file explorer, editor, and terminal" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Cowork agents create documentation, configuration files, and text-based artifacts as part of their coding tasks, writing directly to the project workspace.",
+      "subFeatures": [
+        {
+          "name": "Agent-Generated Documentation",
+          "description": "Background agents create README files, API docs, architecture documents, and configuration files as part of task completion"
+        },
+        {
+          "name": "Multi-File Creation",
+          "description": "Agents create multiple coordinated files in a single task, including source code and accompanying documentation"
+        }
+      ],
+      "limitations": [
+        "Limited to text-based file formats",
+        "No PDF, DOCX, or presentation generation",
+        "Document creation is part of coding tasks, not a standalone document tool",
+        "No collaborative real-time document editing between users"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Document creation included as part of agent task execution" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-file creation and documentation generation in agent tasks" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Cowork does not include image generation capabilities. It is focused on code and development tasks.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Cowork is a development-focused platform — image generation is not part of its feature set"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "No integration with image generation APIs within the platform",
+        "Cannot create visual assets or graphics"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Launched without image generation" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Cowork excels at prototyping through its multi-agent architecture — users can describe what they want built and background agents scaffold entire projects, implement features, and run tests autonomously in a sandboxed environment.",
+      "subFeatures": [
+        {
+          "name": "Multi-Agent Project Scaffolding",
+          "description": "Launch multiple agents to work on different parts of a project simultaneously — frontend, backend, tests, and configuration in parallel"
+        },
+        {
+          "name": "Sandboxed Development Environment",
+          "description": "Each agent works in an isolated environment with a full development setup including package managers, build tools, and test frameworks"
+        },
+        {
+          "name": "Live Preview",
+          "description": "View running applications and web previews within the Cowork environment during development"
+        },
+        {
+          "name": "Iterative Refinement",
+          "description": "Review agent output in the IDE, provide feedback, and launch follow-up tasks to refine the implementation"
+        }
+      ],
+      "limitations": [
+        "Sandbox environments may have limited package availability",
+        "Complex infrastructure setups (databases, message queues) may not be fully supported",
+        "Parallel agent coordination is managed by the platform, not user-directed",
+        "Preview capabilities limited to web-based applications"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Pro ($20/mo)", "details": "Background agents with basic concurrency for prototyping" },
+        { "tier": "Claude Max ($100/mo)", "details": "Higher concurrency for parallel prototyping agents" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent prototyping with parallel task execution and web-based IDE" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Cowork supports project-level configuration and preferences that guide agent behavior, coding conventions, and task execution style within the workspace.",
+      "subFeatures": [
+        {
+          "name": "Project Configuration",
+          "description": "Configure project-level instructions and conventions that all agents follow when working in the workspace"
+        },
+        {
+          "name": "Task Customization",
+          "description": "Provide specific instructions and constraints for individual agent tasks to tailor their approach"
+        }
+      ],
+      "limitations": [
+        "No persistent user profile across workspaces",
+        "Configuration options still evolving in early access",
+        "No per-user preference system within shared team workspaces",
+        "Limited to text-based instruction configuration"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Workspace and task customization included" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Project-level configuration for agent behavior customization" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Cowork maintains persistent context through its workspace model — project files, agent task history, and configuration persist across sessions within a workspace.",
+      "subFeatures": [
+        {
+          "name": "Workspace Persistence",
+          "description": "Project workspace with all files, configurations, and agent task history persists between sessions"
+        },
+        {
+          "name": "Task History",
+          "description": "Complete history of background agent tasks, their instructions, and results maintained within the workspace"
+        },
+        {
+          "name": "Git Integration",
+          "description": "Changes tracked through git within the workspace, providing full version history and the ability to review agent-made changes"
+        }
+      ],
+      "limitations": [
+        "Context limited to individual workspace scope",
+        "No cross-workspace context sharing",
+        "Agent memory does not persist between separate tasks",
+        "Workspace storage has size limits"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Workspace persistence included in all Cowork-enabled plans" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Persistent workspaces with task history and git integration" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Cowork's defining feature is multi-agent orchestration — users launch background agents that work autonomously and in parallel on coding tasks, with the platform managing scheduling, isolation, and result aggregation.",
+      "subFeatures": [
+        {
+          "name": "Background Agents",
+          "description": "Launch autonomous coding agents that work in the background on multi-step tasks while you focus on other work or review completed results"
+        },
+        {
+          "name": "Parallel Task Execution",
+          "description": "Run multiple agents simultaneously on different tasks — each agent gets its own isolated environment and works independently"
+        },
+        {
+          "name": "Agent Status Tracking",
+          "description": "Monitor the progress of all active background agents with real-time status updates, logs, and completion notifications"
+        },
+        {
+          "name": "Autonomous Tool Use",
+          "description": "Agents autonomously use file editing, terminal commands, web browsing, and other tools to complete their assigned tasks"
+        }
+      ],
+      "limitations": [
+        "Concurrent agent limits based on subscription tier",
+        "Agents cannot directly communicate with each other during execution",
+        "Complex inter-task dependencies must be manually managed by the user",
+        "Agent execution time has platform-imposed limits"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Pro ($20/mo)", "details": "Background agents with limited concurrency" },
+        { "tier": "Claude Max ($100/mo)", "details": "Higher agent concurrency and longer execution times" },
+        { "tier": "Claude Max ($200/mo)", "details": "Maximum agent concurrency for intensive multi-agent workflows" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent orchestration with background agents and parallel execution" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Cowork integrates with GitHub for repository management and version control, with the development environment supporting standard developer tool ecosystems.",
+      "subFeatures": [
+        {
+          "name": "GitHub Integration",
+          "description": "Import repositories from GitHub, push changes, create branches, and manage pull requests from within the Cowork workspace"
+        },
+        {
+          "name": "Development Tool Ecosystem",
+          "description": "Workspace environments include standard development tools — package managers, build systems, and testing frameworks"
+        }
+      ],
+      "limitations": [
+        "GitHub is the primary version control integration at launch",
+        "No direct integration with project management tools (Jira, Linear)",
+        "No Slack or communication tool integration",
+        "External API integrations limited to what agents can access via web browsing"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "GitHub integration and development tools included" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "GitHub repository integration and standard development tool support" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Cowork does not include voice input or dictation capabilities. All interaction is through text-based chat and IDE interfaces.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Cowork is a web-based development platform with text input only — no voice or speech-to-text support"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "No audio processing capabilities",
+        "Web interface is text-input only"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Cowork Launch", "date": "2025-05", "changes": "Launched without voice capabilities" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "cowork-announcement",
+    "cowork-docs",
+    "claude-code-pricing"
+  ]
+}

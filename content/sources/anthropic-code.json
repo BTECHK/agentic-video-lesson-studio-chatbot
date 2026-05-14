@@ -1,0 +1,45 @@
+{
+  "vendor": "Anthropic",
+  "sources": [
+    {
+      "id": "claude-code-docs",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+      "title": "Claude Code Documentation — Overview"
+    },
+    {
+      "id": "claude-code-github",
+      "url": "https://github.com/anthropics/claude-code",
+      "title": "Claude Code GitHub Repository"
+    },
+    {
+      "id": "claude-code-mcp",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+      "title": "Claude Code MCP Server Integration"
+    },
+    {
+      "id": "claude-code-hooks",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "title": "Claude Code Hooks Documentation"
+    },
+    {
+      "id": "claude-code-pricing",
+      "url": "https://www.anthropic.com/pricing",
+      "title": "Anthropic Claude Code Pricing"
+    },
+    {
+      "id": "cowork-announcement",
+      "url": "https://www.anthropic.com/news/cowork",
+      "title": "Introducing Cowork — Anthropic Multi-Agent Platform"
+    },
+    {
+      "id": "cowork-docs",
+      "url": "https://docs.anthropic.com/en/docs/agents-and-tools/cowork",
+      "title": "Cowork Documentation — Multi-Agent Orchestration"
+    },
+    {
+      "id": "claude-code-best-practices",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/best-practices",
+      "title": "Claude Code Best Practices"
+    }
+  ]
+}

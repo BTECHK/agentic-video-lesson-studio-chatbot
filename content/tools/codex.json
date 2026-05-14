@@ -1,0 +1,345 @@
+{
+  "id": "codex",
+  "name": "Codex",
+  "vendor": "OpenAI",
+  "priority": "P0",
+  "description": "OpenAI's cloud-based coding agent and open-source CLI tool that runs in a sandboxed environment, performing multi-file code generation, editing, debugging, and agentic task execution using OpenAI models.",
+  "url": "https://openai.com/index/introducing-codex",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Codex accepts natural language prompts to generate, explain, and edit code. The CLI provides an interactive terminal chat experience while the cloud agent processes tasks asynchronously with full context.",
+      "subFeatures": [
+        {
+          "name": "Natural Language to Code",
+          "description": "Describe what you want in plain English and Codex generates the corresponding code, including boilerplate, tests, and documentation"
+        },
+        {
+          "name": "Interactive CLI Chat",
+          "description": "Terminal-based conversational interface where you can iteratively refine code through multi-turn dialogue with the agent"
+        },
+        {
+          "name": "Code Explanation",
+          "description": "Ask Codex to explain existing code, trace logic, and document functions in natural language"
+        }
+      ],
+      "limitations": [
+        "CLI is terminal-only — no GUI or web chat interface",
+        "Cloud agent responses are asynchronous, not real-time streaming",
+        "Context limited to repository files and conversation history",
+        "No general-purpose writing — optimized specifically for code-related tasks"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Open-source CLI using your own OpenAI API key, pay per token usage" },
+        { "tier": "Codex Cloud (Pro $200/mo)", "details": "Cloud-hosted agent with sandboxed execution included in ChatGPT Pro subscription" },
+        { "tier": "Codex Cloud (Team $25/user/mo)", "details": "Cloud agent access for teams with shared workspace" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Cloud-based coding agent with sandbox execution, parallel task processing" },
+        { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Open-source CLI tool released on GitHub for terminal-based coding assistance" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": false,
+      "summary": "Codex does not include web browsing or research capabilities. It operates within the codebase context and does not search the internet for information.",
+      "subFeatures": [
+        {
+          "name": "Codebase Search",
+          "description": "Codex can search and navigate the local repository to find relevant files, functions, and patterns, but this is code navigation rather than web research"
+        }
+      ],
+      "limitations": [
+        "No web browsing or internet search capability",
+        "Cannot access documentation sites or Stack Overflow during execution",
+        "Knowledge limited to training data and provided repository context"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available — Codex is a coding-focused tool without research features" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "No research capability included at launch" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Codex reads and analyzes files across the entire repository within its sandbox, understanding project structure, dependencies, and code relationships for informed code changes.",
+      "subFeatures": [
+        {
+          "name": "Repository-Wide File Reading",
+          "description": "Reads any file in the cloned repository including source code, configuration, documentation, and data files"
+        },
+        {
+          "name": "Dependency Analysis",
+          "description": "Parses package manifests, import graphs, and build configurations to understand project dependencies"
+        },
+        {
+          "name": "Multi-File Context",
+          "description": "Analyzes relationships between files to make changes that are consistent across the entire codebase"
+        }
+      ],
+      "limitations": [
+        "Limited to files within the repository — cannot analyze external files or URLs",
+        "Binary file analysis limited to recognized formats",
+        "Large repositories may exceed context window limitations",
+        "No image or media file analysis"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Full local file access using your API key" },
+        { "tier": "Codex Cloud", "details": "Repository cloned into sandbox with full file access" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Sandboxed repository access with full file system navigation" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Codex generates documentation, README files, code comments, and technical specifications as part of its coding workflow. It creates files directly in the repository.",
+      "subFeatures": [
+        {
+          "name": "README and Documentation Generation",
+          "description": "Generates project documentation, README files, API docs, and inline code comments based on the codebase"
+        },
+        {
+          "name": "Code Comment Generation",
+          "description": "Adds JSDoc, docstrings, and inline comments explaining code logic and function signatures"
+        }
+      ],
+      "limitations": [
+        "Output limited to text-based files — no PDFs, presentations, or formatted documents",
+        "Documentation style follows model defaults unless explicitly instructed",
+        "Cannot generate diagrams or visual documentation"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Documentation generation as part of coding tasks" },
+        { "tier": "Codex Cloud", "details": "Documentation generation included in cloud agent tasks" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Documentation generation as part of multi-file coding tasks" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Codex is a code-focused tool and does not generate images. It has no DALL-E or image generation integration.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Codex is designed for code generation and editing, not image creation"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "No DALL-E integration",
+        "Cannot create diagrams, charts, or visual assets"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Launched without image generation capabilities" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Codex excels at code prototyping — generating full implementations from natural language descriptions, scaffolding new projects, creating proof-of-concept code, and iterating through multi-turn refinement.",
+      "subFeatures": [
+        {
+          "name": "Full Project Scaffolding",
+          "description": "Generate entire project structures including source files, configuration, tests, and build scripts from a description"
+        },
+        {
+          "name": "Multi-File Code Generation",
+          "description": "Create coordinated changes across multiple files simultaneously, maintaining consistency across the codebase"
+        },
+        {
+          "name": "Sandbox Code Execution",
+          "description": "Cloud agent runs generated code in a sandboxed environment to verify it compiles and passes tests before presenting results",
+          "availableOn": ["Codex Cloud"]
+        },
+        {
+          "name": "Test Generation",
+          "description": "Automatically generate unit tests, integration tests, and test fixtures alongside implementation code"
+        }
+      ],
+      "limitations": [
+        "CLI version cannot execute code — only generates it",
+        "Cloud sandbox limited to standard development environments",
+        "Cannot start local servers or access network services during sandbox execution",
+        "Generated code quality depends on prompt specificity"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Code generation and scaffolding via API key" },
+        { "tier": "Codex Cloud", "details": "Code generation with sandbox execution and verification" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Sandboxed execution environment for verifying generated code" },
+        { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Multi-file code generation from terminal" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Codex CLI supports configuration files and custom instructions that tailor its behavior to project-specific conventions, coding styles, and preferred patterns.",
+      "subFeatures": [
+        {
+          "name": "Project Configuration",
+          "description": "CODEX.md or similar configuration files in the repository root define project-specific instructions, coding conventions, and constraints"
+        },
+        {
+          "name": "Model Selection",
+          "description": "Choose between different OpenAI models (GPT-4o, o3, o4-mini) based on task complexity and cost preferences"
+        }
+      ],
+      "limitations": [
+        "No persistent memory across separate sessions",
+        "Configuration limited to project-level files",
+        "No user profile or preference system",
+        "No learning from past interactions"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Full project configuration support" },
+        { "tier": "Codex Cloud", "details": "Project configuration carried into sandbox environment" }
+      ],
+      "versionHistory": [
+        { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Project configuration file support for customizing agent behavior" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Codex maintains context within a session through conversation history and repository-level configuration. The cloud agent persists task history and results within a workspace.",
+      "subFeatures": [
+        {
+          "name": "Session Conversation History",
+          "description": "CLI maintains conversation context within a single terminal session for iterative refinement"
+        },
+        {
+          "name": "Repository Context",
+          "description": "Project configuration files and codebase serve as persistent context that informs every interaction"
+        },
+        {
+          "name": "Cloud Task History",
+          "description": "Codex Cloud maintains a history of completed tasks and their results within the workspace",
+          "availableOn": ["Codex Cloud"]
+        }
+      ],
+      "limitations": [
+        "CLI session context lost when terminal is closed",
+        "No cross-session memory in CLI mode",
+        "Cloud task history is per-workspace, not cross-project",
+        "No semantic memory or learned preferences"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Session-level context with repository configuration" },
+        { "tier": "Codex Cloud", "details": "Persistent task history within workspace" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Workspace-level task history and persistent context" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Codex is fundamentally an agentic coding tool. The cloud agent autonomously plans, writes, tests, and commits code changes in a sandboxed environment, processing multiple tasks in parallel.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Code Agent",
+          "description": "Cloud agent independently reads the codebase, plans changes, writes code, runs tests, and presents verified results as a pull request or diff"
+        },
+        {
+          "name": "Parallel Task Processing",
+          "description": "Run multiple coding tasks simultaneously, each in an isolated sandbox environment",
+          "availableOn": ["Codex Cloud"]
+        },
+        {
+          "name": "Agentic Tool Use",
+          "description": "Agent uses shell commands, file operations, test runners, and linters autonomously to complete tasks"
+        },
+        {
+          "name": "Sandbox Execution",
+          "description": "Each task runs in an isolated container with the full repository, ensuring safe code execution without affecting the main codebase",
+          "availableOn": ["Codex Cloud"]
+        }
+      ],
+      "limitations": [
+        "Sandbox has no internet access — cannot install packages not already in the repo",
+        "Cannot interact with external services, databases, or APIs during execution",
+        "Task scope limited to single-repository changes",
+        "Human review required before merging agent-generated changes"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Single-task agentic coding via API key" },
+        { "tier": "Codex Cloud (Pro $200/mo)", "details": "Parallel autonomous agents with sandbox execution" },
+        { "tier": "Codex Cloud (Team $25/user/mo)", "details": "Shared agent workspace with team collaboration" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Cloud-based autonomous coding agent with parallel task execution" },
+        { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Terminal-based agentic coding with tool use" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Codex integrates with GitHub for repository access, pull request creation, and code review workflows. The cloud agent can be triggered from the ChatGPT interface.",
+      "subFeatures": [
+        {
+          "name": "GitHub Integration",
+          "description": "Cloud agent clones repositories from GitHub, creates branches, and opens pull requests with completed changes",
+          "availableOn": ["Codex Cloud"]
+        },
+        {
+          "name": "ChatGPT Interface",
+          "description": "Codex Cloud tasks can be initiated from the ChatGPT web interface, bridging conversational AI with code agent execution",
+          "availableOn": ["Codex Cloud"]
+        }
+      ],
+      "limitations": [
+        "GitHub is the only supported version control platform at launch",
+        "No native IDE integration (VS Code, JetBrains)",
+        "CLI operates on local filesystem only — no cloud storage connectors",
+        "No Slack, Jira, or project management tool integration"
+      ],
+      "pricingTiers": [
+        { "tier": "CLI (Free)", "details": "Local filesystem only" },
+        { "tier": "Codex Cloud", "details": "GitHub integration for repository access and PR creation" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "GitHub repository integration with PR workflow" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Codex is a text-based coding tool with no voice input or dictation capabilities.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Codex operates entirely through text-based CLI or web interface — no voice input support"
+        }
+      ],
+      "limitations": [
+        "No voice input or speech-to-text integration",
+        "No audio processing capabilities",
+        "Terminal-based interface is text-only"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Launched without voice capabilities" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "codex-cli-github",
+    "codex-cli-announcement",
+    "codex-cli-docs",
+    "codex-sandbox-docs",
+    "openai-codex-pricing"
+  ]
+}

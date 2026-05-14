@@ -1,0 +1,30 @@
+{
+  "vendor": "OpenAI",
+  "sources": [
+    {
+      "id": "codex-cli-github",
+      "url": "https://github.com/openai/codex",
+      "title": "OpenAI Codex CLI GitHub Repository"
+    },
+    {
+      "id": "codex-cli-announcement",
+      "url": "https://openai.com/index/introducing-codex",
+      "title": "Introducing Codex — OpenAI Cloud Coding Agent"
+    },
+    {
+      "id": "codex-cli-docs",
+      "url": "https://github.com/openai/codex/blob/main/README.md",
+      "title": "Codex CLI Documentation and Usage Guide"
+    },
+    {
+      "id": "codex-sandbox-docs",
+      "url": "https://platform.openai.com/docs/guides/codex",
+      "title": "OpenAI Codex Cloud Sandbox Documentation"
+    },
+    {
+      "id": "openai-codex-pricing",
+      "url": "https://openai.com/pricing",
+      "title": "OpenAI API and Codex Pricing"
+    }
+  ]
+}

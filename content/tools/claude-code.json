@@ -1,0 +1,379 @@
+{
+  "id": "claude-code",
+  "name": "Claude Code",
+  "vendor": "Anthropic",
+  "priority": "P0",
+  "description": "Anthropic's CLI-first agentic coding tool that operates directly in the terminal, using Claude models to read, edit, and create files across entire codebases with tool use, MCP server integration, hooks, and IDE extensions.",
+  "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Claude Code provides a conversational terminal interface for discussing code, asking questions about the codebase, and receiving explanations. It supports multi-turn conversations with full project context.",
+      "subFeatures": [
+        {
+          "name": "Terminal Chat Interface",
+          "description": "Interactive REPL-style conversation in the terminal with streaming responses, markdown rendering, and syntax-highlighted code output"
+        },
+        {
+          "name": "Codebase-Aware Conversation",
+          "description": "Automatically understands project structure, reads relevant files, and provides answers grounded in the actual codebase"
+        },
+        {
+          "name": "CLAUDE.md Instructions",
+          "description": "Project-level and user-level instruction files that customize Claude Code's behavior, coding style, and response format for every interaction"
+        },
+        {
+          "name": "Multi-Turn Refinement",
+          "description": "Iterative conversation within a session to refine code changes, debug issues, and explore alternatives"
+        }
+      ],
+      "limitations": [
+        "Terminal-only interface — no web UI for chat (use claude.ai for web chat)",
+        "No rich media rendering in terminal output",
+        "Context window constrained by model limits (200K tokens for Claude Sonnet/Opus)",
+        "Session history not persisted across separate terminal sessions by default"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Code (Max $100/mo)", "details": "Included in Claude Max subscription with usage limits based on plan tier" },
+        { "tier": "Claude Code (Max $200/mo)", "details": "Higher usage limits for heavy coding workflows" },
+        { "tier": "API Usage", "details": "Pay-per-token via Anthropic API key for direct API-backed usage" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability with Claude Opus 4 and Sonnet 4 model support" },
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "Public beta launch with tool use, file editing, and terminal commands" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Claude Code can perform web searches via MCP servers and fetch documentation, though its primary research mode is codebase exploration — searching files, tracing dependencies, and understanding architecture.",
+      "subFeatures": [
+        {
+          "name": "Codebase Search and Exploration",
+          "description": "Uses grep, glob, and file reading tools to search across the entire project, find definitions, trace call chains, and map architecture"
+        },
+        {
+          "name": "MCP-Based Web Search",
+          "description": "Connect external MCP servers (like Context7, Brave Search) to enable web search and documentation lookup from within Claude Code"
+        }
+      ],
+      "limitations": [
+        "No built-in web browsing — requires MCP server configuration for web access",
+        "Web search results depend on connected MCP server capabilities",
+        "Cannot access paywalled or authenticated web content",
+        "Research scope primarily code-focused, not general-purpose"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Codebase search included; web search requires MCP server setup (often free)" }
+      ],
+      "versionHistory": [
+        { "version": "MCP Integration", "date": "2025-04", "changes": "MCP server support enabling external tool and data source connections" },
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "Built-in grep and glob tools for codebase search" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Claude Code reads and analyzes any file in the project directory — source code, configuration, documentation, images, PDFs, and Jupyter notebooks — with full understanding of file relationships and project structure.",
+      "subFeatures": [
+        {
+          "name": "Multi-Format File Reading",
+          "description": "Read source code, JSON, YAML, Markdown, PDFs, images (multimodal), and Jupyter notebooks with structured output"
+        },
+        {
+          "name": "Project Structure Analysis",
+          "description": "Understands monorepo layouts, package boundaries, import graphs, and build system configurations"
+        },
+        {
+          "name": "Git History Analysis",
+          "description": "Read git logs, diffs, and blame information to understand code evolution and recent changes"
+        }
+      ],
+      "limitations": [
+        "File reading limited to local filesystem — cannot fetch remote files without MCP",
+        "Large binary files cannot be analyzed",
+        "Image analysis requires multimodal model capabilities",
+        "Very large files may be partially read due to context window limits"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Full file analysis included in all Claude Code access methods" }
+      ],
+      "versionHistory": [
+        { "version": "Multimodal File Reading", "date": "2025-04", "changes": "Added image and PDF reading support via multimodal Claude models" },
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "Text-based file reading and analysis tools" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Claude Code creates documentation, README files, technical specs, and any text-based documents directly in the project filesystem. It writes files with full awareness of project context.",
+      "subFeatures": [
+        {
+          "name": "Documentation Generation",
+          "description": "Generate README files, API documentation, architecture docs, and inline code comments based on codebase analysis"
+        },
+        {
+          "name": "File Creation",
+          "description": "Create any text-based file — Markdown, JSON, YAML, TypeScript, configuration files — directly in the project directory"
+        }
+      ],
+      "limitations": [
+        "Text-based output only — no PDF, DOCX, or presentation generation",
+        "Cannot create visual diagrams or charts",
+        "Document formatting limited to what the file format supports"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Document creation included in all Claude Code access methods" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "File creation and editing tools for documentation and code" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Claude Code does not generate images. It is a code-focused tool without any image generation capabilities.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Claude Code is designed for code generation and editing — image generation is not part of its feature set"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "No integration with image generation APIs",
+        "Cannot create visual assets, diagrams, or illustrations"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "No image generation included" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Claude Code is a powerful prototyping tool that generates, edits, and tests code across entire projects. It can scaffold new applications, implement features end-to-end, run tests, and iterate based on results.",
+      "subFeatures": [
+        {
+          "name": "Full-Stack Code Generation",
+          "description": "Generate complete implementations spanning frontend, backend, database schemas, and configuration from natural language descriptions"
+        },
+        {
+          "name": "Multi-File Editing",
+          "description": "Make coordinated changes across dozens of files simultaneously, maintaining consistency across the entire codebase"
+        },
+        {
+          "name": "Test-Driven Development",
+          "description": "Write tests first, then implement code to pass them, with automatic test execution to verify correctness"
+        },
+        {
+          "name": "Shell Command Execution",
+          "description": "Run build commands, test suites, linters, and dev servers directly from Claude Code to verify generated code works"
+        },
+        {
+          "name": "Git Workflow Integration",
+          "description": "Create commits, branches, and manage git operations as part of the prototyping workflow"
+        }
+      ],
+      "limitations": [
+        "Code execution requires local dev environment setup",
+        "Cannot create GUI-based prototypes or interactive previews within the tool",
+        "Network-dependent operations require local connectivity",
+        "Long-running processes may need manual management"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Code (Max $100/mo)", "details": "Full prototyping capabilities with usage-based limits" },
+        { "tier": "API Usage", "details": "Pay-per-token for unlimited prototyping sessions" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "Opus 4 and Sonnet 4 models with enhanced agentic coding" },
+        { "version": "Extended Thinking", "date": "2025-03", "changes": "Enhanced reasoning for complex multi-file refactoring tasks" },
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "Multi-file editing with bash command execution" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Claude Code offers deep personalization through CLAUDE.md instruction files at project, user, and global levels, plus memory files for persistent preferences and hooks for custom workflow automation.",
+      "subFeatures": [
+        {
+          "name": "CLAUDE.md Project Instructions",
+          "description": "Project-level instruction file that defines coding conventions, forbidden patterns, required tools, and project-specific guidelines for all Claude Code interactions"
+        },
+        {
+          "name": "User-Level CLAUDE.md",
+          "description": "Personal instruction file (~/.claude/CLAUDE.md) applied across all projects for consistent personal preferences"
+        },
+        {
+          "name": "Memory System",
+          "description": "Claude Code can save and recall facts, preferences, and project context across sessions via memory files"
+        },
+        {
+          "name": "Hooks",
+          "description": "Custom scripts triggered at specific lifecycle events (pre-tool-use, post-tool-use, notification) for automated workflow customization"
+        }
+      ],
+      "limitations": [
+        "CLAUDE.md files must be manually maintained",
+        "Memory has storage limits and may not retain all details",
+        "Hooks require scripting knowledge to configure",
+        "No GUI for managing preferences"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Full personalization features included" }
+      ],
+      "versionHistory": [
+        { "version": "Hooks", "date": "2025-05", "changes": "Custom lifecycle hooks for pre/post tool-use automation" },
+        { "version": "Memory", "date": "2025-04", "changes": "Persistent memory system for cross-session context" },
+        { "version": "CLAUDE.md", "date": "2025-02", "changes": "Project and user-level instruction files for customization" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Claude Code maintains persistent context through CLAUDE.md instruction files, memory files, git history, and project-level configuration that carries across sessions and team members.",
+      "subFeatures": [
+        {
+          "name": "CLAUDE.md as Living Context",
+          "description": "Version-controlled instruction files that serve as persistent project context, shared across all team members who use Claude Code"
+        },
+        {
+          "name": "Memory Files",
+          "description": "Persistent memory storage for user preferences, project decisions, and accumulated context that survives across sessions"
+        },
+        {
+          "name": "Git-Based Context",
+          "description": "Automatically reads git history, recent commits, and branch context to understand ongoing work"
+        },
+        {
+          "name": "Session Resume",
+          "description": "Resume previous conversation context using the --resume flag to continue interrupted work"
+        }
+      ],
+      "limitations": [
+        "Memory files have size constraints",
+        "Session history not automatically persisted beyond recent conversations",
+        "No cloud-synced context across different machines without git",
+        "Context window limits constrain how much persistent context can be loaded per interaction"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Full persistent context features included" }
+      ],
+      "versionHistory": [
+        { "version": "Session Resume", "date": "2025-05", "changes": "Resume previous sessions with --resume and --continue flags" },
+        { "version": "Memory Files", "date": "2025-04", "changes": "Persistent memory system across sessions" },
+        { "version": "CLAUDE.md", "date": "2025-02", "changes": "Project-level persistent instructions" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Claude Code is a fully agentic coding system that autonomously plans, executes, and verifies multi-step coding tasks. It uses tools (file read/write, bash, grep, glob) in autonomous loops and supports sub-agent orchestration.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Task Execution",
+          "description": "Independently plans multi-step coding tasks, selects tools, reads files, writes code, runs tests, and iterates until the task is complete"
+        },
+        {
+          "name": "Tool Use Framework",
+          "description": "Built-in tools for file operations (Read, Write, Edit), shell commands (Bash), search (Grep, Glob), and external integrations (MCP)"
+        },
+        {
+          "name": "Sub-Agent Spawning",
+          "description": "Can spawn sub-agents for parallel or delegated tasks, enabling orchestration of complex multi-step workflows"
+        },
+        {
+          "name": "MCP Server Integration",
+          "description": "Connect to external Model Context Protocol servers for additional tools, data sources, and capabilities beyond the built-in set"
+        },
+        {
+          "name": "Headless Mode",
+          "description": "Run Claude Code non-interactively in CI/CD pipelines, scripts, and automation workflows with structured output"
+        }
+      ],
+      "limitations": [
+        "Agent operates within local filesystem permissions",
+        "No built-in sandboxing — executes with user's system permissions",
+        "Long-running agentic loops consume significant token usage",
+        "Complex multi-repo operations require manual configuration"
+      ],
+      "pricingTiers": [
+        { "tier": "Claude Code (Max $100/mo)", "details": "Full agentic capabilities with usage-based limits" },
+        { "tier": "Claude Code (Max $200/mo)", "details": "Higher limits for intensive agentic workflows" },
+        { "tier": "API Usage", "details": "Pay-per-token for unlimited agentic execution" }
+      ],
+      "versionHistory": [
+        { "version": "Sub-Agents", "date": "2025-05", "changes": "Agent tool for spawning sub-agents and parallel task execution" },
+        { "version": "Headless Mode", "date": "2025-04", "changes": "Non-interactive execution for CI/CD and automation" },
+        { "version": "MCP Integration", "date": "2025-04", "changes": "Model Context Protocol server support for extensible tool use" },
+        { "version": "Claude Code Beta", "date": "2025-02", "changes": "Agentic coding with autonomous tool use loops" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Claude Code connects to external services through MCP (Model Context Protocol) servers, enabling integration with databases, APIs, cloud services, and developer tools from within the coding workflow.",
+      "subFeatures": [
+        {
+          "name": "MCP Server Ecosystem",
+          "description": "Connect to any MCP-compatible server for external data sources, tools, and service integrations (GitHub, databases, search engines, monitoring)"
+        },
+        {
+          "name": "IDE Extensions",
+          "description": "VS Code extension and JetBrains plugin that bring Claude Code capabilities directly into the IDE with inline code actions"
+        },
+        {
+          "name": "Git and GitHub Integration",
+          "description": "Native git operations and GitHub CLI integration for branch management, PR creation, and code review workflows"
+        }
+      ],
+      "limitations": [
+        "MCP servers require manual setup and configuration",
+        "IDE extension features are a subset of full CLI capabilities",
+        "No native integration with project management tools without MCP",
+        "MCP ecosystem is still maturing — not all services have servers"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "MCP and IDE integrations included; some MCP servers may have their own costs" }
+      ],
+      "versionHistory": [
+        { "version": "IDE Extensions", "date": "2025-05", "changes": "VS Code and JetBrains IDE integration plugins" },
+        { "version": "MCP Integration", "date": "2025-04", "changes": "Model Context Protocol server support" },
+        { "version": "Git Integration", "date": "2025-02", "changes": "Native git operations from Claude Code" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Claude Code is a text-based terminal tool with no voice input or dictation capabilities.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Claude Code operates entirely through text input in the terminal — no voice or speech-to-text support"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "Terminal interface is text-only",
+        "No speech-to-text or audio processing capabilities"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "claude-code-docs",
+    "claude-code-github",
+    "claude-code-mcp",
+    "claude-code-hooks",
+    "claude-code-pricing",
+    "claude-code-best-practices"
+  ]
+}
