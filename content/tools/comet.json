@@ -1,0 +1,312 @@
+{
+  "id": "comet",
+  "name": "Comet",
+  "vendor": "Comet",
+  "priority": "P1",
+  "description": "Comet is a browser automation and web data extraction platform that uses AI to navigate websites, interact with web pages, and extract structured data — functioning as an AI-powered web scraping and automation agent.",
+  "url": "https://www.comet.com",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Comet provides a conversational interface for describing web automation tasks in natural language, which the agent then executes autonomously in a browser environment.",
+      "subFeatures": [
+        {
+          "name": "Natural Language Task Description",
+          "description": "Describe web automation tasks in plain English — Comet translates instructions into browser actions and executes them"
+        },
+        {
+          "name": "Task Status and Results",
+          "description": "View real-time progress of browser automation tasks with step-by-step action logs and final results"
+        }
+      ],
+      "limitations": [
+        "Chat is task-oriented, not general-purpose conversation",
+        "Cannot discuss topics outside web automation scope",
+        "Limited to web browser task instructions",
+        "No creative writing or general Q&A capabilities"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited number of automation tasks per month" },
+        { "tier": "Pro", "details": "Higher task limits with priority execution" },
+        { "tier": "Enterprise", "details": "Custom limits, dedicated support, API access" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "Natural language web automation interface" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Comet excels at web-based research by automatically navigating websites, extracting data from multiple pages, and compiling structured results — making it effective for competitive research, price monitoring, and data collection.",
+      "subFeatures": [
+        {
+          "name": "Multi-Page Data Extraction",
+          "description": "Automatically navigate through multiple web pages, extracting and structuring data from search results, listings, and directories"
+        },
+        {
+          "name": "Competitive Research Automation",
+          "description": "Monitor competitor websites, extract pricing, product details, and feature comparisons across multiple sources"
+        },
+        {
+          "name": "Structured Data Output",
+          "description": "Export extracted web data as structured JSON, CSV, or spreadsheet formats for analysis"
+        }
+      ],
+      "limitations": [
+        "Cannot access login-protected content without credentials",
+        "Rate-limited by target website defenses and robots.txt compliance",
+        "Research limited to publicly accessible web content",
+        "May be blocked by aggressive anti-bot measures"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited research extractions per month" },
+        { "tier": "Pro", "details": "Higher extraction limits and priority processing" },
+        { "tier": "Enterprise", "details": "Custom extraction limits and dedicated infrastructure" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "Web data extraction and research automation" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": false,
+      "summary": "Comet is focused on web browser automation and does not provide file upload or analysis capabilities.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Comet operates in web browsers — it does not accept file uploads or analyze local files"
+        }
+      ],
+      "limitations": [
+        "No file upload capability",
+        "Cannot analyze local documents, images, or code files",
+        "Limited to web page content analysis"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "No file analysis included" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Comet creates structured data outputs from web extraction tasks — CSV files, JSON exports, and spreadsheets containing extracted web data, though it does not generate prose documents.",
+      "subFeatures": [
+        {
+          "name": "Data Export",
+          "description": "Export extracted web data as CSV, JSON, or structured spreadsheet files for further analysis or import into other tools"
+        },
+        {
+          "name": "Extraction Reports",
+          "description": "Generate summary reports of extraction tasks including data quality metrics and extraction statistics"
+        }
+      ],
+      "limitations": [
+        "Limited to structured data output — no prose document generation",
+        "Cannot create presentations, PDFs, or formatted reports",
+        "Output format options limited to data-oriented formats",
+        "No document editing or collaboration features"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Basic data export formats" },
+        { "tier": "Pro", "details": "Full export format options and larger data exports" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "CSV, JSON, and spreadsheet data export" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Comet does not generate images. It is a web automation and data extraction tool.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Comet is focused on browser automation — image generation is not part of its feature set"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "No visual asset creation",
+        "Tool is designed for web data extraction, not content creation"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "No image generation included" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": false,
+      "summary": "Comet does not provide code generation or software prototyping capabilities. It is focused on web browser automation for data extraction.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Comet automates web browser tasks — it does not generate code or assist with software prototyping"
+        }
+      ],
+      "limitations": [
+        "No code generation or execution",
+        "No IDE integration",
+        "Not designed for software development workflows",
+        "Cannot prototype applications or generate source code"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "No prototyping capabilities included" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Comet allows users to save and customize automation workflows, creating reusable templates for repeated data extraction tasks.",
+      "subFeatures": [
+        {
+          "name": "Saved Workflows",
+          "description": "Save configured automation tasks as reusable workflows that can be re-run with different parameters"
+        },
+        {
+          "name": "Custom Extraction Schemas",
+          "description": "Define custom data schemas that specify exactly what fields to extract from web pages"
+        }
+      ],
+      "limitations": [
+        "Personalization limited to task configuration",
+        "No general-purpose preference system",
+        "No memory of conversational preferences",
+        "Customization focused on automation workflows only"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited saved workflows" },
+        { "tier": "Pro", "details": "Unlimited saved workflows and custom schemas" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "Saved workflow templates and custom extraction schemas" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Comet maintains a history of extraction tasks and their results, with saved workflows serving as persistent automation templates.",
+      "subFeatures": [
+        {
+          "name": "Task History",
+          "description": "Complete history of all executed automation tasks with results, timestamps, and configuration details"
+        },
+        {
+          "name": "Workflow Templates",
+          "description": "Persistent workflow configurations that retain extraction logic across sessions for repeated use"
+        }
+      ],
+      "limitations": [
+        "No conversational memory across tasks",
+        "Context limited to automation task configuration",
+        "No knowledge base or document storage",
+        "History focused on extraction results, not general context"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited task history retention" },
+        { "tier": "Pro", "details": "Extended task history and persistent workflows" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "Task history and workflow persistence" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Comet is fundamentally an AI agent — it autonomously navigates web browsers, fills forms, clicks buttons, scrolls pages, and extracts data without human intervention after receiving task instructions.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Browser Agent",
+          "description": "AI agent that independently controls a web browser to navigate pages, interact with elements, and complete multi-step web tasks"
+        },
+        {
+          "name": "Multi-Step Task Execution",
+          "description": "Execute complex workflows involving navigation across multiple pages, form filling, pagination, and conditional logic"
+        },
+        {
+          "name": "Visual Page Understanding",
+          "description": "Understand web page layouts visually to identify interactive elements, data tables, and content areas for extraction"
+        }
+      ],
+      "limitations": [
+        "Agent limited to web browser actions only",
+        "Cannot perform desktop automation or file system operations",
+        "May fail on heavily JavaScript-dependent or dynamically loaded pages",
+        "CAPTCHA and anti-bot measures can block agent execution"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited agent task executions per month" },
+        { "tier": "Pro", "details": "Higher execution limits with priority processing" },
+        { "tier": "Enterprise", "details": "Custom limits, parallel execution, dedicated browser instances" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "AI-powered autonomous browser agent for web automation" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Comet connects to the web through its browser automation engine and can export data to various formats and integrations.",
+      "subFeatures": [
+        {
+          "name": "Web Browser Engine",
+          "description": "Headless browser engine that can access any public website, handling JavaScript rendering, cookies, and session management"
+        },
+        {
+          "name": "Data Export Integrations",
+          "description": "Export extracted data to spreadsheets, databases, and other tools via CSV, JSON, and API webhooks"
+        }
+      ],
+      "limitations": [
+        "No native integrations with Slack, Notion, or productivity tools",
+        "No Google Drive or cloud storage direct connectors",
+        "Webhook integrations require technical setup",
+        "Browser automation subject to website terms of service"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Basic browser automation and CSV export" },
+        { "tier": "Pro", "details": "Full export options and webhook integrations" },
+        { "tier": "Enterprise", "details": "Custom integrations and API access" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "Browser automation engine and data export connectors" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Comet does not include voice input or dictation capabilities. All interaction is through text-based task descriptions.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Comet is a web automation tool with text-based input only — no voice or speech capabilities"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation",
+        "No speech-to-text capabilities",
+        "Text-only task description interface"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Comet Launch", "date": "2024-10", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "comet-browser-overview",
+    "comet-docs",
+    "comet-pricing"
+  ]
+}

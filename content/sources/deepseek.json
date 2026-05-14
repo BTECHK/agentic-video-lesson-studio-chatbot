@@ -1,0 +1,30 @@
+{
+  "vendor": "DeepSeek",
+  "sources": [
+    {
+      "id": "deepseek-platform",
+      "url": "https://www.deepseek.com",
+      "title": "DeepSeek AI Platform"
+    },
+    {
+      "id": "deepseek-api-docs",
+      "url": "https://api-docs.deepseek.com",
+      "title": "DeepSeek API Documentation"
+    },
+    {
+      "id": "deepseek-github",
+      "url": "https://github.com/deepseek-ai",
+      "title": "DeepSeek AI GitHub Organization"
+    },
+    {
+      "id": "deepseek-r1-paper",
+      "url": "https://arxiv.org/abs/2501.12948",
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs"
+    },
+    {
+      "id": "deepseek-pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "title": "DeepSeek API Pricing"
+    }
+  ]
+}

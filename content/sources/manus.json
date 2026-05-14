@@ -1,0 +1,20 @@
+{
+  "vendor": "Manus",
+  "sources": [
+    {
+      "id": "manus-overview",
+      "url": "https://manus.im",
+      "title": "Manus AI Agent Platform"
+    },
+    {
+      "id": "manus-docs",
+      "url": "https://docs.manus.im",
+      "title": "Manus Documentation and Usage Guide"
+    },
+    {
+      "id": "manus-pricing",
+      "url": "https://manus.im/pricing",
+      "title": "Manus Pricing Plans"
+    }
+  ]
+}

@@ -1,0 +1,336 @@
+{
+  "id": "manus",
+  "name": "Manus",
+  "vendor": "Manus",
+  "priority": "P1",
+  "description": "Manus is an autonomous AI agent platform that can browse the web, execute code, manage files, and complete complex multi-step tasks independently — positioning itself as a general-purpose AI agent that goes beyond chat to take real actions.",
+  "url": "https://manus.im",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Manus provides a conversational interface for task delegation, where users describe complex objectives and the agent plans and executes them autonomously, providing updates and results through the chat.",
+      "subFeatures": [
+        {
+          "name": "Task-Oriented Chat",
+          "description": "Describe complex tasks in natural language — Manus breaks them into steps, creates an execution plan, and works through them autonomously"
+        },
+        {
+          "name": "Progress Updates",
+          "description": "Real-time visibility into agent execution with step-by-step progress, browser screenshots, and action logs"
+        },
+        {
+          "name": "Result Delivery",
+          "description": "Agent presents completed task results in chat with links to generated files, data, and deliverables"
+        }
+      ],
+      "limitations": [
+        "Chat is task-execution focused, not general conversation",
+        "Response times are longer due to autonomous execution (minutes, not seconds)",
+        "Not suitable for quick Q&A or casual conversation",
+        "Agent may require clarification for ambiguous tasks"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited task credits per month" },
+        { "tier": "Plus ($39/mo)", "details": "More task credits with priority execution" },
+        { "tier": "Team", "details": "Shared workspace with team task management" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Public launch of autonomous AI agent with chat-based task delegation" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Manus excels at autonomous web research — it browses multiple websites, compiles information, cross-references sources, and produces comprehensive research reports without human intervention.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Web Research",
+          "description": "Agent independently browses the web, visits multiple sources, and compiles research findings into structured reports"
+        },
+        {
+          "name": "Multi-Source Synthesis",
+          "description": "Cross-reference information from dozens of websites to produce comprehensive, fact-checked research outputs"
+        },
+        {
+          "name": "Research Report Generation",
+          "description": "Produce formatted research reports with citations, comparisons, and analysis as downloadable documents"
+        }
+      ],
+      "limitations": [
+        "Cannot access paywalled or login-protected content",
+        "Research quality depends on available public web sources",
+        "May be slow for time-sensitive research (minutes per task)",
+        "Cannot guarantee accuracy of all extracted information"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited research tasks per month" },
+        { "tier": "Plus ($39/mo)", "details": "More research tasks with higher priority" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Autonomous multi-source web research capability" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Manus can read and analyze files within its execution environment, including documents, data files, and code, as part of completing assigned tasks.",
+      "subFeatures": [
+        {
+          "name": "Document Analysis",
+          "description": "Read and analyze uploaded documents, extracting key information and answering questions about content"
+        },
+        {
+          "name": "Data File Processing",
+          "description": "Process CSV, JSON, and spreadsheet files within the agent's execution environment for data analysis tasks"
+        }
+      ],
+      "limitations": [
+        "File analysis is part of task execution, not a standalone feature",
+        "Upload size limits apply",
+        "Cannot analyze all file formats — focused on common document and data types",
+        "Analysis depth depends on task context and instructions"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "File analysis as part of task credits" },
+        { "tier": "Plus ($39/mo)", "details": "Higher file size limits and more complex analysis tasks" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "File upload and analysis within agent tasks" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Manus creates documents as task deliverables — research reports, data compilations, spreadsheets, and formatted documents generated autonomously during task execution.",
+      "subFeatures": [
+        {
+          "name": "Report Generation",
+          "description": "Autonomously generate comprehensive reports from research, data analysis, and web extraction tasks"
+        },
+        {
+          "name": "Spreadsheet Creation",
+          "description": "Create and populate spreadsheets with structured data extracted from web sources or computed from uploaded data"
+        },
+        {
+          "name": "Multi-Format Output",
+          "description": "Generate deliverables in multiple formats including markdown, CSV, HTML, and document files"
+        }
+      ],
+      "limitations": [
+        "Document creation is a byproduct of task execution, not a writing tool",
+        "No collaborative document editing",
+        "Output quality varies with task complexity",
+        "No fine-grained document formatting controls"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Document creation as part of task credits" },
+        { "tier": "Plus ($39/mo)", "details": "Larger and more complex document generation" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Multi-format document creation as task deliverables" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Manus does not generate images directly. While the agent can interact with web-based image generation tools, it does not have a native image generation capability.",
+      "subFeatures": [
+        {
+          "name": "Not Available Natively",
+          "description": "Manus focuses on web browsing, code execution, and data tasks — image generation is not a built-in capability, though the agent could potentially use web-based image tools"
+        }
+      ],
+      "limitations": [
+        "No native image generation model",
+        "Cannot create visual assets directly",
+        "Would need to use external web-based tools for image tasks"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available as native capability" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "No native image generation" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Manus can write and execute code as part of its task execution, enabling basic prototyping capabilities including script writing, data processing code, and simple application creation.",
+      "subFeatures": [
+        {
+          "name": "Code Execution",
+          "description": "Write and execute Python code within the agent's sandbox environment for data processing, automation scripts, and computation tasks"
+        },
+        {
+          "name": "Web Application Prototyping",
+          "description": "Create simple web pages, tools, and applications as task deliverables that can be previewed and downloaded"
+        }
+      ],
+      "limitations": [
+        "Code execution limited to sandbox environment capabilities",
+        "Not a full-featured coding assistant — better suited for data processing and scripting",
+        "Cannot create complex multi-file applications",
+        "No IDE integration or persistent development environment"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Code execution as part of task credits" },
+        { "tier": "Plus ($39/mo)", "details": "More complex code execution tasks with higher time limits" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Code execution capability within agent sandbox" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": false,
+      "summary": "Manus has minimal personalization features. Tasks are standalone and there is no persistent preference or instruction system across tasks.",
+      "subFeatures": [
+        {
+          "name": "Task Instructions",
+          "description": "Provide detailed instructions for each task to guide agent behavior, but these do not persist across tasks"
+        }
+      ],
+      "limitations": [
+        "No persistent user preferences or instructions",
+        "No custom instruction system like ChatGPT",
+        "No memory of past task preferences",
+        "Each task starts from a clean state"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No dedicated personalization features" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Per-task instruction system" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Manus maintains a history of completed tasks and their deliverables, allowing users to review and reference past task results.",
+      "subFeatures": [
+        {
+          "name": "Task History",
+          "description": "Complete history of all executed tasks with instructions, execution logs, and deliverables accessible in the dashboard"
+        },
+        {
+          "name": "Deliverable Storage",
+          "description": "Generated files and reports stored and downloadable from the task history for future reference"
+        }
+      ],
+      "limitations": [
+        "No cross-task memory or learning",
+        "Agent does not remember previous task context in new tasks",
+        "Storage limits on retained deliverables",
+        "No knowledge base or persistent document storage"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited task history retention" },
+        { "tier": "Plus ($39/mo)", "details": "Extended task history and deliverable storage" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Task history and deliverable storage dashboard" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Manus is built from the ground up as an autonomous AI agent. It plans, reasons, and executes complex multi-step tasks across web browsing, code execution, and file management without human intervention.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Task Planning",
+          "description": "Agent analyzes the task objective, creates a multi-step execution plan, and works through each step independently"
+        },
+        {
+          "name": "Browser Automation",
+          "description": "Control a full web browser to navigate sites, fill forms, click buttons, scroll, and interact with web applications"
+        },
+        {
+          "name": "Code Execution Agent",
+          "description": "Write and run code in a sandboxed environment to process data, make calculations, and generate outputs"
+        },
+        {
+          "name": "File Management",
+          "description": "Create, read, edit, and organize files within the agent's workspace as part of task execution"
+        },
+        {
+          "name": "Multi-Tool Orchestration",
+          "description": "Seamlessly combine web browsing, code execution, and file management within a single complex task"
+        }
+      ],
+      "limitations": [
+        "No desktop application control — limited to web browser and sandbox",
+        "Complex tasks may take significant time (10+ minutes)",
+        "Agent may make mistakes that require task restart",
+        "Cannot interact with mobile apps or native desktop software",
+        "CAPTCHA and anti-bot measures can block web tasks"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Limited task credits for agent execution" },
+        { "tier": "Plus ($39/mo)", "details": "More task credits, longer execution times, priority processing" },
+        { "tier": "Team", "details": "Shared agent workspace with team collaboration" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "General-purpose autonomous AI agent with multi-tool orchestration" },
+        { "version": "Manus Preview", "date": "2025-01", "changes": "Limited preview release with invite-only access" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Manus connects to the web through its built-in browser automation and can interact with any publicly accessible web service. It also provides API access for programmatic task submission.",
+      "subFeatures": [
+        {
+          "name": "Web Service Interaction",
+          "description": "The agent can interact with any publicly accessible web service through browser automation — effectively connecting to any web-based tool"
+        },
+        {
+          "name": "API Access",
+          "description": "Programmatic task submission and result retrieval through the Manus API for integration into workflows"
+        }
+      ],
+      "limitations": [
+        "No native integrations with specific third-party tools",
+        "Web service interaction limited to what a browser can access",
+        "No OAuth or SSO connectors for authenticated services",
+        "API integration requires development effort"
+      ],
+      "pricingTiers": [
+        { "tier": "Free Tier", "details": "Web interaction through browser agent" },
+        { "tier": "Plus ($39/mo)", "details": "API access for programmatic task submission" },
+        { "tier": "Team", "details": "Advanced API features and team integration" }
+      ],
+      "versionHistory": [
+        { "version": "API Access", "date": "2025-04", "changes": "Programmatic API for task submission and result retrieval" },
+        { "version": "Manus Launch", "date": "2025-03", "changes": "Browser-based web service interaction" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Manus does not include voice input or dictation capabilities. All task instructions are provided through text.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Manus accepts task instructions through text input only — no voice or speech-to-text capabilities"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "No speech-to-text capabilities",
+        "Text-only task instruction interface"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Manus Launch", "date": "2025-03", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "manus-overview",
+    "manus-docs",
+    "manus-pricing"
+  ]
+}

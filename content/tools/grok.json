@@ -1,0 +1,381 @@
+{
+  "id": "grok",
+  "name": "Grok",
+  "vendor": "xAI",
+  "priority": "P1",
+  "description": "xAI's conversational AI assistant with real-time web access, deep X/Twitter integration, image generation via Aurora, and strong reasoning capabilities powered by the Grok model family.",
+  "url": "https://x.ai/grok",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Grok provides a conversational chat interface with a distinctive personality, supporting multi-turn dialogue, various response styles, and integration with the X platform for context-aware conversations.",
+      "subFeatures": [
+        {
+          "name": "Conversational Chat",
+          "description": "Multi-turn dialogue with Grok's characteristic direct and sometimes humorous communication style, adjustable between fun and professional modes"
+        },
+        {
+          "name": "X/Twitter Context",
+          "description": "Grok can reference and analyze X/Twitter posts, trends, and conversations as context in chat interactions"
+        },
+        {
+          "name": "Think Mode",
+          "description": "Extended reasoning mode where Grok shows its step-by-step thinking process for complex questions",
+          "availableOn": ["Premium", "Premium+"]
+        },
+        {
+          "name": "DeepSearch",
+          "description": "Multi-step web research that synthesizes information from multiple sources into comprehensive answers",
+          "availableOn": ["Premium", "Premium+"]
+        }
+      ],
+      "limitations": [
+        "Free tier has limited message allowance per time period",
+        "Personality style may not suit all professional contexts",
+        "Context window smaller than some competitors",
+        "Primarily available through X app and x.ai website"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Limited Grok access through X app with basic model" },
+        { "tier": "X Premium ($8/mo)", "details": "Grok access with standard message limits" },
+        { "tier": "X Premium+ ($16/mo)", "details": "Higher limits, Think mode, DeepSearch, priority access" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Highest limits, all features, Grok 3 access" }
+      ],
+      "versionHistory": [
+        { "version": "Grok 3", "date": "2025-02", "changes": "Major reasoning upgrade, Think mode, DeepSearch, benchmark-leading performance" },
+        { "version": "Grok 2", "date": "2024-08", "changes": "Improved reasoning, image understanding, coding capabilities" },
+        { "version": "Grok 1.5", "date": "2024-03", "changes": "128K context window, improved coding and math" },
+        { "version": "Grok 1", "date": "2023-11", "changes": "Initial release with real-time X data access" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Grok has strong research capabilities through real-time web access, X/Twitter trend analysis, and DeepSearch for multi-step autonomous research across the web.",
+      "subFeatures": [
+        {
+          "name": "Real-Time Web Search",
+          "description": "Live web search integrated into conversations, providing current information with source citations"
+        },
+        {
+          "name": "X/Twitter Trend Analysis",
+          "description": "Analyze trending topics, sentiment, and conversations on X/Twitter in real time — a unique capability among AI assistants"
+        },
+        {
+          "name": "DeepSearch",
+          "description": "Autonomous multi-step research that browses dozens of sources, cross-references information, and produces detailed research reports",
+          "availableOn": ["Premium+", "SuperGrok"]
+        }
+      ],
+      "limitations": [
+        "Web search results biased toward X/Twitter content",
+        "DeepSearch limited to higher-tier subscriptions",
+        "Cannot access paywalled academic or news content",
+        "Research depth varies by topic — strongest on technology and current events"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic web search with limited usage" },
+        { "tier": "X Premium ($8/mo)", "details": "Web search and X trend analysis" },
+        { "tier": "Premium+ ($16/mo)", "details": "DeepSearch with multi-step research capabilities" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Unlimited DeepSearch and research access" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSearch", "date": "2025-02", "changes": "Multi-step autonomous research with source synthesis" },
+        { "version": "Real-time Web", "date": "2023-11", "changes": "Real-time web and X data access from launch" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Grok can analyze uploaded images, documents, and files with multimodal understanding, including screenshots, charts, photographs, and text documents.",
+      "subFeatures": [
+        {
+          "name": "Image Analysis",
+          "description": "Analyze uploaded images including photographs, screenshots, charts, and diagrams using Grok's vision capabilities"
+        },
+        {
+          "name": "Document Reading",
+          "description": "Read and extract information from uploaded text documents and PDFs"
+        },
+        {
+          "name": "X Post Analysis",
+          "description": "Analyze shared X/Twitter posts, threads, and associated media content"
+        }
+      ],
+      "limitations": [
+        "File upload types more limited than competitors",
+        "No spreadsheet or CSV analysis with code execution",
+        "No sandboxed code environment for data processing",
+        "Image analysis capabilities still improving"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic image analysis" },
+        { "tier": "Premium ($8/mo)", "details": "Image and document analysis with higher limits" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Full file analysis with maximum usage" }
+      ],
+      "versionHistory": [
+        { "version": "Grok 2", "date": "2024-08", "changes": "Multimodal image understanding added" },
+        { "version": "Document Upload", "date": "2024-12", "changes": "PDF and document upload support" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Grok generates text-based documents, reports, summaries, and formatted content through its chat interface. It can produce structured output including tables, lists, and formatted text.",
+      "subFeatures": [
+        {
+          "name": "Report Generation",
+          "description": "Generate structured reports, summaries, and analysis documents from research queries and uploaded content"
+        },
+        {
+          "name": "Formatted Text Output",
+          "description": "Produce markdown-formatted content with headers, tables, code blocks, and structured lists"
+        },
+        {
+          "name": "X/Twitter Content Creation",
+          "description": "Draft posts, threads, and social media content optimized for the X platform"
+        }
+      ],
+      "limitations": [
+        "No dedicated document editor or workspace",
+        "No export to Word, PDF, or other document formats",
+        "No collaborative document editing",
+        "Cannot create presentations or slide decks"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic text generation in chat" },
+        { "tier": "Premium ($8/mo)", "details": "Full document generation capabilities" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Maximum output length and quality" }
+      ],
+      "versionHistory": [
+        { "version": "Grok 3", "date": "2025-02", "changes": "Improved long-form document generation with better structure" },
+        { "version": "Grok 2", "date": "2024-08", "changes": "Enhanced text generation quality and formatting" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": true,
+      "summary": "Grok integrates Aurora, xAI's image generation model, for creating images from text prompts directly within the chat interface, including photorealistic and artistic styles.",
+      "subFeatures": [
+        {
+          "name": "Aurora Image Generation",
+          "description": "Generate high-quality images from text descriptions using xAI's Aurora model, supporting photorealistic, artistic, and abstract styles"
+        },
+        {
+          "name": "Image Editing",
+          "description": "Modify and iterate on generated images through conversational follow-up prompts"
+        },
+        {
+          "name": "Fewer Content Restrictions",
+          "description": "Aurora has notably fewer content restrictions compared to competitors like DALL-E, allowing a wider range of creative outputs"
+        }
+      ],
+      "limitations": [
+        "Image generation quality below DALL-E 3 and Midjourney for some styles",
+        "Generation limits based on subscription tier",
+        "No precise layout or composition controls",
+        "Text rendering in images less reliable than competitors"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Limited Aurora image generation" },
+        { "tier": "Premium ($8/mo)", "details": "Aurora image generation with daily limits" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Higher generation limits and priority access" }
+      ],
+      "versionHistory": [
+        { "version": "Aurora", "date": "2024-12", "changes": "Native image generation model integrated into Grok" },
+        { "version": "FLUX Integration", "date": "2024-08", "changes": "Initial image generation via FLUX model partnership" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Grok can generate code and assist with prototyping tasks through its chat interface, though it lacks a dedicated code execution environment or IDE integration.",
+      "subFeatures": [
+        {
+          "name": "Code Generation",
+          "description": "Generate code in multiple programming languages from natural language descriptions, with syntax highlighting and explanations"
+        },
+        {
+          "name": "Code Explanation and Debugging",
+          "description": "Analyze, explain, and debug code snippets shared in conversation"
+        }
+      ],
+      "limitations": [
+        "No sandboxed code execution environment",
+        "No live preview or code runner",
+        "No IDE integration",
+        "Coding capabilities behind GPT-4o and Claude for complex tasks",
+        "Cannot execute or test generated code"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic code generation in chat" },
+        { "tier": "Premium ($8/mo)", "details": "Full code generation with Grok 2" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Grok 3 with enhanced coding capabilities" }
+      ],
+      "versionHistory": [
+        { "version": "Grok 3", "date": "2025-02", "changes": "Significantly improved coding performance" },
+        { "version": "Grok 1.5", "date": "2024-03", "changes": "Improved coding and mathematical reasoning" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Grok offers personality mode selection and leverages X profile context for personalized interactions, though it has fewer personalization options than competitors.",
+      "subFeatures": [
+        {
+          "name": "Personality Modes",
+          "description": "Switch between 'Fun Mode' (witty, irreverent) and 'Regular Mode' (more straightforward) for different interaction styles"
+        },
+        {
+          "name": "X Profile Context",
+          "description": "Grok can use your X/Twitter profile, posts, and interests to provide contextually relevant responses"
+        }
+      ],
+      "limitations": [
+        "No custom instructions system like ChatGPT",
+        "Personalization limited to mode selection and X profile data",
+        "No persistent user preference system beyond X integration",
+        "Cannot create custom personas or specialized bots"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Personality mode selection" },
+        { "tier": "Premium ($8/mo)", "details": "Personality modes with X profile integration" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Full personalization features" }
+      ],
+      "versionHistory": [
+        { "version": "Personality Modes", "date": "2023-11", "changes": "Fun and Regular mode options at launch" },
+        { "version": "X Profile Integration", "date": "2024-03", "changes": "Use X profile data for personalized responses" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Grok maintains conversation history within the X app and can reference prior conversations, though cross-session memory features are more limited than competitors.",
+      "subFeatures": [
+        {
+          "name": "Conversation History",
+          "description": "Previous conversations saved and accessible within the Grok interface on X"
+        },
+        {
+          "name": "X Activity Context",
+          "description": "Grok has ambient awareness of your X/Twitter activity, providing a passive form of persistent context about your interests"
+        }
+      ],
+      "limitations": [
+        "No explicit memory system like ChatGPT's Memory feature",
+        "No custom knowledge base uploads",
+        "Conversation history management is basic",
+        "No cross-device session continuity beyond X app sync"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic conversation history" },
+        { "tier": "Premium ($8/mo)", "details": "Full conversation history and X activity context" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Enhanced context retention" }
+      ],
+      "versionHistory": [
+        { "version": "Conversation History", "date": "2024-03", "changes": "Persistent conversation storage in X app" },
+        { "version": "X Context", "date": "2023-11", "changes": "X/Twitter activity awareness from launch" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Grok has emerging agentic capabilities through DeepSearch (autonomous research) and the xAI API for building custom agents, though it lacks the browser automation and task execution of competitors.",
+      "subFeatures": [
+        {
+          "name": "DeepSearch Agent",
+          "description": "Autonomous multi-step research agent that browses the web and X/Twitter to compile comprehensive reports on any topic",
+          "availableOn": ["Premium+", "SuperGrok"]
+        },
+        {
+          "name": "xAI API for Custom Agents",
+          "description": "Build custom agentic applications using the xAI API with function calling, tool use, and structured outputs"
+        }
+      ],
+      "limitations": [
+        "No browser automation or task execution agent",
+        "No Operator-like capability for web tasks",
+        "Custom agent building requires API access and development effort",
+        "DeepSearch limited to information gathering, not task execution"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "No agent capabilities" },
+        { "tier": "Premium+ ($16/mo)", "details": "DeepSearch autonomous research" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Full DeepSearch access" },
+        { "tier": "API (pay-per-use)", "details": "Build custom agents with function calling" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSearch", "date": "2025-02", "changes": "Autonomous multi-step research agent" },
+        { "version": "xAI API Function Calling", "date": "2024-11", "changes": "Tool use and function calling support in API" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Grok's primary connector is its deep integration with the X/Twitter platform. Beyond X, it connects through the xAI API for programmatic access.",
+      "subFeatures": [
+        {
+          "name": "X/Twitter Integration",
+          "description": "Native deep integration with X — access posts, trends, user profiles, and conversations directly from the AI assistant"
+        },
+        {
+          "name": "xAI API",
+          "description": "RESTful API compatible with OpenAI SDK format, enabling integration with existing toolchains and applications"
+        }
+      ],
+      "limitations": [
+        "No third-party app integrations beyond X",
+        "No Google Drive, OneDrive, or cloud storage connectors",
+        "No plugin or extension ecosystem",
+        "No Slack, Notion, or productivity tool integrations",
+        "API is the only integration path for non-X services"
+      ],
+      "pricingTiers": [
+        { "tier": "X Premium ($8/mo)", "details": "Native X integration" },
+        { "tier": "API (pay-per-use)", "details": "Programmatic access starting at $2/M input tokens for Grok 2" }
+      ],
+      "versionHistory": [
+        { "version": "xAI API", "date": "2024-11", "changes": "Public API with OpenAI-compatible format" },
+        { "version": "X Integration", "date": "2023-11", "changes": "Deep X/Twitter platform integration at launch" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": true,
+      "summary": "Grok supports voice input through the X mobile app, with voice conversations and speech-to-text for dictating prompts.",
+      "subFeatures": [
+        {
+          "name": "Voice Input on X App",
+          "description": "Use voice to interact with Grok through the X mobile app, with speech-to-text transcription for prompts"
+        },
+        {
+          "name": "Voice Conversations",
+          "description": "Have spoken conversations with Grok using voice mode in the X app",
+          "availableOn": ["Premium", "Premium+", "SuperGrok"]
+        }
+      ],
+      "limitations": [
+        "Voice features only available in X mobile app",
+        "No web browser voice input",
+        "Voice conversation quality varies by device and connection",
+        "Limited voice customization options"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (via X)", "details": "Basic voice input on mobile" },
+        { "tier": "Premium ($8/mo)", "details": "Voice conversations with Grok" },
+        { "tier": "SuperGrok ($30/mo)", "details": "Full voice features with priority access" }
+      ],
+      "versionHistory": [
+        { "version": "Voice Mode", "date": "2024-12", "changes": "Voice conversations added to Grok on X mobile app" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "xai-grok-overview",
+    "xai-api-docs",
+    "xai-grok-models",
+    "xai-pricing",
+    "xai-grok-features"
+  ]
+}

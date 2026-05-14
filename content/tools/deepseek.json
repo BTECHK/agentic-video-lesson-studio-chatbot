@@ -1,0 +1,333 @@
+{
+  "id": "deepseek",
+  "name": "DeepSeek",
+  "vendor": "DeepSeek",
+  "priority": "P1",
+  "description": "DeepSeek's open-source AI models and chat platform offering strong reasoning capabilities (DeepSeek-R1), competitive coding performance, and extremely cost-efficient API pricing, making advanced AI accessible at a fraction of competitor costs.",
+  "url": "https://www.deepseek.com",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "DeepSeek provides a conversational chat interface through its web app and API, with a reasoning model (R1) that shows chain-of-thought for complex queries and a general-purpose model (V3) for standard conversation.",
+      "subFeatures": [
+        {
+          "name": "DeepSeek Chat",
+          "description": "Web-based chat interface with multi-turn conversation, markdown rendering, and code highlighting"
+        },
+        {
+          "name": "DeepThink (R1 Reasoning)",
+          "description": "Toggle deep reasoning mode that shows step-by-step thinking process for math, logic, and complex analysis tasks"
+        },
+        {
+          "name": "Multi-Turn Conversations",
+          "description": "Full conversation history within sessions with the ability to branch and edit previous messages"
+        }
+      ],
+      "limitations": [
+        "Web interface less polished than ChatGPT or Claude",
+        "English-primary but optimized for Chinese as well — other languages less supported",
+        "Context window of 64K tokens for V3, 64K for R1",
+        "Reasoning mode significantly slower due to chain-of-thought generation",
+        "Service availability may vary by region"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "Free access to DeepSeek chat with both V3 and R1 models" },
+        { "tier": "API (V3)", "details": "$0.27/M input tokens, $1.10/M output tokens — among the cheapest frontier-class APIs" },
+        { "tier": "API (R1)", "details": "$0.55/M input tokens, $2.19/M output tokens — reasoning model at fraction of competitor cost" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Reasoning model matching o1 performance at fraction of cost, open-source weights" },
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "671B MoE model with strong general performance, trained for $5.6M" },
+        { "version": "DeepSeek-V2", "date": "2024-05", "changes": "MoE architecture with strong coding and math capabilities" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "DeepSeek offers web search capabilities in its chat interface and excels at analyzing and reasoning about complex topics, though its web search is less mature than ChatGPT or Perplexity.",
+      "subFeatures": [
+        {
+          "name": "Web Search",
+          "description": "Search the web from within DeepSeek chat to find current information and cite sources"
+        },
+        {
+          "name": "Deep Reasoning Analysis",
+          "description": "Use R1's chain-of-thought reasoning to analyze complex research questions, break down problems, and synthesize information"
+        }
+      ],
+      "limitations": [
+        "Web search less comprehensive than Perplexity or ChatGPT browse",
+        "No autonomous multi-step research agent",
+        "Search results may be biased toward Chinese-language sources",
+        "No dedicated research report generation feature"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "Web search included in free chat" },
+        { "tier": "API", "details": "No built-in web search in API — requires external integration" }
+      ],
+      "versionHistory": [
+        { "version": "Web Search", "date": "2025-01", "changes": "Web search integration in DeepSeek chat interface" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "DeepSeek chat supports file uploads for analysis including documents, images, and code files, with the R1 model providing detailed reasoning about file contents.",
+      "subFeatures": [
+        {
+          "name": "Document Upload and Analysis",
+          "description": "Upload PDFs, text files, and documents for DeepSeek to read, summarize, and answer questions about"
+        },
+        {
+          "name": "Image Understanding",
+          "description": "Analyze uploaded images including diagrams, screenshots, and photographs"
+        },
+        {
+          "name": "Code File Analysis",
+          "description": "Read, explain, and debug uploaded code files with detailed reasoning"
+        }
+      ],
+      "limitations": [
+        "File size limits more restrictive than competitors",
+        "No sandboxed code execution environment for data analysis",
+        "Spreadsheet and CSV analysis limited to text-based parsing",
+        "Image analysis capabilities still maturing"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "File uploads included in free chat" },
+        { "tier": "API", "details": "Multimodal input supported in API at standard token pricing" }
+      ],
+      "versionHistory": [
+        { "version": "Multimodal V3", "date": "2024-12", "changes": "Image understanding added to V3 model" },
+        { "version": "File Upload", "date": "2024-06", "changes": "Document upload support in chat interface" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "DeepSeek generates text-based documents, technical reports, and structured content through its chat interface, with R1 excelling at detailed technical and mathematical documentation.",
+      "subFeatures": [
+        {
+          "name": "Technical Document Generation",
+          "description": "Generate technical reports, code documentation, and analysis documents with detailed reasoning and mathematical notation"
+        },
+        {
+          "name": "Structured Output",
+          "description": "Produce well-formatted markdown content including tables, code blocks, LaTeX math, and structured lists"
+        }
+      ],
+      "limitations": [
+        "No dedicated document editor or workspace",
+        "No export to Word, PDF, or other formats",
+        "No collaborative editing features",
+        "Output limited to text formats"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "Full text generation in chat" },
+        { "tier": "API", "details": "Structured output and JSON mode via API" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Enhanced technical writing with chain-of-thought reasoning" },
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "Improved document generation quality" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "DeepSeek does not include image generation capabilities. It is focused on text generation, reasoning, and code.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "DeepSeek's models are text-focused — no image generation or visual creation capabilities are included"
+        }
+      ],
+      "limitations": [
+        "No image generation model",
+        "No integration with image generation services",
+        "Cannot create visual assets or illustrations"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "No image generation included" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "DeepSeek excels at code generation and is competitive with GPT-4 on coding benchmarks, making it effective for prototyping through its chat interface and API, though it lacks a code execution environment.",
+      "subFeatures": [
+        {
+          "name": "Code Generation",
+          "description": "Generate code in multiple languages with strong performance on coding benchmarks (SWE-bench, HumanEval) competitive with GPT-4 and Claude"
+        },
+        {
+          "name": "Code Reasoning with R1",
+          "description": "Use the R1 reasoning model for complex algorithmic problems, debugging, and multi-step code architecture decisions"
+        },
+        {
+          "name": "Open-Source Model Access",
+          "description": "Run DeepSeek models locally or on custom infrastructure for private prototyping without sending code to external servers"
+        }
+      ],
+      "limitations": [
+        "No sandboxed code execution environment",
+        "No live preview or interactive code runner",
+        "No IDE integration beyond API access",
+        "Local deployment requires significant GPU resources for full models"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "Code generation in chat with V3 and R1" },
+        { "tier": "API", "details": "Extremely cost-efficient code generation via API" },
+        { "tier": "Self-Hosted (Free)", "details": "Open-source weights for local deployment" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Reasoning model with strong code generation and debugging" },
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "671B MoE model with top-tier coding performance" },
+        { "version": "DeepSeek Coder V2", "date": "2024-06", "changes": "Specialized coding model with strong benchmark results" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": false,
+      "summary": "DeepSeek has minimal personalization features — no custom instructions, memory, or persistent preference system in the web interface.",
+      "subFeatures": [
+        {
+          "name": "System Prompts (API)",
+          "description": "API users can set system prompts to customize model behavior, but the web interface has no equivalent personalization"
+        }
+      ],
+      "limitations": [
+        "No custom instructions in the web interface",
+        "No memory or persistent preferences",
+        "No custom bot or persona creation",
+        "API-only system prompt customization"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "No personalization features" },
+        { "tier": "API", "details": "System prompts for behavior customization" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "System prompt support in API" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "DeepSeek maintains conversation history within the web app, allowing users to revisit and continue previous conversations, though it lacks cross-session memory.",
+      "subFeatures": [
+        {
+          "name": "Conversation History",
+          "description": "Saved conversations accessible from the sidebar, with the ability to continue or reference previous discussions"
+        },
+        {
+          "name": "Long Context Window",
+          "description": "64K token context window allowing extended conversations within a single session"
+        }
+      ],
+      "limitations": [
+        "No cross-session memory system",
+        "No knowledge base or document upload for persistent context",
+        "Conversation search limited to basic text matching",
+        "No project or workspace organization"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "Conversation history included" },
+        { "tier": "API", "details": "Context management handled by API consumer" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek Chat", "date": "2024-01", "changes": "Conversation history and management in web interface" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "DeepSeek supports agentic use through its API with function calling and tool use, enabling developers to build autonomous agents. The chat interface does not have built-in agent features.",
+      "subFeatures": [
+        {
+          "name": "Function Calling (API)",
+          "description": "API support for function calling and tool use, enabling developers to build agents that interact with external systems"
+        },
+        {
+          "name": "Open-Source Agent Frameworks",
+          "description": "DeepSeek models are widely used in open-source agent frameworks (LangChain, AutoGen, CrewAI) due to cost efficiency and open weights"
+        }
+      ],
+      "limitations": [
+        "No built-in agent features in the web interface",
+        "No autonomous task execution in chat",
+        "No browser automation or computer use capabilities",
+        "Agent building requires external framework and development effort"
+      ],
+      "pricingTiers": [
+        { "tier": "Free (Web)", "details": "No agent features in web interface" },
+        { "tier": "API", "details": "Function calling at standard API token pricing" },
+        { "tier": "Self-Hosted", "details": "Agent frameworks with local model deployment" }
+      ],
+      "versionHistory": [
+        { "version": "Function Calling", "date": "2024-12", "changes": "Tool use and function calling support in V3 API" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "DeepSeek connects to external systems primarily through its OpenAI-compatible API, making it a drop-in replacement in existing tool chains. No native third-party integrations exist in the web interface.",
+      "subFeatures": [
+        {
+          "name": "OpenAI-Compatible API",
+          "description": "API follows OpenAI's format, enabling drop-in replacement in applications built for GPT models with minimal code changes"
+        },
+        {
+          "name": "Open-Source Ecosystem",
+          "description": "Available on Hugging Face and major inference platforms (vLLM, Ollama, Together AI), with broad ecosystem compatibility"
+        }
+      ],
+      "limitations": [
+        "No native third-party integrations in web interface",
+        "No plugin or extension ecosystem",
+        "No direct Google Drive, OneDrive, or cloud storage connectors",
+        "Integration requires API development or third-party tools"
+      ],
+      "pricingTiers": [
+        { "tier": "API", "details": "OpenAI-compatible API at DeepSeek pricing" },
+        { "tier": "Self-Hosted", "details": "Free model weights with self-hosted infrastructure costs" }
+      ],
+      "versionHistory": [
+        { "version": "OpenAI-Compatible API", "date": "2024-01", "changes": "API launched with OpenAI-compatible format" },
+        { "version": "Hugging Face Release", "date": "2025-01", "changes": "R1 open-source weights released on Hugging Face" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "DeepSeek does not include voice input or dictation capabilities in its web interface or API.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "DeepSeek is a text-only platform with no voice or speech-to-text capabilities"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "No speech-to-text capabilities",
+        "No audio processing features",
+        "Text-only interaction in both web and API"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "deepseek-platform",
+    "deepseek-api-docs",
+    "deepseek-github",
+    "deepseek-r1-paper",
+    "deepseek-pricing"
+  ]
+}

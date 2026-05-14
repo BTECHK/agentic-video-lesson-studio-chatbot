@@ -1,0 +1,30 @@
+{
+  "vendor": "xAI",
+  "sources": [
+    {
+      "id": "xai-grok-overview",
+      "url": "https://x.ai/grok",
+      "title": "Grok — xAI Product Overview"
+    },
+    {
+      "id": "xai-api-docs",
+      "url": "https://docs.x.ai/docs",
+      "title": "xAI API Documentation"
+    },
+    {
+      "id": "xai-grok-models",
+      "url": "https://docs.x.ai/docs/models",
+      "title": "xAI Grok Model Specifications"
+    },
+    {
+      "id": "xai-pricing",
+      "url": "https://x.ai/pricing",
+      "title": "xAI Grok Pricing Plans"
+    },
+    {
+      "id": "xai-grok-features",
+      "url": "https://x.ai/news",
+      "title": "xAI News and Feature Announcements"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "vendor": "Comet",
+  "sources": [
+    {
+      "id": "comet-browser-overview",
+      "url": "https://www.comet.com",
+      "title": "Comet Browser Automation Platform"
+    },
+    {
+      "id": "comet-docs",
+      "url": "https://docs.comet.com",
+      "title": "Comet Documentation and User Guide"
+    },
+    {
+      "id": "comet-pricing",
+      "url": "https://www.comet.com/pricing",
+      "title": "Comet Pricing Plans"
+    }
+  ]
+}

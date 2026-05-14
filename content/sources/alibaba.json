@@ -1,0 +1,30 @@
+{
+  "vendor": "Alibaba Cloud",
+  "sources": [
+    {
+      "id": "qwen-github",
+      "url": "https://github.com/QwenLM/Qwen",
+      "title": "Qwen Model GitHub Repository"
+    },
+    {
+      "id": "qwen-blog",
+      "url": "https://qwenlm.github.io/blog/",
+      "title": "Qwen Official Blog and Announcements"
+    },
+    {
+      "id": "qwen-huggingface",
+      "url": "https://huggingface.co/Qwen",
+      "title": "Qwen Models on Hugging Face"
+    },
+    {
+      "id": "qwen-chat",
+      "url": "https://chat.qwen.ai",
+      "title": "Qwen Chat Web Interface"
+    },
+    {
+      "id": "alibaba-dashscope",
+      "url": "https://www.alibabacloud.com/help/en/model-studio/",
+      "title": "Alibaba Cloud Model Studio (DashScope) Documentation"
+    }
+  ]
+}
