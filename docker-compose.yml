@@ -21,3 +21,15 @@ services:
     environment:
       - NODE_ENV=production
     command: npx tsx scripts/pipeline.ts --skip-determinism
+
+  ingest:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ingest
+    volumes:
+      - ./content:/app/content
+      - ./scripts:/app/scripts
+      - ./ingest.config.json:/app/ingest.config.json
+      - ./logs:/app/logs
+    environment:
+      - NODE_ENV=production

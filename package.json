@@ -9,7 +9,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:audit": "vitest run --reporter=json --outputFile=.test-results/results.json",
-    "validate:content": "tsx scripts/validate-content.ts"
+    "validate:content": "tsx scripts/validate-content.ts",
+    "ingest:poll": "docker compose run --rm ingest npx tsx scripts/ingest.ts --mode poll",
+    "ingest:search": "docker compose run --rm ingest npx tsx scripts/ingest.ts --mode search",
+    "ingest:schedule": "docker compose up -d ingest",
+    "ingest:unschedule": "docker compose stop ingest",
+    "ingest:llm": "npx tsx scripts/ingest.ts --mode llm-extract"
   },
   "keywords": [],
   "author": "",
