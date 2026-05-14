@@ -72,9 +72,9 @@ Plans:
   6. Scene type dispatcher maps JSON scene types to Remotion components
 **Plans:** 4 plans
 Plans:
-- [ ] 03-01-PLAN.md — Zod schemas: tool capabilities, source bibliography, lesson content, scene types
-- [ ] 03-02-PLAN.md — Animation architecture: scene type dispatcher, JSON content loader, content-to-scene mapping
-- [ ] 03-03-PLAN.md — P0 LLM tool data: ChatGPT, Claude, Gemini, Perplexity + source bibliographies
+- [x] 03-01-PLAN.md — Zod schemas: tool capabilities, source bibliography, lesson content, scene types
+- [x] 03-02-PLAN.md — Animation architecture: scene type dispatcher, JSON content loader, content-to-scene mapping
+- [x] 03-03-PLAN.md — P0 LLM tool data: ChatGPT, Claude, Gemini, Perplexity + source bibliographies
 - [ ] 03-04-PLAN.md — Remaining 8 tools: P0 coding agents + P1 tools + source bibliographies
 
 ### Phase 4: Content Ingestion & Freshness
@@ -96,10 +96,10 @@ Plans:
   3. Chatbot runs as a standalone web application with its own frontend, accessible independently of Teachable
 **Plans:** 4 plans
 Plans:
-- [ ] 05-01-PLAN.md — Next.js app scaffold, brand system, shared types, access control (demo/student)
-- [ ] 05-02-PLAN.md — LLM backend: dual provider, Tutor system prompt, session store
-- [ ] 05-03-PLAN.md — Chat UI components, API route wiring, citations, visual checkpoint
-- [ ] 05-04-PLAN.md — Docker containerization for chatbot
+- [x] 05-01-PLAN.md — Next.js app scaffold, brand system, shared types, access control (demo/student)
+- [x] 05-02-PLAN.md — LLM backend: dual provider, Tutor system prompt, session store
+- [x] 05-03-PLAN.md — Chat UI components, API route wiring, citations, visual checkpoint
+- [x] 05-04-PLAN.md — Docker containerization for chatbot
 **UI hint**: yes
 
 ## Progress
@@ -113,6 +113,6 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 |-------|----------------|--------|-----------|
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
-| 3. Content Repository & Schemas | 0/5 | Planned | - |
+| 3. Content Repository & Schemas | 3/4 | In Progress | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
-| 5. TA Chatbot | 0/4 | Planned | - |
+| 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
