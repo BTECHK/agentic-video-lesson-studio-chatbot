@@ -1,0 +1,45 @@
+{
+  "vendor": "Perplexity",
+  "sources": [
+    {
+      "id": "perplexity-docs",
+      "url": "https://docs.perplexity.ai",
+      "title": "Perplexity Documentation"
+    },
+    {
+      "id": "perplexity-api",
+      "url": "https://docs.perplexity.ai/api-reference",
+      "title": "Perplexity API Reference"
+    },
+    {
+      "id": "perplexity-pricing",
+      "url": "https://www.perplexity.ai/pro",
+      "title": "Perplexity Pro Pricing and Features"
+    },
+    {
+      "id": "perplexity-spaces",
+      "url": "https://www.perplexity.ai/hub/blog/introducing-spaces",
+      "title": "Perplexity Spaces Introduction"
+    },
+    {
+      "id": "perplexity-pro-search",
+      "url": "https://www.perplexity.ai/hub/blog/introducing-pro-search",
+      "title": "Perplexity Pro Search"
+    },
+    {
+      "id": "perplexity-pages",
+      "url": "https://www.perplexity.ai/hub/blog/perplexity-pages",
+      "title": "Perplexity Pages — Shareable Research Articles"
+    },
+    {
+      "id": "perplexity-collections",
+      "url": "https://www.perplexity.ai/hub/blog/introducing-collections",
+      "title": "Perplexity Collections"
+    },
+    {
+      "id": "perplexity-about",
+      "url": "https://www.perplexity.ai/about",
+      "title": "About Perplexity AI"
+    }
+  ]
+}

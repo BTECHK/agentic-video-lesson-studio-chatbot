@@ -1,0 +1,356 @@
+{
+  "id": "perplexity",
+  "name": "Perplexity",
+  "vendor": "Perplexity",
+  "priority": "P0",
+  "description": "An AI-powered answer engine focused on real-time web research with cited sources, providing direct answers to questions by searching the internet and synthesizing information from multiple sources with inline citations.",
+  "url": "https://perplexity.ai",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Perplexity provides conversational question-answering with a focus on factual, cited responses rather than creative writing. It functions as an answer engine rather than a traditional chatbot, with follow-up questions and source-backed responses.",
+      "subFeatures": [
+        {
+          "name": "Answer Engine",
+          "description": "Provides direct, concise answers to questions with inline citations from web sources, optimized for information retrieval over open-ended conversation"
+        },
+        {
+          "name": "Follow-Up Questions",
+          "description": "Maintains conversation context for multi-turn follow-up questions that drill deeper into a research topic"
+        },
+        {
+          "name": "Model Selection",
+          "description": "Pro users can select from multiple underlying models including GPT-4o, Claude 3.5 Sonnet, and Perplexity's own models",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Focus Modes",
+          "description": "Filter searches by source type: All, Academic, Writing, Wolfram Alpha, YouTube, or Reddit for targeted answers"
+        }
+      ],
+      "limitations": [
+        "Not designed for creative writing, brainstorming, or open-ended conversation",
+        "Responses optimized for brevity and factuality over depth",
+        "Free tier limited in daily Pro Search uses",
+        "Writing mode is basic compared to ChatGPT Canvas or Claude Artifacts"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic search with limited Pro Search queries per day" },
+        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, model selection, file uploads, higher limits" }
+      ],
+      "versionHistory": [
+        { "version": "Focus Modes", "date": "2024-06", "changes": "Source-specific search filters for Academic, YouTube, Reddit, and more" },
+        { "version": "Pro Search", "date": "2024-02", "changes": "Enhanced multi-step search with deeper source analysis" },
+        { "version": "Launch", "date": "2023-01", "changes": "Initial answer engine with real-time web search and citations" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Research is Perplexity's core strength. Every response is grounded in real-time web search with inline numbered citations, Pro Search performs multi-step investigation, and Pages enables publishing research as shareable articles.",
+      "subFeatures": [
+        {
+          "name": "Real-Time Web Search",
+          "description": "Every query triggers a live web search, synthesizing information from multiple current sources with numbered inline citations"
+        },
+        {
+          "name": "Pro Search",
+          "description": "Multi-step search that asks clarifying questions, searches multiple queries, and synthesizes a comprehensive answer from deeper source analysis",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Academic Search",
+          "description": "Focus mode that searches academic papers and scholarly sources, citing specific studies with DOIs and publication details"
+        },
+        {
+          "name": "Pages",
+          "description": "Convert research threads into polished, shareable articles with organized sections, citations, and a clean reading format",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Source Transparency",
+          "description": "Every claim is linked to its source with numbered citations, allowing users to verify information by clicking through to original articles"
+        }
+      ],
+      "limitations": [
+        "Cannot access paywalled academic papers (only abstracts and metadata)",
+        "Search results biased toward well-indexed English-language sources",
+        "Pro Search limited to a set number of daily queries on free tier",
+        "Cannot analyze or cross-reference user-uploaded documents with web sources",
+        "Academic search relies on available open-access and indexed papers"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic web search with citations, limited Pro Search (5/day)" },
+        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, Academic focus, Pages, priority source access" }
+      ],
+      "versionHistory": [
+        { "version": "Pages", "date": "2024-05", "changes": "Convert research threads into shareable articles" },
+        { "version": "Pro Search", "date": "2024-02", "changes": "Multi-step deep research with clarifying questions" },
+        { "version": "Academic Focus", "date": "2024-01", "changes": "Dedicated academic paper search mode" },
+        { "version": "Citations", "date": "2023-01", "changes": "Inline numbered citations from launch" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Perplexity Pro supports file uploads for analysis, including PDFs, images, and documents, allowing users to ask questions about uploaded content and cross-reference with web search results.",
+      "subFeatures": [
+        {
+          "name": "PDF Analysis",
+          "description": "Upload PDF documents and ask questions about their content, with Perplexity extracting and analyzing text and tables",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Image Analysis",
+          "description": "Upload images for visual question answering, identifying objects, reading text, and analyzing visual content",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Document Q&A",
+          "description": "Ask specific questions about uploaded documents and receive answers with references to specific sections",
+          "availableOn": ["Pro"]
+        }
+      ],
+      "limitations": [
+        "File upload limited to Pro subscribers",
+        "Cannot process video or audio files",
+        "File size limits more restrictive than competitors",
+        "No code execution environment for data analysis",
+        "Cannot analyze multiple files in a single conversation"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No file upload capability" },
+        { "tier": "Pro ($20/mo)", "details": "PDF, image, and document uploads with analysis" }
+      ],
+      "versionHistory": [
+        { "version": "File Uploads", "date": "2024-03", "changes": "PDF, image, and document upload support for Pro users" },
+        { "version": "Image Analysis", "date": "2024-06", "changes": "Visual question answering for uploaded images" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Perplexity creates research-oriented documents through Pages, which converts search threads into polished, shareable articles with structured sections, citations, and a clean reading format.",
+      "subFeatures": [
+        {
+          "name": "Pages",
+          "description": "Convert research conversations into formatted, shareable articles with sections, headers, and maintained citations that can be published with a public URL",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Formatted Responses",
+          "description": "Responses include markdown formatting with headers, bullet points, numbered lists, and code blocks"
+        }
+      ],
+      "limitations": [
+        "Pages limited to Pro subscribers",
+        "No collaborative document editing (read-only after creation)",
+        "Cannot create presentations, spreadsheets, or non-article formats",
+        "Limited formatting control compared to dedicated document editors",
+        "No template system for consistent document structures"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Formatted chat responses only" },
+        { "tier": "Pro ($20/mo)", "details": "Pages for shareable research articles" }
+      ],
+      "versionHistory": [
+        { "version": "Pages", "date": "2024-05", "changes": "Shareable research article creation from conversation threads" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": true,
+      "summary": "Perplexity Pro includes basic image generation using DALL-E and Stable Diffusion models, though this is a secondary feature rather than a core capability of the platform.",
+      "subFeatures": [
+        {
+          "name": "AI Image Generation",
+          "description": "Generate images from text prompts using integrated DALL-E and Playground models, available within the search interface",
+          "availableOn": ["Pro"]
+        }
+      ],
+      "limitations": [
+        "Image generation is a supplementary feature, not a core focus",
+        "Quality and control inferior to dedicated image generation tools",
+        "Limited image editing or refinement capabilities",
+        "Not available on free tier",
+        "Fewer style options and less prompt control than ChatGPT DALL-E or Gemini Imagen"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No image generation" },
+        { "tier": "Pro ($20/mo)", "details": "AI image generation with daily limits" }
+      ],
+      "versionHistory": [
+        { "version": "Image Generation", "date": "2024-04", "changes": "DALL-E and Playground image generation for Pro users" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": false,
+      "summary": "Perplexity does not support code prototyping or interactive development. It is an answer engine focused on research, not a development environment. Users seeking code prototyping should use ChatGPT, Claude, or dedicated IDEs.",
+      "subFeatures": [
+        {
+          "name": "Code Display Only",
+          "description": "Perplexity can display code snippets from web sources in responses but cannot execute, preview, or interactively edit code"
+        }
+      ],
+      "limitations": [
+        "No code execution environment",
+        "No live preview for any language",
+        "No interactive code editing workspace",
+        "Not designed for software development workflows"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No prototyping capabilities on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "N/A", "date": "2025-05", "changes": "No prototyping features have been released" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Perplexity offers limited personalization through profile settings where users can set their preferred output language, profession, and interests to influence search relevance and response style.",
+      "subFeatures": [
+        {
+          "name": "User Profile",
+          "description": "Set profession, interests, and preferred output language to influence how Perplexity tailors responses to your background"
+        },
+        {
+          "name": "Output Language Preference",
+          "description": "Configure preferred language for responses, independent of the language used in the query"
+        }
+      ],
+      "limitations": [
+        "No custom system prompts or detailed behavior configuration",
+        "No equivalent to Custom GPTs or Claude Projects for specialized personas",
+        "Profile settings limited to basic demographic and preference information",
+        "No cross-conversation memory that learns preferences automatically",
+        "Cannot create reusable custom search configurations"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic profile settings" },
+        { "tier": "Pro ($20/mo)", "details": "Same profile settings with Pro features" }
+      ],
+      "versionHistory": [
+        { "version": "User Profile", "date": "2024-01", "changes": "Basic user profile settings for response personalization" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Perplexity provides persistent context through Spaces (formerly Collections) — organized workspaces for grouping related searches with shared instructions and curated sources for ongoing research projects.",
+      "subFeatures": [
+        {
+          "name": "Spaces",
+          "description": "Organized workspaces that group related search threads with custom instructions, preferred AI models, and curated source lists for focused research",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Search History",
+          "description": "All previous searches saved and searchable for revisiting past research threads"
+        },
+        {
+          "name": "Thread Continuity",
+          "description": "Follow-up questions within a thread maintain full context from the original search and subsequent queries"
+        }
+      ],
+      "limitations": [
+        "Spaces require Pro subscription",
+        "No automatic knowledge accumulation across searches",
+        "Thread context does not carry between different threads",
+        "Spaces have limited storage for custom source files",
+        "No team-shared Spaces for collaborative research"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Search history and thread continuity only" },
+        { "tier": "Pro ($20/mo)", "details": "Spaces for organized research workspaces" }
+      ],
+      "versionHistory": [
+        { "version": "Spaces", "date": "2024-09", "changes": "Organized research workspaces with custom instructions and curated sources" },
+        { "version": "Collections", "date": "2024-03", "changes": "Initial thread organization feature (later evolved into Spaces)" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": false,
+      "summary": "Perplexity does not offer agentic capabilities. It is designed as a search and answer engine, not an autonomous agent platform. Pro Search performs multi-step research but does not take actions or interact with external systems.",
+      "subFeatures": [
+        {
+          "name": "Pro Search (Research Only)",
+          "description": "Multi-step search process that autonomously refines queries and synthesizes results, but limited to information retrieval — cannot take actions or interact with external systems"
+        }
+      ],
+      "limitations": [
+        "No autonomous task execution capability",
+        "Cannot interact with external APIs or services",
+        "No computer use or browser automation",
+        "Pro Search limited to information gathering and synthesis",
+        "No tool use or function calling framework"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No agent capabilities on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "N/A", "date": "2025-05", "changes": "No agent features have been released" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": false,
+      "summary": "Perplexity does not offer integrations with external tools, services, or data sources beyond its built-in web search. There is no plugin system, extension framework, or connector protocol.",
+      "subFeatures": [
+        {
+          "name": "Web Search Only",
+          "description": "Perplexity connects to the open web through its search engine but does not integrate with specific third-party services, productivity tools, or user data sources"
+        }
+      ],
+      "limitations": [
+        "No integration with Google Workspace, Microsoft 365, or other productivity suites",
+        "No plugin or extension ecosystem",
+        "No API-based connector framework for third-party tools",
+        "Cannot access private data sources or internal company databases",
+        "No equivalent to MCP, GPT Actions, or Gemini Extensions"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No connector capabilities on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "N/A", "date": "2025-05", "changes": "No connector features have been released" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Perplexity does not offer native voice input or dictation capabilities. Users interact through text-based search queries. Mobile users can use OS-level dictation as a workaround.",
+      "subFeatures": [
+        {
+          "name": "No Native Voice Input",
+          "description": "Perplexity lacks built-in speech-to-text or voice search — all queries must be typed or pasted, though OS-level dictation can be used as a workaround"
+        }
+      ],
+      "limitations": [
+        "No voice input in web or mobile apps",
+        "No voice response or text-to-speech output",
+        "No real-time voice conversation mode",
+        "Users must rely on OS-level dictation for hands-free input"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No dictation feature available on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "N/A", "date": "2025-05", "changes": "No voice or dictation features have been released" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "perplexity-docs",
+    "perplexity-api",
+    "perplexity-pricing",
+    "perplexity-spaces",
+    "perplexity-pro-search",
+    "perplexity-pages",
+    "perplexity-collections",
+    "perplexity-about"
+  ]
+}

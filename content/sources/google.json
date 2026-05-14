@@ -1,0 +1,55 @@
+{
+  "vendor": "Google",
+  "sources": [
+    {
+      "id": "google-gemini-models",
+      "url": "https://ai.google.dev/gemini-api/docs/models/gemini",
+      "title": "Gemini Models Documentation"
+    },
+    {
+      "id": "google-ai-studio",
+      "url": "https://aistudio.google.com",
+      "title": "Google AI Studio"
+    },
+    {
+      "id": "google-gemini-api",
+      "url": "https://ai.google.dev/gemini-api/docs",
+      "title": "Gemini API Reference"
+    },
+    {
+      "id": "google-gemini-pricing",
+      "url": "https://ai.google.dev/pricing",
+      "title": "Gemini API Pricing"
+    },
+    {
+      "id": "google-gemini-features",
+      "url": "https://gemini.google.com/advanced",
+      "title": "Gemini Advanced Features"
+    },
+    {
+      "id": "google-workspace-ai",
+      "url": "https://workspace.google.com/solutions/ai",
+      "title": "Google Workspace AI Integration"
+    },
+    {
+      "id": "google-gems",
+      "url": "https://blog.google/products/gemini/google-gems",
+      "title": "Google Gems — Custom AI Experts"
+    },
+    {
+      "id": "google-imagen",
+      "url": "https://deepmind.google/technologies/imagen-3",
+      "title": "Imagen 3 Image Generation"
+    },
+    {
+      "id": "google-gemini-extensions",
+      "url": "https://support.google.com/gemini/answer/13695044",
+      "title": "Gemini Extensions Documentation"
+    },
+    {
+      "id": "google-notebooklm",
+      "url": "https://notebooklm.google.com",
+      "title": "NotebookLM — AI Research Assistant"
+    }
+  ]
+}
