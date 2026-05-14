@@ -132,10 +132,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-04 | Phase 3 | Complete (03-05) |
 | CONT-05 | Phase 3 | Complete (03-05) |
 | CONT-06 | Phase 4 | Complete (04-01 through 04-05) |
-| TRAN-01 | Phase 4 | Pending |
-| CHAT-01 | Phase 5 | Pending |
-| CHAT-02 | Phase 5 | Pending |
-| CHAT-03 | Phase 5 | Pending |
+| TRAN-01 | Phase 4 | Deferred (per CONTEXT.md) |
+| CHAT-01 | Phase 5 | Complete (05-02) |
+| CHAT-02 | Phase 5 | Complete (05-03) |
+| CHAT-03 | Phase 5 | Complete (05-01) |
 
 **Coverage:**
 - v1 requirements: 27 total

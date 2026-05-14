@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - DEFERRED until Instructor provides final lesson scripts. Design system locked.
 - [x] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping (completed 2026-05-14)
 - [x] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings (completed 2026-05-14)
-- [ ] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations
+- [x] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations (completed 2026-05-14)
 
 ## Phase Details
 
