@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Rendering Environment & Verification** - Docker + Remotion + headless Chrome pipeline with visual verification workflow (completed 2026-05-13)
 - [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - DEFERRED until Instructor provides final lesson scripts. Design system locked.
-- [ ] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping
+- [x] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping (completed 2026-05-14)
 - [ ] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings
 - [ ] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations
 
@@ -70,12 +70,13 @@ Plans:
   4. Content nodes map to specific video sections — changing a content node identifies exactly which scenes need re-rendering
   5. Lesson content JSON schema validated with Zod and consumable by the Remotion rendering pipeline
   6. Scene type dispatcher maps JSON scene types to Remotion components
-**Plans:** 4 plans
+**Plans:** 5 plans
 Plans:
 - [x] 03-01-PLAN.md — Zod schemas: tool capabilities, source bibliography, lesson content, scene types
 - [x] 03-02-PLAN.md — Animation architecture: scene type dispatcher, JSON content loader, content-to-scene mapping
 - [x] 03-03-PLAN.md — P0 LLM tool data: ChatGPT, Claude, Gemini, Perplexity + source bibliographies
 - [x] 03-04-PLAN.md — Remaining 8 tools: P0 coding agents + P1 tools + source bibliographies
+- [x] 03-05-PLAN.md — Content-to-scene mapping, validation CLI, integration tests
 
 ### Phase 4: Content Ingestion & Freshness
 **Goal**: Automated systems that keep the content repository current — scraping vendor docs for AI tool updates and transcribing large source recordings for course context
@@ -113,6 +114,6 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 |-------|----------------|--------|-----------|
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
-| 3. Content Repository & Schemas | 4/4 | In Progress (03-05 validation pending) | - |
+| 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
 | 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
