@@ -27,6 +27,10 @@ A standalone web application where learners get accurate, source-cited answers g
 ### LLM Backend
 - **D-08:** Dual LLM backend built in from day one. Two options: (1) Claude Code as passthrough — routes questions through Claude Code for answers, (2) Direct API key — calls the LLM API directly. API key is the fallback since the platform choice isn't locked yet. Both options must be programmed in and switchable via configuration.
 
+### Bootstrap Mode (Pre-Content)
+- **D-12:** Chatbot must work before Phase 3 content exists. In bootstrap mode, Tutor operates as a Claude-powered AI assistant with the personality prompt but no RAG content. Claude is the default LLM backing since it's the passthrough anyway. When Phase 3 content arrives, RAG layers on top — the chatbot progressively enhances rather than requiring content to function at all.
+- **D-13:** Bootstrap mode enables testing the full chat experience (UI, multi-turn, access control, personality, citations UX) without waiting for content population. Phase 5 does NOT block on Phase 3 for initial development and testing.
+
 ### Chatbot Personality
 - **D-09:** Friendly, clear tutoring voice. Practical and empowering — like a knowledgeable friend showing you how to do something. Tone calibrated for working professionals.
 - **D-10:** Inline citations with expandable details. Source citations appear as clickable references within the response text (e.g., [Module 2, Lesson 3]). Clicking expands to show the full source — lesson name, module, tool, and verification date. Clean reading experience with detail on demand.
@@ -36,6 +40,7 @@ A standalone web application where learners get accurate, source-cited answers g
 - RAG architecture and vector store implementation
 - Frontend framework and component library choice (must follow brand system)
 - Chat UI layout and responsive design (Apple/Google/Anthropic design principles)
+- All UI/UX decisions — user deferred to Claude's recommendations using Apple/Google/Anthropic design principles and the brand system
 - Session storage and memory implementation
 - API route design and error handling
 - Deployment configuration
