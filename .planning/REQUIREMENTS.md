@@ -69,10 +69,24 @@ Deferred to future release. Tracked but not in current roadmap.
 - **FRESH-02**: Human-in-the-loop approval workflow before content updates propagate to video
 - **FRESH-03**: Content-change-triggered selective scene re-rendering
 
+### Teaching Philosophy
+
+- **PHILO-01**: Encode Instructor's teaching philosophy (scaffolding, sequencing, explanation approach) as structured system prompts and content generation rules — prerequisite for SCALE-02
+- **PHILO-02**: Curriculum auto-generation pipeline that produces lesson storyboards from content repository + encoded philosophy (extends SCALE-02)
+
+### Use Case Content
+
+- **USECASE-01**: Use case content ingestion from community sources (YouTube walkthroughs, Reddit threads, developer forums, practitioner blogs) — distinct from vendor doc scraping in CONT-06
+- **USECASE-02**: Curated creator tracking (public practitioners) for course-relevant use case examples
+
+### Chatbot Enhancements
+
+- **CHAT-04**: Office Hours chatbot mode for tangential/exploratory questions ("you taught X, I want to do Y") — distinct from TA mode's strict content grounding
+
 ### Scaling
 
 - **SCALE-01**: Batch rendering pipeline for multiple lessons from content repository
-- **SCALE-02**: Content-to-storyboard auto-generation from structured content + Instructor's teaching philosophy
+- **SCALE-02**: Content-to-storyboard auto-generation from structured content + Instructor's teaching philosophy (depends on PHILO-01)
 - **SCALE-03**: Multi-language/localization support (English-only for v1)
 
 ## Out of Scope
@@ -117,7 +131,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-03 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-04 | Phase 3 | Complete (03-05) |
 | CONT-05 | Phase 3 | Complete (03-05) |
-| CONT-06 | Phase 4 | In Progress (04-01 config done) |
+| CONT-06 | Phase 4 | In Progress (04-01 config, 04-02 scraper/extractor/logger done) |
 | TRAN-01 | Phase 4 | Pending |
 | CHAT-01 | Phase 5 | Pending |
 | CHAT-02 | Phase 5 | Pending |
@@ -130,4 +144,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-14 after 04-01 completion (Phase 4 in progress)*
+*Last updated: 2026-05-14 after 04-02 completion (Phase 4 in progress)*
