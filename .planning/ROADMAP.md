@@ -89,7 +89,12 @@ Plans:
   1. Chatbot answers questions using course content repository — not generic LLM knowledge — with responses grounded in verified, current information
   2. Every chatbot response includes source citations identifying which lesson, module, or tool the answer references
   3. Chatbot runs as a standalone web application with its own frontend, accessible independently of Teachable
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 05-01-PLAN.md — Next.js app scaffold, brand system, shared types, access control (demo/student)
+- [ ] 05-02-PLAN.md — LLM backend: dual provider, Tutor system prompt, session store
+- [ ] 05-03-PLAN.md — Chat UI components, API route wiring, citations, visual checkpoint
+- [ ] 05-04-PLAN.md — Docker containerization for chatbot
 **UI hint**: yes
 
 ## Progress
@@ -105,4 +110,4 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
 | 3. Content Repository & Schemas | 0/TBD | Starting | - |
 | 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
-| 5. TA Chatbot | 0/TBD | Starting | - |
+| 5. TA Chatbot | 0/4 | Planned | - |
