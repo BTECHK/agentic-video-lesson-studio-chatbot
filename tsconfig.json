@@ -16,6 +16,6 @@
     "moduleResolution": "bundler",
     "noEmit": true
   },
-  "include": ["src/**/*", "scripts/**/*", "test/**/*", "remotion.config.ts"],
+  "include": ["src/**/*", "content/**/*", "scripts/**/*", "test/**/*", "remotion.config.ts"],
   "exclude": ["node_modules", "dist", "output"]
 }
