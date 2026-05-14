@@ -7,7 +7,8 @@
     "render": "remotion render src/index.ts",
     "build": "remotion bundle src/index.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "validate:content": "tsx scripts/validate-content.ts"
   },
   "keywords": [],
   "author": "",
