@@ -1,0 +1,438 @@
+{
+  "id": "claude",
+  "name": "Claude",
+  "vendor": "Anthropic",
+  "priority": "P0",
+  "description": "Anthropic's AI assistant known for strong reasoning, long-context understanding, and safety-focused design, available through claude.ai web interface, mobile apps, and API with features like Projects, Artifacts, and Claude Code.",
+  "url": "https://claude.ai",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Claude excels at conversational writing with nuanced, well-structured responses, supporting Projects for organized workspaces, Artifacts for rich content creation, and customizable system prompts for tailored behavior.",
+      "subFeatures": [
+        {
+          "name": "Projects",
+          "description": "Organized workspaces that group conversations with shared instructions and knowledge files, enabling consistent context across related chats",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Artifacts",
+          "description": "Interactive side panel for generating and editing documents, code, SVGs, React components, and Mermaid diagrams alongside the conversation",
+          "availableOn": ["Free", "Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "System Prompts",
+          "description": "Customizable project-level instructions that shape Claude's behavior, tone, and response format across all conversations in a project",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Multi-turn Conversations",
+          "description": "Extended conversation threads with ability to branch, edit previous messages, and maintain coherent long-form dialogue"
+        },
+        {
+          "name": "Model Selection",
+          "description": "Switch between Claude Opus 4, Sonnet 4, and Haiku models based on task complexity and speed requirements",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "200K token context window (largest among major chatbots but still finite)",
+        "Free tier limited to Sonnet with lower rate limits",
+        "No equivalent to ChatGPT's Custom Instructions for non-project conversations on free tier",
+        "Response length can be conservative without explicit instruction to be thorough"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Claude Sonnet with rate limits, basic Artifacts, no Projects" },
+        { "tier": "Pro ($20/mo)", "details": "Opus 4, Sonnet 4, Haiku, Projects, higher rate limits, priority access" },
+        { "tier": "Team ($25/user/mo)", "details": "Pro features plus team workspace, admin controls, 500K context for select models" },
+        { "tier": "Enterprise (custom)", "details": "SSO/SCIM, audit logs, custom data retention, dedicated capacity" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Opus 4", "date": "2025-05", "changes": "Most capable model with extended thinking, superior reasoning and coding" },
+        { "version": "Claude Sonnet 4", "date": "2025-05", "changes": "Balanced model with strong coding and instruction following" },
+        { "version": "Claude 3.5 Sonnet", "date": "2024-06", "changes": "Major quality upgrade in coding, analysis, and instruction following" },
+        { "version": "Claude 3 Opus", "date": "2024-03", "changes": "First Opus-tier model with near-human reasoning" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "Claude supports web search for current information retrieval with source citations, though research capabilities are more recent additions compared to its core analysis strengths.",
+      "subFeatures": [
+        {
+          "name": "Web Search",
+          "description": "Real-time web search integrated into conversations to find current information, with inline source citations",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Source Citations",
+          "description": "Inline references to web sources with clickable links when web search is used"
+        },
+        {
+          "name": "Document-Based Research",
+          "description": "Analyze uploaded documents, extract key findings, compare sources, and synthesize information across multiple files within Projects"
+        }
+      ],
+      "limitations": [
+        "Web search is a newer feature with less refinement than competitors",
+        "Cannot access paywalled or login-gated content",
+        "No dedicated multi-step autonomous research agent comparable to ChatGPT Deep Research",
+        "Free tier has limited or no web search access"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No web search, document analysis only" },
+        { "tier": "Pro ($20/mo)", "details": "Web search with citations, document-based research" },
+        { "tier": "Enterprise (custom)", "details": "Full research capabilities with data controls" }
+      ],
+      "versionHistory": [
+        { "version": "Web Search", "date": "2025-03", "changes": "Real-time web search integration with source citations" },
+        { "version": "Document Analysis", "date": "2024-03", "changes": "Multi-document analysis and synthesis capabilities" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Claude can analyze uploaded files including PDFs, images, code files, CSVs, and text documents, with strong performance on long documents due to its 200K token context window.",
+      "subFeatures": [
+        {
+          "name": "PDF Analysis",
+          "description": "Read and analyze PDF documents including complex layouts, tables, and embedded images, leveraging the full 200K context window"
+        },
+        {
+          "name": "Vision / Image Analysis",
+          "description": "Analyze uploaded images including photographs, diagrams, charts, screenshots, and handwritten content using Claude's native vision capabilities"
+        },
+        {
+          "name": "Code File Analysis",
+          "description": "Read, explain, debug, and refactor code files with support for all major programming languages"
+        },
+        {
+          "name": "Spreadsheet and CSV Analysis",
+          "description": "Parse and analyze tabular data from CSV and spreadsheet files, perform calculations, and identify patterns"
+        },
+        {
+          "name": "Multi-File Analysis",
+          "description": "Upload multiple files to a Project's knowledge base for cross-document analysis and comparison",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "No sandboxed code execution environment (cannot run code on uploaded data)",
+        "Cannot process video or audio files",
+        "File uploads limited to approximately 30 MB per file",
+        "Image analysis is input-only — cannot generate or edit images",
+        "Complex spreadsheet formulas and macros not interpreted"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic file uploads with rate-limited analysis" },
+        { "tier": "Pro ($20/mo)", "details": "Higher file limits, Project knowledge bases, priority analysis" },
+        { "tier": "Enterprise (custom)", "details": "Largest file handling, data retention controls" }
+      ],
+      "versionHistory": [
+        { "version": "Claude 3.5 Sonnet Vision", "date": "2024-06", "changes": "Improved image understanding and chart analysis accuracy" },
+        { "version": "Claude 3 Vision", "date": "2024-03", "changes": "Native vision capabilities for image analysis" },
+        { "version": "PDF Support", "date": "2024-03", "changes": "Direct PDF upload and analysis support" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "Claude generates documents, code, and visual content through Artifacts — an interactive side panel that renders markdown, HTML, React components, SVG graphics, and Mermaid diagrams as live previews.",
+      "subFeatures": [
+        {
+          "name": "Artifact Documents",
+          "description": "Generate well-formatted documents rendered as live previews in the Artifacts panel, supporting markdown with tables, headers, and lists"
+        },
+        {
+          "name": "Code Artifacts",
+          "description": "Generate standalone code files displayed in a syntax-highlighted editor within the Artifacts panel, copyable and downloadable"
+        },
+        {
+          "name": "SVG Graphics",
+          "description": "Create and render SVG illustrations and diagrams directly in the Artifacts panel as live visual previews"
+        },
+        {
+          "name": "Mermaid Diagrams",
+          "description": "Generate flowcharts, sequence diagrams, and other Mermaid-based visualizations rendered as interactive diagrams"
+        }
+      ],
+      "limitations": [
+        "No direct export to Word, PowerPoint, or Google Docs",
+        "Artifacts are tied to conversations — no standalone sharing URL for documents",
+        "Cannot create multi-page documents with pagination",
+        "No collaborative real-time editing with other users",
+        "SVG output quality limited compared to dedicated design tools"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic Artifacts for documents and code" },
+        { "tier": "Pro ($20/mo)", "details": "Full Artifact capabilities with higher limits" },
+        { "tier": "Enterprise (custom)", "details": "All document creation features with admin controls" }
+      ],
+      "versionHistory": [
+        { "version": "Artifacts", "date": "2024-06", "changes": "Interactive side panel for documents, code, SVGs, and Mermaid diagrams" },
+        { "version": "Markdown Output", "date": "2024-03", "changes": "Improved structured document formatting in Claude 3" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Claude cannot generate raster images. It can create SVG graphics and diagrams through Artifacts but has no equivalent to DALL-E or Imagen for photorealistic or artistic image generation.",
+      "subFeatures": [
+        {
+          "name": "SVG Generation (via Artifacts)",
+          "description": "Create vector graphics, icons, and simple illustrations as SVG code rendered in the Artifacts panel — not equivalent to AI image generation"
+        }
+      ],
+      "limitations": [
+        "No AI image generation capability (no DALL-E equivalent)",
+        "SVG generation limited to simple vector graphics and diagrams",
+        "Cannot edit, modify, or enhance uploaded images",
+        "No planned image generation feature announced"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "SVG generation via Artifacts available on all tiers; no raster image generation on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "Artifacts SVG", "date": "2024-06", "changes": "SVG rendering support added through Artifacts panel" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Claude supports interactive prototyping through Artifacts, which can render live React components, HTML/CSS/JS applications, and interactive visualizations directly in the browser, making it uniquely strong for front-end prototyping.",
+      "subFeatures": [
+        {
+          "name": "React Component Artifacts",
+          "description": "Generate and render fully interactive React components with state management, event handling, and Tailwind CSS styling in a live preview",
+          "availableOn": ["Free", "Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "HTML/CSS/JS Artifacts",
+          "description": "Create complete web pages and interactive applications rendered live in the Artifacts panel"
+        },
+        {
+          "name": "Interactive Data Visualizations",
+          "description": "Build interactive charts and dashboards using libraries like Recharts or D3 within React Artifacts"
+        },
+        {
+          "name": "Iterative Refinement",
+          "description": "Modify Artifacts through conversation, making incremental changes while preserving the live preview"
+        }
+      ],
+      "limitations": [
+        "React Artifacts limited to single-file components (no multi-file projects)",
+        "Limited library availability — only select npm packages pre-installed in Artifact sandbox",
+        "No backend code execution (server-side logic, database access)",
+        "Cannot deploy or share prototypes as standalone applications",
+        "No mobile-responsive preview mode"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic Artifacts with React and HTML rendering" },
+        { "tier": "Pro ($20/mo)", "details": "Higher rate limits for complex prototyping sessions" },
+        { "tier": "Enterprise (custom)", "details": "Full prototyping with admin controls" }
+      ],
+      "versionHistory": [
+        { "version": "React Artifacts", "date": "2024-06", "changes": "Live React component rendering with Tailwind CSS in Artifacts panel" },
+        { "version": "HTML Artifacts", "date": "2024-06", "changes": "Interactive HTML/CSS/JS rendering in Artifacts" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Claude offers personalization through Project-level custom instructions that shape behavior for specific workspaces, though it lacks ChatGPT-style global Custom Instructions and cross-conversation memory on the free tier.",
+      "subFeatures": [
+        {
+          "name": "Project Instructions",
+          "description": "Custom system prompts set at the Project level that apply to all conversations within that project, defining Claude's persona, rules, and response style",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Conversation Styles",
+          "description": "Users can set preferred response styles and adjust Claude's tone and verbosity through conversation-level instructions"
+        },
+        {
+          "name": "Profile Preferences",
+          "description": "Account-level settings for default response behavior and preferred communication style",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "No cross-conversation memory system (unlike ChatGPT Memory)",
+        "Project Instructions require Pro tier — free users rely on per-conversation context",
+        "No user profile that persists facts and preferences automatically",
+        "Cannot create shareable custom personas (no equivalent to Custom GPTs)"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Per-conversation instructions only" },
+        { "tier": "Pro ($20/mo)", "details": "Project Instructions, profile preferences" },
+        { "tier": "Enterprise (custom)", "details": "Admin-managed instruction templates across teams" }
+      ],
+      "versionHistory": [
+        { "version": "Project Instructions", "date": "2024-06", "changes": "Custom system prompts for Project workspaces" },
+        { "version": "Profile Preferences", "date": "2025-01", "changes": "Account-level default behavior settings" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Claude provides persistent context through Projects, which combine custom instructions with uploaded knowledge files to create reusable workspaces with consistent context across multiple conversations.",
+      "subFeatures": [
+        {
+          "name": "Project Knowledge Bases",
+          "description": "Upload documents, code files, and data to a Project that are accessible across all conversations in that workspace, up to 200K tokens of context",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Conversation History",
+          "description": "All conversations are saved with full history, searchable and resumable from the sidebar"
+        },
+        {
+          "name": "Starred Conversations",
+          "description": "Pin important conversations for quick access and organization within the conversation list"
+        }
+      ],
+      "limitations": [
+        "No cross-conversation memory that automatically remembers facts (unlike ChatGPT Memory)",
+        "Project knowledge limited by context window size",
+        "Knowledge files must be manually uploaded — no automatic ingestion from URLs or feeds",
+        "Projects not available on free tier",
+        "No team-shared knowledge base across projects"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Conversation history and search only" },
+        { "tier": "Pro ($20/mo)", "details": "Projects with knowledge bases, starred conversations" },
+        { "tier": "Team ($25/user/mo)", "details": "Shared team projects with knowledge bases" },
+        { "tier": "Enterprise (custom)", "details": "Advanced knowledge management, data retention controls" }
+      ],
+      "versionHistory": [
+        { "version": "Projects", "date": "2024-06", "changes": "Workspace-based persistent context with knowledge bases and custom instructions" },
+        { "version": "Conversation History", "date": "2024-03", "changes": "Saved conversation history with search in Claude 3 launch" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Claude offers powerful agentic capabilities through Claude Code (autonomous software engineering agent), computer use (GUI interaction), and API-based tool use for building custom agent workflows.",
+      "subFeatures": [
+        {
+          "name": "Claude Code",
+          "description": "Terminal-based agentic coding assistant that can autonomously navigate codebases, write and edit files, run tests, and execute multi-step software engineering tasks",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "Computer Use (API)",
+          "description": "Claude can interact with desktop GUIs by viewing screenshots and executing mouse/keyboard actions, enabling automation of visual software workflows",
+          "availableOn": ["API"]
+        },
+        {
+          "name": "Tool Use (API)",
+          "description": "Function-calling capability that lets Claude invoke external tools, APIs, and services as part of structured agent workflows via the API"
+        },
+        {
+          "name": "Extended Thinking",
+          "description": "Chain-of-thought reasoning mode where Claude shows its thinking process for complex multi-step problems before providing an answer",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Computer use is API-only, not available in claude.ai interface",
+        "Claude Code requires separate setup and API credits or Pro subscription",
+        "No browser-based agent comparable to ChatGPT Operator in claude.ai",
+        "Tool use requires API integration — not a no-code solution",
+        "Computer use is still in beta with reliability limitations"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No agent capabilities" },
+        { "tier": "Pro ($20/mo)", "details": "Claude Code included, Extended Thinking" },
+        { "tier": "API", "details": "Computer use and tool use billed per token" },
+        { "tier": "Enterprise (custom)", "details": "Full agent suite with admin controls and dedicated capacity" }
+      ],
+      "versionHistory": [
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability of agentic coding assistant with Opus 4" },
+        { "version": "Extended Thinking", "date": "2025-02", "changes": "Chain-of-thought reasoning for complex problems" },
+        { "version": "Computer Use Beta", "date": "2024-10", "changes": "Desktop GUI interaction via screenshots and mouse/keyboard control" },
+        { "version": "Tool Use", "date": "2024-04", "changes": "Function calling and structured tool integration via API" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Claude pioneered the Model Context Protocol (MCP), an open standard for connecting AI models to external data sources and tools, and supports integrations with Google Drive, GitHub, and other services through MCP servers.",
+      "subFeatures": [
+        {
+          "name": "Model Context Protocol (MCP)",
+          "description": "Open protocol created by Anthropic that standardizes how AI models connect to external tools, data sources, and services through a client-server architecture"
+        },
+        {
+          "name": "Google Workspace Integration",
+          "description": "Connect Claude to Google Drive, Docs, and Sheets for direct file access and analysis within conversations",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        },
+        {
+          "name": "GitHub Integration",
+          "description": "Connect to GitHub repositories for code review, issue analysis, and codebase understanding",
+          "availableOn": ["Team", "Enterprise"]
+        },
+        {
+          "name": "MCP Servers for Claude Code",
+          "description": "Claude Code supports MCP servers for connecting to databases, APIs, and development tools during agentic coding sessions",
+          "availableOn": ["Pro", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "MCP ecosystem still maturing — fewer pre-built connectors than competitors",
+        "Google Workspace integration requires separate authorization",
+        "No native Slack, Notion, or project management tool integration in claude.ai",
+        "MCP server setup requires technical knowledge",
+        "Enterprise connectors require custom deployment"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No connector capabilities" },
+        { "tier": "Pro ($20/mo)", "details": "Google Workspace integration, MCP with Claude Code" },
+        { "tier": "Team ($25/user/mo)", "details": "GitHub integration, team-managed connectors" },
+        { "tier": "Enterprise (custom)", "details": "Custom MCP deployments, admin-managed integrations" }
+      ],
+      "versionHistory": [
+        { "version": "MCP Launch", "date": "2024-11", "changes": "Open-source Model Context Protocol specification released" },
+        { "version": "Google Drive Integration", "date": "2025-02", "changes": "Native Google Workspace file access in claude.ai" },
+        { "version": "GitHub Integration", "date": "2025-03", "changes": "Repository integration for Team and Enterprise tiers" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Claude does not offer native voice input or speech-to-text dictation. Users must type or paste text. Third-party integrations or OS-level dictation tools can be used as workarounds.",
+      "subFeatures": [
+        {
+          "name": "No Native Voice Input",
+          "description": "Claude lacks built-in speech-to-text or voice mode — all input must be typed or pasted into the text interface"
+        }
+      ],
+      "limitations": [
+        "No voice input capability in claude.ai web or mobile apps",
+        "No text-to-speech output for responses",
+        "No real-time voice conversation mode",
+        "Users must rely on OS-level dictation (e.g., Windows speech recognition, macOS Dictation) as a workaround"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "No dictation feature available on any tier" }
+      ],
+      "versionHistory": [
+        { "version": "N/A", "date": "2025-05", "changes": "No voice or dictation features have been released as of this date" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "anthropic-models",
+    "anthropic-api-reference",
+    "anthropic-pricing",
+    "anthropic-claude-features",
+    "anthropic-projects",
+    "anthropic-artifacts",
+    "anthropic-claude-code",
+    "anthropic-system-prompts",
+    "anthropic-vision",
+    "anthropic-mcp"
+  ]
+}

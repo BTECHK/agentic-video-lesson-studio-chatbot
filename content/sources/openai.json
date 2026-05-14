@@ -1,0 +1,65 @@
+{
+  "vendor": "OpenAI",
+  "sources": [
+    {
+      "id": "openai-models",
+      "url": "https://platform.openai.com/docs/models",
+      "title": "OpenAI Models Documentation"
+    },
+    {
+      "id": "openai-api-reference",
+      "url": "https://platform.openai.com/docs/api-reference",
+      "title": "OpenAI API Reference"
+    },
+    {
+      "id": "openai-pricing",
+      "url": "https://openai.com/pricing",
+      "title": "OpenAI Pricing"
+    },
+    {
+      "id": "openai-chatgpt-features",
+      "url": "https://openai.com/chatgpt",
+      "title": "ChatGPT Product Features"
+    },
+    {
+      "id": "openai-gpt-store",
+      "url": "https://openai.com/index/introducing-the-gpt-store",
+      "title": "GPT Store Introduction"
+    },
+    {
+      "id": "openai-canvas",
+      "url": "https://openai.com/index/introducing-canvas",
+      "title": "Introducing Canvas"
+    },
+    {
+      "id": "openai-dalle",
+      "url": "https://platform.openai.com/docs/guides/images",
+      "title": "DALL-E Image Generation Guide"
+    },
+    {
+      "id": "openai-custom-gpts",
+      "url": "https://openai.com/index/introducing-gpts",
+      "title": "Introducing Custom GPTs"
+    },
+    {
+      "id": "openai-voice-mode",
+      "url": "https://openai.com/index/chatgpt-can-now-see-hear-and-speak",
+      "title": "ChatGPT Advanced Voice Mode"
+    },
+    {
+      "id": "openai-memory",
+      "url": "https://openai.com/index/memory-and-new-controls-for-chatgpt",
+      "title": "ChatGPT Memory and Controls"
+    },
+    {
+      "id": "openai-data-analysis",
+      "url": "https://openai.com/index/improvements-to-data-analysis-in-chatgpt",
+      "title": "ChatGPT Advanced Data Analysis"
+    },
+    {
+      "id": "openai-plugins-deprecation",
+      "url": "https://help.openai.com/en/articles/8988022-winding-down-the-chatgpt-plugins-beta",
+      "title": "ChatGPT Plugins Wind-Down"
+    }
+  ]
+}

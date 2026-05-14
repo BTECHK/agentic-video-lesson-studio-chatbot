@@ -1,0 +1,452 @@
+{
+  "id": "chatgpt",
+  "name": "ChatGPT",
+  "vendor": "OpenAI",
+  "priority": "P0",
+  "description": "OpenAI's conversational AI assistant powered by GPT-4o and GPT-4.1 models, offering text generation, code assistance, image generation, file analysis, and web browsing through a chat interface.",
+  "url": "https://chat.openai.com",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "ChatGPT's core capability, providing conversational text generation with Canvas for collaborative editing, custom instructions for persistent preferences, and system-level prompt customization.",
+      "subFeatures": [
+        {
+          "name": "Canvas",
+          "description": "Side-by-side collaborative editing workspace for writing and code, supporting inline suggestions, adjusting reading level, length, and adding polish or emojis",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Custom Instructions",
+          "description": "Persistent user-defined instructions applied automatically to all new conversations, covering response style and background context"
+        },
+        {
+          "name": "Multi-turn Conversations",
+          "description": "Full conversation history within a thread with ability to edit and regenerate previous messages"
+        },
+        {
+          "name": "Markdown Rendering",
+          "description": "Rich text output with code blocks, tables, LaTeX math, and structured formatting"
+        },
+        {
+          "name": "Model Selection",
+          "description": "Users can switch between GPT-4o, GPT-4o mini, GPT-4.1, and o-series reasoning models within a conversation",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Context window limited to 128K tokens for GPT-4o",
+        "Canvas not available on free tier",
+        "Free tier limited to GPT-4o mini with restricted GPT-4o access",
+        "System prompt customization only available via API, not ChatGPT UI"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "GPT-4o mini default, limited GPT-4o access, basic chat features" },
+        { "tier": "Plus ($20/mo)", "details": "Full GPT-4o, o-series reasoning models, Canvas, higher rate limits" },
+        { "tier": "Team ($25/user/mo)", "details": "Plus features plus admin console, workspace management, higher limits" },
+        { "tier": "Enterprise (custom)", "details": "Unlimited GPT-4o, advanced admin, SSO/SCIM, audit logs, dedicated capacity" }
+      ],
+      "versionHistory": [
+        { "version": "GPT-4.1", "date": "2025-04", "changes": "Improved instruction following, long-context performance up to 1M tokens via API" },
+        { "version": "GPT-4o", "date": "2024-05", "changes": "Natively multimodal model with vision and faster responses, 128K context" },
+        { "version": "GPT-4 Turbo", "date": "2024-01", "changes": "128K context window, knowledge cutoff April 2024, JSON mode" },
+        { "version": "GPT-4", "date": "2023-03", "changes": "Major reasoning upgrade, 8K/32K context options" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": true,
+      "summary": "ChatGPT can browse the web in real time to find current information, cite sources with links, and perform multi-step research with the Deep Research feature.",
+      "subFeatures": [
+        {
+          "name": "Web Browsing",
+          "description": "Real-time web search integrated into conversations, providing cited responses with source links"
+        },
+        {
+          "name": "Deep Research",
+          "description": "Multi-step autonomous research that synthesizes information from dozens of sources into a comprehensive report",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Source Citations",
+          "description": "Inline citations with clickable links to original sources in browsing-enabled responses"
+        }
+      ],
+      "limitations": [
+        "Web browsing may not access paywalled or login-gated content",
+        "Deep Research has limited daily uses even on Plus tier",
+        "Cannot guarantee real-time accuracy of rapidly changing information",
+        "Browsing results depend on search engine indexing"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic web browsing with limited usage" },
+        { "tier": "Plus ($20/mo)", "details": "Full web browsing, Deep Research with limited monthly uses" },
+        { "tier": "Enterprise (custom)", "details": "Higher Deep Research limits, priority access" }
+      ],
+      "versionHistory": [
+        { "version": "Deep Research", "date": "2025-02", "changes": "Autonomous multi-step research agent producing comprehensive reports" },
+        { "version": "Browse with Bing", "date": "2023-09", "changes": "Web browsing re-enabled for all Plus users after initial beta" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "ChatGPT can upload, read, and analyze files including PDFs, spreadsheets, images, and code files through Advanced Data Analysis (formerly Code Interpreter) with a sandboxed Python environment.",
+      "subFeatures": [
+        {
+          "name": "Advanced Data Analysis",
+          "description": "Sandboxed Python environment that can process uploaded files, run computations, generate charts, and perform statistical analysis",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Image Understanding",
+          "description": "Analyze uploaded images including charts, diagrams, screenshots, handwritten text, and photos using GPT-4o vision"
+        },
+        {
+          "name": "Document Parsing",
+          "description": "Read and extract content from PDFs, Word documents, Excel spreadsheets, CSV files, and text files"
+        },
+        {
+          "name": "Code File Analysis",
+          "description": "Read, explain, debug, and refactor uploaded code files in any major programming language"
+        }
+      ],
+      "limitations": [
+        "File upload limited to 512 MB per file",
+        "Advanced Data Analysis sandbox has no internet access",
+        "Python environment has limited library availability",
+        "Cannot process password-protected or encrypted files",
+        "Image analysis may struggle with very small text or complex diagrams"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic file uploads and image analysis, limited Advanced Data Analysis" },
+        { "tier": "Plus ($20/mo)", "details": "Full Advanced Data Analysis with higher usage limits" },
+        { "tier": "Enterprise (custom)", "details": "Highest usage limits, data retention controls" }
+      ],
+      "versionHistory": [
+        { "version": "Advanced Data Analysis", "date": "2024-05", "changes": "Rebranded from Code Interpreter, integrated with GPT-4o vision" },
+        { "version": "Code Interpreter", "date": "2023-07", "changes": "Sandboxed Python execution environment for data analysis" },
+        { "version": "File Uploads", "date": "2023-10", "changes": "Support for uploading and analyzing multiple file types" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "ChatGPT can generate structured documents, reports, and formatted content through Canvas's collaborative editing environment and Advanced Data Analysis for data-driven outputs.",
+      "subFeatures": [
+        {
+          "name": "Canvas Document Editing",
+          "description": "Full-featured writing workspace with inline editing, tone adjustment, length control, and reading level modification",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Chart and Visualization Generation",
+          "description": "Create charts, graphs, and data visualizations via Advanced Data Analysis Python environment",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Formatted Text Output",
+          "description": "Generate markdown, structured documents, tables, and formatted content directly in chat"
+        }
+      ],
+      "limitations": [
+        "No native export to Word, PDF, or Google Docs from Canvas",
+        "Canvas documents are not shareable as standalone links",
+        "Chart generation requires Advanced Data Analysis (Python-based, not interactive)",
+        "Cannot create presentations or slide decks natively"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic text generation in chat, no Canvas" },
+        { "tier": "Plus ($20/mo)", "details": "Canvas document editing, chart generation via ADA" },
+        { "tier": "Enterprise (custom)", "details": "Full feature access with admin controls" }
+      ],
+      "versionHistory": [
+        { "version": "Canvas", "date": "2024-10", "changes": "Collaborative editing workspace for documents and code" },
+        { "version": "Advanced Data Analysis", "date": "2023-07", "changes": "Python-based chart and document generation" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": true,
+      "summary": "ChatGPT integrates DALL-E 3 and GPT-4o native image generation for creating images from text prompts, with editing capabilities and style controls.",
+      "subFeatures": [
+        {
+          "name": "DALL-E 3 Integration",
+          "description": "Generate high-quality images from text descriptions with improved prompt following and text rendering",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "GPT-4o Native Image Generation",
+          "description": "Image generation directly from GPT-4o model with better instruction following, text in images, and consistent character generation",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Image Editing",
+          "description": "Modify specific regions of generated images through conversational follow-up instructions"
+        },
+        {
+          "name": "Style Presets",
+          "description": "Generate images in various artistic styles including photorealistic, illustration, and artistic renderings"
+        }
+      ],
+      "limitations": [
+        "DALL-E 3 generation limited to a set number per time window on Plus tier",
+        "Cannot generate images of real public figures by policy",
+        "No precise spatial layout control — prompt-dependent results",
+        "Image editing capabilities limited compared to dedicated tools like Photoshop",
+        "Not available on Free tier"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No DALL-E access, limited GPT-4o image generation" },
+        { "tier": "Plus ($20/mo)", "details": "DALL-E 3 and GPT-4o image generation with daily limits" },
+        { "tier": "Enterprise (custom)", "details": "Higher generation limits, content policy customization options" }
+      ],
+      "versionHistory": [
+        { "version": "GPT-4o Image Gen", "date": "2025-03", "changes": "Native image generation from GPT-4o with better text rendering and consistency" },
+        { "version": "DALL-E 3", "date": "2023-10", "changes": "Major quality upgrade with better prompt adherence and text rendering" },
+        { "version": "DALL-E 2", "date": "2023-03", "changes": "Initial ChatGPT image generation integration" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "ChatGPT supports code prototyping through Canvas's code editing mode and Advanced Data Analysis, enabling users to write, run, and iterate on code in Python and generate HTML/CSS/JS previews.",
+      "subFeatures": [
+        {
+          "name": "Canvas Code Editor",
+          "description": "Dedicated code editing workspace with syntax highlighting, inline comments, bug fixing, and port-to-language features",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Python Code Execution",
+          "description": "Run Python code in a sandboxed environment via Advanced Data Analysis, producing visual outputs and file downloads",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "HTML/CSS/JS Preview",
+          "description": "Generate front-end code that can be copied and previewed locally, though no in-browser preview is provided"
+        }
+      ],
+      "limitations": [
+        "Code execution limited to Python only (no JavaScript, Ruby, etc.)",
+        "No live preview for HTML/CSS/JS within ChatGPT interface",
+        "Sandbox environment has no network access or persistent storage",
+        "Cannot connect to external databases or APIs from code sandbox",
+        "Canvas code mode limited to single-file editing"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic code generation in chat, no Canvas or code execution" },
+        { "tier": "Plus ($20/mo)", "details": "Canvas code editing, Advanced Data Analysis with Python execution" },
+        { "tier": "Enterprise (custom)", "details": "Full access with higher execution limits" }
+      ],
+      "versionHistory": [
+        { "version": "Canvas Code", "date": "2024-10", "changes": "Collaborative code editing workspace with language detection and debugging" },
+        { "version": "Code Interpreter", "date": "2023-07", "changes": "Sandboxed Python execution for code prototyping" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "ChatGPT offers Custom Instructions and Memory features that adapt responses to individual users' preferences, background, and communication style across conversations.",
+      "subFeatures": [
+        {
+          "name": "Custom Instructions",
+          "description": "Two-field system for telling ChatGPT about yourself and how you want responses formatted, applied to all new conversations"
+        },
+        {
+          "name": "Memory",
+          "description": "ChatGPT remembers key facts and preferences across conversations, building a persistent user profile that can be viewed and edited",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Custom GPTs",
+          "description": "User-created specialized chatbots with custom instructions, knowledge files, and configured actions for specific use cases",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Memory can only be managed manually — users cannot bulk-import preferences",
+        "Custom Instructions limited to two text fields with character limits",
+        "Custom GPTs require Plus subscription to create (free users can only use public ones)",
+        "Memory feature not available in all regions"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Custom Instructions only" },
+        { "tier": "Plus ($20/mo)", "details": "Custom Instructions, Memory, create and use Custom GPTs" },
+        { "tier": "Enterprise (custom)", "details": "All personalization features, admin-managed GPTs, no data training" }
+      ],
+      "versionHistory": [
+        { "version": "Memory", "date": "2024-02", "changes": "Persistent cross-conversation memory with user controls" },
+        { "version": "Custom GPTs", "date": "2023-11", "changes": "User-created specialized assistants with GPT Store" },
+        { "version": "Custom Instructions", "date": "2023-07", "changes": "Persistent instructions applied to all conversations" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "ChatGPT maintains context through conversation history, Memory across sessions, and Custom GPTs with uploaded knowledge bases for domain-specific persistence.",
+      "subFeatures": [
+        {
+          "name": "Conversation History",
+          "description": "All conversations are saved and searchable, with ability to resume previous threads"
+        },
+        {
+          "name": "Memory System",
+          "description": "Cross-conversation memory that persists user facts, preferences, and project context across all new conversations",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Custom GPT Knowledge",
+          "description": "Upload documents to Custom GPTs as persistent knowledge bases available in every conversation with that GPT",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "No native project or workspace organization for conversations",
+        "Memory has limited capacity and may not retain all details",
+        "Custom GPT knowledge files have upload size limits",
+        "No shared team knowledge base in Team tier (per-GPT only)",
+        "Conversation search is basic text matching, not semantic"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Conversation history only" },
+        { "tier": "Plus ($20/mo)", "details": "History, Memory, Custom GPT knowledge bases" },
+        { "tier": "Enterprise (custom)", "details": "All features with admin-managed knowledge and data controls" }
+      ],
+      "versionHistory": [
+        { "version": "Memory", "date": "2024-02", "changes": "Cross-conversation persistent memory" },
+        { "version": "Custom GPT Knowledge", "date": "2023-11", "changes": "File uploads as persistent knowledge for Custom GPTs" },
+        { "version": "Conversation History", "date": "2022-12", "changes": "Saved conversation history with ChatGPT launch" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "ChatGPT supports agentic capabilities through Custom GPTs with Actions (API integrations), Operator for browser-based task automation, and Deep Research for autonomous multi-step investigation.",
+      "subFeatures": [
+        {
+          "name": "Custom GPT Actions",
+          "description": "Connect Custom GPTs to external APIs via OpenAPI schemas, enabling them to take actions like sending emails, querying databases, or updating records",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Operator",
+          "description": "Browser-based agent that can navigate websites and perform tasks autonomously, such as booking reservations or filling forms",
+          "availableOn": ["Pro"]
+        },
+        {
+          "name": "Deep Research Agent",
+          "description": "Autonomous research agent that browses multiple sources, synthesizes findings, and produces comprehensive reports",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Operator limited to Pro tier ($200/mo) and specific supported websites",
+        "Custom GPT Actions require technical setup with OpenAPI specifications",
+        "No general-purpose computer use or desktop automation",
+        "Deep Research limited to information gathering, cannot take external actions",
+        "Agent capabilities fragmented across different features rather than unified"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "No agent capabilities" },
+        { "tier": "Plus ($20/mo)", "details": "Custom GPT Actions, Deep Research" },
+        { "tier": "Pro ($200/mo)", "details": "Operator browser agent, unlimited Deep Research" },
+        { "tier": "Enterprise (custom)", "details": "Custom GPT Actions with enterprise API integrations" }
+      ],
+      "versionHistory": [
+        { "version": "Operator", "date": "2025-01", "changes": "Browser-based autonomous task agent for Pro users" },
+        { "version": "Deep Research", "date": "2025-02", "changes": "Multi-step autonomous research with source synthesis" },
+        { "version": "GPT Actions", "date": "2023-11", "changes": "API integration framework for Custom GPTs" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "ChatGPT connects to external services through Custom GPT Actions (API-based), native integrations with services like Google Drive and OneDrive, and the now-deprecated plugin ecosystem.",
+      "subFeatures": [
+        {
+          "name": "Custom GPT Actions",
+          "description": "OpenAPI-based integration framework allowing GPTs to call external APIs for reading and writing data to third-party services"
+        },
+        {
+          "name": "Native File Integrations",
+          "description": "Direct integration with Google Drive, Microsoft OneDrive, and other cloud storage for file access within conversations",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "GPT Store",
+          "description": "Marketplace of pre-built GPTs with various third-party integrations, searchable by category and use case",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Plugin ecosystem deprecated in favor of Custom GPT Actions",
+        "No native integration with Slack, Notion, or project management tools in ChatGPT UI",
+        "Actions require technical expertise to configure OpenAPI specs",
+        "Third-party GPTs in the store have variable quality and reliability",
+        "Enterprise connectors require custom setup"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Use public GPTs from the store" },
+        { "tier": "Plus ($20/mo)", "details": "Create GPTs with Actions, access GPT Store, cloud file integration" },
+        { "tier": "Enterprise (custom)", "details": "Admin-managed integrations, SSO-protected GPTs" }
+      ],
+      "versionHistory": [
+        { "version": "Native File Integrations", "date": "2024-05", "changes": "Google Drive and OneDrive integration for file access" },
+        { "version": "GPT Store", "date": "2024-01", "changes": "Marketplace for discovering and sharing Custom GPTs" },
+        { "version": "Plugins Deprecated", "date": "2024-04", "changes": "Plugin ecosystem wound down in favor of GPT Actions" },
+        { "version": "Plugins Beta", "date": "2023-05", "changes": "Third-party plugin ecosystem launch (later deprecated)" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": true,
+      "summary": "ChatGPT supports voice input through Advanced Voice Mode with real-time speech-to-speech conversation, plus standard voice input via Whisper transcription on mobile and desktop apps.",
+      "subFeatures": [
+        {
+          "name": "Advanced Voice Mode",
+          "description": "Real-time speech-to-speech conversation with natural-sounding voices, emotional expression, and the ability to interrupt mid-response",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        },
+        {
+          "name": "Voice Input (Whisper)",
+          "description": "Speech-to-text input using OpenAI Whisper transcription, available on mobile and desktop apps for dictating prompts"
+        },
+        {
+          "name": "Voice Selection",
+          "description": "Choose from multiple voice personas for ChatGPT responses in voice mode",
+          "availableOn": ["Plus", "Team", "Enterprise"]
+        }
+      ],
+      "limitations": [
+        "Advanced Voice Mode not available on free tier",
+        "Voice mode has shorter context handling than text mode",
+        "Cannot share voice conversations or export audio",
+        "Voice mode not available in all countries",
+        "Standard voice input requires mobile or desktop app (not available in web browser)"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Basic voice input via Whisper on mobile app" },
+        { "tier": "Plus ($20/mo)", "details": "Advanced Voice Mode with multiple voices, real-time conversation" },
+        { "tier": "Enterprise (custom)", "details": "Advanced Voice Mode with admin controls" }
+      ],
+      "versionHistory": [
+        { "version": "Advanced Voice Mode", "date": "2024-09", "changes": "GPT-4o-powered real-time speech-to-speech conversation" },
+        { "version": "Voice Input", "date": "2023-09", "changes": "Whisper-based voice input on mobile apps" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "openai-models",
+    "openai-api-reference",
+    "openai-pricing",
+    "openai-chatgpt-features",
+    "openai-gpt-store",
+    "openai-canvas",
+    "openai-dalle",
+    "openai-custom-gpts",
+    "openai-voice-mode",
+    "openai-memory",
+    "openai-data-analysis"
+  ]
+}

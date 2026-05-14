@@ -1,0 +1,55 @@
+{
+  "vendor": "Anthropic",
+  "sources": [
+    {
+      "id": "anthropic-models",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "title": "Claude Models Overview"
+    },
+    {
+      "id": "anthropic-api-reference",
+      "url": "https://docs.anthropic.com/en/api/getting-started",
+      "title": "Anthropic API Reference"
+    },
+    {
+      "id": "anthropic-pricing",
+      "url": "https://www.anthropic.com/pricing",
+      "title": "Anthropic Pricing"
+    },
+    {
+      "id": "anthropic-claude-features",
+      "url": "https://www.anthropic.com/claude",
+      "title": "Claude Product Features"
+    },
+    {
+      "id": "anthropic-projects",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/projects",
+      "title": "Claude Projects Documentation"
+    },
+    {
+      "id": "anthropic-artifacts",
+      "url": "https://support.anthropic.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them",
+      "title": "Claude Artifacts Guide"
+    },
+    {
+      "id": "anthropic-claude-code",
+      "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+      "title": "Claude Code Documentation"
+    },
+    {
+      "id": "anthropic-system-prompts",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts",
+      "title": "System Prompts Guide"
+    },
+    {
+      "id": "anthropic-vision",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/vision",
+      "title": "Claude Vision Documentation"
+    },
+    {
+      "id": "anthropic-mcp",
+      "url": "https://modelcontextprotocol.io/introduction",
+      "title": "Model Context Protocol (MCP) Specification"
+    }
+  ]
+}
