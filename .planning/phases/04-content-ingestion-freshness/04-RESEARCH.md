@@ -473,22 +473,19 @@ function removeScheduledTask(): void {
 | A2 | Most vendor documentation pages (Anthropic, Google, Perplexity, DeepSeek, etc.) serve server-rendered HTML accessible via simple HTTP fetch | Pitfall 1 | MEDIUM -- verified for Anthropic (works) and OpenAI platform (403). Others not tested. Some may require browser-based scraping |
 | A3 | The `gh` CLI can create PRs from branches pushed to the remote without additional configuration beyond what's already authenticated | Architecture Patterns | LOW -- verified authentication and scopes (repo, workflow), but no remote is configured yet |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Git remote not configured**
+1. **Git remote not configured** (RESOLVED — defensive check in pr-workflow.ts)
    - What we know: `git remote -v` returns empty. `gh repo view` fails with "no git remotes found". [VERIFIED]
-   - What's unclear: Does the user want to create a new GitHub repo, or is there an existing one to connect to?
-   - Recommendation: The planner must include a prerequisite task to either `git remote add origin <url>` or `gh repo create`. The PR workflow is blocked without this.
+   - Resolution: Plan 04-04-01 adds `checkGitRemote()` to pr-workflow.ts. Returns `{ configured: false }` with clear setup instructions when no remote. createVendorPR throws with actionable message before attempting push. User sets up remote manually before first PR run.
 
-2. **Claude Code passthrough mechanism**
+2. **Claude Code passthrough mechanism** (RESOLVED — structured prompt approach)
    - What we know: D-02 specifies Claude Code as the LLM backend for manual pulls, routed through the running session.
-   - What's unclear: The exact mechanism for programmatically invoking Claude Code from a script. Claude Code is a CLI tool -- the "passthrough" may mean the user runs `npm run ingest:search` and Claude Code itself executes the script, with the script outputting prompts that Claude Code processes.
-   - Recommendation: The simplest implementation is: the manual/search modes output structured prompts (content to analyze + extraction instructions) that the user pastes into Claude Code, or the script writes a prompt file that Claude Code reads. Avoid building complex IPC. [ASSUMED]
+   - Resolution: Plan 04-04-02 creates llm-extract.ts that generates structured markdown prompts written to `logs/ingest/pending-*.md`. User opens file and processes through Claude Code session. No IPC or programmatic invocation.
 
-3. **Extraction selectors per vendor**
-   - What we know: Each vendor's docs have different HTML structures. Selectors need to be configured per source URL type (changelog page vs API docs page vs product page).
-   - What's unclear: The exact selectors for each of the 100+ source URLs across 11 vendors.
-   - Recommendation: Start with a small set of extraction patterns for the most common page types (changelog pages, pricing pages, feature lists). Add selectors incrementally as the system is used. The skip-and-log strategy (D-04) means missing selectors don't break the system.
+3. **Extraction selectors per vendor** (RESOLVED — default maps + skip-and-log)
+   - What we know: Each vendor's docs have different HTML structures.
+   - Resolution: Plan 04-02-02 creates DEFAULT_EXTRACTION_MAPS for common page types (changelog, features, pricing). Missing selectors handled by skip-and-log (D-04). Selectors added incrementally.
 
 ## Environment Availability
 

@@ -85,7 +85,23 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Web scraping system discovers and ingests new AI tool developments from vendor docs, changelogs, and support pages with minimal API key usage
   2. Video transcription pipeline processes files up to 2.5GB (the large source recordings) and produces usable text output
-**Plans**: TBD
+**Plans:** 5 plans
+
+**Wave 1** *(parallel — no dependencies)*
+Plans:
+- [ ] 04-01-PLAN.md — Dependencies & configuration system (cheerio, robots-parser, p-limit, ingest.config.json, Zod config loader)
+- [ ] 04-02-PLAN.md — HTTP scraper, CSS extractor & JSON Lines logger (fetch + cheerio + robots.txt + skip-and-log)
+- [ ] 04-03-PLAN.md — Diff engine & schema validation (scraped vs existing tool JSON, D-07 best-effort mapping)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+Plans:
+- [ ] 04-04-PLAN.md — PR workflow & LLM extraction (per-vendor git branch + gh pr create, Claude Code prompt generator)
+- [ ] 04-05-PLAN.md — CLI entry point, Windows Task Scheduler & npm scripts (3 ingestion modes, schtasks setup)
+
+Cross-cutting constraints:
+- All scraped data validated against ToolSchema.safeParse before writing (T-04-01)
+- Vendor names sanitized via SHELL_METACHAR_PATTERN before shell commands (T-04-02)
+- TRAN-01 deferred — no transcription code in this phase
 
 ### Phase 5: TA Chatbot
 **Goal**: A standalone web application where learners get accurate, source-cited answers grounded in the course content repository
@@ -115,5 +131,5 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
-| 4. Content Ingestion & Freshness | 0/TBD | Not started | - |
+| 4. Content Ingestion & Freshness | 0/5 | Planned | - |
 | 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
