@@ -1,0 +1,6 @@
+# Sample Academy — Ingestion Schedule
+# Runs weekly: Monday at 06:00 UTC
+# To change: edit the cron expression below.
+# Format: minute hour day-of-month month day-of-week command
+# Current: 0 6 * * 1 = every Monday at 6am UTC
+0 6 * * 1  cd /app && npx tsx scripts/ingest.ts --mode scheduled >> /var/log/ingest-cron.log 2>&1

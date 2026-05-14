@@ -1,0 +1,27 @@
+FROM node:22-bookworm-slim
+
+# Install cron (scheduling) and git (PR workflow)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  cron git \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+# Copy ingestion scripts and content
+COPY scripts/ scripts/
+COPY content/ content/
+COPY ingest.config.json .
+
+# Install crontab for scheduled polling
+COPY docker/crontab.ingest /etc/cron.d/ingest-cron
+RUN chmod 0644 /etc/cron.d/ingest-cron && crontab /etc/cron.d/ingest-cron
+
+# Create log file for cron output (so tail -f works immediately)
+RUN touch /var/log/ingest-cron.log
+
+# Default: start cron daemon and tail the log (docker logs works)
+# For one-off runs, override CMD via: docker compose run --rm ingest npx tsx scripts/ingest.ts --mode poll
+CMD ["sh", "-c", "cron && tail -f /var/log/ingest-cron.log"]
