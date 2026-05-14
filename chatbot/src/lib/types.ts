@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export type AccessMode = 'demo' | 'student';
-export type LLMProvider = 'claude-passthrough' | 'api-key';
+export type LLMProvider = 'anthropic' | 'mock';
 
 export interface Citation {
   id: string;
@@ -30,7 +30,6 @@ export interface ChatSession {
 export interface ChatRequest {
   message: string;
   sessionId: string;
-  accessMode: AccessMode;
 }
 
 export interface ChatResponse {
@@ -41,5 +40,9 @@ export interface ChatResponse {
 export const ChatRequestSchema = z.object({
   message: z.string().min(1).max(2000),
   sessionId: z.string().min(1),
-  accessMode: z.enum(['demo', 'student']),
+});
+
+export const SessionRequestSchema = z.object({
+  accessMode: z.enum(['demo', 'student']).default('demo'),
+  accessCode: z.string().optional(),
 });

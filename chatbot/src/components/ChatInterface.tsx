@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { AccessMode, ChatMessage, Citation } from '@/lib/types';
 import { MessageBubble } from './MessageBubble';
 
-export function ChatInterface({ accessMode }: { accessMode: AccessMode }) {
+export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMode; accessCode?: string }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [sessionId, setSessionId] = useState('');
@@ -15,12 +15,12 @@ export function ChatInterface({ accessMode }: { accessMode: AccessMode }) {
     fetch('/api/session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ accessMode }),
+      body: JSON.stringify({ accessMode, ...(accessCode ? { accessCode } : {}) }),
     })
       .then((res) => res.json())
       .then((data: { sessionId: string }) => setSessionId(data.sessionId))
       .catch(console.error);
-  }, [accessMode]);
+  }, [accessMode, accessCode]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,7 +46,7 @@ export function ChatInterface({ accessMode }: { accessMode: AccessMode }) {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, sessionId, accessMode }),
+        body: JSON.stringify({ message: text, sessionId }),
       });
 
       if (!res.ok) {
@@ -78,7 +78,17 @@ export function ChatInterface({ accessMode }: { accessMode: AccessMode }) {
   }
 
   return (
-    <div className="flex flex-col h-screen max-w-3xl mx-auto w-full">
+    <div
+      className="flex flex-col max-w-3xl mx-auto w-full overflow-hidden"
+      style={{
+        height: 'calc(100vh - 2rem)',
+        marginTop: '1rem',
+        border: '1px solid rgba(28, 28, 28, 0.15)',
+        borderRadius: 'var(--radius)',
+        boxShadow: '0 4px 24px rgba(28, 28, 28, 0.12)',
+        backgroundColor: 'var(--bg-card)',
+      }}
+    >
       <header
         className="p-4 border-b"
         style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-card)' }}

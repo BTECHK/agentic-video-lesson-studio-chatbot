@@ -6,7 +6,7 @@ import type { AccessMode } from '@/lib/types';
 export function AccessGate({
   onModeSelected,
 }: {
-  onModeSelected: (mode: AccessMode) => void;
+  onModeSelected: (mode: AccessMode, accessCode?: string) => void;
 }) {
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [accessCode, setAccessCode] = useState('');
@@ -27,7 +27,7 @@ export function AccessGate({
       });
       const data = await res.json();
       if (data.valid) {
-        onModeSelected('student');
+        onModeSelected('student', accessCode);
       } else {
         setError(
           'Invalid access code. Check your enrollment email from Sample Academy.',

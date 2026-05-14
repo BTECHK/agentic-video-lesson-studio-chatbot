@@ -1,10 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sessionStore } from '@/lib/session';
-import type { AccessMode } from '@/lib/types';
+import { SessionRequestSchema } from '@/lib/types';
+import { validateAccessCode } from '@/lib/access';
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const accessMode = (body.accessMode === 'student' ? 'student' : 'demo') as AccessMode;
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  const parsed = SessionRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid request', details: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+
+  const { accessMode, accessCode } = parsed.data;
+
+  if (accessMode === 'student') {
+    if (!accessCode || !validateAccessCode(accessCode)) {
+      return NextResponse.json(
+        { error: 'Valid access code required for student mode' },
+        { status: 401 },
+      );
+    }
+  }
+
   const session = sessionStore.create(accessMode);
   return NextResponse.json({ sessionId: session.id, accessMode: session.accessMode });
 }

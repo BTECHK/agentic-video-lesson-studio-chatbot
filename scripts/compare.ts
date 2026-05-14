@@ -21,6 +21,16 @@ export function compareFrames(
   const actual = PNG.sync.read(actualData);
   const reference = PNG.sync.read(referenceData);
 
+  // Guard: pixelmatch requires identical dimensions
+  if (actual.width !== reference.width || actual.height !== reference.height) {
+    return {
+      match: false,
+      diffPixels: -1,
+      totalPixels: -1,
+      diffPercent: 1,
+    };
+  }
+
   const { width, height } = actual;
   const diff = new PNG({ width, height });
 

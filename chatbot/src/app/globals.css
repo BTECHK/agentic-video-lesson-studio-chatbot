@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -11,7 +10,7 @@
   --accent-hover: #6B1D28;
   --accent-soft: #8B26351A;
   --border: rgba(28, 28, 28, 0.08);
-  --font: 'Syne', sans-serif;
+  --font: var(--font-syne), 'Syne', sans-serif;
   --radius: 4px;
 }
 

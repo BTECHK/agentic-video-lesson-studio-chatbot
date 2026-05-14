@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SceneTypeSchema } from './scene-types';
+import { SceneTypeSchema, SCENE_CONTENT_SCHEMAS, type SceneType } from './scene-types';
 
 export const LessonMetaSchema = z.object({
   createdAt: z.string(),
@@ -23,6 +23,20 @@ export const SceneBaseSchema = z.object({
   duration: z.number(),
   label: z.string().optional(),
   content: z.record(z.string(), z.unknown()),
+}).superRefine((scene, ctx) => {
+  const contentSchema = SCENE_CONTENT_SCHEMAS[scene.type as SceneType];
+  if (contentSchema) {
+    const result = contentSchema.safeParse(scene.content);
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: issue.message,
+          path: ['content', ...issue.path],
+        });
+      }
+    }
+  }
 });
 
 export const LessonSchema = z

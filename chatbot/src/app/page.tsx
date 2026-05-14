@@ -5,12 +5,17 @@ import type { AccessMode } from '@/lib/types';
 import { AccessGate } from '@/components/AccessGate';
 import { ChatInterface } from '@/components/ChatInterface';
 
-export default function Home() {
-  const [accessMode, setAccessMode] = useState<AccessMode | null>(null);
+interface SessionInfo {
+  accessMode: AccessMode;
+  accessCode?: string;
+}
 
-  if (accessMode) {
-    return <ChatInterface accessMode={accessMode} />;
+export default function Home() {
+  const [session, setSession] = useState<SessionInfo | null>(null);
+
+  if (session) {
+    return <ChatInterface accessMode={session.accessMode} accessCode={session.accessCode} />;
   }
 
-  return <AccessGate onModeSelected={setAccessMode} />;
+  return <AccessGate onModeSelected={(mode, code) => setSession({ accessMode: mode, accessCode: code })} />;
 }

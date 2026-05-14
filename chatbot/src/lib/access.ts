@@ -1,15 +1,13 @@
+import { timingSafeEqual } from 'crypto';
 import type { AccessMode } from './types';
-
-export function getAccessMode(): AccessMode {
-  return 'demo';
-}
 
 export function validateAccessCode(code: string): boolean {
   if (process.env.NEXT_PUBLIC_DEV_BYPASS === 'true') {
     return true;
   }
   const validCode = process.env.ACCESS_CODE || 'demo-access-code';
-  return code === validCode;
+  if (code.length !== validCode.length) return false;
+  return timingSafeEqual(Buffer.from(code), Buffer.from(validCode));
 }
 
 export function getDemoModuleScope(): string {
@@ -18,6 +16,5 @@ export function getDemoModuleScope(): string {
 
 export function isModuleAccessible(moduleId: string, mode: AccessMode): boolean {
   if (mode === 'student') return true;
-  const demoScope = getDemoModuleScope();
-  return moduleId === demoScope;
+  return moduleId === getDemoModuleScope();
 }

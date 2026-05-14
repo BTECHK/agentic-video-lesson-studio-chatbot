@@ -79,6 +79,22 @@ describe('Deterministic Frame Comparison', () => {
       expect(result.diffPercent).toBeLessThanOrEqual(1);
     });
 
+    it('returns match=false with diffPercent=1 for dimension-mismatched images', async () => {
+      const smallPath = path.join(FIXTURES_DIR, 'small-5x5.png');
+      await sharp({
+        create: { width: 5, height: 5, channels: 3, background: { r: 255, g: 255, b: 255 } },
+      })
+        .png()
+        .toFile(smallPath);
+
+      const whitePath = path.join(FIXTURES_DIR, 'white.png'); // 10×10
+      const result = compareFrames(whitePath, smallPath);
+      expect(result.match).toBe(false);
+      expect(result.diffPercent).toBe(1);
+      expect(result.diffPixels).toBe(-1);
+      expect(result.totalPixels).toBe(-1);
+    });
+
     it('returns match=true for nearly identical images within tolerance', () => {
       // nearly-white vs white: pixel diff is tiny (254 vs 255 in blue)
       // pixelmatch threshold 0.1 means the per-pixel color distance must be > 0.1

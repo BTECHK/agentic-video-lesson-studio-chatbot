@@ -1,31 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ChatRequestSchema } from '@/lib/types';
-import type { Citation } from '@/lib/types';
+import { parseCitations } from '@/lib/citations';
 import { sessionStore } from '@/lib/session';
 import { getLLMProvider } from '@/lib/llm/provider';
-
-function parseCitations(content: string): { cleanContent: string; citations: Citation[] } {
-  const citationRegex = /\[Source: ([^\]]+)\]/g;
-  const citations: Citation[] = [];
-  let match;
-  let index = 0;
-
-  while ((match = citationRegex.exec(content)) !== null) {
-    const raw = match[1];
-    const moduleMatch = raw.match(/Module\s+(\d+)/i);
-    const lessonMatch = raw.match(/Lesson\s+(\d+)/i);
-    const toolMatch = raw.match(/Tool:\s*(\w+)/i);
-    citations.push({
-      id: `cite-${index++}`,
-      module: moduleMatch ? `Module ${moduleMatch[1]}` : 'General',
-      lesson: lessonMatch ? `Lesson ${lessonMatch[1]}` : 'General',
-      tool: toolMatch ? toolMatch[1] : undefined,
-      snippet: raw,
-    });
-  }
-
-  return { cleanContent: content, citations };
-}
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -43,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { message, sessionId, accessMode } = parsed.data;
+  const { message, sessionId } = parsed.data;
 
   const session = sessionStore.get(sessionId);
   if (!session) {
@@ -58,7 +35,7 @@ export async function POST(req: NextRequest) {
   try {
     const provider = getLLMProvider();
     const messages = sessionStore.getMessages(sessionId);
-    const response = await provider.chat({ messages, accessMode });
+    const response = await provider.chat({ messages, accessMode: session.accessMode });
 
     sessionStore.addMessage(sessionId, {
       role: 'assistant',

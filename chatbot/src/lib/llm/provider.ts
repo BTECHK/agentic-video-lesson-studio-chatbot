@@ -1,14 +1,14 @@
 import type { LLMProviderInterface } from './types';
-import { ClaudePassthroughProvider } from './claude-passthrough';
-import { ApiKeyProvider } from './api-key';
+import { AnthropicProvider } from './anthropic-provider';
+import { MockProvider } from './mock-provider';
 
 export function getLLMProvider(): LLMProviderInterface {
-  const provider = process.env.LLM_PROVIDER || 'claude-passthrough';
+  const provider = process.env.LLM_PROVIDER || 'anthropic';
   switch (provider) {
-    case 'api-key':
-      return new ApiKeyProvider();
-    case 'claude-passthrough':
+    case 'mock':
+      return new MockProvider();
+    case 'anthropic':
     default:
-      return new ClaudePassthroughProvider();
+      return new AnthropicProvider();
   }
 }

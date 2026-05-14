@@ -87,28 +87,28 @@ describe('Cross-reference validation', () => {
 
 describe('Content-to-scene mapping', () => {
   it('getAffectedScenes with capabilities.writing-chat includes comparison-chats', () => {
-    const scenes = getAffectedScenes('chatgpt', ['capabilities.writing-chat']);
+    const scenes = getAffectedScenes(['capabilities.writing-chat']);
     expect(scenes).toContain('comparison-chats');
   });
 
   it('getAffectedScenes with name includes tool-card-reveal', () => {
-    const scenes = getAffectedScenes('chatgpt', ['name']);
+    const scenes = getAffectedScenes(['name']);
     expect(scenes).toContain('tool-card-reveal');
   });
 
   it('getAffectedScenes with capabilities.dictation includes voice-demo', () => {
-    const scenes = getAffectedScenes('chatgpt', ['capabilities.dictation']);
+    const scenes = getAffectedScenes(['capabilities.dictation']);
     expect(scenes).toContain('voice-demo');
   });
 
   it('getAffectedScenes with capabilities.writing-chat also includes capability-table from wildcard', () => {
-    const scenes = getAffectedScenes('chatgpt', ['capabilities.writing-chat']);
+    const scenes = getAffectedScenes(['capabilities.writing-chat']);
     expect(scenes).toContain('capability-table');
     expect(scenes).toContain('feature-grid');
   });
 
   it('getAffectedScenes with description includes comparison-chats and capability-table', () => {
-    const scenes = getAffectedScenes('chatgpt', ['description']);
+    const scenes = getAffectedScenes(['description']);
     expect(scenes).toContain('comparison-chats');
     expect(scenes).toContain('capability-table');
   });

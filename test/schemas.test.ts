@@ -160,7 +160,7 @@ describe('SourceFileSchema', () => {
 });
 
 describe('SceneTypes', () => {
-  it('has exactly 13 scene type entries', () => {
+  it('has exactly 14 scene type entries', () => {
     expect(SCENE_TYPES).toHaveLength(14);
   });
 

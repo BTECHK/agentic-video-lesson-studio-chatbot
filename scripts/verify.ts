@@ -42,6 +42,9 @@ const BLANK_FRAME_THRESHOLD = 0.997; // 99.7% same color = blank (allows small e
 const FONT_STDDEV_THRESHOLD = 25;
 
 // Shell metacharacter pattern for path sanitization (T-01-06)
+// Defense-in-depth only — blocks common injection chars but is not exhaustive.
+// The real mitigation is quoting the path in the ffprobe command and never
+// passing untrusted user input to shell exec in production.
 const SHELL_METACHAR_PATTERN = /[;|&$`]/;
 
 // --- Individual Validators ---

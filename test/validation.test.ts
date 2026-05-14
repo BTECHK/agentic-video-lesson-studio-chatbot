@@ -9,6 +9,7 @@ import {
   validateDuration,
   detectBlankFrame,
   verifyFontRendering,
+  extractMetadata,
 } from '../scripts/verify';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
@@ -176,6 +177,44 @@ describe('Post-Render Validation', () => {
         path.join(FIXTURES_DIR, 'blank-white.png'),
       );
       expect(result).toBe(false);
+    });
+  });
+
+  describe('extractMetadata', () => {
+    it('throws on file not found', () => {
+      expect(() => extractMetadata('/nonexistent/video.mp4')).toThrow(
+        'File not found',
+      );
+    });
+
+    it('throws on shell metacharacters in path', () => {
+      expect(() => extractMetadata('/tmp/video;rm -rf.mp4')).toThrow(
+        'shell metacharacters',
+      );
+    });
+  });
+
+  describe('path sanitization (SHELL_METACHAR_PATTERN)', () => {
+    it('rejects semicolon', () => {
+      expect(() => extractMetadata('path;cmd')).toThrow('shell metacharacters');
+    });
+
+    it('rejects pipe', () => {
+      expect(() => extractMetadata('path|cmd')).toThrow('shell metacharacters');
+    });
+
+    it('rejects ampersand', () => {
+      expect(() => extractMetadata('path&cmd')).toThrow('shell metacharacters');
+    });
+
+    it('rejects dollar sign', () => {
+      expect(() => extractMetadata('path$cmd')).toThrow('shell metacharacters');
+    });
+
+    it('rejects backtick', () => {
+      expect(() => extractMetadata('path`cmd`')).toThrow(
+        'shell metacharacters',
+      );
     });
   });
 });

@@ -69,14 +69,13 @@ export const CONTENT_SCENE_MAPPINGS: ContentSceneMapping[] = [
 ];
 
 /**
- * Given a tool ID and a list of changed content paths, return deduplicated
- * scene types that need re-rendering.
+ * Given a list of changed content paths, return deduplicated scene types
+ * that need re-rendering.
  *
  * Uses prefix matching: a mapping with contentPath "capabilities.*" matches
  * any changedPath starting with "capabilities.".
  */
 export function getAffectedScenes(
-  _toolId: string,
   changedPaths: string[],
 ): SceneType[] {
   const affected = new Set<SceneType>();

@@ -1,23 +1,7 @@
 import React from 'react';
+import { SCENE_TYPES, type SceneType } from '../../content/schemas/scene-types';
 
-export const SCENE_TYPES = [
-  'cover',
-  'journey-map',
-  'comparison-chats',
-  'tool-card-reveal',
-  'capability-table',
-  'setup-checklist',
-  'feature-grid',
-  'voice-demo',
-  'recap-grid',
-  'preview-band',
-  'demo-cue',
-  'dig-deeper',
-  'assignment-list',
-  'quote-card',
-] as const;
-
-export type SceneType = (typeof SCENE_TYPES)[number];
+export { SCENE_TYPES, type SceneType };
 
 export interface SceneComponentProps {
   scene: {
