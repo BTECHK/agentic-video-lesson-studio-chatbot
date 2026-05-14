@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Rendering Environment & Verification** - Docker + Remotion + headless Chrome pipeline with visual verification workflow (completed 2026-05-13)
 - [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - DEFERRED until Instructor provides final lesson scripts. Design system locked.
 - [x] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping (completed 2026-05-14)
-- [ ] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings
+- [x] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings (completed 2026-05-14)
 - [ ] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations
 
 ## Phase Details
@@ -96,7 +96,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 Plans:
 - [x] 04-04-PLAN.md — PR workflow & LLM extraction (per-vendor git branch + gh pr create, Claude Code prompt generator)
-- [ ] 04-05-PLAN.md — CLI entry point, Windows Task Scheduler & npm scripts (3 ingestion modes, schtasks setup)
+- [x] 04-05-PLAN.md — CLI entry point, Docker container & npm scripts (4 ingestion modes, cron scheduling)
 
 Cross-cutting constraints:
 - All scraped data validated against ToolSchema.safeParse before writing (T-04-01)
@@ -131,5 +131,5 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
-| 4. Content Ingestion & Freshness | 4/5 | In Progress (04-05 remaining) | - |
+| 4. Content Ingestion & Freshness | 5/5 | Complete | 2026-05-14 |
 | 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
