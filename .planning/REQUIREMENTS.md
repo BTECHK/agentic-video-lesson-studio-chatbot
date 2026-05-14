@@ -131,7 +131,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-03 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-04 | Phase 3 | Complete (03-05) |
 | CONT-05 | Phase 3 | Complete (03-05) |
-| CONT-06 | Phase 4 | In Progress (04-01 config, 04-02 scraper/extractor/logger done) |
+| CONT-06 | Phase 4 | In Progress (04-01 config, 04-02 scraper, 04-03 differ, 04-04 PR workflow done) |
 | TRAN-01 | Phase 4 | Pending |
 | CHAT-01 | Phase 5 | Pending |
 | CHAT-02 | Phase 5 | Pending |
@@ -144,4 +144,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-14 after 04-02 completion (Phase 4 in progress)*
+*Last updated: 2026-05-14 after 04-04 completion (Phase 4 in progress)*

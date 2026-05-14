@@ -95,7 +95,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 Plans:
-- [ ] 04-04-PLAN.md — PR workflow & LLM extraction (per-vendor git branch + gh pr create, Claude Code prompt generator)
+- [x] 04-04-PLAN.md — PR workflow & LLM extraction (per-vendor git branch + gh pr create, Claude Code prompt generator)
 - [ ] 04-05-PLAN.md — CLI entry point, Windows Task Scheduler & npm scripts (3 ingestion modes, schtasks setup)
 
 Cross-cutting constraints:
@@ -131,5 +131,5 @@ Phase 2 deferred — animation design locked, waiting on final lesson scripts. P
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
 | 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
-| 4. Content Ingestion & Freshness | 3/5 | In Progress (Wave 1 complete) | - |
+| 4. Content Ingestion & Freshness | 4/5 | In Progress (04-05 remaining) | - |
 | 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
