@@ -1,0 +1,28 @@
+{
+  "defaults": {
+    "concurrency": 2,
+    "timeoutMs": 15000,
+    "retries": 1,
+    "delayMs": 2000,
+    "userAgent": "edu-content-bot/1.0",
+    "maxLogSizeMB": 10
+  },
+  "scheduling": {
+    "frequency": "weekly",
+    "dayOfWeek": "MON",
+    "timeOfDay": "06:00"
+  },
+  "vendors": {
+    "openai": { "enabled": true, "sources": {} },
+    "anthropic": { "enabled": true, "sources": {} },
+    "google": { "enabled": true, "sources": {} },
+    "perplexity": { "enabled": true, "sources": {} },
+    "xai": { "enabled": true, "sources": {} },
+    "deepseek": { "enabled": true, "sources": {} },
+    "alibaba": { "enabled": true, "sources": {} },
+    "comet": { "enabled": true, "sources": {} },
+    "manus": { "enabled": true, "sources": {} },
+    "openai-codex": { "enabled": true, "sources": {} },
+    "anthropic-code": { "enabled": true, "sources": {} }
+  }
+}
