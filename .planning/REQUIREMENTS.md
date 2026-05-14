@@ -35,9 +35,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content Repository
 
-- [ ] **CONT-01**: Structured schema for AI tool capabilities (11 capability categories across P0/P1 tools)
-- [ ] **CONT-02**: Official source attribution for every factual claim with URL and verification date
-- [ ] **CONT-03**: Git-versioned content with structured change history
+- [x] **CONT-01**: Structured schema for AI tool capabilities (11 capability categories across P0/P1 tools)
+- [x] **CONT-02**: Official source attribution for every factual claim with URL and verification date
+- [x] **CONT-03**: Git-versioned content with structured change history
 - [ ] **CONT-04**: Content-to-scene mapping metadata linking content nodes to specific video sections
 - [ ] **CONT-05**: Zod-validated content schemas catching structural errors before render
 
@@ -112,9 +112,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANIM-05 | Phase 2 | Pending |
 | ANIM-06 | Phase 2 | Pending |
 | ANIM-07 | Phase 2 | Pending |
-| CONT-01 | Phase 3 | Pending |
-| CONT-02 | Phase 3 | Pending |
-| CONT-03 | Phase 3 | Pending |
+| CONT-01 | Phase 3 | Complete (03-03, 03-04) |
+| CONT-02 | Phase 3 | Complete (03-03, 03-04) |
+| CONT-03 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-04 | Phase 3 | Pending |
 | CONT-05 | Phase 3 | Pending |
 | CONT-06 | Phase 4 | Pending |
@@ -130,4 +130,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-13 after roadmap creation*
+*Last updated: 2026-05-14 after 03-04 completion*
