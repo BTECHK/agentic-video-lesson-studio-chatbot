@@ -19,18 +19,32 @@ export const ChatDemo: React.FC = () => {
   const local = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const springCfg = { damping: 18, mass: 0.5 };
+  const sCfg = { damping: 18, mass: 0.5 };
 
-  // Staggered entrances
-  const navProgress = spring({ frame: local, fps, config: springCfg });
-  const headerProgress = spring({ frame: local - 10, fps, config: springCfg });
-  const userMsgProgress = spring({ frame: local - 40, fps, config: springCfg });
-  const typingProgress = spring({ frame: local - 80, fps, config: { damping: 15, mass: 0.4 } });
-  const tutorMsgProgress = spring({ frame: local - 120, fps, config: springCfg });
-  const citationProgress = spring({ frame: local - 160, fps, config: springCfg });
+  const navProgress = spring({ frame: local, fps, config: sCfg });
+  const headerProgress = spring({ frame: local - 10, fps, config: sCfg });
 
-  // Typing indicator visibility (show between frames 80-120, then hide)
-  const showTyping = local >= 80 && local < 120;
+  // Conversation 1
+  const q1Progress = spring({ frame: local - 30, fps, config: sCfg });
+  const showTyping1 = local >= 60 && local < 100;
+  const typing1Progress = spring({ frame: local - 60, fps, config: { damping: 15, mass: 0.4 } });
+  const a1Progress = spring({ frame: local - 100, fps, config: sCfg });
+  const cite1Progress = spring({ frame: local - 130, fps, config: sCfg });
+
+  // Conversation 2
+  const q2Progress = spring({ frame: local - 220, fps, config: sCfg });
+  const showTyping2 = local >= 250 && local < 300;
+  const typing2Progress = spring({ frame: local - 250, fps, config: { damping: 15, mass: 0.4 } });
+  const a2Progress = spring({ frame: local - 300, fps, config: sCfg });
+  const cite2Progress = spring({ frame: local - 340, fps, config: sCfg });
+
+  // Scroll offset — conversation scrolls up as new messages arrive
+  const scrollOffset = local >= 220
+    ? interpolate(
+        spring({ frame: local - 220, fps, config: { damping: 20, mass: 0.8 } }),
+        [0, 1], [0, -160]
+      )
+    : 0;
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: '0 18px',
@@ -45,233 +59,135 @@ export const ChatDemo: React.FC = () => {
   });
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: BASE,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '40px 60px',
-      }}
-    >
-      {/* Browser chrome mockup */}
-      <div
-        style={{
-          width: 1000,
-          borderRadius: BRAND.radius,
-          overflow: 'hidden',
-          border: `1px solid ${BORDER}`,
-          boxShadow: '0 8px 40px rgba(28, 28, 28, 0.1)',
-          opacity: navProgress,
-          transform: `translateY(${interpolate(navProgress, [0, 1], [30, 0])}px)`,
-          display: 'flex',
-          flexDirection: 'column',
-          height: 620,
-          backgroundColor: CARD_BG,
-        }}
-      >
+    <div style={{ width: '100%', height: '100%', backgroundColor: BASE, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 60px' }}>
+      <div style={{
+        width: 1000, borderRadius: BRAND.radius, overflow: 'hidden',
+        border: `1px solid ${BORDER}`, boxShadow: '0 8px 40px rgba(28, 28, 28, 0.1)',
+        opacity: navProgress, transform: `translateY(${interpolate(navProgress, [0, 1], [30, 0])}px)`,
+        display: 'flex', flexDirection: 'column', height: 620, backgroundColor: CARD_BG,
+      }}>
         {/* TopNav */}
-        <nav
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: 48,
-            padding: '0 16px',
-            backgroundColor: CARD_BG,
-            borderBottom: `1px solid ${BORDER}`,
-          }}
-        >
+        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 48, padding: '0 16px', backgroundColor: CARD_BG, borderBottom: `1px solid ${BORDER}` }}>
           <div style={{ display: 'flex', height: '100%', gap: 8 }}>
             <div style={tabStyle(true)}>Chat</div>
             <div style={tabStyle(false)}>Content</div>
             <div style={tabStyle(false)}>Compare</div>
           </div>
-          <span style={{ color: MUTED, fontSize: 14, fontWeight: 500, fontFamily }}>
-            Sample Academy
-          </span>
+          <span style={{ color: MUTED, fontSize: 14, fontWeight: 500, fontFamily }}>Sample Academy</span>
         </nav>
 
         {/* Chat header */}
-        <div
-          style={{
-            padding: '16px 20px',
-            borderBottom: `1px solid ${BORDER}`,
-            backgroundColor: CARD_BG,
-            opacity: headerProgress,
-          }}
-        >
+        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${BORDER}`, backgroundColor: CARD_BG, opacity: headerProgress }}>
           <div style={{ fontFamily, fontWeight: 700, fontSize: 20, color: TEXT }}>Tutor</div>
-          <div style={{ fontFamily, fontSize: 13, color: MUTED }}>
-            Sample Academy AI Teaching Assistant
-          </div>
+          <div style={{ fontFamily, fontSize: 13, color: MUTED }}>Sample Academy AI Teaching Assistant</div>
         </div>
 
         {/* Messages area */}
-        <div
-          style={{
-            flex: 1,
-            backgroundColor: BASE,
-            padding: '20px 24px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16,
-            overflow: 'hidden',
-          }}
-        >
-          {/* User message */}
-          <div
-            style={{
-              alignSelf: 'flex-end',
-              opacity: userMsgProgress,
-              transform: `translateX(${interpolate(userMsgProgress, [0, 1], [40, 0])}px)`,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              gap: 4,
-            }}
-          >
-            <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>You</span>
-            <div
-              style={{
-                backgroundColor: ACCENT,
-                color: '#FFFFFF',
-                padding: '12px 16px',
-                borderRadius: BRAND.radius,
-                fontFamily,
-                fontSize: 15,
-                lineHeight: 1.5,
-                maxWidth: 500,
-              }}
-            >
-              What can Claude do for research?
+        <div style={{ flex: 1, backgroundColor: BASE, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'hidden' }}>
+          <div style={{ transform: `translateY(${scrollOffset}px)`, transition: 'none', display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+            {/* Q1: User */}
+            <div style={{
+              alignSelf: 'flex-end', opacity: q1Progress,
+              transform: `translateX(${interpolate(q1Progress, [0, 1], [40, 0])}px)`,
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4,
+            }}>
+              <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>You</span>
+              <div style={{ backgroundColor: ACCENT, color: '#FFFFFF', padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, lineHeight: 1.5, maxWidth: 500 }}>
+                What can Claude do for research?
+              </div>
             </div>
+
+            {/* Typing 1 */}
+            {showTyping1 && (
+              <div style={{ alignSelf: 'flex-start', opacity: typing1Progress, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+                <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
+                <div style={{ backgroundColor: CARD_BG, padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, color: MUTED }}>
+                  Thinking...
+                </div>
+              </div>
+            )}
+
+            {/* A1: Tutor */}
+            {local >= 100 && (
+              <div style={{
+                alignSelf: 'flex-start', opacity: a1Progress,
+                transform: `translateX(${interpolate(a1Progress, [0, 1], [-40, 0])}px)`,
+                display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4, maxWidth: 600,
+              }}>
+                <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
+                <div style={{ backgroundColor: CARD_BG, padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, lineHeight: 1.6, color: TEXT }}>
+                  Claude excels at research with its 200K context window — you can upload entire papers and get structured summaries. It handles multi-step analysis particularly well.
+                </div>
+                <div style={{ opacity: cite1Progress, transform: `translateY(${interpolate(cite1Progress, [0, 1], [8, 0])}px)`, marginTop: 2 }}>
+                  <span style={{ display: 'inline-block', padding: '3px 10px', fontSize: 11, fontFamily, fontWeight: 600, backgroundColor: `${ACCENT}15`, color: ACCENT, borderRadius: BRAND.radius, border: `1px solid ${ACCENT}30` }}>
+                    Source: Content Repository — Claude
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Q2: User follow-up */}
+            {local >= 220 && (
+              <div style={{
+                alignSelf: 'flex-end', opacity: q2Progress,
+                transform: `translateX(${interpolate(q2Progress, [0, 1], [40, 0])}px)`,
+                display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4,
+              }}>
+                <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>You</span>
+                <div style={{ backgroundColor: ACCENT, color: '#FFFFFF', padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, lineHeight: 1.5, maxWidth: 500 }}>
+                  How does that compare to Perplexity for research?
+                </div>
+              </div>
+            )}
+
+            {/* Typing 2 */}
+            {showTyping2 && (
+              <div style={{ alignSelf: 'flex-start', opacity: typing2Progress, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+                <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
+                <div style={{ backgroundColor: CARD_BG, padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, color: MUTED }}>
+                  Thinking...
+                </div>
+              </div>
+            )}
+
+            {/* A2: Tutor comparison answer */}
+            {local >= 300 && (
+              <div style={{
+                alignSelf: 'flex-start', opacity: a2Progress,
+                transform: `translateX(${interpolate(a2Progress, [0, 1], [-40, 0])}px)`,
+                display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4, maxWidth: 600,
+              }}>
+                <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
+                <div style={{ backgroundColor: CARD_BG, padding: '12px 16px', borderRadius: BRAND.radius, fontFamily, fontSize: 15, lineHeight: 1.6, color: TEXT }}>
+                  Perplexity is better for real-time web research with built-in citations. Claude is stronger for deep analysis of documents you already have. They complement each other well.
+                </div>
+                <div style={{ display: 'flex', gap: 6, opacity: cite2Progress, transform: `translateY(${interpolate(cite2Progress, [0, 1], [8, 0])}px)`, marginTop: 2 }}>
+                  <span style={{ display: 'inline-block', padding: '3px 10px', fontSize: 11, fontFamily, fontWeight: 600, backgroundColor: `${ACCENT}15`, color: ACCENT, borderRadius: BRAND.radius, border: `1px solid ${ACCENT}30` }}>
+                    Source: Claude
+                  </span>
+                  <span style={{ display: 'inline-block', padding: '3px 10px', fontSize: 11, fontFamily, fontWeight: 600, backgroundColor: `${ACCENT}15`, color: ACCENT, borderRadius: BRAND.radius, border: `1px solid ${ACCENT}30` }}>
+                    Source: Perplexity
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* Typing indicator */}
-          {showTyping && (
-            <div
-              style={{
-                alignSelf: 'flex-start',
-                opacity: typingProgress,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 4,
-              }}
-            >
-              <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
-              <div
-                style={{
-                  backgroundColor: CARD_BG,
-                  padding: '12px 16px',
-                  borderRadius: BRAND.radius,
-                  fontFamily,
-                  fontSize: 15,
-                  color: MUTED,
-                }}
-              >
-                Thinking...
-              </div>
-            </div>
-          )}
-
-          {/* Tutor response */}
-          {local >= 120 && (
-            <div
-              style={{
-                alignSelf: 'flex-start',
-                opacity: tutorMsgProgress,
-                transform: `translateX(${interpolate(tutorMsgProgress, [0, 1], [-40, 0])}px)`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 4,
-                maxWidth: 600,
-              }}
-            >
-              <span style={{ fontSize: 12, color: MUTED, fontFamily, fontWeight: 600 }}>Tutor</span>
-              <div
-                style={{
-                  backgroundColor: CARD_BG,
-                  padding: '12px 16px',
-                  borderRadius: BRAND.radius,
-                  fontFamily,
-                  fontSize: 15,
-                  lineHeight: 1.6,
-                  color: TEXT,
-                }}
-              >
-                Based on our course content, Claude excels at research with its 200K context window
-                — you can upload entire papers and get structured summaries. It handles multi-step
-                analysis particularly well, breaking complex research questions into logical steps.
-              </div>
-
-              {/* Citation badge */}
-              <div
-                style={{
-                  opacity: citationProgress,
-                  transform: `translateY(${interpolate(citationProgress, [0, 1], [8, 0])}px)`,
-                  marginTop: 4,
-                }}
-              >
-                <span
-                  style={{
-                    display: 'inline-block',
-                    padding: '3px 10px',
-                    fontSize: 11,
-                    fontFamily,
-                    fontWeight: 600,
-                    backgroundColor: `${ACCENT}15`,
-                    color: ACCENT,
-                    borderRadius: BRAND.radius,
-                    border: `1px solid ${ACCENT}30`,
-                  }}
-                >
-                  Source: Module 1, Tool: Claude
-                </span>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Input bar */}
-        <div
-          style={{
-            display: 'flex',
-            gap: 8,
-            padding: '12px 16px',
-            borderTop: `1px solid ${BORDER}`,
-            backgroundColor: CARD_BG,
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              padding: '10px 14px',
-              fontSize: 14,
-              fontFamily,
-              color: MUTED,
-              backgroundColor: BASE,
-              borderRadius: BRAND.radius,
-              border: `1px solid ${BORDER}`,
-            }}
-          >
-            Ask Tutor a question...
+        {/* Input bar with typing animation */}
+        <div style={{ display: 'flex', gap: 8, padding: '12px 16px', borderTop: `1px solid ${BORDER}`, backgroundColor: CARD_BG }}>
+          <div style={{ flex: 1, padding: '10px 14px', fontSize: 14, fontFamily, color: MUTED, backgroundColor: BASE, borderRadius: BRAND.radius, border: `1px solid ${BORDER}` }}>
+            {local >= 190 && local < 220
+              ? (() => {
+                  const text = 'How does that compare to Perplexity for research?';
+                  const chars = Math.floor(interpolate(local, [190, 218], [0, text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
+                  return <span style={{ color: TEXT }}>{text.slice(0, chars)}<span style={{ opacity: local % 15 < 8 ? 1 : 0 }}>|</span></span>;
+                })()
+              : 'Ask Tutor a question...'
+            }
           </div>
-          <div
-            style={{
-              padding: '10px 20px',
-              fontSize: 14,
-              fontFamily,
-              fontWeight: 600,
-              color: '#FFFFFF',
-              backgroundColor: ACCENT,
-              borderRadius: BRAND.radius,
-            }}
-          >
+          <div style={{ padding: '10px 20px', fontSize: 14, fontFamily, fontWeight: 600, color: '#FFFFFF', backgroundColor: ACCENT, borderRadius: BRAND.radius }}>
             Send
           </div>
         </div>
