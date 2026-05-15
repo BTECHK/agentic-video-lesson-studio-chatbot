@@ -8,10 +8,6 @@ const { fontFamily } = loadFont('normal', {
   subsets: ['latin'],
 });
 
-interface ChatDemoProps {
-  startFrame: number;
-}
-
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
 const BASE = BRAND.colors.bgBase;
@@ -19,10 +15,9 @@ const CARD_BG = '#FFFFFF';
 const BORDER = 'rgba(28, 28, 28, 0.12)';
 const MUTED = 'rgba(28, 28, 28, 0.5)';
 
-export const ChatDemo: React.FC<ChatDemoProps> = ({ startFrame }) => {
-  const frame = useCurrentFrame();
+export const ChatDemo: React.FC = () => {
+  const local = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const local = frame - startFrame;
 
   const springCfg = { damping: 18, mass: 0.5 };
 

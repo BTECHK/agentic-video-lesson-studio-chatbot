@@ -35,22 +35,22 @@ export const PlatformWalkthrough: React.FC = () => {
     <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase }}>
       {/* Scene 1: Title Card */}
       <Sequence from={0} durationInFrames={240}>
-        <TitleCard startFrame={0} />
+        <TitleCard />
       </Sequence>
 
       {/* Scene 2: Chat Demo */}
       <Sequence from={240} durationInFrames={480}>
-        <ChatDemo startFrame={240} />
+        <ChatDemo />
       </Sequence>
 
       {/* Scene 3: Content Viewer */}
       <Sequence from={720} durationInFrames={480}>
-        <ContentViewer startFrame={720} />
+        <ContentViewer />
       </Sequence>
 
       {/* Scene 4: Comparison View */}
       <Sequence from={1200} durationInFrames={480}>
-        <ComparisonView startFrame={1200} />
+        <ComparisonView />
       </Sequence>
 
       {/* Outro: fade overlay with brand accent mark */}

@@ -8,14 +8,9 @@ const { fontFamily } = loadFont('normal', {
   subsets: ['latin'],
 });
 
-interface TitleCardProps {
-  startFrame: number;
-}
-
-export const TitleCard: React.FC<TitleCardProps> = ({ startFrame }) => {
-  const frame = useCurrentFrame();
+export const TitleCard: React.FC = () => {
+  const local = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const local = frame - startFrame;
 
   const logoProgress = spring({
     frame: local,

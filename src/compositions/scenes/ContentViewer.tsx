@@ -8,10 +8,6 @@ const { fontFamily } = loadFont('normal', {
   subsets: ['latin'],
 });
 
-interface ContentViewerProps {
-  startFrame: number;
-}
-
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
 const BASE = BRAND.colors.bgBase;
@@ -29,10 +25,9 @@ const TOOLS = [
 const FILTER_PILLS = ['All', 'Essential', 'Research', 'Writing & Chat', 'File Analysis', 'Agents'];
 const ACTIVE_FILTERS = ['All', 'Essential'];
 
-export const ContentViewer: React.FC<ContentViewerProps> = ({ startFrame }) => {
-  const frame = useCurrentFrame();
+export const ContentViewer: React.FC = () => {
+  const local = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const local = frame - startFrame;
 
   const springCfg = { damping: 18, mass: 0.5 };
 

@@ -8,10 +8,6 @@ const { fontFamily } = loadFont('normal', {
   subsets: ['latin'],
 });
 
-interface ComparisonViewProps {
-  startFrame: number;
-}
-
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
 const BASE = BRAND.colors.bgBase;
@@ -41,10 +37,9 @@ const EDITORIAL_PICKS = [
   { category: 'Best for Speed', winner: 'Gemini', reason: 'Fastest token generation', runnerUp: 'ChatGPT', runnerUpReason: 'Consistent low latency' },
 ];
 
-export const ComparisonView: React.FC<ComparisonViewProps> = ({ startFrame }) => {
-  const frame = useCurrentFrame();
+export const ComparisonView: React.FC = () => {
+  const local = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const local = frame - startFrame;
 
   const springCfg = { damping: 18, mass: 0.5 };
 
