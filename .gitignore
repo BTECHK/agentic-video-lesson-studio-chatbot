@@ -3,7 +3,17 @@ dist/
 output/
 *.mp4
 *.log
+*.zip
 .DS_Store
+.env
+.env.*
 test/fixtures/
 .test-results/
 logs/
+original background content/
+personal research.md
+vibe code guidlines/
+Claude design work in session-SampleAcademy/
+Claude design work in session-SampleAcademy.zip
+drive-download-*
+.claude/
