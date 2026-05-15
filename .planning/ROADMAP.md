@@ -140,7 +140,16 @@ Plans:
   3. Features vs limitations use Apple iOS soft-bubble styling with visual distinction
   4. Comparison page at /content/compare shows side-by-side tool data with benchmark scores from open sources
   5. Editorial "best for X" recommendations based on curated content data
-**Plans**: TBD
+**Plans:** 3 plans
+
+**Wave 1** *(parallel — no dependencies)*
+Plans:
+- [ ] 06-01-PLAN.md — Labels, multi-select filtering, soft-bubble styling (CONT-08)
+- [ ] 06-02-PLAN.md — Comparison page with benchmarks and editorial picks (CONT-07)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+Plans:
+- [ ] 06-03-PLAN.md — Visual verification checkpoint
 
 ### Phase 7: Chatbot Content Grounding
 **Goal**: Wire the content repository into the chatbot so Tutor answers from curated tool data instead of general Claude knowledge — the single biggest gap in the system
@@ -218,7 +227,7 @@ Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (parallel, NOW) �
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
 | 4. Content Ingestion & Freshness | 5/5 | Complete | 2026-05-14 |
 | 5. TA Chatbot (Scaffold) | 4/4 | Complete | 2026-05-14 |
-| 6. Content Viewer V2 | 0/TBD | Ready to plan | - |
+| 6. Content Viewer V2 | 0/3 | Planned | - |
 | 7. Chatbot Content Grounding | 0/2 | Planned | - |
 | 8. Chatbot Enhancements | 0/TBD | Blocked on Phase 7 | - |
 | 9. Scene Components | 0/TBD | Ready to plan | - |
