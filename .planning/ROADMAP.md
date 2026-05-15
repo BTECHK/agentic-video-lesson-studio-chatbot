@@ -2,7 +2,12 @@
 
 ## Overview
 
-This roadmap delivers Sample Academy's AI content system in five phases. Phase 1 (complete) established the rendering pipeline. Phase 2 (animation) is deferred until Instructor provides final lesson scripts — the animation design system is locked via the Claude Design session output. Phase 3 (Content Repository) and Phase 5 (Chatbot) now run in parallel as the active critical path. Phase 3 also includes animation architecture prep (JSON schema, scene dispatcher, Remotion primitives) so content can be rendered immediately when scripts arrive. Phase 4 (Content Ingestion) follows Phase 3.
+This roadmap delivers Sample Academy's AI content system in eleven phases. Phases 1, 3, 4, 5 established the foundation: rendering pipeline, content repository, ingestion automation, and chatbot scaffold. Phase 2 (animation) remains deferred until Instructor provides final lesson scripts.
+
+**2026-05-15 gap audit** revealed significant missing features across all scopes — the chatbot lacks RAG grounding, no comparison feature exists, zero scene components are implemented. Phases 6–11 close these gaps:
+
+- **Phases 6–10** (Wave 1+2): Unblocked work — content viewer polish, chatbot RAG, chatbot enhancements, scene components, stakeholder demo animation
+- **Phase 11** (Wave 3): Blocked on Instructor — lesson pipeline, teaching philosophy, Teachable export
 
 **Cross-cutting concerns applied to ALL phases:**
 - **Test-driven development**: Tests written before implementation for every component
@@ -22,7 +27,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Module 1 Animation & Stakeholder Demo** - DEFERRED until Instructor provides final lesson scripts. Design system locked.
 - [x] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping (completed 2026-05-14)
 - [x] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings (completed 2026-05-14)
-- [x] **Phase 5: TA Chatbot** - Standalone RAG-grounded chatbot answering from course content with source citations (completed 2026-05-14)
+- [x] **Phase 5: TA Chatbot (Scaffold)** - Chat UI, LLM provider, session management, access control, system prompt (completed 2026-05-14). NOTE: RAG grounding NOT wired — chatbot uses general Claude knowledge, not content repo.
+- [ ] **Phase 6: Content Viewer V2** - P0/P1 labels, multi-select filtering, comparison page with benchmarks + editorial picks
+- [ ] **Phase 7: Chatbot Content Grounding** - RAG pipeline wiring content repo into chat, citation verification
+- [ ] **Phase 8: Chatbot Enhancements** - Office Hours mode, session persistence (SQLite)
+- [ ] **Phase 9: Scene Components** - Implement top scene types as Remotion React components from existing schemas
+- [ ] **Phase 10: Stakeholder Demo Animation** - Product walkthrough Remotion composition with mock chatbot responses
+- [ ] **Phase 11: Lesson Pipeline** - BLOCKED on Instructor. Teaching philosophy, lesson generator, Teachable export
 
 ## Phase Details
 
@@ -119,17 +130,97 @@ Plans:
 - [x] 05-04-PLAN.md — Docker containerization for chatbot
 **UI hint**: yes
 
+### Phase 6: Content Viewer V2
+**Goal**: Polish the content viewer with user-friendly labels, multi-select filtering, and a comparison page with benchmark data and editorial "best for X" recommendations
+**Depends on**: Phase 3 (complete), Phase 5 (complete — viewer exists)
+**Requirements**: CONT-07, CONT-08
+**Success Criteria** (what must be TRUE):
+  1. P0/P1 labels display as "P0 Models"/"P1 Models" (or similar user-friendly phrasing) — raw P0/P1 codes not shown to end users
+  2. Capability filtering supports multi-select — user can filter by multiple capabilities simultaneously
+  3. Features vs limitations use Apple iOS soft-bubble styling with visual distinction
+  4. Comparison page at /content/compare shows side-by-side tool data with benchmark scores from open sources
+  5. Editorial "best for X" recommendations based on curated content data
+**Plans**: TBD
+
+### Phase 7: Chatbot Content Grounding
+**Goal**: Wire the content repository into the chatbot so Tutor answers from curated tool data instead of general Claude knowledge — the single biggest gap in the system
+**Depends on**: Phase 3 (content repo), Phase 5 (chatbot scaffold)
+**Requirements**: CHAT-01 (re-opened), CHAT-02 (re-opened), CHAT-06
+**Success Criteria** (what must be TRUE):
+  1. Chat route loads relevant content from content.ts before sending to LLM — Tutor's answers reflect your curated tool data, not generic Claude knowledge
+  2. System prompt includes content context injection with the specific tool data relevant to the user's question
+  3. Citations in responses reference actual content repository entries and can be verified as existing
+  4. A student asking "what can Claude do for research?" gets an answer grounded in your Claude tool JSON, with citations
+**Plans:** 2 plans
+**Wave 1** *(no dependencies)*
+Plans:
+- [ ] 07-01-PLAN.md — Content retrieval function, system prompt content injection, LLMRequest type update
+
+**Wave 2** *(depends on Wave 1)*
+Plans:
+- [ ] 07-02-PLAN.md — Chat route wiring, citation verification, provider updates, end-to-end checkpoint
+
+### Phase 8: Chatbot Enhancements
+**Goal**: Add Office Hours mode for exploratory questions and persist sessions across restarts
+**Depends on**: Phase 7 (content grounding should be in place first)
+**Requirements**: CHAT-04, CHAT-05
+**Success Criteria** (what must be TRUE):
+  1. Office Hours mode has its own system prompt allowing tangential/exploratory questions beyond strict TA content
+  2. UI toggle lets user switch between TA mode and Office Hours mode
+  3. Sessions persist across server restarts via SQLite (or similar file-based store)
+  4. Session history survives container restarts with data stored in a mounted volume
+**Plans**: TBD
+
+### Phase 9: Scene Components
+**Goal**: Implement the top 3-4 scene types from the 14 defined schemas as working Remotion React components
+**Depends on**: Phase 1 (rendering env), Phase 3 (scene schemas)
+**Requirements**: ANIM-03 (partial), ANIM-08
+**Success Criteria** (what must be TRUE):
+  1. At least 3 scene types render from JSON data as Remotion compositions with spring-physics animations
+  2. Scene dispatcher correctly routes JSON scene type to the corresponding React component
+  3. Each scene type follows the brand system (Syne, warm linen palette, 4px radius)
+  4. Scene components are registered in Root.tsx alongside BrandShowcase
+**Plans**: TBD
+
+### Phase 10: Stakeholder Demo Animation
+**Goal**: A polished product walkthrough Remotion composition demonstrating the chatbot + content repo for stakeholder meetings
+**Depends on**: Phase 7 (chatbot should be grounded), Phase 9 (scene components available)
+**Requirements**: DEMO-01
+**Success Criteria** (what must be TRUE):
+  1. 30-60 second Remotion composition renders as stakeholder-quality MP4 showing the product in action
+  2. Mock chatbot responses demonstrate content-grounded answers (uses mock provider, no API key needed)
+  3. Content repo browsing shown with filters, comparison, and tool detail views
+  4. Smooth spring-physics transitions throughout — no choppy slides
+**Plans**: TBD
+
+### Phase 11: Lesson Pipeline
+**Goal**: End-to-end pipeline from content repository to rendered Remotion lessons with Instructor's teaching philosophy encoded
+**Status**: BLOCKED — waiting on Instructor's input for teaching philosophy, lesson sequencing, and curriculum structure
+**Depends on**: Phase 9 (scene components), Instructor's content
+**Requirements**: PHILO-01, PHILO-02, SCALE-01
+**Success Criteria** (what must be TRUE):
+  1. Instructor's teaching philosophy (scaffolding, sequencing, explanation approach) encoded as structured rules
+  2. Content repository data transforms into lesson JSON automatically
+  3. Lesson JSON renders through scene components into cohesive video compositions
+  4. Diff engine + scene mapping + re-render pipeline connected end-to-end for surgical updates
+  5. Rendered MP4 exports in Teachable-compatible format
+**Plans**: TBD — blocked on Instructor's input
+
 ## Progress
 
 **Execution Order:**
-Phase 1 (complete) → Phase 3 + Phase 5 (parallel, NOW) → Phase 4 (after Phase 3) → Phase 2 (when Instructor's content ready)
-
-Phase 2 deferred — animation design locked, waiting on final lesson scripts. Phase 3 includes animation architecture prep so Phase 2 executes fast when unblocked.
+Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (parallel, NOW) → Phase 8 (after 7) → Phase 9 → Phase 10 (after 7+9) → Phase 2 + 11 (when Instructor's content ready)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Rendering Environment & Verification | 4/4 | Complete | 2026-05-13 |
-| 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting content) | - |
+| 2. Module 1 Animation & Stakeholder Demo | 0/TBD | Deferred (awaiting Instructor) | - |
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
 | 4. Content Ingestion & Freshness | 5/5 | Complete | 2026-05-14 |
-| 5. TA Chatbot | 4/4 | Complete | 2026-05-14 |
+| 5. TA Chatbot (Scaffold) | 4/4 | Complete | 2026-05-14 |
+| 6. Content Viewer V2 | 0/TBD | Ready to plan | - |
+| 7. Chatbot Content Grounding | 0/2 | Planned | - |
+| 8. Chatbot Enhancements | 0/TBD | Blocked on Phase 7 | - |
+| 9. Scene Components | 0/TBD | Ready to plan | - |
+| 10. Stakeholder Demo Animation | 0/TBD | Blocked on Phase 7+9 | - |
+| 11. Lesson Pipeline | 0/TBD | Blocked on Instructor | - |
