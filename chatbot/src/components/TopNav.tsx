@@ -3,23 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const TABS = [
+  { label: 'Home', href: '/', match: (p: string) => p === '/' },
+  { label: 'Chat', href: '/chat', match: (p: string) => p === '/chat' },
+  { label: 'Content', href: '/content', match: (p: string) => p.startsWith('/content') && !p.startsWith('/content/compare') },
+  { label: 'Compare', href: '/content/compare', match: (p: string) => p.startsWith('/content/compare') },
+];
+
 export function TopNav() {
   const pathname = usePathname();
-  const isContent = pathname.startsWith('/content') && !pathname.startsWith('/content/compare');
-  const isCompare = pathname.startsWith('/content/compare');
-
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: '0 0.75rem',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
-    color: active ? 'var(--accent)' : 'var(--text)',
-    borderBottom: active ? '2px solid var(--accent)' : '2px solid transparent',
-    fontFamily: 'var(--font)',
-    fontSize: '0.875rem',
-    fontWeight: 600,
-  });
 
   return (
     <nav
@@ -35,15 +27,29 @@ export function TopNav() {
       }}
     >
       <div style={{ display: 'flex', height: '100%', gap: '0.5rem' }}>
-        <Link href="/" style={tabStyle(!isContent && !isCompare)}>
-          Chat
-        </Link>
-        <Link href="/content" style={tabStyle(isContent)}>
-          Content
-        </Link>
-        <Link href="/content/compare" style={tabStyle(isCompare)}>
-          Compare
-        </Link>
+        {TABS.map((tab) => {
+          const active = tab.match(pathname);
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              style={{
+                padding: '0 0.75rem',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                textDecoration: 'none',
+                color: active ? 'var(--accent)' : 'var(--text)',
+                borderBottom: active ? '2px solid var(--accent)' : '2px solid transparent',
+                fontFamily: 'var(--font)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+              }}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
       </div>
       <span
         style={{
