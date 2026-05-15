@@ -184,8 +184,8 @@ Plans:
 
 **Wave 1** *(parallel — no dependencies)*
 Plans:
-- [ ] 07.1-01-PLAN.md — Landing page with Module 1 lesson embed and access gate
-- [ ] 07.1-02-PLAN.md — PlatformWalkthrough Remotion composition (4 scenes, 60s)
+- [x] 07.1-01-PLAN.md — Landing page with Module 1 lesson embed and access gate
+- [x] 07.1-02-PLAN.md — PlatformWalkthrough Remotion composition (4 scenes, 60s)
 
 **Wave 2** *(blocked on Wave 1)*
 Plans:
@@ -283,7 +283,7 @@ Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (complete) → **P
 | 5. TA Chatbot (Scaffold) | 4/4 | Complete | 2026-05-14 |
 | 6. Content Viewer V2 | 3/3 | Complete | 2026-05-15 |
 | 7. Chatbot Content Grounding | 2/2 | Complete | 2026-05-15 |
-| 7.1 Home Page + Walkthrough | 0/3 | **NOW** | - |
+| 7.1 Home Page + Walkthrough | 2/3 | **NOW** | - |
 | 8. Chatbot Enhancements | 0/TBD | Ready to plan | - |
 | 8.5 Ingestion Control Panel | 0/TBD | Ready to discuss | - |
 | 9. Scene Components | 0/TBD | Ready to plan | - |
