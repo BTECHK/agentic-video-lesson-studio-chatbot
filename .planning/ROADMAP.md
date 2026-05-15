@@ -30,7 +30,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: TA Chatbot (Scaffold)** - Chat UI, LLM provider, session management, access control, system prompt (completed 2026-05-14). NOTE: RAG grounding NOT wired — chatbot uses general Claude knowledge, not content repo.
 - [x] **Phase 6: Content Viewer V2** - P0/P1 labels, multi-select filtering, comparison page with benchmarks + editorial picks (completed 2026-05-15)
 - [x] **Phase 7: Chatbot Content Grounding** - RAG pipeline wiring content repo into chat, citation verification (completed 2026-05-15)
+- [ ] **Phase 7.1: Home Page + Platform Walkthrough** - INSERTED. Landing page with lesson video, 60s platform walkthrough Remotion video, push to private GitHub
 - [ ] **Phase 8: Chatbot Enhancements** - Office Hours mode, session persistence (SQLite)
+- [ ] **Phase 8.5: Ingestion Control Panel** - INSERTED. Web UI for data freshness, manual refresh, ad hoc search, schedule status
 - [ ] **Phase 9: Scene Components** - Implement top scene types as Remotion React components from existing schemas
 - [ ] **Phase 10: Stakeholder Demo Animation** - Product walkthrough Remotion composition with mock chatbot responses
 - [ ] **Phase 11: Lesson Pipeline** - BLOCKED on Instructor. Teaching philosophy, lesson generator, Teachable export
@@ -169,6 +171,26 @@ Plans:
 Plans:
 - [x] 07-02-PLAN.md — Chat route wiring, citation verification, provider updates, end-to-end checkpoint
 
+### Phase 7.1: Home Page + Platform Walkthrough (INSERTED)
+**Goal**: Landing page with Module 1 lesson embed, 60-second platform walkthrough video, push to private GitHub repo
+**Depends on**: Phase 6 (content viewer), Phase 7 (chatbot grounding), Phase 1 (Remotion pipeline)
+**Requirements**: DEMO-01 (partial)
+**Success Criteria** (what must be TRUE):
+  1. Home page has a landing section with Module 1 lesson content visible before login
+  2. 60-second (max) Remotion composition showing chat, content viewer, and comparison page in action
+  3. Walkthrough rendered as 1080p MP4 with smooth spring-physics transitions
+  4. Code pushed to private GitHub repository with no secrets
+**Plans:** 3 plans
+
+**Wave 1** *(parallel — no dependencies)*
+Plans:
+- [ ] 07.1-01-PLAN.md — Landing page with Module 1 lesson embed and access gate
+- [ ] 07.1-02-PLAN.md — PlatformWalkthrough Remotion composition (4 scenes, 60s)
+
+**Wave 2** *(blocked on Wave 1)*
+Plans:
+- [ ] 07.1-03-PLAN.md — Create private GitHub repo and push
+
 ### Phase 8: Chatbot Enhancements
 **Goal**: Add Office Hours mode for exploratory questions and persist sessions across restarts
 **Depends on**: Phase 7 (content grounding should be in place first)
@@ -179,6 +201,18 @@ Plans:
   3. Sessions persist across server restarts via SQLite (or similar file-based store)
   4. Session history survives container restarts with data stored in a mounted volume
 **Plans**: TBD
+
+### Phase 8.5: Ingestion Control Panel (INSERTED)
+**Goal**: Web UI control panel for the content ingestion pipeline — data freshness indicators, manual refresh triggers, ad hoc search, schedule status
+**Depends on**: Phase 4 (ingestion pipeline), Phase 6 (content viewer)
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. Per-tool freshness indicator shows last-updated date with green/yellow/red staleness visual
+  2. Manual refresh button triggers poll for a specific tool or all tools
+  3. Ad hoc search bar pulls data from established sources for a specific topic
+  4. Schedule status shows active/inactive, last run, next run
+**Plans**: TBD — needs discuss-phase before planning
+**P1 (future)**: Custom sources beyond established list, source management, ingestion history log
 
 ### Phase 9: Scene Components
 **Goal**: Implement the top 3-4 scene types from the 14 defined schemas as working Remotion React components
@@ -238,7 +272,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (complete) → Phase 8 (NOW) → Phase 9 → Phase 10 (after 9) → Phase 2 + 11 (when Instructor's content ready)
+Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (complete) → **Phase 7.1 (NOW)** → Phase 8 → Phase 8.5 → Phase 9 → Phase 10 (after 9) → Phase 2 + 11 (when Instructor's content ready)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -249,7 +283,9 @@ Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (complete) → Pha
 | 5. TA Chatbot (Scaffold) | 4/4 | Complete | 2026-05-14 |
 | 6. Content Viewer V2 | 3/3 | Complete | 2026-05-15 |
 | 7. Chatbot Content Grounding | 2/2 | Complete | 2026-05-15 |
-| 8. Chatbot Enhancements | 0/TBD | Blocked on Phase 7 | - |
+| 7.1 Home Page + Walkthrough | 0/3 | **NOW** | - |
+| 8. Chatbot Enhancements | 0/TBD | Ready to plan | - |
+| 8.5 Ingestion Control Panel | 0/TBD | Ready to discuss | - |
 | 9. Scene Components | 0/TBD | Ready to plan | - |
 | 10. Stakeholder Demo Animation | 0/TBD | Blocked on Phase 7+9 | - |
 | 11. Lesson Pipeline | 0/TBD | Blocked on Instructor | - |
