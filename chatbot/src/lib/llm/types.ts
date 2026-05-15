@@ -6,6 +6,7 @@ export interface LLMMessage {
 export interface LLMRequest {
   messages: LLMMessage[];
   accessMode: 'demo' | 'student';
+  contentContext?: string;
 }
 
 export interface LLMResponse {

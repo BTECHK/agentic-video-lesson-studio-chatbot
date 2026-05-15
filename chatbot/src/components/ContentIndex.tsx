@@ -11,15 +11,21 @@ import { FilterBar } from './FilterBar';
 export function ContentIndex({ tools }: { tools: ToolData[] }) {
   const [view, setView] = useState<'tile' | 'list'>('tile');
   const [priority, setPriority] = useState<'all' | 'P0' | 'P1'>('all');
-  const [capability, setCapability] = useState('');
+  const [selectedCapabilities, setSelectedCapabilities] = useState<string[]>([]);
+
+  const toggleCapability = (cat: string) => {
+    setSelectedCapabilities((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
+  };
 
   const filtered = useMemo(() => {
     return tools.filter((t) => {
       if (priority !== 'all' && t.priority !== priority) return false;
-      if (capability && !t.capabilities[capability]?.supported) return false;
+      if (selectedCapabilities.length > 0 && !selectedCapabilities.some((cap) => t.capabilities[cap]?.supported)) return false;
       return true;
     });
-  }, [tools, priority, capability]);
+  }, [tools, priority, selectedCapabilities]);
 
   const totalSupported = tools.reduce((sum, t) => sum + getCapabilityCount(t).supported, 0);
 
@@ -46,9 +52,9 @@ export function ContentIndex({ tools }: { tools: ToolData[] }) {
       >
         <FilterBar
           priority={priority}
-          capability={capability}
+          selectedCapabilities={selectedCapabilities}
           onPriorityChange={setPriority}
-          onCapabilityChange={setCapability}
+          onCapabilityToggle={toggleCapability}
         />
         <ViewToggle view={view} onViewChange={setView} />
       </div>

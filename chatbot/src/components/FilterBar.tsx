@@ -14,6 +14,8 @@ const CAPABILITY_CATEGORIES = [
   'dictation',
 ];
 
+const PRIORITY_LABELS: Record<string, string> = { all: 'All', P0: 'Essential', P1: 'Supplementary' };
+
 function formatCategory(cat: string): string {
   return cat
     .split('-')
@@ -23,14 +25,14 @@ function formatCategory(cat: string): string {
 
 export function FilterBar({
   priority,
-  capability,
+  selectedCapabilities,
   onPriorityChange,
-  onCapabilityChange,
+  onCapabilityToggle,
 }: {
   priority: 'all' | 'P0' | 'P1';
-  capability: string;
+  selectedCapabilities: string[];
   onPriorityChange: (p: 'all' | 'P0' | 'P1') => void;
-  onCapabilityChange: (c: string) => void;
+  onCapabilityToggle: (c: string) => void;
 }) {
   const pillStyle = (active: boolean): React.CSSProperties => ({
     padding: '0.25rem 0.75rem',
@@ -49,32 +51,24 @@ export function FilterBar({
       <div style={{ display: 'flex', gap: '0.25rem' }}>
         {(['all', 'P0', 'P1'] as const).map((p) => (
           <button key={p} style={pillStyle(priority === p)} onClick={() => onPriorityChange(p)}>
-            {p === 'all' ? 'All' : p}
+            {PRIORITY_LABELS[p]}
           </button>
         ))}
       </div>
 
-      <select
-        value={capability}
-        onChange={(e) => onCapabilityChange(e.target.value)}
-        style={{
-          padding: '0.25rem 0.5rem',
-          fontSize: '0.75rem',
-          fontFamily: 'var(--font)',
-          borderRadius: 'var(--radius)',
-          border: '1px solid var(--border)',
-          backgroundColor: 'var(--bg-card)',
-          color: 'var(--text)',
-          cursor: 'pointer',
-        }}
-      >
-        <option value="">All capabilities</option>
+      <div style={{ width: 1, height: 20, backgroundColor: 'var(--border)' }} />
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
         {CAPABILITY_CATEGORIES.map((cat) => (
-          <option key={cat} value={cat}>
+          <button
+            key={cat}
+            style={pillStyle(selectedCapabilities.includes(cat))}
+            onClick={() => onCapabilityToggle(cat)}
+          >
             {formatCategory(cat)}
-          </option>
+          </button>
         ))}
-      </select>
+      </div>
     </div>
   );
 }

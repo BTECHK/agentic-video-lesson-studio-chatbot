@@ -45,6 +45,28 @@ describe('MockProvider', () => {
     });
     expect(response.content).toContain('second question');
   });
+
+  it('returns content-grounded response when contentContext is provided', async () => {
+    const provider = new MockProvider();
+    const response = await provider.chat({
+      messages: [{ role: 'user', content: 'Tell me about ChatGPT' }],
+      accessMode: 'student',
+      contentContext: '### ChatGPT (OpenAI)\nAn AI chatbot.',
+    });
+    expect(response.content).toContain('grounded in the Sample Academy content repository');
+    expect(response.citations[0].tool).toBe('ChatGPT');
+  });
+
+  it('falls back to default mock response when contentContext is empty', async () => {
+    const provider = new MockProvider();
+    const response = await provider.chat({
+      messages: [{ role: 'user', content: 'Hello' }],
+      accessMode: 'demo',
+      contentContext: '',
+    });
+    expect(response.content).toContain('mock response');
+    expect(response.citations[0].tool).toBe('MockTool');
+  });
 });
 
 describe('getLLMProvider', () => {

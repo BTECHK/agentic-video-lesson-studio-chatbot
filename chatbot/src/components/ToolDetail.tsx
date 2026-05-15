@@ -5,6 +5,8 @@ import type { ToolData, SourceEntry } from '@/lib/content-types';
 import { getCapabilityCount } from '@/lib/content-types';
 import { CapabilityAccordion } from './CapabilityAccordion';
 
+const PRIORITY_LABEL: Record<string, string> = { P0: 'Essential', P1: 'Supplementary' };
+
 export function ToolDetail({ tool, sources }: { tool: ToolData; sources: SourceEntry[] }) {
   const { supported, total } = getCapabilityCount(tool);
   const isP0 = tool.priority === 'P0';
@@ -54,7 +56,7 @@ export function ToolDetail({ tool, sources }: { tool: ToolData; sources: SourceE
               fontFamily: 'var(--font)',
             }}
           >
-            {tool.priority}
+            {PRIORITY_LABEL[tool.priority]}
           </span>
         </div>
 

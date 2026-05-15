@@ -40,14 +40,26 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CONT-03**: Git-versioned content with structured change history
 - [x] **CONT-04**: Content-to-scene mapping metadata linking content nodes to specific video sections
 - [x] **CONT-05**: Zod-validated content schemas catching structural errors before render
-
 - [x] **CONT-06**: Web scraping/research system that periodically discovers new AI tool developments and updates from vendor docs, changelogs, and support pages — minimal API key usage, agent-driven
+- [ ] **CONT-07**: AI tool comparison feature with benchmark data from open sources (LMSYS, Artificial Analysis) and editorial "best for X" recommendations
+- [ ] **CONT-08**: User-friendly content labels (not raw P0/P1) and multi-select capability filtering in the content viewer
 
 ### Chatbot Support
 
-- [ ] **CHAT-01**: RAG-grounded TA chatbot answering from course content repository with verified, current information
-- [ ] **CHAT-02**: Source citations in every response (which lesson/module/tool the answer references)
-- [ ] **CHAT-03**: Standalone web application (separate from Teachable) with its own frontend
+- [ ] **CHAT-01**: RAG-grounded TA chatbot answering from course content repository with verified, current information (Phase 5 built scaffold only — RAG not wired)
+- [ ] **CHAT-02**: Source citations in every response that reference actual content repo entries and can be verified (Phase 5 built parsing only — no verification)
+- [x] **CHAT-03**: Standalone web application (separate from Teachable) with its own frontend
+- [ ] **CHAT-04**: Office Hours chatbot mode for tangential/exploratory questions — distinct from TA mode's strict content grounding (moved from v2)
+- [ ] **CHAT-05**: Session persistence across server restarts via file-based storage
+- [ ] **CHAT-06**: Citation verification — every cited source validated against content repository before display
+
+### Stakeholder Demo
+
+- [ ] **DEMO-01**: Product walkthrough animation (30-60s Remotion composition) demonstrating chatbot + content repo for stakeholder meetings
+
+### Scene Components
+
+- [ ] **ANIM-08**: Scene type components implemented as Remotion React components from the 14 defined Zod schemas
 
 ### Transcription
 
@@ -81,7 +93,7 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ### Chatbot Enhancements
 
-- **CHAT-04**: Office Hours chatbot mode for tangential/exploratory questions ("you taught X, I want to do Y") — distinct from TA mode's strict content grounding
+- ~~**CHAT-04**: Moved to v1 requirements (Phase 8)~~
 
 ### Scaling
 
@@ -119,29 +131,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VERI-02 | Phase 1 | Complete (01-01) |
 | VERI-03 | Phase 1 | Complete (01-04) |
 | VERI-04 | Phase 1 | Complete (01-03) |
-| ANIM-01 | Phase 2 | Pending |
-| ANIM-02 | Phase 2 | Pending |
-| ANIM-03 | Phase 2 | Pending |
-| ANIM-04 | Phase 2 | Pending |
-| ANIM-05 | Phase 2 | Pending |
-| ANIM-06 | Phase 2 | Pending |
-| ANIM-07 | Phase 2 | Pending |
+| ANIM-01 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-02 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-03 | Phase 2 + 9 | Partial — schemas done (Phase 3), components in Phase 9 |
+| ANIM-04 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-05 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-06 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-07 | Phase 2 | Deferred (awaiting Instructor) |
+| ANIM-08 | Phase 9 | Pending |
 | CONT-01 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-02 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-03 | Phase 3 | Complete (03-03, 03-04) |
 | CONT-04 | Phase 3 | Complete (03-05) |
 | CONT-05 | Phase 3 | Complete (03-05) |
 | CONT-06 | Phase 4 | Complete (04-01 through 04-05) |
+| CONT-07 | Phase 6 | Pending |
+| CONT-08 | Phase 6 | Pending |
 | TRAN-01 | Phase 4 | Deferred (per CONTEXT.md) |
-| CHAT-01 | Phase 5 | Complete (05-02) |
-| CHAT-02 | Phase 5 | Complete (05-03) |
+| CHAT-01 | Phase 7 | Scaffold in Phase 5, RAG grounding in Phase 7 |
+| CHAT-02 | Phase 7 | Parsing in Phase 5, verification in Phase 7 |
 | CHAT-03 | Phase 5 | Complete (05-01) |
+| CHAT-04 | Phase 8 | Pending (moved from v2) |
+| CHAT-05 | Phase 8 | Pending |
+| CHAT-06 | Phase 7 | Pending |
+| DEMO-01 | Phase 10 | Pending |
+| PHILO-01 | Phase 11 | Blocked on Instructor |
+| PHILO-02 | Phase 11 | Blocked on Instructor |
+| SCALE-01 | Phase 11 | Blocked on Instructor |
 
 **Coverage:**
-- v1 requirements: 27 total
-- Mapped to phases: 27
+- v1 requirements: 34 total (7 new from gap audit)
+- Mapped to phases: 34
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-13*
-*Last updated: 2026-05-14 after 04-05 completion (Phase 4 complete)*
+*Last updated: 2026-05-15 after gap audit — 6 new phases added, CHAT-01/02 re-opened, CHAT-04 moved from v2*

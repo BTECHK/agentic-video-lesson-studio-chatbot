@@ -4,6 +4,8 @@ import Link from 'next/link';
 import type { ToolData } from '@/lib/content-types';
 import { getCapabilityCount } from '@/lib/content-types';
 
+const PRIORITY_LABEL: Record<string, string> = { P0: 'Essential', P1: 'Supplementary' };
+
 export function ToolRow({ tool }: { tool: ToolData }) {
   const { supported, total } = getCapabilityCount(tool);
   const isP0 = tool.priority === 'P0';
@@ -44,7 +46,7 @@ export function ToolRow({ tool }: { tool: ToolData }) {
           flexShrink: 0,
         }}
       >
-        {tool.priority}
+        {PRIORITY_LABEL[tool.priority]}
       </span>
 
       <span style={{ fontWeight: 700, fontSize: '0.875rem', minWidth: 120, fontFamily: 'var(--font)' }}>

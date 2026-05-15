@@ -78,8 +78,17 @@ export function CapabilityAccordion({
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                 {capability.subFeatures.map((sf) => (
-                  <div key={sf.name} style={{ fontSize: '0.8125rem' }}>
-                    <strong style={{ fontWeight: 600 }}>{sf.name}</strong>
+                  <div
+                    key={sf.name}
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'var(--feature-bg)',
+                      border: '1px solid var(--feature-border)',
+                      fontSize: '0.8125rem',
+                    }}
+                  >
+                    <strong style={{ fontWeight: 600, color: 'var(--feature-text)' }}>{sf.name}</strong>
                     {sf.availableOn && (
                       <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>
                         ({sf.availableOn.join(', ')})
@@ -99,11 +108,24 @@ export function CapabilityAccordion({
               <h4 style={{ fontSize: '0.75rem', fontWeight: 700, margin: '0 0 0.5rem', fontFamily: 'var(--font)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
                 Limitations
               </h4>
-              <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.8125rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                 {capability.limitations.map((lim, i) => (
-                  <li key={i}>{lim}</li>
+                  <div
+                    key={i}
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'var(--limitation-bg)',
+                      border: '1px solid var(--limitation-border)',
+                      fontSize: '0.8125rem',
+                      color: 'var(--limitation-text)',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {lim}
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 

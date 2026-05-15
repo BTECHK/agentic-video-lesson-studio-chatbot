@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { parseCitations } from '@/lib/citations';
+import { describe, it, expect, vi } from 'vitest';
+import { parseCitations, verifyCitations } from '@/lib/citations';
 
 describe('parseCitations', () => {
   it('extracts a single citation with module and lesson', () => {
@@ -63,5 +63,58 @@ describe('parseCitations', () => {
     const content = '[Source: Module 5, Lesson 10, Tool: Gemini]';
     const { citations } = parseCitations(content);
     expect(citations[0].snippet).toBe('Module 5, Lesson 10, Tool: Gemini');
+  });
+});
+
+describe('verifyCitations', () => {
+  it('marks citations with matching tool names as verified', () => {
+    const citations = [
+      { id: 'cite-0', module: 'Module 1', lesson: 'Lesson 1', tool: 'ChatGPT', snippet: 'test' },
+    ];
+    const result = verifyCitations(citations, ['ChatGPT', 'Claude']);
+    expect(result[0].verified).toBe(true);
+  });
+
+  it('marks citations with non-matching tool names as unverified', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const citations = [
+      { id: 'cite-0', module: 'Module 1', lesson: 'Lesson 1', tool: 'UnknownTool', snippet: 'test' },
+    ];
+    const result = verifyCitations(citations, ['ChatGPT', 'Claude']);
+    expect(result[0].verified).toBe(false);
+    warnSpy.mockRestore();
+  });
+
+  it('performs case-insensitive matching', () => {
+    const citations = [
+      { id: 'cite-0', module: 'Module 1', lesson: 'Lesson 1', tool: 'chatgpt', snippet: 'test' },
+    ];
+    const result = verifyCitations(citations, ['ChatGPT']);
+    expect(result[0].verified).toBe(true);
+  });
+
+  it('marks citations without a tool field as verified', () => {
+    const citations = [
+      { id: 'cite-0', module: 'Module 1', lesson: 'Lesson 1', tool: undefined, snippet: 'test' },
+    ];
+    const result = verifyCitations(citations, ['ChatGPT']);
+    expect(result[0].verified).toBe(true);
+  });
+
+  it('logs a warning for unverified citations', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const citations = [
+      { id: 'cite-0', module: 'Module 1', lesson: 'Lesson 1', tool: 'FakeTool', snippet: 'test' },
+    ];
+    verifyCitations(citations, ['ChatGPT']);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Unverified citation: tool "FakeTool"')
+    );
+    warnSpy.mockRestore();
+  });
+
+  it('handles empty citations array', () => {
+    const result = verifyCitations([], ['ChatGPT']);
+    expect(result).toHaveLength(0);
   });
 });

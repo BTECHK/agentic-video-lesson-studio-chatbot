@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 
 export function TopNav() {
   const pathname = usePathname();
-  const isContent = pathname.startsWith('/content');
+  const isContent = pathname.startsWith('/content') && !pathname.startsWith('/content/compare');
+  const isCompare = pathname.startsWith('/content/compare');
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
     padding: '0 0.75rem',
@@ -34,11 +35,14 @@ export function TopNav() {
       }}
     >
       <div style={{ display: 'flex', height: '100%', gap: '0.5rem' }}>
-        <Link href="/" style={tabStyle(!isContent)}>
+        <Link href="/" style={tabStyle(!isContent && !isCompare)}>
           Chat
         </Link>
         <Link href="/content" style={tabStyle(isContent)}>
           Content
+        </Link>
+        <Link href="/content/compare" style={tabStyle(isCompare)}>
+          Compare
         </Link>
       </div>
       <span

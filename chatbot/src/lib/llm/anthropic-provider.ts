@@ -13,7 +13,7 @@ export class AnthropicProvider implements LLMProviderInterface {
   }
 
   async chat(request: LLMRequest): Promise<LLMResponse> {
-    const systemPrompt = getSystemPrompt(request.accessMode);
+    const systemPrompt = getSystemPrompt(request.accessMode, request.contentContext);
 
     const messages = request.messages
       .filter((m): m is LLMMessage & { role: 'user' | 'assistant' } =>

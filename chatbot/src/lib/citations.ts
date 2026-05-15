@@ -1,5 +1,9 @@
 import type { Citation } from './types';
 
+export interface VerifiedCitation extends Citation {
+  verified: boolean;
+}
+
 const CITATION_REGEX = /\[Source: ([^\]]+)\]/g;
 
 export function parseCitations(content: string): { cleanContent: string; citations: Citation[] } {
@@ -24,4 +28,21 @@ export function parseCitations(content: string): { cleanContent: string; citatio
   const cleanContent = content.replace(CITATION_REGEX, '').replace(/\s{2,}/g, ' ').trim();
 
   return { cleanContent, citations };
+}
+
+export function verifyCitations(citations: Citation[], toolNames: string[]): VerifiedCitation[] {
+  const normalizedNames = toolNames.map((name) => name.toLowerCase());
+
+  return citations.map((citation) => {
+    if (!citation.tool) {
+      return { ...citation, verified: true };
+    }
+
+    const verified = normalizedNames.includes(citation.tool.toLowerCase());
+    if (!verified) {
+      console.warn(`Unverified citation: tool "${citation.tool}" not found in content repository`);
+    }
+
+    return { ...citation, verified };
+  });
 }

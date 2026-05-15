@@ -28,8 +28,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Content Repository & Schemas** - Structured AI tool knowledge base with validation, versioning, and content-to-scene mapping (completed 2026-05-14)
 - [x] **Phase 4: Content Ingestion & Freshness** - Web scraping system for vendor docs + video transcription pipeline for large source recordings (completed 2026-05-14)
 - [x] **Phase 5: TA Chatbot (Scaffold)** - Chat UI, LLM provider, session management, access control, system prompt (completed 2026-05-14). NOTE: RAG grounding NOT wired — chatbot uses general Claude knowledge, not content repo.
-- [ ] **Phase 6: Content Viewer V2** - P0/P1 labels, multi-select filtering, comparison page with benchmarks + editorial picks
-- [ ] **Phase 7: Chatbot Content Grounding** - RAG pipeline wiring content repo into chat, citation verification
+- [x] **Phase 6: Content Viewer V2** - P0/P1 labels, multi-select filtering, comparison page with benchmarks + editorial picks (completed 2026-05-15)
+- [x] **Phase 7: Chatbot Content Grounding** - RAG pipeline wiring content repo into chat, citation verification (completed 2026-05-15)
 - [ ] **Phase 8: Chatbot Enhancements** - Office Hours mode, session persistence (SQLite)
 - [ ] **Phase 9: Scene Components** - Implement top scene types as Remotion React components from existing schemas
 - [ ] **Phase 10: Stakeholder Demo Animation** - Product walkthrough Remotion composition with mock chatbot responses
@@ -144,12 +144,12 @@ Plans:
 
 **Wave 1** *(parallel — no dependencies)*
 Plans:
-- [ ] 06-01-PLAN.md — Labels, multi-select filtering, soft-bubble styling (CONT-08)
-- [ ] 06-02-PLAN.md — Comparison page with benchmarks and editorial picks (CONT-07)
+- [x] 06-01-PLAN.md — Labels, multi-select filtering, soft-bubble styling (CONT-08)
+- [x] 06-02-PLAN.md — Comparison page with benchmarks and editorial picks (CONT-07)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 Plans:
-- [ ] 06-03-PLAN.md — Visual verification checkpoint
+- [x] 06-03-PLAN.md — Visual verification checkpoint
 
 ### Phase 7: Chatbot Content Grounding
 **Goal**: Wire the content repository into the chatbot so Tutor answers from curated tool data instead of general Claude knowledge — the single biggest gap in the system
@@ -163,11 +163,11 @@ Plans:
 **Plans:** 2 plans
 **Wave 1** *(no dependencies)*
 Plans:
-- [ ] 07-01-PLAN.md — Content retrieval function, system prompt content injection, LLMRequest type update
+- [x] 07-01-PLAN.md — Content retrieval function, system prompt content injection, LLMRequest type update
 
 **Wave 2** *(depends on Wave 1)*
 Plans:
-- [ ] 07-02-PLAN.md — Chat route wiring, citation verification, provider updates, end-to-end checkpoint
+- [x] 07-02-PLAN.md — Chat route wiring, citation verification, provider updates, end-to-end checkpoint
 
 ### Phase 8: Chatbot Enhancements
 **Goal**: Add Office Hours mode for exploratory questions and persist sessions across restarts
@@ -238,7 +238,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (parallel, NOW) → Phase 8 (after 7) → Phase 9 → Phase 10 (after 7+9) → Phase 2 + 11 (when Instructor's content ready)
+Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (complete) → Phase 8 (NOW) → Phase 9 → Phase 10 (after 9) → Phase 2 + 11 (when Instructor's content ready)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -247,8 +247,8 @@ Phase 1 (complete) → Phase 3–5 (complete) → Phase 6 + 7 (parallel, NOW) �
 | 3. Content Repository & Schemas | 5/5 | Complete | 2026-05-14 |
 | 4. Content Ingestion & Freshness | 5/5 | Complete | 2026-05-14 |
 | 5. TA Chatbot (Scaffold) | 4/4 | Complete | 2026-05-14 |
-| 6. Content Viewer V2 | 0/3 | Planned | - |
-| 7. Chatbot Content Grounding | 0/2 | Planned | - |
+| 6. Content Viewer V2 | 3/3 | Complete | 2026-05-15 |
+| 7. Chatbot Content Grounding | 2/2 | Complete | 2026-05-15 |
 | 8. Chatbot Enhancements | 0/TBD | Blocked on Phase 7 | - |
 | 9. Scene Components | 0/TBD | Ready to plan | - |
 | 10. Stakeholder Demo Animation | 0/TBD | Blocked on Phase 7+9 | - |

@@ -40,9 +40,22 @@ This user is in demo mode with access to Module 1 content only.
 If they ask about topics beyond Module 1, respond helpfully but add:
 "This topic is covered in more depth in the full course. Enroll at Sample Academy to unlock all modules!"`;
 
-export function getSystemPrompt(accessMode: AccessMode): string {
+export function getSystemPrompt(accessMode: AccessMode, contentContext?: string): string {
   let prompt = TUTOR_PERSONA;
-  prompt += BOOTSTRAP_ADDENDUM;
+
+  if (contentContext && contentContext.length > 0) {
+    prompt += `
+
+## Course Content Repository
+You have access to the following curated AI tool data from the Sample Academy course.
+Use ONLY this data to answer questions about AI tools. If the question is not covered by this data, say so honestly.
+When citing, use the tool name in your citation: [Source: Module 1, Lesson 1, Tool: {ToolName}]
+
+${contentContext}`;
+  } else {
+    prompt += BOOTSTRAP_ADDENDUM;
+  }
+
   if (accessMode === 'demo') {
     prompt += DEMO_ADDENDUM;
   }
