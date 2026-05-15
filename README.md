@@ -7,108 +7,51 @@ A content production and maintenance system for **Sample Academy**, an AI educat
 
 ---
 
-## Three Scopes
+## Project Plan
 
-Everything in this system maps to one of three scopes from the original brief:
+The system has three scopes from the [original brief](project-brief.md): **(1)** a content repository that tracks what AI tools can do, **(2)** a curriculum and lesson generation pipeline that turns that content into animated video lessons using Instructor's teaching philosophy, and **(3)** a support system where students can ask an AI teaching assistant questions grounded in actual course content.
 
-### Scope 1 — Content Repository (the foundation)
-A structured knowledge base of 12 AI tools and their capabilities, kept current through automated ingestion from vendor docs. This repository is the single source of truth for tool facts.
+### Summary
 
-### Scope 2 — Curriculum & Lesson Generation
-Generates animated video lessons from the content repository + Instructor's teaching philosophy. No pre-recorded lectures — the system generates Remotion-based animated videos (1080p MP4) that can be surgically updated when tools change, without rebuilding entire lessons.
+| Deliverable | Scope | Status | What's Done | What's Needed |
+|-------------|-------|--------|-------------|---------------|
+| **Content repository** (12 AI tools, 11 capabilities) | 1 | Done | Structured JSON profiles for all 12 tools with Zod validation, source attribution, versioning. Content nodes map to video scenes for surgical re-rendering. | — |
+| **Content ingestion pipeline** (automated freshness) | 1 | Done | Web scraper for vendor docs/changelogs with robots.txt compliance, diff engine, per-vendor git branches, auto-PR workflow. 4 modes: manual poll, specific search, scheduled poll, full refresh. | — |
+| **Ingestion control panel** (web UI) | 1 | Not Started | — | Engineering: build web UI for per-tool freshness indicators, manual refresh triggers, ad hoc search, schedule monitoring |
+| **Rendering pipeline** (Docker + Remotion) | 2 | Done | Containerized Remotion + headless Chrome pipeline. Post-render validation (resolution, fps, blank frames). Screenshot verification. Deterministic rendering. | — |
+| **Scene components** (Remotion) | 2 | Not Started | 14 scene types designed and schema'd (from Claude Design session). Scene dispatcher + JSON content loader built. | Engineering: implement top 3-4 scene types as React components with spring-physics animation |
+| **Module 1 animated video** (stakeholder demo) | 2 | Blocked | Design system fully locked (Syne, warm linen palette, motion contract). Storyboard metadata schema ready. | **Instructor:** final Module 1 lesson scripts and topic content |
+| **Lesson generation pipeline** | 2 | Blocked | Content-to-scene mapping built. Zod lesson schema defined. Scene dispatcher routes JSON to Remotion components. | **Instructor:** teaching philosophy document (scaffolding, sequencing, explanation approach), curriculum structure, lesson ordering. Engineering: wire content repo → philosophy rules → lesson JSON → scene components → MP4 → Teachable export |
+| **Stakeholder demo animation** | 2 | Not Started | — | Engineering: 30-60s polished Remotion composition. Blocked on scene components (above). |
+| **Chatbot web app** (Tutor) | 3 | Done | Next.js 16 app with chat UI, Claude SDK backend, access gate (demo + student modes), system prompt, session management. | — |
+| **Content grounding (RAG)** | 3 | Done | Content repo wired into chat via RAG. Tutor answers from curated tool data with source citations, not generic LLM knowledge. | — |
+| **Content library + comparison** | 3 | Done | Browsable tool repository (tile/list views, priority + capability filtering). Side-by-side comparison with benchmarks, capability matrix, editorial picks. Tool detail pages. | — |
+| **Landing page** | 3 | Done | Hero section, Module 1 preview, feature cards, brand system applied. | **Instructor:** confirm or revise hero copy and module topic titles |
+| **Office hours mode** | 3 | Not Started | — | Engineering: separate system prompt for exploratory questions, UI toggle between TA and Office Hours modes |
+| **Session persistence** | 3 | Not Started | — | Engineering: SQLite storage so chat history survives server restarts |
+| **Platform walkthrough video** | — | Done | 60-second Remotion composition rendered to MP4 (4 scenes: title, chat demo, content viewer, comparison). Available locally at `output/video/platform-walkthrough.mp4`. | — |
 
-### Scope 3 — Support System
-An AI teaching assistant ("Tutor") and office hours mode so learners get hands-on support grounded in course content, not generic LLM knowledge.
+### Progress at a Glance
 
----
-
-## What's Built
-
-### Rendering Pipeline (Phase 1)
-Containerized Remotion + Docker pipeline that renders animated compositions to MP4. Includes headless Chrome, post-render validation (file size, resolution, fps, blank frames), screenshot verification, and deterministic rendering.
-
-### Content Repository (Phase 3)
-Structured JSON data for all 12 AI tools across 11 capability categories, validated with Zod schemas. Every factual claim has official source attribution. Content nodes map to video scenes so changes identify exactly which scenes need re-rendering. Includes lesson content schema, scene type dispatcher, and animation architecture prep.
-
-**12 tools tracked:** ChatGPT, Claude, Claude Code, Codex, Comet, Cowork, DeepSeek, Gemini, Grok, Manus, Perplexity, Qwen
-
-**11 capabilities covered:** Writing & Chat, Research, File Analysis, Document Creation, Image Generation, Prototyping, Personalization, Persistent Context, Agents, Connectors, Dictation
-
-### Content Ingestion Pipeline (Phase 4)
-Automated web scraping system that pulls updates from vendor docs, changelogs, and support pages. Includes robots.txt compliance, CSS extraction, diff engine comparing scraped data against existing tool JSON, per-vendor git branches with auto-PR workflow, and 4 ingestion modes (manual poll, specific search, scheduled poll, full refresh).
-
-### Chatbot Web App (Phases 5–7)
-Next.js 16 web application with four main sections:
-
-**Landing Page** — Hero section, Module 1 topic preview, feature cards
-
-![Landing Page](docs/screenshots/01-landing-full.png)
-
-**Ask Tutor (AI Teaching Assistant)** — Claude-powered assistant grounded in the content repository via RAG. Answers reference curated tool data with source citations, not generic LLM knowledge. Access-gated with demo mode.
-
-![Tutor](docs/screenshots/02-chat-gate.png)
-
-**Content Library** — Browsable repository of all 12 tools with tile/list views, priority filtering (Essential/Supplementary), and multi-select capability filtering.
-
-![Content Library](docs/screenshots/03-content-library.png)
-
-**Tool Comparison** — Side-by-side benchmarks (Arena ELO, quality index, speed, pricing, context window), capability matrix, and editorial "best for X" recommendations.
-
-![Compare Tools](docs/screenshots/04-compare.png)
-
-**Tool Detail Pages** — Full capability breakdown per tool with expandable details and source references.
-
-![Tool Detail](docs/screenshots/05-tool-detail.png)
+- **Done:** 8 of 14 deliverables (content repo, ingestion pipeline, rendering pipeline, chatbot, RAG grounding, content library + comparison, landing page, walkthrough video)
+- **Not started (unblocked):** 4 deliverables (ingestion control panel, scene components, office hours, session persistence)
+- **Blocked on Instructor:** 2 deliverables (Module 1 animation, lesson generation pipeline)
 
 ---
 
-## Roadmap & Status
+## What's Needed from Instructor
 
-| # | Phase | Status | What It Delivers |
-|---|-------|--------|-----------------|
-| 1 | Rendering Environment | Done | Docker + Remotion + Chrome pipeline, screenshot verification, post-render validation |
-| 2 | Module 1 Animation | Blocked (Instructor) | Polished stakeholder-demo animated video with spring-physics motion |
-| 3 | Content Repository & Schemas | Done | 12-tool knowledge base, Zod validation, scene mapping, lesson schema |
-| 4 | Content Ingestion & Freshness | Done | Web scraping, diff engine, auto-PR workflow, 4 ingestion modes |
-| 5 | TA Chatbot (Scaffold) | Done | Next.js app, chat UI, LLM provider, access control, system prompt |
-| 6 | Content Viewer V2 | Done | Comparison page, benchmark data, editorial picks, multi-select filters |
-| 7 | Chatbot Content Grounding | Done | RAG pipeline wiring content repo into chat, citation verification |
-| 7.1 | Home Page + Walkthrough | Done | Landing page, platform walkthrough video, GitHub push |
-| 8 | Chatbot Enhancements | Not started | Office Hours mode, session persistence (SQLite) |
-| 8.5 | Ingestion Control Panel | Not started | Web UI for data freshness, manual refresh, ad hoc search, schedules |
-| 9 | Scene Components | Not started | Top scene types as Remotion React components from design system |
-| 10 | Stakeholder Demo Animation | Not started | 30-60s product walkthrough Remotion video for stakeholder meetings |
-| 11 | Lesson Pipeline | Blocked (Instructor) | Teaching philosophy encoding, content-to-lesson generation, Teachable export |
+These are the items only Instructor can provide — they block the lesson generation pipeline (Scope 2), which is the core differentiator of the system.
 
-**Completed:** Phases 1, 3, 4, 5, 6, 7, 7.1 (7 of 11 phases)
-
-**Ready to build (unblocked):** Phases 8, 8.5, 9
-
-**Blocked on Instructor:** Phases 2, 10 (needs scene components first), 11
+| Item | What It Is | What It Unblocks |
+|------|-----------|-----------------|
+| **Teaching philosophy document** | How you scaffold, sequence, and explain. What you emphasize, what you skip, your opinions on which tool to reach for. The system encodes this as rules to generate lessons in your voice. | Lesson generation pipeline — the system can't "sound like Instructor" without this |
+| **Final Module 1 lesson scripts** | Confirmed topic titles, lesson text, narrative flow for Module 1 | Module 1 animated video, landing page content |
+| **Curriculum structure** | Lesson ordering, module breakdown, what content goes where | Full lesson generation across all modules |
+| **Tool priority review** | Confirm the 12 tools and their Essential/Supplementary tiers are still accurate | Content accuracy across the whole system |
+| **Tutor voice direction** | Should the AI teaching assistant sound formal-professional or warm-conversational? Currently warm-neutral | Chat quality and consistency |
 
 ---
-
-## What's Needed
-
-### Engineering (no blockers)
-
-| Phase | What | Why |
-|-------|------|-----|
-| 8 | Office Hours chat mode + SQLite session persistence | Students need exploratory Q&A beyond strict TA mode; sessions should survive restarts |
-| 8.5 | Ingestion control panel (web UI) | Visual freshness indicators, manual refresh triggers, schedule monitoring |
-| 9 | Scene components (Remotion) | Top 3-4 of the 14 defined scene types as React components with spring-physics animation |
-| 10 | Stakeholder demo animation | 30-60s polished walkthrough showing chatbot + content repo for stakeholder meetings |
-
-### From Instructor
-
-| What | Why | Blocks |
-|------|-----|--------|
-| Final Module 1 lesson scripts | Landing page shows placeholder topic titles; animation needs real content | Phase 2, Phase 11 |
-| Teaching philosophy document | How Instructor scaffolds, sequences, and explains — the system needs this encoded as rules to generate lessons in the Instructor's voice | Phase 11 |
-| Curriculum structure | Lesson ordering, module breakdown, what goes in each section | Phase 11 |
-| Tool priority confirmation | Are the 12 tools and Essential/Supplementary tiers still accurate? | Content accuracy |
-| Landing page copy review | Hero reads "Learn to work with AI assistants" — confirm or revise | Phase 7.1 |
-| Tutor voice direction | Formal-professional or warm-conversational? Currently warm-neutral | Chat quality |
 
 ---
 
@@ -116,7 +59,7 @@ Next.js 16 web application with four main sections:
 
 | Layer | Choice |
 |-------|--------|
-| Animation | Remotion v4 (React-based video) |
+| Animation | Remotion v4 (React-based video rendering) |
 | Web App | Next.js 16 (App Router), TypeScript |
 | AI Backend | Anthropic Claude SDK |
 | Ingestion | Cheerio, robots-parser, p-limit, JSON Lines |
@@ -125,29 +68,6 @@ Next.js 16 web application with four main sections:
 | Testing | Vitest |
 | Container | Docker (node:22-bookworm-slim), FFmpeg |
 | Brand | Syne font, #EDE8E3 base, #8B2635 accent, 4px radius |
-
-## Project Structure
-
-```
-chatbot/                    # Next.js web application (Tutor + content viewer)
-  src/app/                  # Routes: landing, chat, content, compare
-  src/components/           # 15 React components
-  src/lib/                  # Content loading, types, utilities
-
-content/                    # AI tool knowledge base
-  tools/                    # 12 tool profiles (JSON)
-  sources/                  # Official source references
-
-src/                        # Animation + ingestion pipeline
-  components/               # Remotion scene components
-  lib/                      # Content loaders, validators
-  test/                     # Test suites
-
-scripts/                    # Ingestion CLI, render scripts
-docker/                     # Dockerfile configs
-docs/screenshots/           # Platform screenshots
-.planning/                  # Roadmap, phase plans, research
-```
 
 ## Running Locally
 
