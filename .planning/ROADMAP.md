@@ -215,6 +215,26 @@ Plans:
   5. Rendered MP4 exports in Teachable-compatible format
 **Plans**: TBD — blocked on Instructor's input
 
+## Backlog
+
+### Phase 999.1: Comparison Page V2 (BACKLOG)
+
+**Goal:** Redesign the comparison page with model-level granularity, sourced benchmarks, interactive editorial cards, and comprehensive metrics
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Context (from user feedback 2026-05-15):
+1. Model-level granularity — compare individual models (Claude Opus vs Sonnet vs Haiku) not just tool-level
+2. Citation sources for benchmark data — show where numbers come from (LMSYS, Artificial Analysis, etc.)
+3. Clickable "Best For" cards — expand to show hard numbers, multi-source evaluations, detailed reasoning
+4. Metric definitions — tooltip or side panel explaining what Arena ELO, Quality Index, Speed, etc. mean
+5. Comprehensive benchmark coverage — audit whether current metrics are sufficient or missing important ones
+6. Evaluation source breakdown — show how each tool rates across different evaluation sites separately
+7. Capability filtering on comparison page — filter the comparison table by capability category
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
+
 ## Progress
 
 **Execution Order:**
