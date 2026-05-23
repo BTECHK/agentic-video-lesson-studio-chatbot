@@ -8,6 +8,7 @@ const TABS = [
   { label: 'Chat', href: '/chat', match: (p: string) => p === '/chat' },
   { label: 'Content', href: '/content', match: (p: string) => p.startsWith('/content') && !p.startsWith('/content/compare') },
   { label: 'Compare', href: '/content/compare', match: (p: string) => p.startsWith('/content/compare') },
+  { label: 'Studio', href: '/studio', match: (p: string) => p.startsWith('/studio') },
 ];
 
 export function TopNav() {

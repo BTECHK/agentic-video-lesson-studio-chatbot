@@ -3,7 +3,7 @@
 **Branch:** `feat/codified-lesson-pipeline`
 **Design:** `docs/superpowers/specs/2026-05-23-codified-lesson-pipeline-design.md`
 **Research:** `.planning/research/ai-lesson-pipeline-research.md`, `.planning/research/studio-timeline-ui-spec.md`
-**Status:** Phases A, B, C-1, C-2, D, E, **F complete** (298 root tests + 76 chatbot). **Phase G ⬅ NEXT** (Studio control plane).
+**Status:** Phases A, B, C-1, C-2, D, E, F complete + **G core slice done** (298 root tests + 90 chatbot). Pipeline + control plane shippable; Phase G polish follow-ups listed below.
 
 ## The vision (one line)
 Outline → script (Instructor's voice) → animation → free/local AI voiceover → MP4 — fully codified so any
@@ -137,13 +137,36 @@ common "what's stale now" view; a real run rebuilds in topo order and is exact. 
 live docker+remotion regeneration end-to-end (same gating as D/E: needs `docker compose build tts` +
 model download + render); engine/graph logic and the dry-run path are fully tested.
 
-## Phase G — Studio control plane  [CTRL-01/02/03]
-- New "Studio" tab in `chatbot/` (Next.js 19, **inline-styled components + CSS-variable tokens — no
-  Tailwind/shadcn**, matching existing convention). Full UI contract: `studio-timeline-ui-spec.md`.
-- 4 parallel tracks (animation thumbnails / voiceover waveform / script blocks / caption pages) on one
-  shared time axis; synced playhead; click-to-isolate inspector + comment (AI-delegated edits, no
-  in-app editing); fresh/stale/error badges; set-and-forget default.
-- Hand-build timeline with absolutely-positioned divs; **wavesurfer.js (BSD-3)** for waveforms only.
+## Phase G — Studio control plane  ✅ CORE SLICE DONE  [CTRL-01/02/03]
+Delivered (TDD on logic + visual verification): `/studio` tab in `chatbot/` (Next 16, inline-styled
++ CSS-var tokens, no Tailwind/shadcn). Data layer `src/lib/studio-timeline.ts` (pure: `lessonToTimeline`,
+`paginateCaptions`, clip geometry, `tickIntervalSec`, `formatTime`) + 14 tests in
+`test/studio-timeline.test.ts`. Server loader `src/lib/lesson-timeline.ts` (reads `../content/lessons/<id>/
+lesson.json`; derives **live status** — voiceover `stale` when its `.wav` is ungenerated; `force-dynamic`).
+Components in `src/components/studio/`: `Timeline` (orchestrator — shared px/s scale, rAF playback,
+auto-scroll, selection, comments), `Ruler`, `Playhead` (ARIA slider, drag + arrow-key scrub), `TrackLane`
++ `TrackHeader`, `Clip` (4 variants, focusable, under-playhead wash), `TransportBar` (zoom 4–80 px/s,
+play/pause, time), `StatusBadge` (fresh=quiet), `Inspector` (modal dialog, isolated preview, status row,
+comment thread + composer, slide-in honoring reduced-motion). TopNav gets a Studio tab.
+**Verified:** `npm run check` (90 chatbot tests), `next build` clean, Playwright screenshots of the
+default timeline, the click-to-isolate inspector, and the live 2-stale state (renamed a wav → badge
+appeared on clip + track roll-up + global "↻ 2 stale" count → restored).
+
+**Honored from contract:** one shared time axis governs all lanes; frozen 200px header column +
+horizontally-scrolling lane body; click-to-isolate inspector overlay with scrim; set-and-forget
+(fresh shows no badge); brand tokens only; a11y (every clip a `<button>` with aria-label, playhead as
+`role=slider`, dialog with Esc/focus, reduced-motion).
+
+**Deferred follow-ups (clearly-scoped, not blockers):**
+- **Real waveforms**: lane voiceover uses a CSS bar motif; wire **wavesurfer.js (BSD-3)** with
+  pre-decoded `peaks` (lane) + real `audioUrl` (inspector player). Needs a peaks-extraction step
+  (root script → `peaks.json` per scene, or compute from wav).
+- **Live AI-regen wiring**: comments are optimistic local state (`aiState:'queued'`). Connect the
+  composer to the Phase F `regenerate` engine so a comment triggers a real per-scene rebuild and
+  flips the clip back to `fresh` on completion (CTRL-03).
+- **Scene thumbnails**: animation lane uses a tonal filmstrip placeholder; wire first-frame stills
+  (the `render-lesson-stills.ts` output) into `public/`.
+- Multi-lesson picker (loader already lists lesson ids; page defaults to the first).
 
 ## Constraints to keep honoring
 - No paid services (P0): all TTS/align tools chosen are MIT/Apache/BSD + commercial-OK.
