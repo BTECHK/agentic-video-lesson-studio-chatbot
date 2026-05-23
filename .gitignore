@@ -17,3 +17,6 @@ Claude design work in session-SampleAcademy/
 Claude design work in session-SampleAcademy.zip
 drive-download-*
 .claude/
+
+# transient download staging
+.incoming/

@@ -61,6 +61,29 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **ANIM-08**: Scene type components implemented as Remotion React components from the 14 defined Zod schemas
 
+### Lesson Generation Pipeline (promoted from v2 — unblocked by Instructor's transcripts, 2026-05-23)
+
+The codified outline → script → animation → voiceover → MP4 factory. See `docs/superpowers/specs/2026-05-23-codified-lesson-pipeline-design.md`.
+
+- [ ] **STYLE-01**: Instructor's teaching voice extracted from workshop transcripts into a reusable `content/teaching/STYLE.md` (cadence, vocabulary, signature phrases, openings/closings, grade level)
+- [ ] **OUTLINE-01**: Zod-validated lesson `outline.json` schema (sections, learning objectives, tool/capability references) — codified lesson structure above the scene layer
+- [ ] **SCRIPT-01**: AI script generator producing talk-track `script.json` in Instructor's voice, structured per scene type, from outline + STYLE + facts
+- [ ] **SCRIPT-02**: Fact-check gate — every tool claim in a generated script maps to a capability/source record or is flagged for review (audit-integrity P0; "official sources only")
+- [ ] **PLAN-01**: Scene planner mapping `script.json` blocks → `lesson.json` draft scenes against the 14 scene-type content schemas
+- [ ] **VOICE-01**: AI voiceover via free/local TTS adapter — Kokoro-82M (Apache-2.0) branded neutral default, Chatterbox (MIT) Instructor-clone upgrade, paid API behind the same adapter (no subscription required)
+- [ ] **VOICE-02**: Word-level timestamp alignment (stable-ts, local) syncing narration + captions to animation frames
+- [ ] **VOICE-03**: Audio-driven scene durations — `narration` audio length drives `duration`; contiguous `start`/`lesson.duration` recomputed and re-validated; per-scene-type minimum-duration floor
+- [ ] **VOICE-04**: `narration` layer added to `SceneBaseSchema` (text + audioSrc + word timings) — single source of truth for audio/captions; backward-compatible with silent lessons
+- [ ] **FRESH-01**: Content-hashed artifact DAG — changing one input regenerates only affected downstream artifacts, cached per scene
+- [ ] **FRESH-02**: Targeted regeneration — edit/comment on one element (script block, voice, scene content) → only that scene's downstream artifacts rebuild, then re-splice (no full re-record)
+- [ ] **FRESH-03**: `regenerate` CLI driving the DAG with fresh/stale/error reporting
+
+### Control Plane (Studio)
+
+- [ ] **CTRL-01**: "Studio" tab in the Next.js app — CapCut/GarageBand-style multi-track timeline showing animation / voiceover / script / captions as 4 parallel tracks on one shared time axis
+- [ ] **CTRL-02**: Click any element → view isolated + leave a comment; edits are AI-delegated (comment → regenerate), no in-app content editing
+- [ ] **CTRL-03**: Per-element fresh/stale/error status surfaced on the timeline; playhead scrub/play of all tracks together; set-and-forget default
+
 ### Transcription
 
 - [ ] **TRAN-01**: Video transcription pipeline (FFmpeg audio extraction + Whisper/AssemblyAI) capable of handling files up to 2.5GB
@@ -69,22 +92,22 @@ Requirements for initial release. Each maps to roadmap phases.
 
 Deferred to future release. Tracked but not in current roadmap.
 
-### Voiceover System
+### Voiceover System — ⮝ PROMOTED to v1 (2026-05-23)
 
-- **VOICE-01**: AI voiceover generation using ElevenLabs TTS with Instructor voice clone
-- **VOICE-02**: Word-level timestamp alignment syncing narration to animation frames
-- **VOICE-03**: Audio-driven scene duration adjustment (scenes stretch/compress to match narration)
+Re-scoped free/local-first (not ElevenLabs) and moved to the active Lesson Generation Pipeline group above as `VOICE-01..04`. Original v2 entries kept for history:
+- ~~**VOICE-01**: AI voiceover generation using ElevenLabs TTS with Instructor voice clone~~ → free/local Kokoro+Chatterbox, paid behind adapter
+- ~~**VOICE-02**: Word-level timestamp alignment~~ → promoted
+- ~~**VOICE-03**: Audio-driven scene duration adjustment~~ → promoted
 
-### Content Freshness Automation
+### Content Freshness Automation — ⮝ PROMOTED to v1 (2026-05-23)
 
-- **FRESH-01**: Automated change detection diffing vendor docs against stored content
-- **FRESH-02**: Human-in-the-loop approval workflow before content updates propagate to video
-- **FRESH-03**: Content-change-triggered selective scene re-rendering
+Promoted as `FRESH-01..03` (content-hashed regeneration DAG) above:
+- ~~**FRESH-01/02/03**~~ → promoted (FRESH-02 re-scoped from vendor-doc approval to per-element targeted regeneration)
 
-### Teaching Philosophy
+### Teaching Philosophy — ⮝ PARTIALLY PROMOTED (2026-05-23, unblocked by transcripts)
 
-- **PHILO-01**: Encode Instructor's teaching philosophy (scaffolding, sequencing, explanation approach) as structured system prompts and content generation rules — prerequisite for SCALE-02
-- **PHILO-02**: Curriculum auto-generation pipeline that produces lesson storyboards from content repository + encoded philosophy (extends SCALE-02)
+- **PHILO-01**: Encode Instructor's teaching philosophy → realized as `STYLE-01` (extracted STYLE.md) + script-generator system prompts (`SCRIPT-01`)
+- **PHILO-02**: Curriculum auto-generation pipeline → realized as `OUTLINE-01` + `SCRIPT-01` + `PLAN-01` (outline → script → scene-plan)
 
 ### Use Case Content
 
