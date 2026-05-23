@@ -19,7 +19,7 @@ export const FPS = 30;
 export const WPM = 150;
 
 /** Per-scene-type minimum on-screen duration (seconds) so reveals can complete. */
-const MIN_SECONDS: Partial<Record<SceneType, number>> = {
+export const MIN_SECONDS: Partial<Record<SceneType, number>> = {
   cover: 4,
   'journey-map': 5,
   'tool-card-reveal': 5,
@@ -30,7 +30,7 @@ const MIN_SECONDS: Partial<Record<SceneType, number>> = {
   'quote-card': 4,
   'preview-band': 3,
 };
-const DEFAULT_MIN_SECONDS = 3;
+export const DEFAULT_MIN_SECONDS = 3;
 
 export function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;

@@ -21,7 +21,8 @@
     "ingest:unschedule": "docker compose stop ingest",
     "ingest:llm": "npx tsx scripts/ingest.ts --mode llm-extract",
     "tts:build": "docker compose build tts",
-    "tts:lesson": "tsx scripts/synthesize-lesson.ts"
+    "tts:lesson": "tsx scripts/synthesize-lesson.ts",
+    "align:lesson": "tsx scripts/align-lesson.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@fontsource/syne": "^5.2.7",
     "@remotion/bundler": "^4.0.460",
+    "@remotion/captions": "^4.0.460",
     "@remotion/cli": "^4.0.460",
     "@remotion/google-fonts": "^4.0.460",
     "@remotion/renderer": "^4.0.460",

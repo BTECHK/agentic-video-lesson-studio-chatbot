@@ -13,7 +13,7 @@
  */
 
 import { spawn } from 'node:child_process';
-import { join } from 'node:path';
+import { posix } from 'node:path';
 
 export const TTS_IMPLS = ['kokoro', 'chatterbox', 'paid'] as const;
 export type TtsImpl = (typeof TTS_IMPLS)[number];
@@ -62,9 +62,18 @@ export function selectImpl(env: Record<string, string | undefined> = {}): TtsImp
   return impl;
 }
 
-/** Per-scene output path. Per-scene granularity = the cache/regeneration unit. */
+/**
+ * Per-scene output path. Per-scene granularity = the cache/regeneration unit.
+ * POSIX separators: this path is passed verbatim into the Linux TTS container,
+ * where Windows backslashes would become a literal filename, not a dir path.
+ */
 export function sceneWavPath(lessonId: string, sceneId: string): string {
-  return join('content', 'lessons', lessonId, 'audio', `scene-${sceneId}.wav`);
+  return posix.join('content', 'lessons', lessonId, 'audio', `scene-${sceneId}.wav`);
+}
+
+/** Per-scene word-alignment path (written alongside the wav by the sidecar). */
+export function sceneAlignPath(lessonId: string, sceneId: string): string {
+  return posix.join('content', 'lessons', lessonId, 'align', `scene-${sceneId}.json`);
 }
 
 interface NarrationLike {
@@ -105,6 +114,75 @@ export function lessonToSynthPlan(lesson: LessonLike): SynthPlanItem[] {
   }
   return plan;
 }
+
+export interface ManifestEntry {
+  text: string;
+  out: string;
+  align: string;
+}
+
+export interface Manifest {
+  manifestPath: string;
+  entries: ManifestEntry[];
+}
+
+/**
+ * Build a batch synthesis manifest for a whole lesson: one {text, out} entry
+ * per narrated scene plus the manifest's own path (all POSIX, container-side).
+ *
+ * Batching all scenes into a single container run is both faster (the model
+ * loads once, not per scene) and far more reliable than spawning one container
+ * per scene — repeated container churn destabilizes Docker Desktop on Windows.
+ */
+export function buildManifest(lesson: LessonLike): Manifest {
+  const entries = lessonToSynthPlan(lesson).map((item) => ({
+    text: item.text,
+    out: item.wavPath,
+    align: sceneAlignPath(lesson.id, item.sceneId),
+  }));
+  return {
+    manifestPath: posix.join('content', 'lessons', lesson.id, 'audio', 'manifest.json'),
+    entries,
+  };
+}
+
+export interface BatchArgs {
+  manifestPath: string;
+  voice: string;
+  impl: TtsImpl;
+}
+
+/** Performs the real batch synthesis (one container run). Injectable for tests. */
+export type BatchRunner = (args: BatchArgs) => Promise<void>;
+
+/**
+ * Default batch runner: one `docker compose run` that synthesizes every scene
+ * in the manifest in a single container (model loaded once).
+ */
+export const defaultBatchRunner: BatchRunner = ({ manifestPath, voice, impl }) =>
+  new Promise((resolve, reject) => {
+    const proc = spawn(
+      'docker',
+      [
+        'compose',
+        'run',
+        '--rm',
+        'tts',
+        '--impl',
+        impl,
+        '--voice',
+        voice,
+        '--manifest',
+        manifestPath,
+      ],
+      { stdio: 'inherit' },
+    );
+    proc.on('error', reject);
+    proc.on('close', (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`TTS sidecar exited with code ${code}`));
+    });
+  });
 
 /**
  * Default sidecar runner: invokes the Python TTS CLI inside the docker/tts

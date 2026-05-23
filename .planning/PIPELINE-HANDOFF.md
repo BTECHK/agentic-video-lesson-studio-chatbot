@@ -3,7 +3,7 @@
 **Branch:** `feat/codified-lesson-pipeline`
 **Design:** `docs/superpowers/specs/2026-05-23-codified-lesson-pipeline-design.md`
 **Research:** `.planning/research/ai-lesson-pipeline-research.md`, `.planning/research/studio-timeline-ui-spec.md`
-**Status:** Phases A, B, C-1, **C-2, D complete** (262/262 tests). **Phase E ⬅ NEXT.** F, G remaining.
+**Status:** Phases A, B, C-1, C-2, D, **E complete** (278 root tests + 76 chatbot). **Phase F ⬅ NEXT.** G remaining.
 
 ## The vision (one line)
 Outline → script (Instructor's voice) → animation → free/local AI voiceover → MP4 — fully codified so any
@@ -15,10 +15,11 @@ content/lessons/module-1/
   outline.json   ✅ authored (7 sections, 9 beats)        [OUTLINE-01]
   → script.json  ✅ generated, fact-checked (0 flags)      [SCRIPT-01/02]  scripts/generate-script.ts
   → lesson.json  ✅ planned, LessonSchema-valid, narration  [PLAN-01]       scripts/plan-lesson.ts
-  → module-1-silent.mp4 ✅ C-2 renders (out/, 248.79s/1080p, gitignored)    LessonVideo
-  → audio/*.wav  🟡 Phase D code ready (adapter+sidecar); NOT yet generated (needs docker build tts + model dl)
-  → align/*.json ⬜ Phase E
-  → module-1.mp4 ⬜ Phase E (silent video + synced audio + captions)
+  → module-1-silent.mp4 ✅ C-2 renders (out/, gitignored)                    LessonVideo
+  → audio/*.wav  ✅ Phase D generated & verified (9 scenes, Kokoro, one batch run)  tts:lesson
+  → align/*.json ✅ Phase E (Kokoro-native word timestamps, emitted with the wav)  tts:lesson
+  → lesson.json(final) ✅ Phase E timing inversion → 6163 frames/205.5s          align:lesson
+  → module-1.mp4 ✅ Phase E DELIVERABLE (1080p, 205.5s, 16.2MB, H.264+AAC audio + captions)  render
 ```
 
 ## Key files built
@@ -74,18 +75,35 @@ Original task spec preserved below.
 - Per-scene output `content/lessons/<id>/audio/scene-<id>.wav` (per-scene = the cache granularity that
   enables surgical regeneration — research §6).
 
-## Phase E — Alignment + timing inversion + captions → MP4  ⬅ NEXT  [VOICE-02/03]
-**Gating step first:** generate Phase D audio (`docker compose build tts` → `npm run tts:lesson module-1`)
-so `content/lessons/module-1/audio/scene-*.wav` exist. Then wire `<Audio>` per scene into
-`LessonVideo.tsx` (the silent composition is built and renders).
+## Phase E — Alignment + timing inversion + captions → MP4  ✅ DONE (2026-05-23)  [VOICE-02/03]
+**Deliverable shipped:** `out/module-1.mp4` — 1080p, 205.5s, 16.2MB, H.264 + AAC stereo narration +
+on-brand word-synced captions. Validated via @remotion/media-parser (dims/duration/tracks) + sampled
+non-blank stills. Full pipeline now: `npm run tts:lesson module-1` → `npm run align:lesson module-1`
+→ `npm run render -- LessonVideo out/module-1.mp4`.
+
+**Key build decisions (differ from original spec below — see ERROR-LOG #4–6 + project memory):**
+- **Alignment uses Kokoro's NATIVE per-word timestamps** (`result.tokens[].start_ts/end_ts`), NOT
+  stable-ts/whisper. We synthesize the audio, so Kokoro knows exact word timing for free — zero extra
+  model, exact by construction. `synthesize.py` emits `align/scene-*.json` in the same batch pass.
+- TTS runs **one batched container per lesson** (manifest), not per-scene (Docker exit-125 churn on
+  Windows). CPU-only torch + baked `en_core_web_sm`. Paths crossing into the Linux container are POSIX.
+- New units (all TDD): `src/lib/{timing,captions,wav,assemble}.ts`, `src/compositions/lesson-scenes/
+  LessonCaptions.tsx`, `scripts/align-lesson.ts`. Audio copied to `public/lessons/<id>/audio/` for
+  `staticFile()`; `narration.audioSrc` is the staticFile-relative path. Media artifacts gitignored.
+
+**Known cosmetic follow-ups (not blockers):** (1) tool-card monograms still collide (ChatGPT/Claude
+both "C") — wants real logo assets in `public/`. (2) caption band slightly overlaps the densest scene
+(capability-table) bottom row; consider per-scene caption placement or a shorter table.
+
+<details><summary>Original Phase E task spec (superseded by the decisions above)</summary>
+
 - `src/lib/aligner.ts` via **stable-ts `align()`** (MIT) over (narration text, wav) → word timestamps.
-  Write to `scene.narration.words` (schema already supports it). Fallback: `@remotion/install-whisper-cpp`.
+  Write to `scene.narration.words`. Fallback: `@remotion/install-whisper-cpp`.
 - Timing inversion: replace estimated `duration` with measured audio length (ceil to frame), keep the
   per-scene-type min floor, recompute contiguous `start` + `lesson.duration`, re-validate LessonSchema.
 - Captions: convert words → `@remotion/captions` `Caption[]` (`timestampMs=(startMs+endMs)/2`), render
   per scene with `createTikTokStyleCaptions`. Add `<Audio>` per scene `<Sequence>`.
-- **Deliverable: `out/module-1.mp4`** with synced narration + captions (the review artifact). Validate
-  size <1.8GB / 1080p / no blank frames (existing Phase-1 checks).
+</details>
 
 ## Phase F — Regeneration DAG  [FRESH-01/02/03]
 - `src/lib/build-dag.ts` (~150 LOC): each artifact = `{id, inputs[], output, run()}`; cache key = SHA-256

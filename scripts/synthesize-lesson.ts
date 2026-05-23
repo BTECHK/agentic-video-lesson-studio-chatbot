@@ -5,34 +5,42 @@
  * Usage:
  *   npx tsx scripts/synthesize-lesson.ts content/lessons/module-1/lesson.json
  *
+ * All scenes are synthesized in a SINGLE container run (the Kokoro model loads
+ * once) via a manifest — faster and more reliable than one container per scene.
  * Implementation is selected by the adapter via TTS_IMPL (default kokoro).
- * This script is intentionally thin: all logic lives in src/lib/tts-adapter.ts.
  */
-import { readFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { lessonToSynthPlan, synthesize } from '../src/lib/tts-adapter';
+import {
+  buildManifest,
+  selectImpl,
+  defaultBatchRunner,
+  TTS_DEFAULT_VOICE,
+} from '../src/lib/tts-adapter';
 
 async function main(): Promise<number> {
-  const lessonPath = process.argv[2];
-  if (!lessonPath) {
-    console.error('usage: tsx scripts/synthesize-lesson.ts <lesson.json>');
+  const arg = process.argv[2];
+  if (!arg) {
+    console.error('usage: tsx scripts/synthesize-lesson.ts <lesson.json | lessonId>');
     return 2;
   }
+  // Accept either a path to lesson.json or a bare lesson id (e.g. "module-1").
+  const lessonPath = arg.endsWith('.json') ? arg : `content/lessons/${arg}/lesson.json`;
 
   const lesson = JSON.parse(readFileSync(lessonPath, 'utf-8'));
-  const plan = lessonToSynthPlan(lesson);
+  const { manifestPath, entries } = buildManifest(lesson);
 
-  if (plan.length === 0) {
+  if (entries.length === 0) {
     console.error(`No narrated scenes found in ${lessonPath}.`);
     return 1;
   }
 
-  console.log(`Synthesizing ${plan.length} scene(s) from ${lessonPath}...`);
-  for (const item of plan) {
-    mkdirSync(dirname(item.wavPath), { recursive: true });
-    const { wavPath } = await synthesize(item.text, undefined, item.wavPath);
-    console.log(`  scene-${item.sceneId} -> ${wavPath}`);
-  }
+  const impl = selectImpl(process.env);
+  mkdirSync(dirname(manifestPath), { recursive: true });
+  writeFileSync(manifestPath, JSON.stringify(entries, null, 2));
+
+  console.log(`Synthesizing ${entries.length} scene(s) from ${lessonPath} (impl=${impl})...`);
+  await defaultBatchRunner({ manifestPath, voice: TTS_DEFAULT_VOICE, impl });
   console.log('Done.');
   return 0;
 }

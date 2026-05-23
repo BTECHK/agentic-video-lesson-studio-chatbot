@@ -4,6 +4,7 @@ import {
   sceneWavPath,
   lessonToSynthPlan,
   synthesize,
+  buildManifest,
   TTS_DEFAULT_VOICE,
   type SidecarRunner,
 } from '../src/lib/tts-adapter';
@@ -54,6 +55,40 @@ describe('sceneWavPath', () => {
     const a = sceneWavPath('module-1', 'cover');
     const b = sceneWavPath('module-1', 'recap');
     expect(a).not.toBe(b);
+  });
+
+  it('uses posix separators so the path is valid inside the linux container', () => {
+    // The path is passed verbatim to the Linux TTS container; backslashes
+    // (Windows path.join) would make it a literal filename, not a dir path.
+    expect(sceneWavPath('module-1', 'cover')).toBe(
+      'content/lessons/module-1/audio/scene-cover.wav',
+    );
+  });
+});
+
+// --- buildManifest: batch all narrated scenes into one container run ---
+
+describe('buildManifest', () => {
+  it('maps narrated scenes to {text,out} entries with posix paths plus a manifest path', () => {
+    const lesson = makeLesson([
+      { id: 'cover', narration: { text: 'Welcome.' } },
+      { id: 'silent', content: {} },
+      { id: 'recap', narration: { text: 'Done.' } },
+    ]);
+    const { manifestPath, entries } = buildManifest(lesson);
+    expect(manifestPath).toBe('content/lessons/module-1/audio/manifest.json');
+    expect(entries).toEqual([
+      {
+        text: 'Welcome.',
+        out: 'content/lessons/module-1/audio/scene-cover.wav',
+        align: 'content/lessons/module-1/align/scene-cover.json',
+      },
+      {
+        text: 'Done.',
+        out: 'content/lessons/module-1/audio/scene-recap.wav',
+        align: 'content/lessons/module-1/align/scene-recap.json',
+      },
+    ]);
   });
 });
 

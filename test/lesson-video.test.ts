@@ -33,7 +33,9 @@ describe('lessonMetadata (calculateMetadata)', () => {
       compositionId: 'LessonVideo',
     } as never);
 
-    expect(meta.durationInFrames).toBe(7462);
+    // Derived from the lesson's contiguous timeline (audio-authoritative after
+    // Phase E timing inversion), not a hardcoded estimate.
+    expect(meta.durationInFrames).toBe(parsed.lesson.duration);
     expect(meta.width).toBe(1920);
     expect(meta.height).toBe(1080);
     expect(meta.fps).toBe(30);

@@ -1,11 +1,12 @@
 import React from 'react';
-import { AbsoluteFill, Series, type CalculateMetadataFunction } from 'remotion';
+import { AbsoluteFill, Series, Audio, staticFile, type CalculateMetadataFunction } from 'remotion';
 import { BRAND } from '../brand/tokens';
 import { LessonSchema, type Lesson } from '../../content/schemas/lesson';
 import { getSceneComponent } from '../lib/scene-dispatcher';
 import type { SceneComponentProps } from '../lib/scene-types';
 import { registerLessonScenes } from './lesson-scenes/register';
 import { fontFamily } from './lesson-scenes/shared';
+import { LessonCaptions } from './lesson-scenes/LessonCaptions';
 
 registerLessonScenes();
 
@@ -38,9 +39,12 @@ export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson }) => {
             },
             sceneStartFrame: scene.start,
           };
+          const narration = scene.narration;
           return (
             <Series.Sequence key={scene.id} durationInFrames={scene.duration}>
               {Component ? <Component {...props} /> : <MissingScene type={scene.type} />}
+              {narration?.audioSrc ? <Audio src={staticFile(narration.audioSrc)} /> : null}
+              {narration?.words?.length ? <LessonCaptions words={narration.words} /> : null}
             </Series.Sequence>
           );
         })}
