@@ -2,7 +2,7 @@ node_modules/
 dist/
 output/
 build/
-out/verify/
+out/
 *.mp4
 *.log
 *.zip
