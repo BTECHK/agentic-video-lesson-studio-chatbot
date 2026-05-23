@@ -54,8 +54,8 @@ Everything in motion, one table. "Blocked" = cannot start until dependency exist
 | | C-1: scene planner → lesson.json | ✅ Done | — | — |
 | | C-2: 9 Remotion scene components + LessonVideo | ⬜ Ready | Nothing — ready to build | Build (quality-sensitive) |
 | | D: free/local TTS sidecar | ⬜ Ready | Needs Docker+Python+model download (heavy setup, not a blocker) | Build sidecar |
-| | E: align + timing + **MP4** | ⛔ Blocked | Needs **C-2** (components to render) **and D** (audio) | After C-2 + D |
-| | F: regeneration DAG | ⛔ Blocked | Needs A–E artifacts to exist to cache | After E |
+| | E: align + timing + **MP4** | ⏭ Downstream (not stalled) | Sequential: needs **C-2** (components) + **D** (audio) done first — you can't render a video without them | After C-2 + D |
+| | F: regeneration DAG | ⏭ Downstream | Sequential: caches A–E artifacts | After E |
 | | G: Studio timeline UI | 🟡 Partial-ready | Can show script+animation now; voice/caption tracks need D+E | First version after C-2 |
 | **Chatbot** | CHAT-01/02/06: RAG grounding + citation verify | 🚨 Scaffold only | RAG never wired — **pre-existing broken chain** | Verify + wire (vertical slice) |
 | | CHAT-04/05: Office Hours + SQLite persistence (Phase 8) | ⬜ Not started | — | Plan when prioritized |
@@ -122,8 +122,23 @@ NOW ──▶ Phase H0: Verification & Anti-Phantom Hardening   (cheap, do first
 
 ---
 
-## 7. Open decisions for you
+## 7. DECISIONS (2026-05-23)
 
-1. **Sequencing:** H0 (hardening) first, or push the watchable Module 1 video (C-2→E) first and harden alongside?
-2. **Scope of H0:** full kit (hooks + Lefthook + Playwright + CI + render-verify) or a minimal first cut (Stop hook + Playwright smoke + render-verify)?
-3. **Re-verify the chatbot now?** Spin it up under the new Playwright smoke to confirm whether RAG is wired before building more on it.
+- **Sequencing:** Harden FIRST (Phase H0), then resume production (C-2 + D in parallel → E → F → G).
+- **"Blocked" clarified:** E/F/G are not stalled — they're *downstream* of C-2 + D. The ready work is C-2 and D.
+- **H0 right-sized for stage (solo, no users, local-first)** — two enforcement walls + real render proof, skip the enterprise tail:
+
+  **H0 — do now (crucial):**
+  1. Add `typecheck` (`tsc --noEmit`) + `lint` + a combined `check` script (root + chatbot).
+  2. **Stop hook** `.claude/hooks/stop-gate.py` — exit 2 until `build && typecheck && lint && test` pass; `stop_hook_active` guard; "AUTOMATED QUALITY GATE" wording. Wire via settings.json. (Move the prose "never report complete without tests" rule into this hook.)
+  3. **GitHub Actions CI** `.github/workflows/ci.yml` running the same `check` (push-time safety net; shipping-relevant).
+  4. **Render verification** script: render a short probe of a Remotion composition, assert non-blank frames + capture screenshots → makes VERI-01..04 real. Expand to full Module 1 after C-2.
+  5. **Vertical-slice rule** added to CLAUDE.md (build one end-to-end slice before expanding sideways).
+  6. **Playwright**: install + ONE smoke test as the pattern; grow per-feature later.
+  7. **Install the Remotion best-practices skill** for the C-2/E build sessions.
+
+  **H0 — backlog (revisit at collaborators / users / scale):**
+  - Lefthook pre-commit · PostToolUse format hook · `fallow` module-graph audit · `act` local CI runner · full per-feature Playwright suite
+
+- **Chatbot re-verify:** **Not now** — stay focused on the pipeline; audit chatbot RAG (CHAT-01/02) later (the scaffold-only risk is logged here so it isn't forgotten).
+- **Execution note (eating our own dog food):** this planning ran in a long context. Per the anti-context-rot guidance we're adopting, **execute H0 in a fresh session** (or via fresh per-slice subagents) rather than at the tail of a long one.
