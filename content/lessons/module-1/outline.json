@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "1.0",
+  "id": "module-1",
+  "lesson": {
+    "title": "Sample Lesson: Choosing and Personalizing an AI Assistant",
+    "topic": "Practical AI Assistants (sample course)",
+    "module": "Sample Lesson"
+  },
+  "audience": "Working professionals who have tried an AI assistant a few times and want a dependable everyday routine.",
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Why this lesson",
+      "objective": "Frame the lesson: one assistant, chosen on purpose and set up once, beats several assistants used at random.",
+      "beats": [
+        {
+          "id": "intro-cover",
+          "summary": "Title card for the standalone sample lesson and its one goal.",
+          "sceneTypeHint": "cover",
+          "content": {
+            "eyebrow": "Sample Lesson",
+            "title": ["Choosing and personalizing", "an *AI assistant*"],
+            "sub": "A synthetic sample lesson that exercises the whole pipeline."
+          }
+        },
+        {
+          "id": "intro-reframe",
+          "summary": "Reframe: the habit of using one tool well matters more than which tool.",
+          "sceneTypeHint": "quote-card",
+          "content": {
+            "eyebrow": "The idea",
+            "quote": "Pick one assistant on purpose, set it up once, and it starts working the way you do.",
+            "attribution": "Course Instructor, Sample Academy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journey",
+      "title": "The plan for this lesson",
+      "objective": "Preview the four steps the lesson walks through.",
+      "beats": [
+        {
+          "id": "journey-map",
+          "summary": "Four stops: meet the assistants, compare them, personalize one, practice.",
+          "sceneTypeHint": "journey-map",
+          "content": {
+            "eyebrow": "Sample Lesson",
+            "title": "Four steps to *your* assistant",
+            "sub": "You are at step one.",
+            "stops": [
+              { "id": "meet", "label": "Step 1", "title": "Meet the assistants", "state": "active" },
+              { "id": "compare", "label": "Step 2", "title": "Compare what they do", "state": "todo" },
+              { "id": "personalize", "label": "Step 3", "title": "Personalize one", "state": "todo" },
+              { "id": "practice", "label": "Step 4", "title": "Practice this week", "state": "todo" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Four assistants in this course",
+      "objective": "Introduce the four assistant profiles, grounded in content/tools.",
+      "beats": [
+        {
+          "id": "tools-reveal",
+          "summary": "One card per assistant, auto-populated from the tool profiles.",
+          "sceneTypeHint": "tool-card-reveal",
+          "toolRefs": ["chatgpt", "claude", "gemini", "perplexity"],
+          "capabilityRefs": ["writing-chat", "research"]
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "title": "What each assistant can do",
+      "objective": "Compare capabilities from the codified facts, including one honest limitation.",
+      "beats": [
+        {
+          "id": "compare-table",
+          "summary": "Capability table derived from grounding; call out that Claude does not generate raster images.",
+          "sceneTypeHint": "capability-table",
+          "toolRefs": ["chatgpt", "claude", "gemini", "perplexity"],
+          "capabilityRefs": ["writing-chat", "research", "file-analysis", "image-generation"]
+        }
+      ]
+    },
+    {
+      "id": "personalize",
+      "title": "Set it up once",
+      "objective": "Show the two settings that make an assistant feel like yours: personalization and persistent context.",
+      "beats": [
+        {
+          "id": "personalize-grid",
+          "summary": "Four setup moves across personalization and persistent context.",
+          "sceneTypeHint": "feature-grid",
+          "toolRefs": ["chatgpt", "claude", "gemini", "perplexity"],
+          "capabilityRefs": ["personalization", "persistent-context"],
+          "content": {
+            "eyebrow": "Sample Lesson",
+            "title": "Set it up *once*",
+            "features": [
+              { "id": "about-you", "n": "01", "cat": "Personalization", "title": "Tell it about you", "sub": "Your role, your audience, and the work you do most.", "focusAt": 0 },
+              { "id": "answer-style", "n": "02", "cat": "Personalization", "title": "Set the answer style", "sub": "Default length, tone, and format for replies.", "focusAt": 0 },
+              { "id": "memory", "n": "03", "cat": "Persistent Context", "title": "Let it remember", "sub": "Memory carries what it learns from one chat to the next.", "focusAt": 0 },
+              { "id": "project-space", "n": "04", "cat": "Persistent Context", "title": "Keep a project space", "sub": "Group related chats, files, and instructions in one place.", "focusAt": 0 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "recap",
+      "title": "What you have now",
+      "objective": "Consolidate the three takeaways and point to the next lesson.",
+      "beats": [
+        {
+          "id": "recap-grid",
+          "summary": "Three recap cards plus a next-up preview.",
+          "sceneTypeHint": "recap-grid",
+          "content": {
+            "eyebrow": "Sample Lesson",
+            "title": "What you have *now*",
+            "cards": [
+              { "id": "meet", "n": "01", "title": "Four assistants", "body": "Different strengths, same fundamentals." },
+              { "id": "compare", "n": "02", "title": "An honest comparison", "body": "Row by row, limitations included." },
+              { "id": "personalize", "n": "03", "title": "Set up once", "body": "Personalization and persistent context switched on." }
+            ],
+            "preview": { "eyebrow": "Next up", "title": "Writing clear prompts" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "Your practice this week",
+      "objective": "Turn the lesson into four small actions for the coming week.",
+      "beats": [
+        {
+          "id": "practice-list",
+          "summary": "Four practice tasks and one closing reminder.",
+          "sceneTypeHint": "assignment-list",
+          "content": {
+            "eyebrow": "Sample Lesson",
+            "title": "Your practice *this week*",
+            "sub": "Small steps. Seven days.",
+            "tasks": [
+              { "id": "choose", "bold": "Choose one assistant", "context": "and use it for seven days." },
+              { "id": "personalize", "bold": "Fill in personalization", "context": "your role, audience, and answer style." },
+              { "id": "remember", "bold": "Turn on memory or a project space", "context": "so context carries between chats." },
+              { "id": "weekly-task", "bold": "Pick one weekly task", "context": "and do it with the assistant twice." }
+            ],
+            "callout": { "label": "Remember", "body": "The assistant drafts. You decide." }
+          }
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-09-30",
+    "lastUpdated": "2026-09-30",
+    "authors": ["Sample Academy (synthetic sample content)"]
+  }
+}

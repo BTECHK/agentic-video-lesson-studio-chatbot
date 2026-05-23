@@ -16,6 +16,18 @@ export const LessonInfoSchema = z.object({
   brandLabel: z.string().optional(),
 });
 
+export const NarrationWordSchema = z.object({
+  word: z.string(),
+  startMs: z.number(),
+  endMs: z.number(),
+});
+
+export const NarrationSchema = z.object({
+  text: z.string(),
+  audioSrc: z.string().optional(),
+  words: z.array(NarrationWordSchema).optional(),
+});
+
 export const SceneBaseSchema = z.object({
   id: z.string(),
   type: SceneTypeSchema,
@@ -23,6 +35,7 @@ export const SceneBaseSchema = z.object({
   duration: z.number(),
   label: z.string().optional(),
   content: z.record(z.string(), z.unknown()),
+  narration: NarrationSchema.optional(),
 }).superRefine((scene, ctx) => {
   const contentSchema = SCENE_CONTENT_SCHEMAS[scene.type as SceneType];
   if (contentSchema) {
@@ -88,3 +101,5 @@ export type LessonMeta = z.infer<typeof LessonMetaSchema>;
 export type LessonInfo = z.infer<typeof LessonInfoSchema>;
 export type SceneBase = z.infer<typeof SceneBaseSchema>;
 export type Lesson = z.infer<typeof LessonSchema>;
+export type NarrationWord = z.infer<typeof NarrationWordSchema>;
+export type Narration = z.infer<typeof NarrationSchema>;
