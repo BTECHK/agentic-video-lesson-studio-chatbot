@@ -1,0 +1,349 @@
+{
+  "schemaVersion": "1.0",
+  "id": "module-1",
+  "lesson": {
+    "title": "Sample Lesson: Choosing and Personalizing an AI Assistant",
+    "topic": "Practical AI Assistants (sample course)",
+    "module": "Sample Lesson",
+    "duration": 6374
+  },
+  "scenes": [
+    {
+      "id": "intro-cover",
+      "type": "cover",
+      "start": 0,
+      "duration": 810,
+      "label": "intro",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": [
+          "Choosing and personalizing",
+          "an *AI assistant*"
+        ],
+        "sub": "A synthetic sample lesson that exercises the whole pipeline."
+      },
+      "narration": {
+        "text": "Welcome to this sample lesson. It is short and practical, and it shows how the whole pipeline works, from outline to finished video. Here is the goal. By the end, you will have chosen one AI assistant on purpose, and set it up so it already knows who you are and how you like to work. No hype. Just a routine you can use tomorrow morning."
+      }
+    },
+    {
+      "id": "intro-reframe",
+      "type": "quote-card",
+      "start": 810,
+      "duration": 774,
+      "label": "intro",
+      "content": {
+        "eyebrow": "The idea",
+        "quote": "Pick one assistant on purpose, set it up once, and it starts working the way you do.",
+        "attribution": "Course Instructor, Sample Academy"
+      },
+      "narration": {
+        "text": "Here's the problem most people hit. They try several assistants, once each, and decide none of them are that useful. The tool is rarely the issue. The habit is. So in this lesson we flip it around. Pick one assistant on purpose. Set it up once. Then use it every day for a week, and watch it start working the way you do."
+      }
+    },
+    {
+      "id": "journey-map",
+      "type": "journey-map",
+      "start": 1584,
+      "duration": 678,
+      "label": "journey",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "Four steps to *your* assistant",
+        "sub": "You are at step one.",
+        "stops": [
+          {
+            "id": "meet",
+            "label": "Step 1",
+            "title": "Meet the assistants",
+            "state": "active"
+          },
+          {
+            "id": "compare",
+            "label": "Step 2",
+            "title": "Compare what they do",
+            "state": "todo"
+          },
+          {
+            "id": "personalize",
+            "label": "Step 3",
+            "title": "Personalize one",
+            "state": "todo"
+          },
+          {
+            "id": "practice",
+            "label": "Step 4",
+            "title": "Practice this week",
+            "state": "todo"
+          }
+        ]
+      },
+      "narration": {
+        "text": "Here is the plan. Four short steps. First, you meet the assistants you'll see throughout this course. Second, you compare what each one can actually do, using the facts recorded in each tool's profile. Third, you personalize the one you pick. And fourth, you practice with it this week. Right now, you're at step one."
+      }
+    },
+    {
+      "id": "tools-reveal",
+      "type": "tool-card-reveal",
+      "start": 2262,
+      "duration": 787,
+      "label": "tools",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "Four assistants in this course",
+        "sub": "Different strengths, same basics. Pick one and start.",
+        "tools": [
+          {
+            "id": "chatgpt",
+            "name": "ChatGPT",
+            "logo": "chatgpt",
+            "tag": "OpenAI",
+            "oneliner": "OpenAI's conversational AI assistant powered by the GPT-5"
+          },
+          {
+            "id": "claude",
+            "name": "Claude",
+            "logo": "claude",
+            "tag": "Anthropic",
+            "oneliner": "Anthropic's AI assistant known for strong reasoning"
+          },
+          {
+            "id": "gemini",
+            "name": "Gemini",
+            "logo": "gemini",
+            "tag": "Google",
+            "oneliner": "Google's multimodal AI assistant powered by the Gemini model family (default Gem"
+          },
+          {
+            "id": "perplexity",
+            "name": "Perplexity",
+            "logo": "perplexity",
+            "tag": "Perplexity AI",
+            "oneliner": "An AI-powered answer engine focused on real-time web research with cited sources"
+          }
+        ]
+      },
+      "narration": {
+        "text": "Meet the four assistants. ChatGPT, from OpenAI, is a general-purpose conversational assistant. Claude, from Anthropic, is known for strong reasoning and well-structured writing. Gemini, from Google, is deeply integrated with Google Workspace. And Perplexity is research-first: every answer is grounded in a live web search, with inline numbered citations. Different strengths. Same fundamentals. Whichever one you pick, the skills in this course carry over."
+      }
+    },
+    {
+      "id": "compare-table",
+      "type": "capability-table",
+      "start": 3049,
+      "duration": 978,
+      "label": "compare",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "What each assistant can do",
+        "footnote": "Find the row for the job you do most. The basics are the same everywhere.",
+        "headers": [
+          "ChatGPT",
+          "Claude",
+          "Gemini",
+          "Perplexity"
+        ],
+        "rows": [
+          {
+            "id": "writing-chat",
+            "label": "Writing Chat",
+            "cells": [
+              "Y",
+              "Y",
+              "Y",
+              "Y"
+            ]
+          },
+          {
+            "id": "research",
+            "label": "Research",
+            "cells": [
+              "Y",
+              "Y",
+              "Y",
+              "Y"
+            ]
+          },
+          {
+            "id": "file-analysis",
+            "label": "File Analysis",
+            "cells": [
+              "Y",
+              "Y",
+              "Y",
+              "Y"
+            ]
+          },
+          {
+            "id": "image-generation",
+            "label": "Image Generation",
+            "cells": [
+              "Y",
+              "-",
+              "Y",
+              "Y"
+            ]
+          },
+          {
+            "id": "personalization",
+            "label": "Personalization",
+            "cells": [
+              "Y",
+              "Y",
+              "Y",
+              "Y"
+            ]
+          },
+          {
+            "id": "persistent-context",
+            "label": "Persistent Context",
+            "cells": [
+              "Y",
+              "Y",
+              "Y",
+              "Y"
+            ]
+          }
+        ]
+      },
+      "narration": {
+        "text": "Now let's compare them. Scan each row for the job you do most. All four handle writing and conversation. All four can search the web for current information, and all four can read files you upload. Now look at image generation. ChatGPT, Gemini, and Perplexity can create images. Claude cannot generate raster images; it can draw diagrams and simple graphics instead. That is not a flaw. It's a question of fit. Pick the assistant whose rows match your real work."
+      }
+    },
+    {
+      "id": "personalize-grid",
+      "type": "feature-grid",
+      "start": 4027,
+      "duration": 882,
+      "label": "personalize",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "Set it up *once*",
+        "features": [
+          {
+            "id": "about-you",
+            "n": "01",
+            "cat": "Personalization",
+            "title": "Tell it about you",
+            "sub": "Your role, your audience, and the work you do most.",
+            "focusAt": 0
+          },
+          {
+            "id": "answer-style",
+            "n": "02",
+            "cat": "Personalization",
+            "title": "Set the answer style",
+            "sub": "Default length, tone, and format for replies.",
+            "focusAt": 0
+          },
+          {
+            "id": "memory",
+            "n": "03",
+            "cat": "Persistent Context",
+            "title": "Let it remember",
+            "sub": "Memory carries what it learns from one chat to the next.",
+            "focusAt": 0
+          },
+          {
+            "id": "project-space",
+            "n": "04",
+            "cat": "Persistent Context",
+            "title": "Keep a project space",
+            "sub": "Group related chats, files, and instructions in one place.",
+            "focusAt": 0
+          }
+        ]
+      },
+      "narration": {
+        "text": "Next, make it yours. All four of these assistants offer personalization. You tell it once who you are, who you write for, and how you like your answers: short or detailed, formal or relaxed. Then there's persistent context. Memory and project spaces let the assistant carry what it knows from one chat to the next, so you stop repeating yourself. A few minutes of setup here pays you back every single week."
+      }
+    },
+    {
+      "id": "recap-grid",
+      "type": "recap-grid",
+      "start": 4909,
+      "duration": 631,
+      "label": "recap",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "What you have *now*",
+        "cards": [
+          {
+            "id": "meet",
+            "n": "01",
+            "title": "Four assistants",
+            "body": "Different strengths, same fundamentals."
+          },
+          {
+            "id": "compare",
+            "n": "02",
+            "title": "An honest comparison",
+            "body": "Row by row, limitations included."
+          },
+          {
+            "id": "personalize",
+            "n": "03",
+            "title": "Set up once",
+            "body": "Personalization and persistent context switched on."
+          }
+        ],
+        "preview": {
+          "eyebrow": "Next up",
+          "title": "Writing clear prompts"
+        }
+      },
+      "narration": {
+        "text": "Let's recap. You met four assistants and saw that they share the same fundamentals. You compared them row by row, limitations included. And you learned the two settings that make any assistant feel like yours: personalization and persistent context. Next up, we put that setup to work by writing clear prompts."
+      }
+    },
+    {
+      "id": "practice-list",
+      "type": "assignment-list",
+      "start": 5540,
+      "duration": 834,
+      "label": "practice",
+      "content": {
+        "eyebrow": "Sample Lesson",
+        "title": "Your practice *this week*",
+        "sub": "Small steps. Seven days.",
+        "tasks": [
+          {
+            "id": "choose",
+            "bold": "Choose one assistant",
+            "context": "and use it for seven days."
+          },
+          {
+            "id": "personalize",
+            "bold": "Fill in personalization",
+            "context": "your role, audience, and answer style."
+          },
+          {
+            "id": "remember",
+            "bold": "Turn on memory or a project space",
+            "context": "so context carries between chats."
+          },
+          {
+            "id": "weekly-task",
+            "bold": "Pick one weekly task",
+            "context": "and do it with the assistant twice."
+          }
+        ],
+        "callout": {
+          "label": "Remember",
+          "body": "The assistant drafts. You decide."
+        }
+      },
+      "narration": {
+        "text": "Here is your practice for this week. Choose one assistant and commit to it for seven days. Fill in its personalization settings: your role, your audience, and your preferred answer style. Turn on memory, or create a project space. Then pick one task you do every week, and do it with the assistant at least twice. Small steps. That's how the habit sticks. The assistant drafts. You decide."
+      }
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-09-30",
+    "lastUpdated": "2026-09-30",
+    "authors": [
+      "Sample Academy (synthetic sample content)"
+    ],
+    "factCheckedAt": null
+  }
+}
