@@ -1,0 +1,46 @@
+name: CI
+
+# Push-time anti-phantom safety net. Runs the SAME checks as the local Stop
+# hook (typecheck + lint + test) and additionally the full builds, so "works
+# locally, fails CI" drift cannot hide. See .planning/PROJECT-PLAN-2026-05-23.md §7.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [master]
+
+jobs:
+  check:
+    name: ${{ matrix.name }} — check + build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: root
+            dir: .
+          - name: chatbot
+            dir: chatbot
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.dir }}/package-lock.json
+
+      # `npm install` (not `npm ci`): the project's lockfiles are intentionally
+      # tolerant of npm-version differences across environments.
+      - name: Install dependencies
+        working-directory: ${{ matrix.dir }}
+        run: npm install
+
+      - name: Check (typecheck + lint + test)
+        working-directory: ${{ matrix.dir }}
+        run: npm run check
+
+      - name: Build
+        working-directory: ${{ matrix.dir }}
+        run: npm run build
