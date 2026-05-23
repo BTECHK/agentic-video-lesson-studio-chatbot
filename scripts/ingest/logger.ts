@@ -1,4 +1,4 @@
-import { mkdirSync, appendFileSync, readdirSync, statSync, unlinkSync } from 'node:fs';
+import { mkdirSync, appendFileSync, readdirSync, statSync, unlinkSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
 import type { ScrapeResult } from './scraper';
 
@@ -32,7 +32,6 @@ export function log(entry: Record<string, unknown>): void {
     if (stats.size >= MAX_LOG_SIZE_BYTES) {
       // Rotate: rename current file and start fresh
       const rotatedPath = logPath.replace('.jsonl', `-${Date.now()}.jsonl`);
-      const { renameSync } = require('node:fs');
       renameSync(logPath, rotatedPath);
     }
   } catch {

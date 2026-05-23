@@ -251,7 +251,7 @@ export async function runIngest(
       // Load source file to get URLs
       const sourcesDir = getSourcesDir();
       const sourceFile = join(sourcesDir, `${overrides.vendor}.json`);
-      let sourceUrls: Array<{ id: string; url: string }> = [];
+      let sourceUrls: Array<{ id: string; url: string }>;
       try {
         const raw = JSON.parse(readFileSync(sourceFile, 'utf-8'));
         sourceUrls = raw.sources ?? [];
