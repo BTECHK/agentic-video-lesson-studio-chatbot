@@ -3,7 +3,7 @@
 **Branch:** `feat/codified-lesson-pipeline`
 **Design:** `docs/superpowers/specs/2026-05-23-codified-lesson-pipeline-design.md`
 **Research:** `.planning/research/ai-lesson-pipeline-research.md`, `.planning/research/studio-timeline-ui-spec.md`
-**Status:** Phases A, B, C-1 complete (243/243 tests). C-2 → G remaining.
+**Status:** Phases A, B, C-1, **C-2, D complete** (262/262 tests). **Phase E ⬅ NEXT.** F, G remaining.
 
 ## The vision (one line)
 Outline → script (Instructor's voice) → animation → free/local AI voiceover → MP4 — fully codified so any
@@ -15,9 +15,10 @@ content/lessons/module-1/
   outline.json   ✅ authored (7 sections, 9 beats)        [OUTLINE-01]
   → script.json  ✅ generated, fact-checked (0 flags)      [SCRIPT-01/02]  scripts/generate-script.ts
   → lesson.json  ✅ planned, LessonSchema-valid, narration  [PLAN-01]       scripts/plan-lesson.ts
-  → audio/*.wav  ⬜ Phase D
+  → module-1-silent.mp4 ✅ C-2 renders (out/, 248.79s/1080p, gitignored)    LessonVideo
+  → audio/*.wav  🟡 Phase D code ready (adapter+sidecar); NOT yet generated (needs docker build tts + model dl)
   → align/*.json ⬜ Phase E
-  → module-1.mp4 ⬜ Phase E (needs Phase C-2 components)
+  → module-1.mp4 ⬜ Phase E (silent video + synced audio + captions)
 ```
 
 ## Key files built
@@ -29,7 +30,14 @@ content/lessons/module-1/
 
 ---
 
-## Phase C-2 — Remotion scene components + LessonVideo  ⬅ NEXT
+## Phase C-2 — Remotion scene components + LessonVideo  ✅ DONE (81dea56)
+Delivered: `src/compositions/lesson-scenes/` (shared.tsx primitives + register.ts +
+9 components) + `LessonVideo.tsx` (`<Series>` timeline, `lessonMetadata` calculateMetadata),
+registered in `Root.tsx`. All 9 scenes visually verified via
+`tsx scripts/render-lesson-stills.ts`; full silent MP4 renders (248.79s/1080p).
+Known gap: tool-card monograms use first letter (ChatGPT/Claude both "C") — wants real
+logo assets in `public/`. Original task spec preserved below.
+
 **Goal:** lesson.json renders to a silent MP4. **QUALITY-SENSITIVE** — honor the P0 animation bar
 (Apple/Anthropic, spring physics, no choppy transitions). Use the `frontend-design` skill + visual
 verification (VERI-01..04), and the design system in `Claude design work in session-SampleAcademy/`
@@ -48,7 +56,15 @@ Tasks:
    Y=Yes(neutral), L=Limited(faint), -=dash (per scene-catalog line 191).
 5. Render silent draft: `npm run render -- LessonVideo out/module-1-silent.mp4` (verify, screenshot).
 
-## Phase D — Free/local TTS sidecar + adapter  [VOICE-01]
+## Phase D — Free/local TTS sidecar + adapter  ✅ DONE (4f8933d)  [VOICE-01]
+Delivered: `docker/tts/` (Kokoro-82M sidecar, `Dockerfile.tts`), `src/lib/tts-adapter.ts`
+(injectable runner, `selectImpl`/`sceneWavPath`/`lessonToSynthPlan`, paid slot gated by
+`TTS_PAID_API_KEY`), `scripts/synthesize-lesson.ts`, 16 tests. docker-compose `tts` service +
+`tts-models` volume; npm `tts:build`/`tts:lesson`.
+**NOT yet run end-to-end** — to produce real audio (the Phase E input):
+`docker compose build tts` then `npm run tts:lesson module-1` (first run downloads the model).
+Original task spec preserved below.
+
 **Goal:** narration text → per-scene wav, free/local, commercial-safe. Needs Docker + model downloads.
 - `docker/tts/`: Python sidecar. **Kokoro-82M (Apache-2.0)** as the branded neutral default;
   **Chatterbox (MIT)** for the Instructor-clone upgrade (needs a clean ~15s Instructor reference clip — extract
@@ -58,7 +74,10 @@ Tasks:
 - Per-scene output `content/lessons/<id>/audio/scene-<id>.wav` (per-scene = the cache granularity that
   enables surgical regeneration — research §6).
 
-## Phase E — Alignment + timing inversion + captions → MP4  [VOICE-02/03]
+## Phase E — Alignment + timing inversion + captions → MP4  ⬅ NEXT  [VOICE-02/03]
+**Gating step first:** generate Phase D audio (`docker compose build tts` → `npm run tts:lesson module-1`)
+so `content/lessons/module-1/audio/scene-*.wav` exist. Then wire `<Audio>` per scene into
+`LessonVideo.tsx` (the silent composition is built and renders).
 - `src/lib/aligner.ts` via **stable-ts `align()`** (MIT) over (narration text, wav) → word timestamps.
   Write to `scene.narration.words` (schema already supports it). Fallback: `@remotion/install-whisper-cpp`.
 - Timing inversion: replace estimated `duration` with measured audio length (ceil to frame), keep the
