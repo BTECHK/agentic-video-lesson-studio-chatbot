@@ -3,7 +3,7 @@
 **Branch:** `feat/codified-lesson-pipeline`
 **Design:** `docs/superpowers/specs/2026-05-23-codified-lesson-pipeline-design.md`
 **Research:** `.planning/research/ai-lesson-pipeline-research.md`, `.planning/research/studio-timeline-ui-spec.md`
-**Status:** Phases A, B, C-1, C-2, D, **E complete** (278 root tests + 76 chatbot). **Phase F ⬅ NEXT.** G remaining.
+**Status:** Phases A, B, C-1, C-2, D, E, **F complete** (298 root tests + 76 chatbot). **Phase G ⬅ NEXT** (Studio control plane).
 
 ## The vision (one line)
 Outline → script (Instructor's voice) → animation → free/local AI voiceover → MP4 — fully codified so any
@@ -105,11 +105,37 @@ both "C") — wants real logo assets in `public/`. (2) caption band slightly ove
   per scene with `createTikTokStyleCaptions`. Add `<Audio>` per scene `<Sequence>`.
 </details>
 
-## Phase F — Regeneration DAG  [FRESH-01/02/03]
-- `src/lib/build-dag.ts` (~150 LOC): each artifact = `{id, inputs[], output, run()}`; cache key = SHA-256
-  of input hashes + step version. **Content hashes, not mtime** (WSL2/Docker mounts). Cache PER SCENE
-  for TTS/align so editing one tool feature regenerates only affected scenes, then re-splice.
-- `scripts/regenerate.ts <lessonId>` with fresh/stale/error reporting.
+## Phase F — Regeneration DAG  ✅ DONE  [FRESH-01/02/03]
+Delivered (TDD, +20 tests): `src/lib/build-dag.ts` (generic content-hash DAG: `cacheKey` =
+SHA-256 of step `version` + input hashes; `topoSort`; `runDag` → fresh/rebuilt/skipped/error,
+in-place cache mutation, dep-failure propagation, injectable `outputExists`/`dryRun`).
+`src/lib/regen-graph.ts` (`buildLessonNodes` → `plan → tts:<scene>(per narrated scene) → align →
+render`; injectable `RegenRunners`; per-scene tts inputs = that scene's narration text only).
+`scripts/regenerate.ts <lessonId> [--dry]` + `npm run regenerate`; cache at
+`content/lessons/<id>/.regen-cache.json` (gitignored). Tests: `test/{build-dag,regen-graph}.test.ts`
+(in-memory store + temp-fs fixtures, no docker/remotion). Verified the CLI against real module-1
+(`--dry` → 12 nodes in dep order, all stale on cold cache).
+
+**Key design decisions:**
+- **Content hashes, never mtime** (WSL2/Docker mounts). Each node hashes its inputs lazily so it sees
+  dependencies' freshly-rebuilt outputs; the change cascades.
+- **Per-scene tts cache:** one `tts:<sceneId>` node per narrated scene, hashing only that scene's
+  narration text — editing one tool feature resynthesizes only affected scenes, then `align` re-splices.
+  Its `run()` uses a **1-entry manifest** (the single `--out` path discards word alignment; the manifest
+  path emits it — see `docker/tts/synthesize.py`).
+- **`align` hashes the wav+align files, NOT lesson.json** — `align-lesson.ts` rewrites lesson.json in
+  place, so hashing its own output would make it perpetually stale.
+- **Script-gen is NOT a node** (Claude-passthrough, D-02). `script.json` is hashed as an INPUT to
+  `plan`; edit it upstream (human + Claude), then `regenerate` cascades the change.
+- Step `version` field is the manual lever for code changes (e.g. editing a scene component → bump
+  `render.version` to force re-encode).
+
+**Known limitations (documented, not blockers):** (1) the node set reflects the current lesson.json;
+adding/removing scenes (structural plan change) takes effect on the *next* regenerate pass. (2) `--dry`
+can under-report a cascade (a downstream node may read pre-rebuild upstream content) — accurate for the
+common "what's stale now" view; a real run rebuilds in topo order and is exact. (3) NOT yet run as a
+live docker+remotion regeneration end-to-end (same gating as D/E: needs `docker compose build tts` +
+model download + render); engine/graph logic and the dry-run path are fully tested.
 
 ## Phase G — Studio control plane  [CTRL-01/02/03]
 - New "Studio" tab in `chatbot/` (Next.js 19, **inline-styled components + CSS-variable tokens — no

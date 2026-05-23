@@ -22,7 +22,8 @@
     "ingest:llm": "npx tsx scripts/ingest.ts --mode llm-extract",
     "tts:build": "docker compose build tts",
     "tts:lesson": "tsx scripts/synthesize-lesson.ts",
-    "align:lesson": "tsx scripts/align-lesson.ts"
+    "align:lesson": "tsx scripts/align-lesson.ts",
+    "regenerate": "tsx scripts/regenerate.ts"
   },
   "keywords": [],
   "author": "",

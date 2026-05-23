@@ -33,3 +33,6 @@ drive-download-*
 content/lessons/*/audio/
 content/lessons/*/align/
 public/lessons/
+
+# Regeneration DAG cache (content hashes; rebuilt on demand, not source)
+content/lessons/*/.regen-cache.json
