@@ -51,6 +51,8 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Intentional mount-in trigger: drives the entrance fade/slide animation below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

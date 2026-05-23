@@ -280,7 +280,7 @@ export async function runIngest(
       result.errors++;
   }
 
-  log({ event: 'ingest_complete', mode, ...result });
+  log({ event: 'ingest_complete', ...result });
   return result;
 }
 
