@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0",
+  "lessonId": "module-1",
+  "blocks": [
+    {
+      "id": "intro-cover",
+      "sectionId": "intro",
+      "beatId": "intro-cover",
+      "sceneType": "cover",
+      "narration": "Welcome to this sample lesson. It is short and practical, and it shows how the whole pipeline works, from outline to finished video. Here is the goal. By the end, you will have chosen one AI assistant on purpose, and set it up so it already knows who you are and how you like to work. No hype. Just a routine you can use tomorrow morning.",
+      "emphasisWords": ["one", "on purpose"]
+    },
+    {
+      "id": "intro-reframe",
+      "sectionId": "intro",
+      "beatId": "intro-reframe",
+      "sceneType": "quote-card",
+      "narration": "Here's the problem most people hit. They try several assistants, once each, and decide none of them are that useful. The tool is rarely the issue. The habit is. So in this lesson we flip it around. Pick one assistant on purpose. Set it up once. Then use it every day for a week, and watch it start working the way you do.",
+      "emphasisWords": ["habit"]
+    },
+    {
+      "id": "journey-map",
+      "sectionId": "journey",
+      "beatId": "journey-map",
+      "sceneType": "journey-map",
+      "narration": "Here is the plan. Four short steps. First, you meet the assistants you'll see throughout this course. Second, you compare what each one can actually do, using the facts recorded in each tool's profile. Third, you personalize the one you pick. And fourth, you practice with it this week. Right now, you're at step one."
+    },
+    {
+      "id": "tools-reveal",
+      "sectionId": "tools",
+      "beatId": "tools-reveal",
+      "sceneType": "tool-card-reveal",
+      "narration": "Meet the four assistants. ChatGPT, from OpenAI, is a general-purpose conversational assistant. Claude, from Anthropic, is known for strong reasoning and well-structured writing. Gemini, from Google, is deeply integrated with Google Workspace. And Perplexity is research-first: every answer is grounded in a live web search, with inline numbered citations. Different strengths. Same fundamentals. Whichever one you pick, the skills in this course carry over.",
+      "contentRefs": ["tool:chatgpt", "tool:claude", "tool:gemini", "tool:perplexity", "cap:claude:writing-chat", "cap:perplexity:research"]
+    },
+    {
+      "id": "compare-table",
+      "sectionId": "compare",
+      "beatId": "compare-table",
+      "sceneType": "capability-table",
+      "narration": "Now let's compare them. Scan each row for the job you do most. All four handle writing and conversation. All four can search the web for current information, and all four can read files you upload. Now look at image generation. ChatGPT, Gemini, and Perplexity can create images. Claude cannot generate raster images; it can draw diagrams and simple graphics instead. That is not a flaw. It's a question of fit. Pick the assistant whose rows match your real work.",
+      "contentRefs": [
+        "cap:chatgpt:writing-chat", "cap:claude:writing-chat", "cap:gemini:writing-chat", "cap:perplexity:writing-chat",
+        "cap:chatgpt:research", "cap:claude:research", "cap:gemini:research", "cap:perplexity:research",
+        "cap:chatgpt:file-analysis", "cap:claude:file-analysis", "cap:gemini:file-analysis", "cap:perplexity:file-analysis",
+        "cap:chatgpt:image-generation", "cap:gemini:image-generation", "cap:perplexity:image-generation", "cap:claude:image-generation"
+      ],
+      "emphasisWords": ["fit"]
+    },
+    {
+      "id": "personalize-grid",
+      "sectionId": "personalize",
+      "beatId": "personalize-grid",
+      "sceneType": "feature-grid",
+      "narration": "Next, make it yours. All four of these assistants offer personalization. You tell it once who you are, who you write for, and how you like your answers: short or detailed, formal or relaxed. Then there's persistent context. Memory and project spaces let the assistant carry what it knows from one chat to the next, so you stop repeating yourself. A few minutes of setup here pays you back every single week.",
+      "contentRefs": [
+        "cap:chatgpt:personalization", "cap:claude:personalization", "cap:gemini:personalization", "cap:perplexity:personalization",
+        "cap:chatgpt:persistent-context", "cap:claude:persistent-context", "cap:gemini:persistent-context", "cap:perplexity:persistent-context"
+      ]
+    },
+    {
+      "id": "recap-grid",
+      "sectionId": "recap",
+      "beatId": "recap-grid",
+      "sceneType": "recap-grid",
+      "narration": "Let's recap. You met four assistants and saw that they share the same fundamentals. You compared them row by row, limitations included. And you learned the two settings that make any assistant feel like yours: personalization and persistent context. Next up, we put that setup to work by writing clear prompts."
+    },
+    {
+      "id": "practice-list",
+      "sectionId": "practice",
+      "beatId": "practice-list",
+      "sceneType": "assignment-list",
+      "narration": "Here is your practice for this week. Choose one assistant and commit to it for seven days. Fill in its personalization settings: your role, your audience, and your preferred answer style. Turn on memory, or create a project space. Then pick one task you do every week, and do it with the assistant at least twice. Small steps. That's how the habit sticks. The assistant drafts. You decide."
+    }
+  ],
+  "meta": {
+    "generatedAt": "2026-09-30",
+    "styleSource": "content/teaching/STYLE.md",
+    "generator": "claude-code-passthrough"
+  }
+}

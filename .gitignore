@@ -20,3 +20,4 @@ drive-download-*
 
 # transient download staging
 .incoming/
+.script-prompt.txt
