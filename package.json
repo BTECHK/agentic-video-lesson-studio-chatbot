@@ -19,7 +19,9 @@
     "ingest:search": "docker compose run --rm ingest npx tsx scripts/ingest.ts --mode search",
     "ingest:schedule": "docker compose up -d ingest",
     "ingest:unschedule": "docker compose stop ingest",
-    "ingest:llm": "npx tsx scripts/ingest.ts --mode llm-extract"
+    "ingest:llm": "npx tsx scripts/ingest.ts --mode llm-extract",
+    "tts:build": "docker compose build tts",
+    "tts:lesson": "tsx scripts/synthesize-lesson.ts"
   },
   "keywords": [],
   "author": "",

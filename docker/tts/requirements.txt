@@ -1,0 +1,12 @@
+# Sample Academy TTS sidecar — commercial-safe, local models only.
+# Pinned for reproducible container builds.
+
+# Kokoro-82M — Apache-2.0. Branded neutral default voice.
+kokoro==0.9.4
+soundfile==0.13.1
+numpy==2.2.6
+
+# Chatterbox (MIT) — future custom-voice path. Kept commented so the
+# image stays small until the reference clip exists and we enable it.
+# Uncomment to build the chatterbox-capable image.
+# chatterbox-tts==0.1.4

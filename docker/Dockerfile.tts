@@ -1,0 +1,22 @@
+# Sample Academy TTS sidecar — Kokoro-82M (Apache-2.0), commercial-safe.
+FROM python:3.11-slim-bookworm
+
+# espeak-ng: phonemizer backend Kokoro depends on.
+# libsndfile1: soundfile (WAV I/O) runtime dependency.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  espeak-ng libsndfile1 \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY docker/tts/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY docker/tts/synthesize.py .
+
+# One-off usage (model downloads on first run, cached in the volume):
+#   docker compose run --rm tts python synthesize.py \
+#     --impl kokoro --voice af_heart --out content/lessons/module-1/audio/scene-cover.wav \
+#     --text "Welcome to the lesson."
+ENTRYPOINT ["python", "synthesize.py"]
+CMD ["--help"]

@@ -33,3 +33,18 @@ services:
       - ./logs:/app/logs
     environment:
       - NODE_ENV=production
+
+  # Free/local, commercial-safe TTS sidecar (Kokoro-82M, Apache-2.0).
+  # Models download on first run and persist in the tts-models volume.
+  tts:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.tts
+    volumes:
+      - ./content:/app/content
+      - tts-models:/root/.cache/huggingface
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  tts-models:
