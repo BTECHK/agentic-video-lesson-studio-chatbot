@@ -186,7 +186,7 @@ export default function Home() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                13 slides
+                9 scenes
               </span>
             </div>
 

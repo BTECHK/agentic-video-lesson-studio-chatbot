@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateAccessCode } from '@/lib/access';
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { code } = body as { code?: string };
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ valid: false, error: 'Invalid JSON' }, { status: 400 });
+  }
+  const { code } = (body ?? {}) as { code?: string };
 
   if (!code || typeof code !== 'string') {
     return NextResponse.json(

@@ -123,6 +123,22 @@ describe('caption track integration', () => {
     expect(captions[0].durationSec).toBeCloseTo(0.9, 5);
   });
 
+  it('labels clips by their unique scene id so same-section scenes stay distinct', () => {
+    // Three intro beats share the section label "intro"; the timeline must
+    // still show them as distinct clips (three beats).
+    const doc: LessonDoc = {
+      id: 'x',
+      lesson: { title: 't', duration: 270 },
+      scenes: [
+        { id: 'intro-a', type: 'cover', start: 0, duration: 90, label: 'intro' },
+        { id: 'intro-b', type: 'cover', start: 90, duration: 90, label: 'intro' },
+        { id: 'intro-c', type: 'cover', start: 180, duration: 90, label: 'intro' },
+      ],
+    };
+    const labels = lessonToTimeline(doc).tracks.animation.map((c) => c.label);
+    expect(labels).toEqual(['intro-a', 'intro-b', 'intro-c']);
+  });
+
   it('offsets caption clips by the scene start so they align with the lesson timeline', () => {
     // Word timings are scene-RELATIVE (each scene's audio starts at 0ms), so a
     // late scene's captions must be shifted to its absolute position, not 0.

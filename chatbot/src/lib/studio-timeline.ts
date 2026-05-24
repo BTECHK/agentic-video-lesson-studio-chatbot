@@ -142,7 +142,9 @@ export function lessonToTimeline(lesson: LessonDoc, status: StatusMap = {}): Les
   for (const scene of lesson.scenes) {
     const startSec = framesToSec(scene.start);
     const durationSec = framesToSec(scene.duration);
-    const label = scene.label ?? scene.id;
+    // Label by the unique scene id (the beat) — section-level scene.label values
+    // collide (e.g. three "intro" beats), making clips indistinguishable.
+    const label = scene.id;
 
     const animId = `anim-${scene.id}`;
     animation.push({
