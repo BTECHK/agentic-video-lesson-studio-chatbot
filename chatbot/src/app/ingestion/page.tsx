@@ -7,5 +7,6 @@ export const dynamic = 'force-dynamic';
 /** Ingestion Control Panel — data freshness, schedule status, manual refresh (Phase 8.5). */
 export default function IngestionPage() {
   const data = getIngestionPanelData();
-  return <IngestionPanel data={data} />;
+  const triggerEnabled = process.env.INGEST_TRIGGER_ENABLED === 'true';
+  return <IngestionPanel data={data} triggerEnabled={triggerEnabled} />;
 }

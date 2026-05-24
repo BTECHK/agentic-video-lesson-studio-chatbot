@@ -27,7 +27,13 @@ function relDays(iso: string | undefined, nowIso: string): string {
   return `${days}d ago`;
 }
 
-export function IngestionPanel({ data }: { data: IngestionPanelData }) {
+export function IngestionPanel({
+  data,
+  triggerEnabled,
+}: {
+  data: IngestionPanelData;
+  triggerEnabled: boolean;
+}) {
   const [status, setStatus] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
 
@@ -72,24 +78,43 @@ export function IngestionPanel({ data }: { data: IngestionPanelData }) {
         </div>
         <button
           type="button"
-          disabled={pending !== null}
+          disabled={pending !== null || !triggerEnabled}
+          title={triggerEnabled ? 'Run a poll for all vendors' : 'Triggering is disabled in this environment'}
           onClick={() => trigger('all', { mode: 'poll' })}
           style={{
-            background: 'var(--accent)',
-            color: '#fff',
-            border: 'none',
+            background: triggerEnabled ? 'var(--accent)' : 'var(--bg-base)',
+            color: triggerEnabled ? '#fff' : 'var(--text-muted)',
+            border: triggerEnabled ? 'none' : '1px solid var(--border)',
             borderRadius: 'var(--radius)',
             padding: '0.5rem 0.9rem',
             fontFamily: 'var(--font)',
             fontWeight: 700,
             fontSize: '0.8rem',
-            cursor: pending ? 'default' : 'pointer',
+            cursor: !triggerEnabled || pending ? 'not-allowed' : 'pointer',
             opacity: pending === 'all' ? 0.6 : 1,
           }}
         >
           {pending === 'all' ? 'Triggering…' : 'Refresh all'}
         </button>
       </div>
+
+      {!triggerEnabled && (
+        <p
+          style={{
+            marginTop: '0.75rem',
+            fontSize: '0.78rem',
+            color: 'var(--text-muted)',
+            background: 'var(--bg-base)',
+            border: '1px dashed var(--border)',
+            borderRadius: 'var(--radius)',
+            padding: '0.5rem 0.75rem',
+          }}
+        >
+          Read-only view. Manual refresh is disabled in this environment — it runs the real scraping
+          pipeline (and can open PRs), so it&rsquo;s gated to the pipeline host
+          (<code>INGEST_TRIGGER_ENABLED=true</code>). Freshness below reflects the last actual run.
+        </p>
+      )}
 
       {status && (
         <p
@@ -146,18 +171,19 @@ export function IngestionPanel({ data }: { data: IngestionPanelData }) {
                 <td style={{ ...td, textAlign: 'right' }}>
                   <button
                     type="button"
-                    disabled={pending !== null || !v.enabled}
+                    disabled={pending !== null || !v.enabled || !triggerEnabled}
+                    title={triggerEnabled ? `Poll ${v.vendor}` : 'Triggering is disabled in this environment'}
                     onClick={() => trigger(v.vendor, { mode: 'poll', vendor: v.vendor })}
                     style={{
                       background: 'transparent',
-                      color: 'var(--accent)',
+                      color: triggerEnabled ? 'var(--accent)' : 'var(--text-muted)',
                       border: '1px solid var(--border)',
                       borderRadius: 'var(--radius)',
                       padding: '0.3rem 0.6rem',
                       fontFamily: 'var(--font)',
                       fontSize: '0.72rem',
                       fontWeight: 600,
-                      cursor: pending || !v.enabled ? 'default' : 'pointer',
+                      cursor: pending || !v.enabled || !triggerEnabled ? 'not-allowed' : 'pointer',
                       opacity: pending === v.vendor ? 0.6 : 1,
                     }}
                   >

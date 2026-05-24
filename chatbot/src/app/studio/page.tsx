@@ -27,5 +27,6 @@ export default async function StudioPage({
     );
   }
 
-  return <Timeline lesson={lesson} lessons={ids} />;
+  const regenEnabled = process.env.REGEN_TRIGGER_ENABLED === 'true';
+  return <Timeline lesson={lesson} lessons={ids} regenEnabled={regenEnabled} />;
 }

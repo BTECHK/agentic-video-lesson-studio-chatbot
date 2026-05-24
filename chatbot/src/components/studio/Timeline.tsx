@@ -35,7 +35,15 @@ function sceneIdOf(clip: Clip): string {
  * horizontally-scrolling lane viewport (ruler + four lanes + playhead), the
  * transport footer, and the slide-in inspector.
  */
-export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; lessons?: string[] }) {
+export function Timeline({
+  lesson,
+  lessons = [],
+  regenEnabled = false,
+}: {
+  lesson: LessonTimeline;
+  lessons?: string[];
+  regenEnabled?: boolean;
+}) {
   const router = useRouter();
   const [pxPerSec, setPxPerSec] = useState(DEFAULT_PX_PER_SEC);
   const [playheadSec, setPlayheadSec] = useState(0);
@@ -86,9 +94,10 @@ export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; les
     }));
   }, []);
 
-  // A comment is direction for the AI: record it optimistically, then kick the
-  // lesson's regeneration DAG (CTRL-03). The clip flips to 'regenerating' once
-  // the host accepts the job.
+  // A comment is direction for the AI. When regeneration is enabled on the host,
+  // sending it kicks the lesson's regen DAG (CTRL-03) and the clip flips to
+  // 'regenerating'. When it's disabled, the comment is just saved locally as a
+  // note (no false "queued" state) — see the regeneration banner.
   const addComment = useCallback(
     (clip: Clip, body: string) => {
       const commentId = `${clip.id}-${Date.now()}`;
@@ -96,9 +105,11 @@ export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; les
         ...prev,
         [clip.id]: [
           ...(prev[clip.id] ?? []),
-          { id: commentId, author: 'You', createdAt: 'just now', body, aiState: 'queued' },
+          { id: commentId, author: 'You', createdAt: 'just now', body, aiState: regenEnabled ? 'queued' : undefined },
         ],
       }));
+
+      if (!regenEnabled) return; // saved note only
 
       fetch('/api/regen', {
         method: 'POST',
@@ -112,7 +123,7 @@ export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; les
           /* leave as queued — surfaced as pending */
         });
     },
-    [lesson.id, setAiState],
+    [lesson.id, regenEnabled, setAiState],
   );
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
@@ -196,6 +207,7 @@ export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; les
         <Inspector
           element={selected}
           comments={comments[selected.id] ?? []}
+          regenEnabled={regenEnabled}
           onClose={() => setSelected(null)}
           onComment={(text) => addComment(selected, text)}
         />

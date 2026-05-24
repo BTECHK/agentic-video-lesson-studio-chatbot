@@ -165,11 +165,14 @@ export function lessonToTimeline(lesson: LessonDoc, status: StatusMap = {}): Les
       payload: { text: narration.text! }, ...stamp(scriptId),
     });
 
+    // Word timings are scene-relative (each scene's audio starts at 0ms), so
+    // shift caption pages by the scene's absolute start to place them correctly
+    // on the shared lesson timeline.
     const pages = paginateCaptions(narration.words ?? [], { maxWords: CAPTION_MAX_WORDS });
     pages.forEach((page, i) => {
       const capId = `cap-${scene.id}-${i}`;
       captions.push({
-        id: capId, kind: 'captions', startSec: page.startSec,
+        id: capId, kind: 'captions', startSec: startSec + page.startSec,
         durationSec: Math.max(page.endSec - page.startSec, 0), label: page.text,
         payload: { text: page.text }, ...stamp(capId),
       });

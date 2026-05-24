@@ -122,6 +122,23 @@ describe('caption track integration', () => {
     expect(captions[0].startSec).toBeCloseTo(0, 5);
     expect(captions[0].durationSec).toBeCloseTo(0.9, 5);
   });
+
+  it('offsets caption clips by the scene start so they align with the lesson timeline', () => {
+    // Word timings are scene-RELATIVE (each scene's audio starts at 0ms), so a
+    // late scene's captions must be shifted to its absolute position, not 0.
+    const doc: LessonDoc = {
+      id: 'x',
+      lesson: { title: 't', duration: 600 },
+      scenes: [
+        { id: 'a', type: 'cover', start: 0, duration: 300, narration: { text: 'First.', words: [{ word: 'First.', startMs: 0, endMs: 500 }] } },
+        { id: 'b', type: 'recap-grid', start: 300, duration: 300, narration: { text: 'Second.', words: [{ word: 'Second.', startMs: 0, endMs: 500 }] } },
+      ],
+    };
+    const { captions } = lessonToTimeline(doc).tracks;
+    const capB = captions.find((c) => c.id === 'cap-b-0')!;
+    expect(capB.startSec).toBeCloseTo(10, 5); // scene b starts at 300 frames = 10s
+    expect(capB.durationSec).toBeCloseTo(0.5, 5);
+  });
 });
 
 describe('clip geometry', () => {

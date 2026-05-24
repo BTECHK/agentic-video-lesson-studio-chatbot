@@ -41,11 +41,13 @@ const STATUS_LINE: Record<Clip['status'], string> = {
 export function Inspector({
   element,
   comments,
+  regenEnabled = false,
   onClose,
   onComment,
 }: {
   element: Clip;
   comments: Comment[];
+  regenEnabled?: boolean;
   onClose: () => void;
   onComment: (text: string) => void;
 }) {
@@ -164,6 +166,11 @@ export function Inspector({
                 color: 'var(--text)',
               }}
             />
+            <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)' }}>
+              {regenEnabled
+                ? 'Sending kicks a regeneration of this lesson on the pipeline host.'
+                : 'Saved as a note on this element (local). Regeneration is disabled in this environment.'}
+            </p>
             <button
               type="button"
               onClick={submit}
