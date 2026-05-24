@@ -1,5 +1,16 @@
 # Studio / Website-Authoring — Direction & Audit (2026-05-24)
 
+## Build progress (2026-05-24)
+- ✅ **Generate** (outline → fact-checked script draft → review → Apply→MP4). Headless `claude -p`
+  backend (no key), retry/backoff/logging, draft→apply. Verified end-to-end (route returns a
+  fact-checked draft; engine produced valid scripts).
+- ✅ **Menu** — lesson directory at /studio/menu (Studio · Generate · Menu nav).
+- ✅ **Comment staging (half of "Studio editing")** — comments persist with metadata tags to
+  .comments.json (open/applied/dismissed); survive refresh; /api/comments GET/POST/PATCH.
+- ⏳ **In-place editing (remaining)** — edit caption text / script / scene timing from the UI +
+  apply-from-staging. NEEDS a design decision (see open questions) before building.
+
+
 Captured from the owner review + the 5-persona website audit. This is the roadmap for
 turning the Studio from a **viewer** into an **authoring tool**, plus the decisions that gate it.
 
