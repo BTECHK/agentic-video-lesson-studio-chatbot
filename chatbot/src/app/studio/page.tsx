@@ -6,8 +6,14 @@ import { Timeline } from '@/components/studio/Timeline';
 export const dynamic = 'force-dynamic';
 
 /** Studio control plane — multi-track timeline for the lesson-video pipeline. */
-export default function StudioPage() {
-  const lessonId = listLessonIds()[0] ?? 'module-1';
+export default async function StudioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lesson?: string }>;
+}) {
+  const { lesson: requested } = await searchParams;
+  const ids = listLessonIds();
+  const lessonId = requested && ids.includes(requested) ? requested : ids[0] ?? 'module-1';
   const lesson = getLessonTimeline(lessonId);
 
   if (!lesson) {
@@ -21,5 +27,5 @@ export default function StudioPage() {
     );
   }
 
-  return <Timeline lesson={lesson} />;
+  return <Timeline lesson={lesson} lessons={ids} />;
 }

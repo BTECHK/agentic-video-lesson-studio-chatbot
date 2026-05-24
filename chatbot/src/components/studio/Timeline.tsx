@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Clip, ClipKind, LessonTimeline, Status } from '@/lib/studio-timeline';
 import { Ruler, RULER_HEIGHT } from './Ruler';
 import { Playhead } from './Playhead';
@@ -14,13 +15,28 @@ const DEFAULT_PX_PER_SEC = 16;
 const worst = (a: Status, b: Status): Status =>
   a === 'error' || b === 'error' ? 'error' : a === 'stale' || b === 'stale' ? 'stale' : 'fresh';
 
+const CLIP_PREFIX: Record<ClipKind, string> = {
+  animation: 'anim-',
+  voiceover: 'voice-',
+  script: 'script-',
+  captions: 'cap-',
+};
+
+/** Recover the scene id a clip belongs to from its prefixed clip id. */
+function sceneIdOf(clip: Clip): string {
+  let id = clip.id.slice(CLIP_PREFIX[clip.kind].length);
+  if (clip.kind === 'captions') id = id.replace(/-\d+$/, ''); // strip caption page index
+  return id;
+}
+
 /**
  * Studio orchestrator: owns the single shared time scale (pxPerSec), playhead,
  * selection, and comments. Renders the frozen header column + the one
  * horizontally-scrolling lane viewport (ruler + four lanes + playhead), the
  * transport footer, and the slide-in inspector.
  */
-export function Timeline({ lesson }: { lesson: LessonTimeline }) {
+export function Timeline({ lesson, lessons = [] }: { lesson: LessonTimeline; lessons?: string[] }) {
+  const router = useRouter();
   const [pxPerSec, setPxPerSec] = useState(DEFAULT_PX_PER_SEC);
   const [playheadSec, setPlayheadSec] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -62,15 +78,42 @@ export function Timeline({ lesson }: { lesson: LessonTimeline }) {
   }, [playheadSec, pxPerSec]);
 
   const onSelect = useCallback((clip: Clip) => setSelected(clip), []);
-  const addComment = useCallback((clipId: string, body: string) => {
+
+  const setAiState = useCallback((clipId: string, commentId: string, aiState: Comment['aiState']) => {
     setComments((prev) => ({
       ...prev,
-      [clipId]: [
-        ...(prev[clipId] ?? []),
-        { id: `${clipId}-${Date.now()}`, author: 'You', createdAt: 'just now', body, aiState: 'queued' },
-      ],
+      [clipId]: (prev[clipId] ?? []).map((c) => (c.id === commentId ? { ...c, aiState } : c)),
     }));
   }, []);
+
+  // A comment is direction for the AI: record it optimistically, then kick the
+  // lesson's regeneration DAG (CTRL-03). The clip flips to 'regenerating' once
+  // the host accepts the job.
+  const addComment = useCallback(
+    (clip: Clip, body: string) => {
+      const commentId = `${clip.id}-${Date.now()}`;
+      setComments((prev) => ({
+        ...prev,
+        [clip.id]: [
+          ...(prev[clip.id] ?? []),
+          { id: commentId, author: 'You', createdAt: 'just now', body, aiState: 'queued' },
+        ],
+      }));
+
+      fetch('/api/regen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId: lesson.id, sceneId: sceneIdOf(clip), comment: body }),
+      })
+        .then((res) => {
+          if (res.ok) setAiState(clip.id, commentId, 'regenerating');
+        })
+        .catch(() => {
+          /* leave as queued — surfaced as pending */
+        });
+    },
+    [lesson.id, setAiState],
+  );
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
   const staleCount = allClips.filter((c) => c.status === 'stale').length;
@@ -87,9 +130,27 @@ export function Timeline({ lesson }: { lesson: LessonTimeline }) {
           background: 'var(--bg-card)', fontFamily: 'var(--font)', flexShrink: 0,
         }}
       >
-        <h1 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
-          {lesson.title} <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>— Studio</span>
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <h1 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>
+            {lesson.title} <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>— Studio</span>
+          </h1>
+          {lessons.length > 1 && (
+            <select
+              aria-label="Select lesson"
+              value={lesson.id}
+              onChange={(e) => router.push(`/studio?lesson=${encodeURIComponent(e.target.value)}`)}
+              style={{
+                fontFamily: 'var(--font)', fontSize: 13, padding: '4px 8px',
+                border: '1px solid var(--border)', borderRadius: 'var(--radius)',
+                background: 'var(--bg-base)', color: 'var(--text)', cursor: 'pointer',
+              }}
+            >
+              {lessons.map((id) => (
+                <option key={id} value={id}>{id}</option>
+              ))}
+            </select>
+          )}
+        </div>
         <GlobalStatus stale={staleCount} error={errorCount} />
       </div>
 
@@ -136,7 +197,7 @@ export function Timeline({ lesson }: { lesson: LessonTimeline }) {
           element={selected}
           comments={comments[selected.id] ?? []}
           onClose={() => setSelected(null)}
-          onComment={(text) => addComment(selected.id, text)}
+          onComment={(text) => addComment(selected, text)}
         />
       )}
     </div>
