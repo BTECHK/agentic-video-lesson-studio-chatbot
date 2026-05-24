@@ -42,14 +42,18 @@ export function Inspector({
   element,
   comments,
   regenEnabled = false,
+  stagedEditCount = 0,
   onClose,
   onComment,
+  onStageEdit,
 }: {
   element: Clip;
   comments: Comment[];
   regenEnabled?: boolean;
+  stagedEditCount?: number;
   onClose: () => void;
   onComment: (text: string) => void;
+  onStageEdit?: (value: string) => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [draft, setDraft] = useState('');
@@ -137,6 +141,14 @@ export function Inspector({
             {formatTime(element.startSec)} – {formatTime(element.startSec + element.durationSec)} · {element.label}
           </div>
 
+          {element.kind === 'script' && onStageEdit && (
+            <NarrationEditor
+              initial={(element.payload as ScriptPayload).text}
+              stagedEditCount={stagedEditCount}
+              onStage={onStageEdit}
+            />
+          )}
+
           <hr style={{ border: 0, borderTop: '1px solid var(--border)', margin: '4px 0' }} />
 
           <h3 style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
@@ -188,6 +200,54 @@ export function Inspector({
         </div>
       </div>
     </>
+  );
+}
+
+function NarrationEditor({
+  initial,
+  stagedEditCount,
+  onStage,
+}: {
+  initial: string;
+  stagedEditCount: number;
+  onStage: (value: string) => void;
+}) {
+  const [text, setText] = useState(initial);
+  const dirty = text.trim() !== initial.trim() && text.trim().length > 0;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <label style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+        Narration (editable)
+      </label>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={5}
+        style={{
+          resize: 'vertical', padding: 8, fontFamily: 'var(--font)', fontSize: 13, lineHeight: 1.5,
+          border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--bg-base)', color: 'var(--text)',
+        }}
+      />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <button
+          type="button"
+          onClick={() => onStage(text.trim())}
+          disabled={!dirty}
+          style={{
+            padding: '5px 12px', borderRadius: 'var(--radius)', border: 'none',
+            background: dirty ? 'var(--accent)' : 'var(--accent-soft)', color: dirty ? '#fff' : 'var(--accent)',
+            fontWeight: 600, fontSize: 12, cursor: dirty ? 'pointer' : 'default', fontFamily: 'var(--font)',
+          }}
+        >
+          Stage edit
+        </button>
+        {stagedEditCount > 0 && (
+          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            {stagedEditCount} staged edit{stagedEditCount === 1 ? '' : 's'} on this scene
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 

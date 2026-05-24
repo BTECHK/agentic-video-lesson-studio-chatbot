@@ -43,3 +43,6 @@ content/lessons/*/*.factcheck.json
 
 # Staged Studio comments (durable local review state)
 content/lessons/*/.comments.json
+
+# Staged Studio edits (durable local review state)
+content/lessons/*/.edits.json

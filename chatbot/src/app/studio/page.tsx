@@ -1,5 +1,6 @@
 import { getLessonTimeline, listLessonIds } from '@/lib/lesson-timeline';
 import { loadComments } from '@/lib/comments-store';
+import { loadEdits } from '@/lib/edits-store';
 import { Timeline } from '@/components/studio/Timeline';
 
 // Read live pipeline status (fresh/stale per artifact) on each request, rather
@@ -30,7 +31,14 @@ export default async function StudioPage({
 
   const regenEnabled = process.env.REGEN_TRIGGER_ENABLED === 'true';
   const initialComments = loadComments(lessonId);
+  const initialEdits = loadEdits(lessonId);
   return (
-    <Timeline lesson={lesson} lessons={ids} regenEnabled={regenEnabled} initialComments={initialComments} />
+    <Timeline
+      lesson={lesson}
+      lessons={ids}
+      regenEnabled={regenEnabled}
+      initialComments={initialComments}
+      initialEdits={initialEdits}
+    />
   );
 }

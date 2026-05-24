@@ -10,6 +10,7 @@ import { TransportBar } from './TransportBar';
 import { Inspector, type Comment } from './Inspector';
 import { StatusBadge } from './StatusBadge';
 import type { StagedComment } from '@/lib/comments';
+import { openEdits, editsForScene, type StagedEdit } from '@/lib/edits';
 
 /** Map a persisted staged comment to the inspector's view shape. */
 function toViewComment(c: StagedComment): Comment {
@@ -53,11 +54,13 @@ export function Timeline({
   lessons = [],
   regenEnabled = false,
   initialComments = [],
+  initialEdits = [],
 }: {
   lesson: LessonTimeline;
   lessons?: string[];
   regenEnabled?: boolean;
   initialComments?: StagedComment[];
+  initialEdits?: StagedEdit[];
 }) {
   const router = useRouter();
   const [pxPerSec, setPxPerSec] = useState(DEFAULT_PX_PER_SEC);
@@ -66,6 +69,8 @@ export function Timeline({
   const [selected, setSelected] = useState<Clip | null>(null);
   // Seeded from persisted comments so they survive refresh (no longer ephemeral).
   const [comments, setComments] = useState<Record<string, Comment[]>>(() => groupByClip(initialComments));
+  const [edits, setEdits] = useState<StagedEdit[]>(initialEdits);
+  const [editMsg, setEditMsg] = useState<string | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -148,6 +153,43 @@ export function Timeline({
   );
 
   const pendingComments = Object.values(comments).flat().length;
+  const pendingEdits = openEdits(edits).length;
+
+  // Stage a narration edit for a clip's scene (persists; applied later in a batch).
+  const stageEdit = useCallback(
+    (clip: Clip, value: string) => {
+      fetch('/api/edits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId: lesson.id, sceneId: sceneIdOf(clip), field: 'narration', value }),
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('stage failed'))))
+        .then(({ edit }: { edit: StagedEdit }) => {
+          setEdits((prev) => [...prev, edit]);
+          setEditMsg('Edit staged. Apply to rebuild the video.');
+        })
+        .catch(() => setEditMsg('Could not stage edit.'));
+    },
+    [lesson.id],
+  );
+
+  // Apply all staged edits → writes script.json + regenerates (host-gated route).
+  const applyEdits = useCallback(() => {
+    setEditMsg('Applying…');
+    fetch('/api/edits/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lessonId: lesson.id }),
+    })
+      .then((res) => res.json())
+      .then((j) => {
+        setEditMsg(j.message || j.error || 'Done.');
+        if (j.status === 'applying') {
+          setEdits((prev) => prev.map((e) => (e.status === 'open' ? { ...e, status: 'applied' as const } : e)));
+        }
+      })
+      .catch(() => setEditMsg('Network error applying edits.'));
+  }, [lesson.id]);
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
   const staleCount = allClips.filter((c) => c.status === 'stale').length;
@@ -191,9 +233,28 @@ export function Timeline({
               ✎ {pendingComments} note{pendingComments === 1 ? '' : 's'}
             </span>
           )}
+          {pendingEdits > 0 && (
+            <button
+              type="button"
+              onClick={applyEdits}
+              title={regenEnabled ? 'Write edits to the script and rebuild the video' : 'Applying edits rebuilds on the pipeline host'}
+              style={{
+                fontSize: 12, fontWeight: 700, fontFamily: 'var(--font)',
+                color: '#fff', background: 'var(--accent)', border: 'none',
+                borderRadius: 'var(--radius)', padding: '5px 12px', cursor: 'pointer',
+              }}
+            >
+              Apply {pendingEdits} edit{pendingEdits === 1 ? '' : 's'} → rebuild
+            </button>
+          )}
           <GlobalStatus stale={staleCount} error={errorCount} />
         </div>
       </div>
+      {editMsg && (
+        <div style={{ padding: '6px 16px', fontSize: '0.78rem', color: 'var(--text)', background: 'var(--bg-base)', borderBottom: '1px solid var(--border)' }}>
+          {editMsg}
+        </div>
+      )}
 
       {/* body: frozen header column + scrolling lanes */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
@@ -238,8 +299,10 @@ export function Timeline({
           element={selected}
           comments={comments[selected.id] ?? []}
           regenEnabled={regenEnabled}
+          stagedEditCount={openEdits(editsForScene(edits, sceneIdOf(selected))).length}
           onClose={() => setSelected(null)}
           onComment={(text) => addComment(selected, text)}
+          onStageEdit={(value) => stageEdit(selected, value)}
         />
       )}
     </div>
