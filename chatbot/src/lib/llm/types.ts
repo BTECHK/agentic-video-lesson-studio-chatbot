@@ -7,6 +7,7 @@ export interface LLMRequest {
   messages: LLMMessage[];
   accessMode: 'demo' | 'student';
   contentContext?: string;
+  mode?: 'ta' | 'office-hours';
 }
 
 export interface LLMResponse {

@@ -24,6 +24,9 @@
 # production
 /build
 
+# persisted session data (mountable volume)
+/data
+
 # misc
 .DS_Store
 *.pem

@@ -11,4 +11,11 @@ services:
       - LLM_PROVIDER=${LLM_PROVIDER:-claude-passthrough}
       - DEMO_MODULE_SCOPE=${DEMO_MODULE_SCOPE:-module-1}
       - NEXT_PUBLIC_DEV_BYPASS=${NEXT_PUBLIC_DEV_BYPASS:-false}
+      - SESSION_DATA_DIR=/app/data/sessions
+    # Persist chat sessions across container restarts (CHAT-05).
+    volumes:
+      - chatbot-data:/app/data
     restart: unless-stopped
+
+volumes:
+  chatbot-data:

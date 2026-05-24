@@ -1,5 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SessionStore } from '@/lib/session';
+import { SessionStore, type Session, type SessionStorage } from '@/lib/session';
+
+/** In-memory fake of the durable backing store, simulating a process restart. */
+function fakeStorage(): SessionStorage & { data: Map<string, Session> } {
+  const data = new Map<string, Session>();
+  return {
+    data,
+    load: () => [...data.values()].map((s) => structuredClone(s)),
+    save: (s) => void data.set(s.id, structuredClone(s)),
+    remove: (id) => void data.delete(id),
+  };
+}
 
 describe('SessionStore', () => {
   let store: SessionStore;
@@ -77,5 +88,47 @@ describe('SessionStore', () => {
     expect(store.get(session1.id)).toBeUndefined();
     expect(store.get(session2.id)).toBeUndefined();
     vi.restoreAllMocks();
+  });
+
+  // Persistence across restart (CHAT-05)
+  describe('persistence', () => {
+    it('saves created sessions to the backing store', () => {
+      const storage = fakeStorage();
+      const persistent = new SessionStore(storage);
+      const session = persistent.create('student');
+      expect(storage.data.has(session.id)).toBe(true);
+    });
+
+    it('persists appended messages to the backing store', () => {
+      const storage = fakeStorage();
+      const persistent = new SessionStore(storage);
+      const session = persistent.create('demo');
+      persistent.addMessage(session.id, { role: 'user', content: 'Hello' });
+      expect(storage.data.get(session.id)!.messages).toHaveLength(1);
+    });
+
+    it('rehydrates sessions when a new store loads the same backing store', () => {
+      const storage = fakeStorage();
+      const first = new SessionStore(storage);
+      const session = first.create('student');
+      first.addMessage(session.id, { role: 'user', content: 'persist me' });
+
+      // Simulate a server restart: a brand-new store over the same storage.
+      const restarted = new SessionStore(storage);
+      const recovered = restarted.get(session.id);
+      expect(recovered).toBeDefined();
+      expect(recovered!.accessMode).toBe('student');
+      expect(restarted.getMessages(session.id)[0].content).toBe('persist me');
+    });
+
+    it('removes expired sessions from the backing store on access', () => {
+      const storage = fakeStorage();
+      const persistent = new SessionStore(storage);
+      const session = persistent.create('demo');
+      vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 31 * 60 * 1000);
+      expect(persistent.get(session.id)).toBeUndefined();
+      expect(storage.data.has(session.id)).toBe(false);
+      vi.restoreAllMocks();
+    });
   });
 });

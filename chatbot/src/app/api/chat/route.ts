@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { message, sessionId } = parsed.data;
+  const { message, sessionId, mode } = parsed.data;
 
   const session = sessionStore.get(sessionId);
   if (!session) {
@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       messages,
       accessMode: session.accessMode,
       contentContext: contentContext || undefined,
+      mode,
     });
 
     sessionStore.addMessage(sessionId, {

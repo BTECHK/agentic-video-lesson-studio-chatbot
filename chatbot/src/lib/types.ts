@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export type AccessMode = 'demo' | 'student';
 export type LLMProvider = 'anthropic' | 'mock';
+/** TA mode answers strictly from course content; Office Hours allows tangential exploration. */
+export type ChatMode = 'ta' | 'office-hours';
 
 export interface Citation {
   id: string;
@@ -40,6 +42,7 @@ export interface ChatResponse {
 export const ChatRequestSchema = z.object({
   message: z.string().min(1).max(2000),
   sessionId: z.string().min(1),
+  mode: z.enum(['ta', 'office-hours']).default('ta'),
 });
 
 export const SessionRequestSchema = z.object({

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import type { AccessMode, ChatMessage, Citation } from '@/lib/types';
+import type { AccessMode, ChatMessage, ChatMode, Citation } from '@/lib/types';
 import { MessageBubble } from './MessageBubble';
 
 export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMode; accessCode?: string }) {
@@ -9,6 +9,7 @@ export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMo
   const [inputValue, setInputValue] = useState('');
   const [sessionId, setSessionId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<ChatMode>('ta');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMo
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, sessionId }),
+        body: JSON.stringify({ message: text, sessionId, mode }),
       });
 
       if (!res.ok) {
@@ -90,15 +91,56 @@ export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMo
       }}
     >
       <header
-        className="p-4 border-b"
+        className="p-4 border-b flex items-center justify-between gap-3"
         style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-card)' }}
       >
-        <h1 className="text-lg" style={{ fontWeight: 700 }}>
-          Tutor
-        </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
-          Sample Academy AI Teaching Assistant
-        </p>
+        <div>
+          <h1 className="text-lg" style={{ fontWeight: 700 }}>
+            Tutor
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+            {mode === 'ta'
+              ? 'Sample Academy AI Teaching Assistant'
+              : 'Office Hours — exploratory mode'}
+          </p>
+        </div>
+        <div
+          role="group"
+          aria-label="Chat mode"
+          className="flex shrink-0"
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
+            overflow: 'hidden',
+          }}
+        >
+          {(
+            [
+              ['ta', 'Teaching Assistant'],
+              ['office-hours', 'Office Hours'],
+            ] as const
+          ).map(([value, label]) => {
+            const active = mode === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setMode(value)}
+                className="px-3 py-1.5 text-xs cursor-pointer"
+                style={{
+                  border: 'none',
+                  fontFamily: 'var(--font)',
+                  fontWeight: active ? 700 : 500,
+                  color: active ? '#fff' : 'var(--text-muted)',
+                  backgroundColor: active ? 'var(--accent)' : 'transparent',
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
       </header>
 
       <div

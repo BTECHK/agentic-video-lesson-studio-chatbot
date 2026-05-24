@@ -71,4 +71,26 @@ describe('getSystemPrompt', () => {
     expect(prompt).toContain('Course Content Repository');
     expect(prompt).toContain('real course content');
   });
+
+  // Office Hours mode (CHAT-04)
+  it('defaults to TA mode with no Office Hours section', () => {
+    const prompt = getSystemPrompt('student', 'real course content');
+    expect(prompt).not.toContain('Office Hours Mode');
+  });
+
+  it('includes an Office Hours section when mode is office-hours', () => {
+    const prompt = getSystemPrompt('student', 'real course content', 'office-hours');
+    expect(prompt).toContain('Office Hours Mode');
+  });
+
+  it('relaxes the strict refusal boundary in Office Hours mode', () => {
+    const prompt = getSystemPrompt('student', 'real course content', 'office-hours');
+    expect(prompt.toLowerCase()).toContain('tangential');
+  });
+
+  it('keeps the Tutor persona and citation rules in Office Hours mode', () => {
+    const prompt = getSystemPrompt('student', 'real course content', 'office-hours');
+    expect(prompt).toContain('Tutor');
+    expect(prompt).toContain('[Source:');
+  });
 });

@@ -1,4 +1,4 @@
-import type { AccessMode } from '../types';
+import type { AccessMode, ChatMode } from '../types';
 
 const TUTOR_PERSONA = `You are Tutor, the Sample Academy AI teaching assistant.
 
@@ -40,7 +40,22 @@ This user is in demo mode with access to Module 1 content only.
 If they ask about topics beyond Module 1, respond helpfully but add:
 "This topic is covered in more depth in the full course. Enroll at Sample Academy to unlock all modules!"`;
 
-export function getSystemPrompt(accessMode: AccessMode, contentContext?: string): string {
+const OFFICE_HOURS_ADDENDUM = `
+
+## Office Hours Mode
+You are now in Office Hours mode — a relaxed, exploratory setting. The strict refusal
+boundary above is RELAXED: you may engage with tangential and exploratory questions about
+AI, technology, careers, and how learners can apply these tools in the real world, even when
+they go beyond the strict course material. Stay in the Tutor persona, stay practical and
+encouraging, and keep citing course content with [Source: ...] whenever a claim is grounded
+in it. For tangential answers not grounded in course content, be helpful but flag that it is
+your general guidance rather than course-sourced.`;
+
+export function getSystemPrompt(
+  accessMode: AccessMode,
+  contentContext?: string,
+  mode: ChatMode = 'ta',
+): string {
   let prompt = TUTOR_PERSONA;
 
   if (contentContext && contentContext.length > 0) {
@@ -58,6 +73,9 @@ ${contentContext}`;
 
   if (accessMode === 'demo') {
     prompt += DEMO_ADDENDUM;
+  }
+  if (mode === 'office-hours') {
+    prompt += OFFICE_HOURS_ADDENDUM;
   }
   return prompt;
 }
