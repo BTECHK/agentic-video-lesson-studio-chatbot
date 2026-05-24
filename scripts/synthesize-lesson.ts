@@ -17,11 +17,12 @@ import {
   defaultBatchRunner,
   TTS_DEFAULT_VOICE,
 } from '../src/lib/tts-adapter';
+import { runMain, type Logger } from '../src/lib/logger';
 
-async function main(): Promise<number> {
+async function main(log: Logger): Promise<number> {
   const arg = process.argv[2];
   if (!arg) {
-    console.error('usage: tsx scripts/synthesize-lesson.ts <lesson.json | lessonId>');
+    log.error('usage: tsx scripts/synthesize-lesson.ts <lesson.json | lessonId>');
     return 2;
   }
   // Accept either a path to lesson.json or a bare lesson id (e.g. "module-1").
@@ -31,7 +32,7 @@ async function main(): Promise<number> {
   const { manifestPath, entries } = buildManifest(lesson);
 
   if (entries.length === 0) {
-    console.error(`No narrated scenes found in ${lessonPath}.`);
+    log.error('no narrated scenes found', { lessonPath });
     return 1;
   }
 
@@ -39,10 +40,10 @@ async function main(): Promise<number> {
   mkdirSync(dirname(manifestPath), { recursive: true });
   writeFileSync(manifestPath, JSON.stringify(entries, null, 2));
 
-  console.log(`Synthesizing ${entries.length} scene(s) from ${lessonPath} (impl=${impl})...`);
+  log.info('synthesizing scenes', { lessonPath, scenes: entries.length, impl });
   await defaultBatchRunner({ manifestPath, voice: TTS_DEFAULT_VOICE, impl });
-  console.log('Done.');
+  log.info('synthesis complete', { scenes: entries.length });
   return 0;
 }
 
-main().then((code) => process.exit(code));
+runMain('tts', main);

@@ -18,11 +18,12 @@ import { lessonToSynthPlan, sceneWavPath, sceneAlignPath } from '../src/lib/tts-
 import { wavDurationSeconds } from '../src/lib/wav';
 import { attachNarrationAssets, type NarrationAsset } from '../src/lib/assemble';
 import { applyMeasuredTimings } from '../src/lib/timing';
+import { runMain, type Logger } from '../src/lib/logger';
 
-function main(): number {
+function main(log: Logger): number {
   const arg = process.argv[2];
   if (!arg) {
-    console.error('usage: tsx scripts/align-lesson.ts <lesson.json | lessonId>');
+    log.error('usage: tsx scripts/align-lesson.ts <lesson.json | lessonId>');
     return 2;
   }
   // Accept either a path to lesson.json or a bare lesson id (e.g. "module-1").
@@ -31,7 +32,7 @@ function main(): number {
   const lesson = JSON.parse(readFileSync(lessonPath, 'utf-8'));
   const plan = lessonToSynthPlan(lesson);
   if (plan.length === 0) {
-    console.error(`No narrated scenes in ${lessonPath}; run synthesize-lesson first.`);
+    log.error('no narrated scenes; run synthesize-lesson first', { lessonPath });
     return 1;
   }
 
@@ -42,7 +43,7 @@ function main(): number {
     const wavPath = sceneWavPath(lesson.id, sceneId);
     const alignPath = sceneAlignPath(lesson.id, sceneId);
     if (!existsSync(wavPath) || !existsSync(alignPath)) {
-      console.error(`Missing audio/alignment for scene ${sceneId} (${wavPath}). Run synthesize-lesson first.`);
+      log.error('missing audio/alignment for scene; run synthesize-lesson first', { sceneId, wavPath });
       return 1;
     }
 
@@ -64,18 +65,24 @@ function main(): number {
 
   const parsed = LessonSchema.safeParse(final);
   if (!parsed.success) {
-    console.error('Assembled lesson failed LessonSchema validation:');
-    console.error(JSON.stringify(parsed.error.issues, null, 2));
+    log.error('assembled lesson failed LessonSchema validation', {
+      lessonPath,
+      issues: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`),
+    });
     return 1;
   }
 
   writeFileSync(lessonPath, `${JSON.stringify(final, null, 2)}\n`);
 
   const fps = 30;
-  console.log(`Assembled ${plan.length} narrated scene(s) into ${lessonPath}`);
-  console.log(`  estimated duration: ${lesson.lesson.duration} frames (~${(lesson.lesson.duration / fps).toFixed(1)}s)`);
-  console.log(`  measured  duration: ${final.lesson.duration} frames (~${(final.lesson.duration / fps).toFixed(1)}s)`);
+  log.info('assembled narrated scenes', {
+    lessonPath,
+    scenes: plan.length,
+    estimatedFrames: lesson.lesson.duration,
+    measuredFrames: final.lesson.duration,
+    measuredSeconds: Number((final.lesson.duration / fps).toFixed(1)),
+  });
   return 0;
 }
 
-process.exit(main());
+runMain('align', main);
