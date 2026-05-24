@@ -8,8 +8,9 @@ const TABS = [
   { label: 'Chat', href: '/chat', match: (p: string) => p === '/chat' },
   { label: 'Tool Repository', href: '/content', match: (p: string) => p.startsWith('/content') && !p.startsWith('/content/compare') },
   { label: 'Tool Comparison', href: '/content/compare', match: (p: string) => p.startsWith('/content/compare') },
-  { label: 'Studio', href: '/studio', match: (p: string) => p === '/studio' || (p.startsWith('/studio') && !p.startsWith('/studio/generate')) },
+  { label: 'Studio', href: '/studio', match: (p: string) => p === '/studio' },
   { label: 'Generate', href: '/studio/generate', match: (p: string) => p.startsWith('/studio/generate') },
+  { label: 'Menu', href: '/studio/menu', match: (p: string) => p.startsWith('/studio/menu') },
   { label: 'Ingestion', href: '/ingestion', match: (p: string) => p.startsWith('/ingestion') },
 ];
 

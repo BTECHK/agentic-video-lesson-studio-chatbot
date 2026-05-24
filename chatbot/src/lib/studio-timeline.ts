@@ -16,6 +16,9 @@ export const MIN_CLIP_PX = 24;
 export type Status = 'fresh' | 'stale' | 'error';
 export type ClipKind = 'animation' | 'voiceover' | 'script' | 'captions';
 
+/** The four track kinds, in display order. */
+export const TRACK_KINDS: ClipKind[] = ['animation', 'voiceover', 'script', 'captions'];
+
 export interface Word {
   word: string;
   startMs: number;
