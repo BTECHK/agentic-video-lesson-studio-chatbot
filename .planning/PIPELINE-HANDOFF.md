@@ -157,16 +157,20 @@ horizontally-scrolling lane body; click-to-isolate inspector overlay with scrim;
 (fresh shows no badge); brand tokens only; a11y (every clip a `<button>` with aria-label, playhead as
 `role=slider`, dialog with Esc/focus, reduced-motion).
 
-**Deferred follow-ups (clearly-scoped, not blockers):**
-- **Real waveforms**: lane voiceover uses a CSS bar motif; wire **wavesurfer.js (BSD-3)** with
-  pre-decoded `peaks` (lane) + real `audioUrl` (inspector player). Needs a peaks-extraction step
-  (root script → `peaks.json` per scene, or compute from wav).
-- **Live AI-regen wiring**: comments are optimistic local state (`aiState:'queued'`). Connect the
-  composer to the Phase F `regenerate` engine so a comment triggers a real per-scene rebuild and
-  flips the clip back to `fresh` on completion (CTRL-03).
-- **Scene thumbnails**: animation lane uses a tonal filmstrip placeholder; wire first-frame stills
-  (the `render-lesson-stills.ts` output) into `public/`.
-- Multi-lesson picker (loader already lists lesson ids; page defaults to the first).
+**Follow-ups status (updated 2026-05-24):**
+- ✅ **Live AI-regen wiring (CTRL-03)** — comment → `/api/regen` (validates+sanitizes lessonId,
+  `regen-trigger.ts` + 4 tests) → spawns `scripts/regenerate.ts` on the pipeline host
+  (`REGEN_TRIGGER_ENABLED=true`), else 503. Timeline records the comment, derives the scene id, posts
+  the trigger, flips the clip to `regenerating`. STILL DEFERRED: applying the comment's *intent* to
+  upstream content (the AI edit step) — this kicks the deterministic rebuild of what's already stale.
+- ✅ **Multi-lesson picker** — `/studio?lesson=<id>` (validated against `listLessonIds`); Timeline
+  shows a lesson `<select>` when >1 lesson exists.
+- ⏳ **Real waveforms** (DEFERRED): lane voiceover uses a CSS bar motif; wire **wavesurfer.js (BSD-3)**
+  with pre-decoded `peaks`. Needs a peaks-extraction step from the wavs (docker/tts-gated, unverifiable
+  here) + a new dependency — left out deliberately rather than stub it.
+- ⏳ **Scene thumbnails** (DEFERRED): animation lane uses a tonal placeholder; wire first-frame stills
+  (`render-lesson-stills.ts` output) into `public/`. Needs a real Remotion render to produce assets.
+- ⏳ **Capability-table caption overlap** (DEFERRED): cosmetic, needs a visual render pass to verify.
 
 ## Constraints to keep honoring
 - No paid services (P0): all TTS/align tools chosen are MIT/Apache/BSD + commercial-OK.
