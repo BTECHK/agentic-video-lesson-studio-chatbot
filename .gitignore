@@ -36,3 +36,7 @@ public/lessons/
 
 # Regeneration DAG cache (content hashes; rebuilt on demand, not source)
 content/lessons/*/.regen-cache.json
+
+# Generated drafts + fact-check reports (Studio Generate; review-then-apply, not source)
+content/lessons/*/script.draft.json
+content/lessons/*/*.factcheck.json
