@@ -10,7 +10,7 @@ import { TransportBar } from './TransportBar';
 import { Inspector, type Comment } from './Inspector';
 import { StatusBadge } from './StatusBadge';
 import type { StagedComment } from '@/lib/comments';
-import { openEdits, editsForScene, type StagedEdit } from '@/lib/edits';
+import { openEdits, editsForScene, moveInOrder, type StagedEdit } from '@/lib/edits';
 
 /** Map a persisted staged comment to the inspector's view shape. */
 function toViewComment(c: StagedComment): Comment {
@@ -173,6 +173,38 @@ export function Timeline({
     [lesson.id],
   );
 
+  // Current scene order (one animation clip per scene). Pending order tracks the
+  // latest staged reorder so successive moves compose.
+  const lessonOrder = lesson.tracks.animation.map((c) => sceneIdOf(c));
+  const lastOrderEdit = [...openEdits(edits)].reverse().find((e) => e.field === 'order');
+  const [pendingOrder, setPendingOrder] = useState<string[]>(
+    lastOrderEdit ? lastOrderEdit.value.split(',').filter(Boolean) : lessonOrder,
+  );
+
+  const moveScene = useCallback(
+    (clip: Clip, dir: 'earlier' | 'later') => {
+      const next = moveInOrder(pendingOrder, sceneIdOf(clip), dir);
+      if (next.join(',') === pendingOrder.join(',')) return; // no-op at the ends
+      setPendingOrder(next);
+      fetch('/api/edits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId: lesson.id, field: 'order', value: next.join(',') }),
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('reorder failed'))))
+        .then(({ edit }: { edit: StagedEdit }) => {
+          // Mirror the store: a new order edit supersedes prior open ones.
+          setEdits((prev) => [
+            ...prev.map((e) => (e.field === 'order' && e.status === 'open' ? { ...e, status: 'dismissed' as const } : e)),
+            edit,
+          ]);
+          setEditMsg('Scene order changed. Apply to rebuild the video.');
+        })
+        .catch(() => setEditMsg('Could not stage reorder.'));
+    },
+    [lesson.id, pendingOrder],
+  );
+
   // Apply all staged edits → writes script.json + regenerates (host-gated route).
   const applyEdits = useCallback(() => {
     setEditMsg('Applying…');
@@ -303,6 +335,7 @@ export function Timeline({
           onClose={() => setSelected(null)}
           onComment={(text) => addComment(selected, text)}
           onStageEdit={(value) => stageEdit(selected, value)}
+          onMove={(dir) => moveScene(selected, dir)}
         />
       )}
     </div>

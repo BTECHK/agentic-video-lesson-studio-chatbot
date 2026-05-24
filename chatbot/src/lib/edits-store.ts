@@ -24,7 +24,15 @@ function write(lessonId: string, list: StagedEdit[]): void {
 
 export function addStagedEdit(lessonId: string, input: NewEdit): StagedEdit {
   const edit = makeEdit(input, { id: crypto.randomUUID(), now: new Date().toISOString() });
-  write(lessonId, [...loadEdits(lessonId), edit]);
+  // Order is a single whole-lesson intent — supersede any prior open order edit
+  // so they don't accumulate; narration edits stack per scene.
+  const existing =
+    input.field === 'order'
+      ? loadEdits(lessonId).map((e) =>
+          e.field === 'order' && e.status === 'open' ? { ...e, status: 'dismissed' as const } : e,
+        )
+      : loadEdits(lessonId);
+  write(lessonId, [...existing, edit]);
   return edit;
 }
 

@@ -20,10 +20,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
   const { lessonId, sceneId, field, value } = (body ?? {}) as Record<string, string>;
-  if (!lessonId || !LESSON_RE.test(lessonId) || !sceneId || field !== 'narration' || !value?.trim()) {
+  const validField = field === 'narration' || field === 'order';
+  // narration edits target a scene; order edits carry the full scene-id list in value.
+  if (!lessonId || !LESSON_RE.test(lessonId) || !validField || !value?.trim() || (field === 'narration' && !sceneId)) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
-  const edit = addStagedEdit(lessonId, { sceneId, field: 'narration', value: value.trim() });
+  const edit = addStagedEdit(lessonId, { sceneId: sceneId ?? '', field, value: value.trim() });
   return NextResponse.json({ edit });
 }
 

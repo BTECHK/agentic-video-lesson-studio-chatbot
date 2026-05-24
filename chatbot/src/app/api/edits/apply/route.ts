@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { loadEdits, markOpenEditsApplied } from '@/lib/edits-store';
-import { applyNarrationEdits, openEdits } from '@/lib/edits';
+import { applyNarrationEdits, applyOrderEdit, openEdits } from '@/lib/edits';
 
 /**
  * Apply staged narration edits: write them into script.json (the source the
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   }
 
   const script = JSON.parse(readFileSync(scriptPath, 'utf-8')) as ScriptDoc;
-  script.blocks = applyNarrationEdits(script.blocks, open);
+  script.blocks = applyOrderEdit(applyNarrationEdits(script.blocks, open), open);
   writeFileSync(scriptPath, `${JSON.stringify(script, null, 2)}\n`, 'utf-8');
   markOpenEditsApplied(lessonId);
 

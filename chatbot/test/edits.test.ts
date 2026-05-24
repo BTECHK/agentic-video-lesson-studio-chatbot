@@ -5,6 +5,8 @@ import {
   editsForScene,
   setEditStatus,
   applyNarrationEdits,
+  applyOrderEdit,
+  moveInOrder,
   type StagedEdit,
 } from '@/lib/edits';
 
@@ -70,5 +72,39 @@ describe('applyNarrationEdits', () => {
     ];
     applyNarrationEdits(blocks, edits);
     expect(blocks.find((b) => b.id === 'a')!.narration).toBe('old a');
+  });
+});
+
+describe('moveInOrder', () => {
+  const order = ['a', 'b', 'c'];
+  it('moves a scene earlier', () => {
+    expect(moveInOrder(order, 'b', 'earlier')).toEqual(['b', 'a', 'c']);
+  });
+  it('moves a scene later', () => {
+    expect(moveInOrder(order, 'b', 'later')).toEqual(['a', 'c', 'b']);
+  });
+  it('is a no-op at the ends', () => {
+    expect(moveInOrder(order, 'a', 'earlier')).toEqual(['a', 'b', 'c']);
+    expect(moveInOrder(order, 'c', 'later')).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('applyOrderEdit', () => {
+  const blocks = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+  it('reorders blocks by the latest open order edit', () => {
+    const edits: StagedEdit[] = [
+      { id: '1', sceneId: '', field: 'order', value: 'a,b,c', author: 'You', createdAt: 't1', status: 'open' },
+      { id: '2', sceneId: '', field: 'order', value: 'c,a,b', author: 'You', createdAt: 't2', status: 'open' },
+    ];
+    expect(applyOrderEdit(blocks, edits).map((b) => b.id)).toEqual(['c', 'a', 'b']);
+  });
+  it('leaves blocks untouched when there is no open order edit', () => {
+    expect(applyOrderEdit(blocks, []).map((b) => b.id)).toEqual(['a', 'b', 'c']);
+  });
+  it('keeps unranked blocks at the end in original order', () => {
+    const edits: StagedEdit[] = [
+      { id: '1', sceneId: '', field: 'order', value: 'c', author: 'You', createdAt: 't', status: 'open' },
+    ];
+    expect(applyOrderEdit(blocks, edits).map((b) => b.id)).toEqual(['c', 'a', 'b']);
   });
 });
