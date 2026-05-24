@@ -40,3 +40,6 @@ content/lessons/*/.regen-cache.json
 # Generated drafts + fact-check reports (Studio Generate; review-then-apply, not source)
 content/lessons/*/script.draft.json
 content/lessons/*/*.factcheck.json
+
+# Staged Studio comments (durable local review state)
+content/lessons/*/.comments.json

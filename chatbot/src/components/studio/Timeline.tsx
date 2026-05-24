@@ -9,6 +9,19 @@ import { TrackLane, LANE, HEADER_WIDTH, TRACK_ORDER } from './TrackLane';
 import { TransportBar } from './TransportBar';
 import { Inspector, type Comment } from './Inspector';
 import { StatusBadge } from './StatusBadge';
+import type { StagedComment } from '@/lib/comments';
+
+/** Map a persisted staged comment to the inspector's view shape. */
+function toViewComment(c: StagedComment): Comment {
+  return { id: c.id, author: c.author, createdAt: c.createdAt.slice(0, 16).replace('T', ' '), body: c.body };
+}
+
+/** Group a flat staged-comment list into the per-clip record the timeline holds. */
+function groupByClip(list: StagedComment[]): Record<string, Comment[]> {
+  const out: Record<string, Comment[]> = {};
+  for (const c of list) (out[c.clipId] ??= []).push(toViewComment(c));
+  return out;
+}
 
 const DEFAULT_PX_PER_SEC = 16;
 
@@ -39,17 +52,20 @@ export function Timeline({
   lesson,
   lessons = [],
   regenEnabled = false,
+  initialComments = [],
 }: {
   lesson: LessonTimeline;
   lessons?: string[];
   regenEnabled?: boolean;
+  initialComments?: StagedComment[];
 }) {
   const router = useRouter();
   const [pxPerSec, setPxPerSec] = useState(DEFAULT_PX_PER_SEC);
   const [playheadSec, setPlayheadSec] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selected, setSelected] = useState<Clip | null>(null);
-  const [comments, setComments] = useState<Record<string, Comment[]>>({});
+  // Seeded from persisted comments so they survive refresh (no longer ephemeral).
+  const [comments, setComments] = useState<Record<string, Comment[]>>(() => groupByClip(initialComments));
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -94,37 +110,44 @@ export function Timeline({
     }));
   }, []);
 
-  // A comment is direction for the AI. When regeneration is enabled on the host,
-  // sending it kicks the lesson's regen DAG (CTRL-03) and the clip flips to
-  // 'regenerating'. When it's disabled, the comment is just saved locally as a
-  // note (no false "queued" state) — see the regeneration banner.
+  // A comment is durable, metadata-tagged direction on a clip. It's PERSISTED to
+  // the staging store (survives refresh), then — if regeneration is enabled on the
+  // host — kicks the lesson's regen DAG (CTRL-03) and the clip flips to
+  // 'regenerating'. When regen is disabled it's a saved note (no false "queued").
   const addComment = useCallback(
     (clip: Clip, body: string) => {
-      const commentId = `${clip.id}-${Date.now()}`;
-      setComments((prev) => ({
-        ...prev,
-        [clip.id]: [
-          ...(prev[clip.id] ?? []),
-          { id: commentId, author: 'You', createdAt: 'just now', body, aiState: regenEnabled ? 'queued' : undefined },
-        ],
-      }));
-
-      if (!regenEnabled) return; // saved note only
-
-      fetch('/api/regen', {
+      const sceneId = sceneIdOf(clip);
+      fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lessonId: lesson.id, sceneId: sceneIdOf(clip), comment: body }),
+        body: JSON.stringify({ lessonId: lesson.id, clipId: clip.id, kind: clip.kind, sceneId, body }),
       })
-        .then((res) => {
-          if (res.ok) setAiState(clip.id, commentId, 'regenerating');
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('persist failed'))))
+        .then(({ comment }: { comment: StagedComment }) => {
+          const view: Comment = { ...toViewComment(comment), aiState: regenEnabled ? 'queued' : undefined };
+          setComments((prev) => ({ ...prev, [clip.id]: [...(prev[clip.id] ?? []), view] }));
+
+          if (!regenEnabled) return; // saved note only
+          fetch('/api/regen', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lessonId: lesson.id, sceneId, comment: body }),
+          })
+            .then((res) => {
+              if (res.ok) setAiState(clip.id, comment.id, 'regenerating');
+            })
+            .catch(() => {
+              /* leave as queued — surfaced as pending */
+            });
         })
         .catch(() => {
-          /* leave as queued — surfaced as pending */
+          /* persistence failed — surfaced by the comment not appearing */
         });
     },
     [lesson.id, regenEnabled, setAiState],
   );
+
+  const pendingComments = Object.values(comments).flat().length;
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
   const staleCount = allClips.filter((c) => c.status === 'stale').length;
@@ -162,7 +185,14 @@ export function Timeline({
             </select>
           )}
         </div>
-        <GlobalStatus stale={staleCount} error={errorCount} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          {pendingComments > 0 && (
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>
+              ✎ {pendingComments} note{pendingComments === 1 ? '' : 's'}
+            </span>
+          )}
+          <GlobalStatus stale={staleCount} error={errorCount} />
+        </div>
       </div>
 
       {/* body: frozen header column + scrolling lanes */}
