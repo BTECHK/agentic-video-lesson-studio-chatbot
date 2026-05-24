@@ -7,8 +7,23 @@
 - ✅ **Menu** — lesson directory at /studio/menu (Studio · Generate · Menu nav).
 - ✅ **Comment staging (half of "Studio editing")** — comments persist with metadata tags to
   .comments.json (open/applied/dismissed); survive refresh; /api/comments GET/POST/PATCH.
-- ⏳ **In-place editing (remaining)** — edit caption text / script / scene timing from the UI +
-  apply-from-staging. NEEDS a design decision (see open questions) before building.
+- ✅ **In-place editing** — DONE per the "reorder + pauses-via-text" decision:
+  - **Narration text** editing (inspector textarea → stage → Apply writes script.json + regenerates;
+    per-scene TTS cache means only edited scenes re-synth). Also the pause/timing lever (punctuation).
+  - **Scene reorder** (inspector move earlier/later → single superseding `order` edit → Apply reorders
+    script.json blocks + regenerates).
+  - Caption-timing / scene-duration deliberately NOT literal overrides — they're measured from the
+    TTS audio by `align`, so manual overrides would be silently erased on rebuild. Handled via
+    narration (pauses) instead. A post-align override layer is a future option if ever needed.
+  - Edits + comments persist as staged items (.edits.json / .comments.json) with metadata + status.
+  - Apply routes are host-gated (REGEN_TRIGGER_ENABLED); return 503 WITHOUT writing when off.
+
+### Remaining / future (not yet built)
+- `anthropic-api` generation backend (currently claude-code only; api branch errors honestly).
+- Generate's full input matrix + topic→new-lesson (only outline→script built).
+- Apply-status polling (Generate is a ~100s synchronous request; Apply→MP4 is fire-and-forget detached).
+- Caption-timing override layer (only if literal hand-timing is ever required).
+- Wavesurfer waveforms, scene thumbnails, capability-table caption overlap (older deferred items).
 
 
 Captured from the owner review + the 5-persona website audit. This is the roadmap for
