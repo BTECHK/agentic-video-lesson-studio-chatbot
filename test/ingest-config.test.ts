@@ -75,7 +75,15 @@ describe('loadConfig', () => {
     const config = loadConfig();
     expect(config.defaults.concurrency).toBe(2);
     expect(config.scheduling.frequency).toBe('weekly');
-    expect(Object.keys(config.vendors).length).toBe(11);
+    // 8 vendor products after collapsing surfaces (Codex, Claude Code, Cowork,
+    // Comet) into sub-sources under their parents — see #26.
+    expect(Object.keys(config.vendors).length).toBe(8);
+    expect(config.vendors.anthropic.sources['claude-code']).toBeDefined();
+    expect(config.vendors.perplexity.sources.comet).toBeDefined();
+    expect(config.vendors.openai.sources.codex).toBeDefined();
+    // The bogus peer vendors must be gone.
+    expect(config.vendors['openai-codex']).toBeUndefined();
+    expect(config.vendors.comet).toBeUndefined();
   });
 
   it('applies concurrency override', () => {

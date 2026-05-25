@@ -13,16 +13,13 @@
     "timeOfDay": "06:00"
   },
   "vendors": {
-    "openai": { "enabled": true, "sources": {} },
-    "anthropic": { "enabled": true, "sources": {} },
-    "google": { "enabled": true, "sources": {} },
-    "perplexity": { "enabled": true, "sources": {} },
-    "xai": { "enabled": true, "sources": {} },
-    "deepseek": { "enabled": true, "sources": {} },
-    "alibaba": { "enabled": true, "sources": {} },
-    "comet": { "enabled": true, "sources": {} },
-    "manus": { "enabled": true, "sources": {} },
-    "openai-codex": { "enabled": true, "sources": {} },
-    "anthropic-code": { "enabled": true, "sources": {} }
+    "openai": { "enabled": true, "sources": { "chatgpt": { "scrapeMode": "reference-only", "priority": 10 }, "codex": { "scrapeMode": "reference-only", "priority": 5 } } },
+    "anthropic": { "enabled": true, "sources": { "claude": { "scrapeMode": "reference-only", "priority": 10 }, "claude-code": { "scrapeMode": "reference-only", "priority": 5 }, "cowork": { "scrapeMode": "reference-only", "priority": 5 } } },
+    "google": { "enabled": true, "sources": { "gemini": { "scrapeMode": "reference-only", "priority": 10 } } },
+    "perplexity": { "enabled": true, "sources": { "perplexity": { "scrapeMode": "reference-only", "priority": 10 }, "comet": { "scrapeMode": "reference-only", "priority": 5 } } },
+    "xai": { "enabled": true, "sources": { "grok": { "scrapeMode": "reference-only", "priority": 10 } } },
+    "deepseek": { "enabled": true, "sources": { "deepseek": { "scrapeMode": "reference-only", "priority": 10 } } },
+    "alibaba": { "enabled": true, "sources": { "qwen": { "scrapeMode": "reference-only", "priority": 10 } } },
+    "manus": { "enabled": true, "sources": { "manus": { "scrapeMode": "reference-only", "priority": 5 } } }
   }
 }
