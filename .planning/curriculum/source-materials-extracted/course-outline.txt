@@ -1,0 +1,115 @@
+Sample Academy
+Practical AI Assistants (sample course)
+Course Design Philosophy (sample)
+
+SYNTHETIC SAMPLE. This outline was written for the public portfolio copy of the pipeline.
+It is not a real curriculum. It exists so that scripts/compile-course-map.ts has realistic
+input to compile into content/curriculum/course-map.json.
+
+How to Read This Document
+Each lesson lists timed rows. Row delivery types (slide, demo, talking head) are recorded
+in content/curriculum/delivery-types.json, standing in for the colour-coded source document.
+This sample is an excerpt: Topic 2 is intentionally left out.
+  ■ Slides/Visual      ■ Demo (in-tool)      ■ Talking Head
+
+Topic 0: Welcome
+~3 min of lessons
+Learning Outcomes
+Orientation: know how the sample course is organised and what each topic covers.
+Lesson 0.1: Welcome to the Sample Course (3 min)
+Time
+Content
+1 min
+Welcome and Course Promise
+A short hello and the single promise of the course: a dependable everyday routine with an AI assistant.
+1 min
+Who This Course Is For
+Working professionals who have tried an AI assistant a few times and want repeatable results.
+1 min
+The Topics Ahead
+A one-screen overview of the topics in this sample and how each one builds on the last.
+
+Topic 1: Getting Started with AI Assistants
+~27 min of lessons
+Learning Outcomes
+Choose: match an assistant to the job in front of you.
+Prompt: ask clearly for what you need.
+Check: review an answer before you rely on it.
+Personalize: set an assistant up once so it remembers how you work.
+Lesson 1.1: How This Course Works (3 min)
+Time
+Content
+1 min
+Welcome + How the Course Is Paced
+Short lessons, one skill each. Every skill is shown in an assistant first, then practiced on the learner's own work.
+1 min
+Topic 1 at a Glance + the Lesson Rhythm
+The five Topic 1 lessons as a map with 1.1 active, and the rhythm every lesson repeats: see the idea, watch it in a tool, try it on your own task.
+1 min
+Get Ready to Practice
+A four-item setup checklist. Engagement moment: pick one real task from your week and hold onto it. Hand-off to Lesson 1.2.
+Lesson 1.2: Picking the Right Assistant (6 min)
+Time
+Content
+2 min
+Side-by-Side Answers
+One everyday request answered by three assistants, to show that style differs while the fundamentals stay the same.
+2 min
+The Assistants in This Course
+A short card for each assistant profile used in the sample lessons.
+2 min
+Match the Tool to the Job
+A rule of thumb: pick one assistant for writing and one for research, then stick with them for a week.
+Lesson 1.3: Writing Clear Prompts (7 min)
+Time
+Content
+2 min
+Why Vague Prompts Disappoint
+A vague request next to a specific one, with the difference in the answers called out.
+3 min
+The Three-Question Prompt Check
+Before sending a prompt, answer three questions: who is it for, what do you need, and what does done look like.
+2 min
+Rewrite a Prompt Together
+Learners rewrite a sample prompt using the three questions while the instructor narrates.
+Lesson 1.4: Checking the Output (6 min)
+Time
+Content
+2 min
+Fluent Is Not the Same as Correct
+Why a confident, well-written answer can still be wrong, shown with an invented example.
+2 min
+A Five-Point Review Checklist
+Facts, numbers, names, tone, and anything missing.
+2 min
+Spot the Problem
+A sample answer with two planted errors for learners to find.
+Lesson 1.5: Making the Assistant Yours (5 min)
+Time
+Content
+2 min
+Personal Settings and Memory
+Tell the assistant once who you are and how you like answers, then let memory carry that forward.
+2 min
+Settings Walkthrough
+A stylized walkthrough of where the personalization settings live.
+1 min
+Topic 1 Wrap-Up
+What learners can now do, and a pointer to the next topic.
+
+Topic 3: Automating Everyday Work
+~6 min of lessons
+Learning Outcomes
+Map: turn one repetitive task into inputs, steps, and an output.
+Lesson 3.1: Mapping a Repetitive Task (6 min)
+Time
+Content
+2 min
+Find the Task Worth Automating
+Look for work that is frequent, predictable, and low risk.
+2 min
+Break It Into Steps
+Write the task down as inputs, a short numbered list of steps, and a single output.
+2 min
+Decide What Stays Human
+Mark the steps that need judgement and keep those with the learner.
