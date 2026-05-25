@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { ToolData } from '@/lib/content-types';
+import { groupIntoProducts } from '@/lib/content-types';
 import { editorialPicks } from '@/lib/editorial';
 import { ComparisonTable } from './ComparisonTable';
 
@@ -39,6 +40,8 @@ export function ComparisonPage({ tools }: ComparisonPageProps) {
     [selected, tools]
   );
 
+  const productGroups = useMemo(() => groupIntoProducts(tools), [tools]);
+
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: '1.5rem 1rem' }}>
       {/* Header */}
@@ -65,30 +68,68 @@ export function ComparisonPage({ tools }: ComparisonPageProps) {
         </p>
       </div>
 
-      {/* Tool selector */}
+      {/* Tool selector — surfaces grouped under their product */}
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '0.5rem',
+          gap: '0.75rem',
           marginBottom: '1.5rem',
         }}
       >
-        {tools.map((t) => {
-          const isSelected = selected.includes(t.id);
+        {productGroups.map((product) => {
+          const grouped = product.surfaces.length > 1;
           return (
-            <button
-              key={t.id}
-              onClick={() => toggleTool(t.id)}
-              style={{
-                ...chipBase,
-                background: isSelected ? 'var(--accent)' : 'var(--bg-card)',
-                color: isSelected ? '#fff' : 'var(--text)',
-                borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
-              }}
+            <div
+              key={product.productId}
+              style={
+                grouped
+                  ? {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.375rem',
+                      padding: '0.5rem',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius)',
+                    }
+                  : { display: 'flex' }
+              }
             >
-              {t.name}
-            </button>
+              {grouped && (
+                <span
+                  style={{
+                    fontSize: '0.625rem',
+                    fontWeight: 700,
+                    color: 'var(--text-muted)',
+                    fontFamily: 'var(--font)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.03em',
+                  }}
+                >
+                  {product.productName}
+                </span>
+              )}
+              <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                {product.surfaces.map((t) => {
+                  const isSelected = selected.includes(t.id);
+                  const label = grouped && !t.isPrimarySurface ? t.surface : t.name;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => toggleTool(t.id)}
+                      style={{
+                        ...chipBase,
+                        background: isSelected ? 'var(--accent)' : 'var(--bg-card)',
+                        color: isSelected ? '#fff' : 'var(--text)',
+                        borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
