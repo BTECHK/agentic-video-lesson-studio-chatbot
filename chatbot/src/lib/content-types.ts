@@ -18,11 +18,51 @@ export interface ToolData {
   id: string;
   name: string;
   vendor: string;
+  productId: string;
+  surface: string;
+  isPrimarySurface: boolean;
   priority: "P0" | "P1";
   description: string;
   url: string;
   capabilities: Record<string, ToolCapability>;
   sourceRefs?: string[];
+}
+
+export interface ProductGroup {
+  productId: string;
+  productName: string;
+  vendor: string;
+  primary: ToolData;
+  surfaces: ToolData[];
+}
+
+/**
+ * Groups tool surfaces into products by `productId`, for rendering surfaces
+ * (e.g. Codex, Claude Code, Cowork, Comet) under their parent product instead
+ * of as peers. The product takes its name/vendor from its primary surface,
+ * which is listed first.
+ */
+export function groupIntoProducts(tools: ToolData[]): ProductGroup[] {
+  const order: string[] = [];
+  const byProduct = new Map<string, ToolData[]>();
+  for (const t of tools) {
+    if (!byProduct.has(t.productId)) {
+      byProduct.set(t.productId, []);
+      order.push(t.productId);
+    }
+    byProduct.get(t.productId)!.push(t);
+  }
+  return order.map((productId) => {
+    const surfaces = byProduct.get(productId)!;
+    const primary = surfaces.find((s) => s.isPrimarySurface) ?? surfaces[0];
+    return {
+      productId,
+      productName: primary.name,
+      vendor: primary.vendor,
+      primary,
+      surfaces: [primary, ...surfaces.filter((s) => s !== primary)],
+    };
+  });
 }
 
 export interface SourceEntry {

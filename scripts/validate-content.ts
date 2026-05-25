@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, basename } from 'node:path';
-import { ToolSchema } from '../content/schemas/tool';
+import { ToolSchema, validateProductInvariant, type Tool } from '../content/schemas/tool';
 import { SourceFileSchema } from '../content/schemas/source';
 
 const GREEN = '\x1b[32m';
@@ -20,6 +20,7 @@ const errors: string[] = [];
 console.log(`${BOLD}Validating tool files...${RESET}\n`);
 
 const toolFiles = readdirSync(toolsDir).filter((f) => f.endsWith('.json'));
+const parsedTools: Tool[] = [];
 
 for (const file of toolFiles) {
   const filePath = join(toolsDir, file);
@@ -28,6 +29,7 @@ for (const file of toolFiles) {
 
   if (result.success) {
     console.log(`  ${GREEN}PASS${RESET}  ${file}`);
+    parsedTools.push(result.data);
     passed++;
   } else {
     console.log(`  ${RED}FAIL${RESET}  ${file}`);
@@ -35,6 +37,21 @@ for (const file of toolFiles) {
       (i) => `    - ${i.path.join('.')}: ${i.message}`,
     );
     errors.push(`${file}:\n${issues.join('\n')}`);
+    failed++;
+  }
+}
+
+// --- Validate product taxonomy invariant ---
+console.log(`\n${BOLD}Validating product taxonomy...${RESET}\n`);
+
+const invariantErrors = validateProductInvariant(parsedTools);
+if (invariantErrors.length === 0) {
+  console.log(`  ${GREEN}PASS${RESET}  every product has exactly one primary surface`);
+  passed++;
+} else {
+  for (const e of invariantErrors) {
+    console.log(`  ${RED}FAIL${RESET}  ${e}`);
+    errors.push(e);
     failed++;
   }
 }

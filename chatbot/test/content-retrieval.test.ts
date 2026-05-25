@@ -5,6 +5,9 @@ import type { ToolData } from '@/lib/content-types';
 function makeTool(overrides: Partial<ToolData> & { id: string; name: string }): ToolData {
   return {
     vendor: 'TestVendor',
+    productId: overrides.id,
+    surface: 'Web app',
+    isPrimarySurface: true,
     priority: 'P0',
     description: 'A test tool',
     url: 'https://example.com',
