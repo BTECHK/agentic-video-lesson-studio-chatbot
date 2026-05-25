@@ -25,6 +25,21 @@
       "id": "alibaba-dashscope",
       "url": "https://www.alibabacloud.com/help/en/model-studio/",
       "title": "Alibaba Cloud Model Studio (DashScope) Documentation"
+    },
+    {
+      "id": "qwen35-release",
+      "url": "https://www.alibabacloud.com/blog/qwen3-5-towards-native-multimodal-agents_602894",
+      "title": "Qwen3.5 — Towards Native Multimodal Agents (2026-02-17)"
+    },
+    {
+      "id": "qwen-hub",
+      "url": "https://huggingface.co/Qwen",
+      "title": "Qwen Model Hub (Hugging Face)"
+    },
+    {
+      "id": "qwen37-max",
+      "url": "https://technode.com/2026/05/21/alibaba-introduces-qwen3-7-max-as-next-gen-ai-agent-model/",
+      "title": "Alibaba Introduces Qwen3.7-Max (2026-05-21)"
     }
   ]
 }

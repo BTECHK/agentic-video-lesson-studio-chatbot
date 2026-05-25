@@ -6,7 +6,7 @@
   "surface": "Web app",
   "isPrimarySurface": true,
   "priority": "P0",
-  "description": "Google's multimodal AI assistant powered by the Gemini model family, deeply integrated with Google Workspace and offering long-context understanding, image generation via Imagen 3, and Google Search grounding.",
+  "description": "Google's multimodal AI assistant powered by the Gemini model family (default Gemini 3.5 Flash as of Google I/O 2026, with Gemini 3.1 Pro on paid tiers), deeply integrated with Google Workspace and offering long-context understanding, image generation via Nano Banana, and Google Search grounding.",
   "url": "https://gemini.google.com",
   "capabilities": {
     "writing-chat": {
@@ -25,7 +25,7 @@
         {
           "name": "Gmail Draft Assistance",
           "description": "Draft, reply to, and refine emails directly within Gmail using Gemini's writing capabilities",
-          "availableOn": ["Advanced", "Business", "Enterprise"]
+          "availableOn": ["Google AI Pro", "Business", "Enterprise"]
         },
         {
           "name": "Response Modification",
@@ -33,22 +33,22 @@
         }
       ],
       "limitations": [
-        "Free tier uses Gemini Flash model with lower quality than Advanced tier's Gemini Pro/Ultra",
+        "Free tier defaults to Gemini 3.5 Flash; paid tiers add Gemini 3.1 Pro access and higher usage limits",
         "Long conversations can lose coherence in earlier context",
         "Google Search grounding not always activated automatically",
         "Cannot customize system-level instructions in the consumer interface"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Gemini Flash model, basic chat with Google Search grounding" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Gemini 2.5 Pro, 1M token context, Google One AI Premium with 2TB storage" },
-        { "tier": "Business ($14/user/mo)", "details": "Gemini for Workspace, enterprise-grade data protection" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Advanced security, compliance, admin controls, full Workspace AI integration" }
+        { "tier": "Free", "details": "Gemini 3.5 Flash (default), basic chat with Google Search grounding, 15 GB storage" },
+        { "tier": "Google AI Plus ($7.99/mo)", "details": "2x usage vs Free, Gemini Omni, AI Inbox in Gmail, 200 GB storage" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "4x usage vs Free, Gemini 3.1 Pro access, 1M token context, 5 TB storage" },
+        { "tier": "Google AI Ultra ($99.99–$199.99/mo)", "details": "5x–20x usage vs Pro, Deep Think reasoning, Gemini Spark (US/English), up to 30 TB storage" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Gemini side panels in Gmail/Docs/Sheets/Slides with enterprise data protection and admin controls" }
       ],
       "versionHistory": [
-        { "version": "Gemini 2.5 Pro", "date": "2025-03", "changes": "Thinking model with 1M token context and multimodal reasoning" },
-        { "version": "Gemini 2.0 Flash", "date": "2025-02", "changes": "Fast multimodal model with tool use and agentic capabilities" },
-        { "version": "Gemini 1.5 Pro", "date": "2024-05", "changes": "1M token context window, improved multimodal understanding" },
-        { "version": "Gemini 1.0 Ultra", "date": "2024-02", "changes": "First Ultra-tier model powering Gemini Advanced" }
+        { "version": "Gemini 3.5 Flash", "date": "2026-05-19", "changes": "New default in Gemini app; outperforms 3.1 Pro on coding/agentic benchmarks; 1M token context" },
+        { "version": "Gemini 3.1 Pro", "date": "2026-02-19", "changes": "Previous flagship, now available on paid tiers via the model picker" },
+        { "version": "Gemini Omni Flash", "date": "2026-05-19", "changes": "New multimodal family (any input to video/image/text output) for Plus/Pro/Ultra subscribers" }
       ]
     },
     "research": {
@@ -63,7 +63,7 @@
         {
           "name": "Deep Research",
           "description": "Autonomous multi-step research agent that creates a research plan, browses dozens of websites, and produces a comprehensive report with citations",
-          "availableOn": ["Advanced"]
+          "availableOn": ["Free", "Google AI Pro"]
         },
         {
           "name": "Double-Check Response",
@@ -71,24 +71,24 @@
         },
         {
           "name": "NotebookLM Integration",
-          "description": "Companion product for uploading documents and generating insights, summaries, and audio overviews from source material"
+          "description": "Companion product for uploading documents and generating insights, summaries, and audio overviews; runs on Gemini 3 (general) and Gemini 3.1 Pro for Pro/Ultra users, with Cinematic Video Overviews (Veo 3)"
         }
       ],
       "limitations": [
-        "Deep Research limited to Advanced tier subscribers",
+        "Deep Research has tighter daily limits on Free; full access on Google AI Pro and above",
         "Google Search grounding can introduce search result biases",
         "Double-check feature is surface-level verification, not deep fact-checking",
         "NotebookLM is a separate product, not integrated into Gemini chat"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Google Search grounding, Double-Check" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Deep Research agent, priority search integration" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Full research capabilities with data governance" }
+        { "tier": "Free", "details": "Google Search grounding, Double-Check, limited Deep Research" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Full Deep Research agent, priority search integration, enhanced NotebookLM" },
+        { "tier": "Google AI Ultra ($99.99–$199.99/mo)", "details": "Highest research limits with Deep Think reasoning" }
       ],
       "versionHistory": [
+        { "version": "Cinematic Video Overviews", "date": "2026-03-04", "changes": "NotebookLM video overviews powered by Veo 3" },
         { "version": "Deep Research", "date": "2024-12", "changes": "Multi-step autonomous research agent with report generation" },
-        { "version": "Double-Check", "date": "2024-05", "changes": "Fact verification against Google Search results" },
-        { "version": "Search Grounding", "date": "2024-02", "changes": "Real-time Google Search integration in responses" }
+        { "version": "Double-Check", "date": "2024-05", "changes": "Fact verification against Google Search results" }
       ]
     },
     "file-analysis": {
@@ -106,35 +106,33 @@
         },
         {
           "name": "Video Understanding",
-          "description": "Upload and analyze video files, including YouTube URLs, with ability to answer questions about specific frames, scenes, and audio content",
-          "availableOn": ["Advanced"]
+          "description": "Upload and analyze video files, including YouTube URLs, with ability to answer questions about specific frames, scenes, and audio content"
         },
         {
           "name": "Audio Analysis",
-          "description": "Process and transcribe audio files, answer questions about spoken content, and analyze music or sound recordings",
-          "availableOn": ["Advanced"]
+          "description": "Process and transcribe audio files, answer questions about spoken content, and analyze music or sound recordings"
         },
         {
           "name": "Google Drive Integration",
           "description": "Access and analyze files directly from Google Drive without manual upload",
-          "availableOn": ["Advanced", "Business", "Enterprise"]
+          "availableOn": ["Google AI Pro", "Business", "Enterprise"]
         }
       ],
       "limitations": [
         "Video analysis limited to shorter clips on free tier",
-        "1M token context only available on Advanced tier with Gemini 2.5 Pro",
+        "Highest usage limits for long-document analysis require Google AI Pro or above",
         "Cannot process password-protected or DRM files",
         "Audio analysis quality depends on recording clarity",
         "No code execution environment for data processing (unlike ChatGPT's ADA)"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Image and basic document analysis with Flash model" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Video, audio, long document analysis with 1M token context" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Full multimodal analysis with Drive integration and data governance" }
+        { "tier": "Free", "details": "Image, document, video and audio analysis with Gemini 3.5 Flash and 1M token context" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Higher usage limits and Gemini 3.1 Pro for long-document analysis" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Full multimodal analysis with Drive integration and data governance" }
       ],
       "versionHistory": [
-        { "version": "Gemini 2.5 Pro", "date": "2025-03", "changes": "Enhanced multimodal reasoning across all file types" },
-        { "version": "Video/Audio Support", "date": "2024-05", "changes": "Native video and audio analysis with Gemini 1.5 Pro" },
+        { "version": "Gemini 3.5 Flash", "date": "2026-05-19", "changes": "Enhanced multimodal reasoning across all file types with 1M token context" },
+        { "version": "Gemini 3.1 Pro", "date": "2026-02-19", "changes": "Long-context multimodal analysis on paid tiers" },
         { "version": "1M Context", "date": "2024-05", "changes": "Million-token context window for long document processing" }
       ]
     },
@@ -146,7 +144,7 @@
         {
           "name": "Google Docs Generation",
           "description": "Generate and export responses as Google Docs, or use 'Help me write' sidebar in Google Docs for in-document AI assistance",
-          "availableOn": ["Advanced", "Business", "Enterprise"]
+          "availableOn": ["Google AI Pro", "Business", "Enterprise"]
         },
         {
           "name": "Google Slides Creation",
@@ -172,9 +170,8 @@
       ],
       "pricingTiers": [
         { "tier": "Free", "details": "Formatted text output in chat only" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Export to Google Docs, basic Workspace integration" },
-        { "tier": "Business ($14/user/mo)", "details": "Full Workspace AI: Docs, Sheets, Slides, Meet" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "All document creation with admin controls and compliance" }
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Export to Google Docs, basic Workspace integration" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Full Workspace AI: Docs, Sheets, Slides, Meet with admin controls and compliance" }
       ],
       "versionHistory": [
         { "version": "Workspace AI Integration", "date": "2024-04", "changes": "Gemini integrated into Google Docs, Sheets, Slides, and Meet" },
@@ -184,11 +181,11 @@
     "image-generation": {
       "category": "image-generation",
       "supported": true,
-      "summary": "Gemini generates images using Google's Imagen 3 model, offering high-quality photorealistic and artistic image generation directly within the chat interface with strong text rendering in images.",
+      "summary": "Gemini generates images using Google's Nano Banana models — Nano Banana 2 (free) and Nano Banana Pro (paid) — offering high-quality photorealistic and artistic image generation directly within the chat interface with strong text rendering in images. (Imagen remains the developer/Vertex AI image family and is not what consumers see in the Gemini app.)",
       "subFeatures": [
         {
-          "name": "Imagen 3 Generation",
-          "description": "Create high-quality images from text prompts using Google DeepMind's Imagen 3 model, with strong photorealism and text-in-image capabilities"
+          "name": "Nano Banana Image Generation",
+          "description": "Create high-quality images from text prompts using Nano Banana 2 (free) with Nano Banana Pro (paid, 18+/US-first) for higher quality, with strong photorealism and text-in-image capabilities"
         },
         {
           "name": "Image Editing",
@@ -204,27 +201,32 @@
         }
       ],
       "limitations": [
-        "Cannot generate images of identifiable real people",
+        "Nano Banana Pro initially limited to users 18+ and US-first",
         "Image generation may be slower than competitors",
         "Limited image editing compared to DALL-E 3 inpainting",
         "Generated images have resolution limits",
         "Content policy restrictions on certain categories are stricter than some competitors"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Imagen 3 image generation with daily limits" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Higher generation limits and priority access" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Image generation with enterprise content policies" }
+        { "tier": "Free", "details": "Nano Banana 2 image generation with daily limits" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Nano Banana Pro with higher generation limits and priority access" },
+        { "tier": "Google AI Ultra ($99.99–$199.99/mo)", "details": "Highest image generation limits" }
       ],
       "versionHistory": [
-        { "version": "Imagen 3", "date": "2024-08", "changes": "Major quality upgrade with better text rendering and photorealism" },
-        { "version": "Imagen 2", "date": "2024-02", "changes": "Initial image generation in Gemini via Imagen 2" }
+        { "version": "Nano Banana Pro", "date": "2026-05", "changes": "Paid consumer image model (18+/US-first) with higher quality output" },
+        { "version": "Nano Banana 2", "date": "2026-05", "changes": "Free consumer image model in the Gemini app, replacing Imagen for end users" }
       ]
     },
     "prototyping": {
       "category": "prototyping",
       "supported": true,
-      "summary": "Gemini offers limited prototyping through code generation in chat and integration with Google AI Studio for testing prompts and API calls, but lacks a live code preview environment like Claude Artifacts.",
+      "summary": "Gemini offers prototyping through Canvas, which now produces live, shareable interactive prototypes in the Gemini app and in AI Mode in Search, plus code generation in chat and Google AI Studio for testing prompts and API calls.",
       "subFeatures": [
+        {
+          "name": "Canvas Live Prototypes",
+          "description": "Build and share live, interactive prototypes directly in the Gemini app and AI Mode in Search, with in-app preview of the generated result",
+          "availableOn": ["Free", "Google AI Pro", "Google AI Ultra"]
+        },
         {
           "name": "Code Generation",
           "description": "Generate code in major programming languages with syntax highlighting and explanations in the chat interface"
@@ -239,36 +241,38 @@
         }
       ],
       "limitations": [
-        "No in-browser code execution or live preview in Gemini chat",
-        "No equivalent to Claude Artifacts React rendering or ChatGPT Code Interpreter",
+        "Canvas live prototypes target US users (rolled out March 2026)",
         "Google AI Studio is a separate developer tool, not integrated into consumer Gemini",
-        "Cannot run or test code directly within the conversation",
-        "Prototyping workflow requires switching between Gemini and external tools"
+        "Prototyping workflow for full apps may still require external tools",
+        "Code generation quality varies by language and complexity"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Code generation in chat, Google AI Studio access" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Higher quality code generation with Gemini 2.5 Pro" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Code generation with enterprise security policies" }
+        { "tier": "Free", "details": "Basic Canvas live prototypes, code generation in chat, Google AI Studio access" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Higher quality code generation with Gemini 3.1 Pro and expanded Canvas usage" },
+        { "tier": "Google AI Ultra ($99.99–$199.99/mo)", "details": "Highest usage limits and priority access" }
       ],
       "versionHistory": [
-        { "version": "Google AI Studio", "date": "2024-02", "changes": "Developer-focused prompt prototyping environment" },
-        { "version": "Code Generation", "date": "2024-02", "changes": "Code generation capabilities in Gemini chat at launch" }
+        { "version": "Canvas Live Prototypes", "date": "2026-03", "changes": "Live, shareable interactive prototypes in the Gemini app and AI Mode in Search (US)" },
+        { "version": "Google AI Studio", "date": "2024-02", "changes": "Developer-focused prompt prototyping environment" }
       ]
     },
     "personalization": {
       "category": "personalization",
       "supported": true,
-      "summary": "Gemini offers personalization through Gems — custom AI experts that users can create with specific instructions, personality, and expertise for recurring use cases.",
+      "summary": "Gemini offers personalization through Gems — custom AI experts (now free for all users 18+) — plus Personal Intelligence that connects Gmail, Calendar, Drive and Photos for context-aware responses.",
       "subFeatures": [
         {
           "name": "Gems",
-          "description": "Custom AI personas with specific instructions, tone, and expertise that persist as reusable chatbot configurations for tasks like coding coach, writing editor, or learning tutor",
-          "availableOn": ["Advanced"]
+          "description": "Custom AI personas with specific instructions, tone, and expertise that persist as reusable chatbot configurations for tasks like coding coach, writing editor, or learning tutor; free for all users 18+",
+          "availableOn": ["Free", "Google AI Pro", "Google AI Ultra"]
+        },
+        {
+          "name": "Personal Intelligence",
+          "description": "Connects Gmail, Calendar, Drive and Photos so Gemini can personalize responses using your Google data; free to US users with global rollout underway (excluding Europe as of May 2026)"
         },
         {
           "name": "Saved Information",
-          "description": "Gemini can remember user preferences and facts shared in conversations to personalize future responses",
-          "availableOn": ["Advanced"]
+          "description": "Gemini can remember user preferences and facts shared in conversations to personalize future responses"
         },
         {
           "name": "Response Style Preferences",
@@ -276,20 +280,19 @@
         }
       ],
       "limitations": [
-        "Gems require Advanced subscription",
-        "No equivalent to ChatGPT's Custom Instructions for free tier users",
+        "Gems are personal — cannot share with team members on consumer tiers",
+        "Personal Intelligence not yet available in Europe (as of May 2026)",
         "Saved information is limited and cannot be bulk-managed",
-        "Gems are personal — cannot share with team members",
         "Fewer customization options compared to ChatGPT Custom GPTs"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Basic response style preferences only" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Gems custom AI experts, saved information" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Admin-managed Gems for team use cases" }
+        { "tier": "Free", "details": "Gems custom AI experts (18+), Personal Intelligence (US), response style preferences" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Higher Gems usage limits and enhanced personalization" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Admin-managed Gems for team use cases" }
       ],
       "versionHistory": [
-        { "version": "Gems", "date": "2024-08", "changes": "Custom AI expert personas for recurring tasks" },
-        { "version": "Saved Info", "date": "2024-11", "changes": "Cross-conversation preference and fact memory" }
+        { "version": "Personal Intelligence", "date": "2026-01", "changes": "Connects Gmail/Calendar/Drive/Photos; free to US users with global rollout underway" },
+        { "version": "Gems (free for all 18+)", "date": "2025-06", "changes": "Custom AI expert personas made available to all users 18+" }
       ]
     },
     "persistent-context": {
@@ -299,8 +302,7 @@
       "subFeatures": [
         {
           "name": "1M Token Context Window",
-          "description": "Process up to 1 million tokens in a single conversation, enabling analysis of entire books, codebases, or large document collections",
-          "availableOn": ["Advanced"]
+          "description": "Process up to 1 million tokens in a single conversation, enabling analysis of entire books, codebases, or large document collections; available with Gemini 3.5 Flash (default) and Gemini 3.1 Pro"
         },
         {
           "name": "Conversation History",
@@ -308,45 +310,43 @@
         },
         {
           "name": "Gem Persistence",
-          "description": "Custom Gems maintain their instructions and context configuration across all sessions",
-          "availableOn": ["Advanced"]
+          "description": "Custom Gems maintain their instructions and context configuration across all sessions"
         }
       ],
       "limitations": [
-        "1M context only available with Gemini 2.5 Pro on Advanced tier",
+        "Paid tiers (Google AI Pro and above) provide higher context usage limits",
         "No project-based organization for grouping related conversations",
         "No persistent knowledge base that carries across conversations",
-        "Conversation context resets with each new thread",
-        "Free tier limited to shorter context windows"
+        "Conversation context resets with each new thread"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Conversation history with standard context window" },
-        { "tier": "Advanced ($19.99/mo)", "details": "1M token context, Gem persistence, full history" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Full context capabilities with data retention controls" }
+        { "tier": "Free", "details": "1M token context with Gemini 3.5 Flash, conversation history, Gem persistence" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Higher context usage limits and Gemini 3.1 Pro access" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Full context capabilities with data retention controls" }
       ],
       "versionHistory": [
-        { "version": "1M Context", "date": "2024-05", "changes": "Million-token context window with Gemini 1.5 Pro" },
-        { "version": "Gems Persistence", "date": "2024-08", "changes": "Persistent custom AI configurations across sessions" }
+        { "version": "1M Context (Gemini 3.5 Flash)", "date": "2026-05-19", "changes": "1M token context available with the default Gemini 3.5 Flash model" },
+        { "version": "1M Context", "date": "2024-05", "changes": "Million-token context window introduced with Gemini 1.5 Pro" }
       ]
     },
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Gemini is developing agentic capabilities with Project Mariner for browser-based tasks, Deep Research for autonomous investigation, and the Gemini API's tool use framework for building custom agents.",
+      "summary": "Gemini has first-class agentic capabilities through Gemini Agent (a GA feature built into the app that absorbed the shut-down Project Mariner), Deep Research for autonomous investigation, and the Gemini API's tool use framework for building custom agents.",
       "subFeatures": [
+        {
+          "name": "Gemini Agent",
+          "description": "Generally available in-app agent that navigates websites and completes multi-step tasks such as filling forms and making purchases; incorporates the capabilities of the now-discontinued Project Mariner",
+          "availableOn": ["Google AI Pro", "Google AI Ultra"]
+        },
         {
           "name": "Deep Research Agent",
           "description": "Autonomous research agent that plans a multi-step investigation, browses the web, and produces comprehensive reports with citations",
-          "availableOn": ["Advanced"]
+          "availableOn": ["Free", "Google AI Pro"]
         },
         {
           "name": "Gemini API Tool Use",
           "description": "Function calling and tool integration through the Gemini API for building custom agentic workflows with structured outputs"
-        },
-        {
-          "name": "Project Mariner (Experimental)",
-          "description": "Experimental browser agent that can navigate websites and complete multi-step tasks like filling forms and making purchases",
-          "availableOn": ["Experimental"]
         },
         {
           "name": "Google Workspace Actions",
@@ -355,22 +355,20 @@
         }
       ],
       "limitations": [
-        "Project Mariner still experimental and not generally available",
+        "Gemini Agent action-taking is gated to paid tiers (Google AI Pro and above)",
         "Workspace Actions limited to Google ecosystem",
-        "No general-purpose computer use or desktop automation",
-        "Agent capabilities fragmented across experimental features",
+        "Gemini Spark always-on personal agent is Ultra-only and US English only",
         "Deep Research limited to information gathering, cannot take external actions"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "No agent capabilities" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Deep Research agent" },
-        { "tier": "Business ($14/user/mo)", "details": "Google Workspace Actions" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Full agent suite with admin controls" }
+        { "tier": "Free", "details": "Limited Deep Research; no in-app action-taking agent" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Gemini Agent for in-app task automation, full Deep Research" },
+        { "tier": "Google AI Ultra ($99.99–$199.99/mo)", "details": "Gemini Agent plus Gemini Spark always-on personal agent (US/English)" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Google Workspace Actions with admin controls" }
       ],
       "versionHistory": [
-        { "version": "Project Mariner", "date": "2024-12", "changes": "Experimental browser agent for web-based task automation" },
-        { "version": "Deep Research", "date": "2024-12", "changes": "Autonomous multi-step research agent" },
-        { "version": "Gemini 2.0 Tool Use", "date": "2025-02", "changes": "Enhanced function calling and agentic tool integration" }
+        { "version": "Project Mariner shutdown", "date": "2026-05-04", "changes": "Project Mariner discontinued; capabilities folded into Gemini Agent (GA) in the app" },
+        { "version": "Deep Research", "date": "2024-12", "changes": "Autonomous multi-step research agent" }
       ]
     },
     "connectors": {
@@ -380,8 +378,8 @@
       "subFeatures": [
         {
           "name": "Google Workspace Extensions",
-          "description": "Native integration with Gmail, Google Drive, Google Docs, Sheets, Slides, and Calendar for reading and writing data across Workspace apps",
-          "availableOn": ["Advanced", "Business", "Enterprise"]
+          "description": "Native integration with Gmail, Google Drive, Google Docs, Sheets, Slides, and Calendar for reading and writing data across Workspace apps; Personal Intelligence also connects Gmail/Calendar/Drive/Photos for consumer users",
+          "availableOn": ["Google AI Pro", "Business", "Enterprise"]
         },
         {
           "name": "Google Search Extension",
@@ -398,7 +396,7 @@
         {
           "name": "Google Flights and Hotels",
           "description": "Search flights and hotels with pricing, compare options, and get travel recommendations",
-          "availableOn": ["Free", "Advanced"]
+          "availableOn": ["Free", "Google AI Pro"]
         }
       ],
       "limitations": [
@@ -409,9 +407,9 @@
         "Extension data access governed by Google's data processing terms"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Google Search, Maps, YouTube, Flights, Hotels extensions" },
-        { "tier": "Advanced ($19.99/mo)", "details": "All extensions plus Google Drive and Workspace integration" },
-        { "tier": "Enterprise ($36/user/mo)", "details": "Full Workspace integration with admin-managed extensions" }
+        { "tier": "Free", "details": "Google Search, Maps, YouTube, Flights, Hotels extensions; Personal Intelligence (US)" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "All extensions plus Google Drive and Workspace integration" },
+        { "tier": "Business / Enterprise (Workspace)", "details": "Full Workspace integration with admin-managed extensions" }
       ],
       "versionHistory": [
         { "version": "Workspace Integration", "date": "2024-04", "changes": "Deep Gmail, Drive, Docs, Sheets, Slides integration" },
@@ -421,12 +419,12 @@
     "dictation": {
       "category": "dictation",
       "supported": true,
-      "summary": "Gemini supports voice input on mobile and web with real-time speech-to-text, plus a conversational Gemini Live mode for natural spoken interaction on mobile devices.",
+      "summary": "Gemini supports voice input on mobile and web with real-time speech-to-text, plus a conversational Gemini Live mode for natural spoken interaction now available on the Free tier (with limits).",
       "subFeatures": [
         {
           "name": "Gemini Live",
-          "description": "Real-time conversational voice mode on mobile devices with natural back-and-forth dialogue, ability to interrupt, and multiple voice options",
-          "availableOn": ["Advanced"]
+          "description": "Real-time conversational voice mode on mobile devices with natural back-and-forth dialogue, ability to interrupt, and multiple voice options; available on Free (with limits)",
+          "availableOn": ["Free", "Google AI Pro", "Google AI Ultra"]
         },
         {
           "name": "Voice Input",
@@ -434,24 +432,22 @@
         },
         {
           "name": "Voice Selection",
-          "description": "Choose from multiple natural-sounding voices for Gemini Live responses",
-          "availableOn": ["Advanced"]
+          "description": "Choose from multiple natural-sounding voices for Gemini Live responses"
         }
       ],
       "limitations": [
-        "Gemini Live requires Advanced subscription",
+        "Free-tier Gemini Live has usage limits; paid tiers raise them",
         "Gemini Live initially limited to Android, later expanded to iOS",
         "Voice mode cannot access Extensions or tools during conversation",
         "No voice mode on web interface — mobile only for Gemini Live",
         "Standard voice input quality dependent on device microphone"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Basic voice input on mobile and web" },
-        { "tier": "Advanced ($19.99/mo)", "details": "Gemini Live with multiple voices and natural conversation" }
+        { "tier": "Free", "details": "Voice input plus Gemini Live with multiple voices (usage-limited)" },
+        { "tier": "Google AI Pro ($19.99/mo)", "details": "Higher Gemini Live usage limits and priority access" }
       ],
       "versionHistory": [
-        { "version": "Gemini Live", "date": "2024-08", "changes": "Conversational voice mode with natural dialogue on mobile" },
-        { "version": "Voice Input", "date": "2024-02", "changes": "Speech-to-text input at Gemini launch" }
+        { "version": "Gemini Live", "date": "2024-08", "changes": "Conversational voice mode with natural dialogue on mobile; now available on the Free tier with limits" }
       ]
     }
   },
@@ -465,6 +461,12 @@
     "google-gems",
     "google-imagen",
     "google-gemini-extensions",
-    "google-notebooklm"
+    "google-notebooklm",
+    "google-gemini-3-5-flash",
+    "google-gemini-model-family",
+    "google-ai-subscriptions",
+    "google-one-ai-plans",
+    "google-gemini-app-io-2026",
+    "google-gemini-release-notes"
   ]
 }

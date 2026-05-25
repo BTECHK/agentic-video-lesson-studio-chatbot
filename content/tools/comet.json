@@ -1,315 +1,314 @@
 {
   "id": "comet",
   "name": "Comet",
-  "vendor": "Comet",
+  "vendor": "Perplexity AI",
   "productId": "perplexity",
   "surface": "Comet browser",
   "isPrimarySurface": false,
   "priority": "P1",
-  "description": "Comet is a browser automation and web data extraction platform that uses AI to navigate websites, interact with web pages, and extract structured data — functioning as an AI-powered web scraping and automation agent.",
-  "url": "https://www.comet.com",
+  "description": "Comet is Perplexity's Chromium-based AI browser with a built-in 'Comet Assistant' — an in-tab browsing agent that answers questions about the current page, summarizes content, and completes web tasks like shopping, travel, finance, and email drafting. Free for all Perplexity account holders since October 2, 2025.",
+  "url": "https://www.perplexity.ai/comet",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
       "supported": true,
-      "summary": "Comet provides a conversational interface for describing web automation tasks in natural language, which the agent then executes autonomously in a browser environment.",
+      "summary": "Comet Assistant provides conversational, context-aware help inside the browser — answering questions about open tabs, drafting and refining text (including email replies), and carrying out web tasks described in natural language.",
       "subFeatures": [
         {
-          "name": "Natural Language Task Description",
-          "description": "Describe web automation tasks in plain English — Comet translates instructions into browser actions and executes them"
+          "name": "In-Tab Assistant",
+          "description": "Ask questions about the current page or open tabs and get cited answers without leaving the browser"
         },
         {
-          "name": "Task Status and Results",
-          "description": "View real-time progress of browser automation tasks with step-by-step action logs and final results"
+          "name": "Email Drafting",
+          "description": "Draft and refine email replies directly in webmail; Max users can cc an Email Assistant on a thread for scheduling and drafts",
+          "availableOn": ["Free", "Max"]
         }
       ],
       "limitations": [
-        "Chat is task-oriented, not general-purpose conversation",
-        "Cannot discuss topics outside web automation scope",
-        "Limited to web browser task instructions",
-        "No creative writing or general Q&A capabilities"
+        "Assistant is grounded in the browser context, not a general-purpose coding chatbot",
+        "Background/Email Assistants for autonomous drafting require the Max tier",
+        "Answer quality depends on the content of the open page"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited number of automation tasks per month" },
-        { "tier": "Pro", "details": "Higher task limits with priority execution" },
-        { "tier": "Enterprise", "details": "Custom limits, dedicated support, API access" }
+        { "tier": "Free", "details": "Comet Assistant for in-tab Q&A and drafting (any Perplexity account)" },
+        { "tier": "Max ($200/mo)", "details": "Adds Email Assistant and Opus-class agent" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "Natural language web automation interface" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Comet AI browser made free for all Perplexity account holders worldwide" }
       ]
     },
     "research": {
       "category": "research",
       "supported": true,
-      "summary": "Comet excels at web-based research by automatically navigating websites, extracting data from multiple pages, and compiling structured results — making it effective for competitive research, price monitoring, and data collection.",
+      "summary": "Comet brings Perplexity's answer engine into the browser: it searches the web with cited sources, summarizes pages and articles, and answers follow-up questions about whatever you are reading.",
       "subFeatures": [
         {
-          "name": "Multi-Page Data Extraction",
-          "description": "Automatically navigate through multiple web pages, extracting and structuring data from search results, listings, and directories"
+          "name": "Page Summarization",
+          "description": "Summarize the current article, page, or video and ask follow-up questions with inline citations"
         },
         {
-          "name": "Competitive Research Automation",
-          "description": "Monitor competitor websites, extract pricing, product details, and feature comparisons across multiple sources"
+          "name": "In-Browser Search with Citations",
+          "description": "Perplexity's cited answer engine is available directly in the browser for real-time research while you browse"
         },
         {
-          "name": "Structured Data Output",
-          "description": "Export extracted web data as structured JSON, CSV, or spreadsheet formats for analysis"
+          "name": "Shopping, Travel and Finance Help",
+          "description": "Comet Assistant helps compare products, plan travel, and review financial information across open tabs"
         }
       ],
       "limitations": [
-        "Cannot access login-protected content without credentials",
-        "Rate-limited by target website defenses and robots.txt compliance",
-        "Research limited to publicly accessible web content",
-        "May be blocked by aggressive anti-bot measures"
+        "Cannot access login-protected content without the user's authenticated session",
+        "Premium publisher content may require the optional Comet Plus add-on",
+        "Research quality depends on source availability and page structure"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited research extractions per month" },
-        { "tier": "Pro", "details": "Higher extraction limits and priority processing" },
-        { "tier": "Enterprise", "details": "Custom extraction limits and dedicated infrastructure" }
+        { "tier": "Free", "details": "Page summarization, cited in-browser search, shopping/travel/finance help" },
+        { "tier": "Comet Plus ($5/mo add-on)", "details": "Optional add-on for premium publisher content" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "Web data extraction and research automation" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Cited in-browser research available to all account holders" }
       ]
     },
     "file-analysis": {
       "category": "file-analysis",
-      "supported": false,
-      "summary": "Comet is focused on web browser automation and does not provide file upload or analysis capabilities.",
+      "supported": true,
+      "summary": "Because Comet is a full browser, the Comet Assistant can read and reason over documents open in a tab (such as PDFs) and over content from connected Perplexity Spaces.",
       "subFeatures": [
         {
-          "name": "Not Available",
-          "description": "Comet operates in web browsers — it does not accept file uploads or analyze local files"
+          "name": "In-Browser Document Q&A",
+          "description": "Ask questions about PDFs and documents opened in a browser tab, with answers drawn from the page content"
         }
       ],
       "limitations": [
-        "No file upload capability",
-        "Cannot analyze local documents, images, or code files",
-        "Limited to web page content analysis"
+        "Analysis is scoped to content accessible in the browser session",
+        "Cannot process video or audio files",
+        "Heavier file-analysis limits follow the user's Perplexity tier"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "Free", "details": "Q&A over documents open in the browser" },
+        { "tier": "Max ($200/mo)", "details": "Higher limits inherited from the Perplexity Max account" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "No file analysis included" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "In-browser document Q&A via Comet Assistant" }
       ]
     },
     "document-creation": {
       "category": "document-creation",
       "supported": true,
-      "summary": "Comet creates structured data outputs from web extraction tasks — CSV files, JSON exports, and spreadsheets containing extracted web data, though it does not generate prose documents.",
+      "summary": "Comet Assistant can draft prose in the browser — emails, summaries, and notes — and surfaces Perplexity's research outputs; full deliverable generation (PPTX, CSV, dashboards) runs through Perplexity Labs in the same account.",
       "subFeatures": [
         {
-          "name": "Data Export",
-          "description": "Export extracted web data as CSV, JSON, or structured spreadsheet files for further analysis or import into other tools"
+          "name": "In-Browser Drafting",
+          "description": "Generate and refine written content such as emails, summaries, and notes directly within the browser"
         },
         {
-          "name": "Extraction Reports",
-          "description": "Generate summary reports of extraction tasks including data quality metrics and extraction statistics"
+          "name": "Email Assistant",
+          "description": "Cc the agent on an email thread to draft replies and handle scheduling",
+          "availableOn": ["Max"]
         }
       ],
       "limitations": [
-        "Limited to structured data output — no prose document generation",
-        "Cannot create presentations, PDFs, or formatted reports",
-        "Output format options limited to data-oriented formats",
-        "No document editing or collaboration features"
+        "Rich deliverables (slides, spreadsheets, dashboards) are produced via Perplexity Labs, not the browser chrome itself",
+        "Email Assistant requires the Max tier",
+        "No standalone collaborative document editor"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Basic data export formats" },
-        { "tier": "Pro", "details": "Full export format options and larger data exports" }
+        { "tier": "Free", "details": "In-browser drafting of emails, summaries, and notes" },
+        { "tier": "Max ($200/mo)", "details": "Email Assistant for autonomous drafting and scheduling" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "CSV, JSON, and spreadsheet data export" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "In-browser drafting via Comet Assistant" }
       ]
     },
     "image-generation": {
       "category": "image-generation",
       "supported": false,
-      "summary": "Comet does not generate images. It is a web automation and data extraction tool.",
+      "summary": "Comet itself is an AI browser and does not generate images. Image generation is available in the Perplexity app under the same account.",
       "subFeatures": [
         {
-          "name": "Not Available",
-          "description": "Comet is focused on browser automation — image generation is not part of its feature set"
+          "name": "Not in Browser Chrome",
+          "description": "Image generation is handled by the Perplexity app, not the Comet browser interface"
         }
       ],
       "limitations": [
-        "No image generation capability",
-        "No visual asset creation",
-        "Tool is designed for web data extraction, not content creation"
+        "No image generation in the Comet browser surface",
+        "Image creation requires the Perplexity web/app surface"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "All tiers", "details": "Image generation available via the Perplexity app, not Comet" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "No image generation included" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "No image generation in the browser surface" }
       ]
     },
     "prototyping": {
       "category": "prototyping",
       "supported": false,
-      "summary": "Comet does not provide code generation or software prototyping capabilities. It is focused on web browser automation for data extraction.",
+      "summary": "Comet is a consumer AI browser, not a development environment. It does not provide code execution, live preview, or an IDE.",
       "subFeatures": [
         {
           "name": "Not Available",
-          "description": "Comet automates web browser tasks — it does not generate code or assist with software prototyping"
+          "description": "Comet focuses on browsing and web task assistance — it does not offer code prototyping or execution"
         }
       ],
       "limitations": [
-        "No code generation or execution",
+        "No code execution or live preview",
         "No IDE integration",
-        "Not designed for software development workflows",
-        "Cannot prototype applications or generate source code"
+        "Not designed for software development workflows"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "All tiers", "details": "No prototyping capabilities" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "No prototyping capabilities included" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "No prototyping capabilities in the browser" }
       ]
     },
     "personalization": {
       "category": "personalization",
       "supported": true,
-      "summary": "Comet allows users to save and customize automation workflows, creating reusable templates for repeated data extraction tasks.",
+      "summary": "Comet personalizes to the signed-in Perplexity account, inheriting profile preferences and cross-conversation Memory so the assistant adapts to the user's context across sessions.",
       "subFeatures": [
         {
-          "name": "Saved Workflows",
-          "description": "Save configured automation tasks as reusable workflows that can be re-run with different parameters"
+          "name": "Account Personalization",
+          "description": "Comet uses the signed-in Perplexity account's profile and preferences to tailor assistant responses"
         },
         {
-          "name": "Custom Extraction Schemas",
-          "description": "Define custom data schemas that specify exactly what fields to extract from web pages"
+          "name": "Memory",
+          "description": "Cross-conversation memory carried from the Perplexity account (upgraded to ~95% recall in February 2026)",
+          "availableOn": ["Pro", "Max"]
         }
       ],
       "limitations": [
-        "Personalization limited to task configuration",
-        "No general-purpose preference system",
-        "No memory of conversational preferences",
-        "Customization focused on automation workflows only"
+        "Full cross-conversation Memory follows the user's Pro/Max entitlement",
+        "Personalization is tied to the signed-in Perplexity account"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited saved workflows" },
-        { "tier": "Pro", "details": "Unlimited saved workflows and custom schemas" }
+        { "tier": "Free", "details": "Account profile personalization" },
+        { "tier": "Pro ($20/mo)", "details": "Adds cross-conversation Memory" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "Saved workflow templates and custom extraction schemas" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Account-based personalization in the browser" }
       ]
     },
     "persistent-context": {
       "category": "persistent-context",
       "supported": true,
-      "summary": "Comet maintains a history of extraction tasks and their results, with saved workflows serving as persistent automation templates.",
+      "summary": "Comet maintains context within the browser across open tabs and inherits the Perplexity account's Spaces and Memory, so research context persists across sessions.",
       "subFeatures": [
         {
-          "name": "Task History",
-          "description": "Complete history of all executed automation tasks with results, timestamps, and configuration details"
+          "name": "Cross-Tab Context",
+          "description": "The assistant reasons over multiple open tabs to maintain context within a browsing session"
         },
         {
-          "name": "Workflow Templates",
-          "description": "Persistent workflow configurations that retain extraction logic across sessions for repeated use"
+          "name": "Account Memory and Spaces",
+          "description": "Inherits Perplexity Memory and Spaces from the signed-in account for persistent, cross-session context",
+          "availableOn": ["Pro", "Max"]
         }
       ],
       "limitations": [
-        "No conversational memory across tasks",
-        "Context limited to automation task configuration",
-        "No knowledge base or document storage",
-        "History focused on extraction results, not general context"
+        "Spaces and full Memory follow the user's Pro/Max entitlement",
+        "Cross-tab context is bounded by the current browser session"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited task history retention" },
-        { "tier": "Pro", "details": "Extended task history and persistent workflows" }
+        { "tier": "Free", "details": "Cross-tab context within a session" },
+        { "tier": "Pro ($20/mo)", "details": "Persistent Memory and Spaces from the Perplexity account" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "Task history and workflow persistence" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Cross-tab context plus account Memory/Spaces" }
       ]
     },
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Comet is fundamentally an AI agent — it autonomously navigates web browsers, fills forms, clicks buttons, scrolls pages, and extracts data without human intervention after receiving task instructions.",
+      "summary": "Comet's defining feature is its in-tab browsing agent. Comet Assistant takes actions across open tabs to complete web tasks, and Max adds Background Assistants (parallel/async agents) and an Email Assistant powered by an Opus-class model.",
       "subFeatures": [
         {
-          "name": "Autonomous Browser Agent",
-          "description": "AI agent that independently controls a web browser to navigate pages, interact with elements, and complete multi-step web tasks"
+          "name": "Comet Assistant (Browsing Agent)",
+          "description": "In-tab agent that navigates pages, fills forms, and completes multi-step web tasks such as shopping, travel, and finance",
+          "availableOn": ["Free", "Pro", "Max"]
         },
         {
-          "name": "Multi-Step Task Execution",
-          "description": "Execute complex workflows involving navigation across multiple pages, form filling, pagination, and conditional logic"
+          "name": "Background Assistants",
+          "description": "Parallel/async agents that work off a to-do list in the background",
+          "availableOn": ["Max"]
         },
         {
-          "name": "Visual Page Understanding",
-          "description": "Understand web page layouts visually to identify interactive elements, data tables, and content areas for extraction"
+          "name": "Email Assistant",
+          "description": "Cc the agent on an email thread for scheduling and drafting",
+          "availableOn": ["Max"]
         }
       ],
       "limitations": [
-        "Agent limited to web browser actions only",
-        "Cannot perform desktop automation or file system operations",
-        "May fail on heavily JavaScript-dependent or dynamically loaded pages",
-        "CAPTCHA and anti-bot measures can block agent execution"
+        "Background Assistants, Email Assistant, and the Opus-class agent require the Max tier",
+        "Agent actions are bounded by site permissions and anti-bot defenses",
+        "Cannot perform desktop automation outside the browser"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited agent task executions per month" },
-        { "tier": "Pro", "details": "Higher execution limits with priority processing" },
-        { "tier": "Enterprise", "details": "Custom limits, parallel execution, dedicated browser instances" }
+        { "tier": "Free", "details": "Comet Assistant in-tab browsing agent for web tasks" },
+        { "tier": "Max ($200/mo)", "details": "Background Assistants, Email Assistant, Opus-class agent, early feature access" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "AI-powered autonomous browser agent for web automation" }
+        { "version": "Background Assistants (Max)", "date": "2025-10-02", "changes": "Max adds parallel background agents alongside the free Comet release" },
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "In-tab browsing agent made free for all account holders worldwide" }
       ]
     },
     "connectors": {
       "category": "connectors",
       "supported": true,
-      "summary": "Comet connects to the web through its browser automation engine and can export data to various formats and integrations.",
+      "summary": "As a full browser, Comet works across any website with the user's signed-in sessions, and inherits the Perplexity account's connectors (Gmail, Calendar, Notion, GitHub on Pro; more on Enterprise).",
       "subFeatures": [
         {
-          "name": "Web Browser Engine",
-          "description": "Headless browser engine that can access any public website, handling JavaScript rendering, cookies, and session management"
+          "name": "Authenticated Web Access",
+          "description": "Operates within the user's own browser sessions, so the assistant can act on sites where the user is already signed in"
         },
         {
-          "name": "Data Export Integrations",
-          "description": "Export extracted data to spreadsheets, databases, and other tools via CSV, JSON, and API webhooks"
+          "name": "Perplexity Connectors",
+          "description": "Inherits Spaces connectors from the account — Gmail, Calendar, Notion, GitHub (Pro) and Outlook, Slack, Drive, and more (Enterprise)",
+          "availableOn": ["Pro", "Enterprise Pro", "Enterprise Max"]
         }
       ],
       "limitations": [
-        "No native integrations with Slack, Notion, or productivity tools",
-        "No Google Drive or cloud storage direct connectors",
-        "Webhook integrations require technical setup",
-        "Browser automation subject to website terms of service"
+        "Third-party data connectors require a Pro subscription or higher",
+        "Broader connector set requires Enterprise",
+        "Actions on a site are bounded by that site's terms and permissions"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Basic browser automation and CSV export" },
-        { "tier": "Pro", "details": "Full export options and webhook integrations" },
-        { "tier": "Enterprise", "details": "Custom integrations and API access" }
+        { "tier": "Free", "details": "Authenticated access to any site in the user's browser" },
+        { "tier": "Pro ($20/mo)", "details": "Adds Gmail, Calendar, Notion, GitHub connectors" },
+        { "tier": "Enterprise ($40–$325/seat)", "details": "Adds Outlook, Slack, Drive, SharePoint, and more" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "Browser automation engine and data export connectors" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Browser-wide authenticated access plus account connectors" }
       ]
     },
     "dictation": {
       "category": "dictation",
-      "supported": false,
-      "summary": "Comet does not include voice input or dictation capabilities. All interaction is through text-based task descriptions.",
+      "supported": true,
+      "summary": "Comet inherits Perplexity's voice capabilities — mobile voice dictation and Voice Mode — for hands-free queries to the in-tab assistant.",
       "subFeatures": [
         {
-          "name": "Not Available",
-          "description": "Comet is a web automation tool with text-based input only — no voice or speech capabilities"
+          "name": "Voice Input",
+          "description": "Dictate queries to Comet Assistant using Perplexity's mobile voice dictation"
+        },
+        {
+          "name": "Voice Mode",
+          "description": "Spoken back-and-forth with live cited results, inherited from Perplexity (iOS-first, Android/desktop rolling out)"
         }
       ],
       "limitations": [
-        "No voice input or dictation",
-        "No speech-to-text capabilities",
-        "Text-only task description interface"
+        "Voice Mode is iOS-first; Android and desktop support is still rolling out",
+        "Voice input quality depends on the device microphone"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "Free", "details": "Voice dictation and Voice Mode inherited from the Perplexity account" }
       ],
       "versionHistory": [
-        { "version": "Comet Launch", "date": "2024-10", "changes": "No voice capabilities included" }
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Voice input available via the Perplexity account" }
       ]
     }
   },
   "sourceRefs": [
-    "comet-browser-overview",
-    "comet-docs",
-    "comet-pricing"
+    "comet-product-page",
+    "comet-free-worldwide",
+    "comet-free-techcrunch"
   ]
 }

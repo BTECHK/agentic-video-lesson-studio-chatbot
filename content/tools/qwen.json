@@ -6,61 +6,61 @@
   "surface": "Web app",
   "isPrimarySurface": true,
   "priority": "P1",
-  "description": "Alibaba's open-source Qwen model family offering strong multilingual capabilities (especially Chinese-English), long context windows up to 1M tokens, tool use, and competitive performance across reasoning, coding, and multimodal tasks.",
+  "description": "Alibaba Cloud's Qwen model family, accessed through the Qwen Studio consumer app (chat.qwen.ai). The GA flagship is Qwen3.5 (released 2026-02-17, Apache-2.0 open weights) — a natively multimodal, early-fusion model with built-in image generation and the Qwen3.5-Omni real-time voice variant; Qwen3.7 (announced 2026-05-20) is a newer API-only preview. Strong multilingual support (~201 languages in text), long context up to 1M tokens, and agentic tool use.",
   "url": "https://chat.qwen.ai",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
       "supported": true,
-      "summary": "Qwen provides a web-based chat interface and API with strong multilingual text generation, particularly excelling at Chinese and English content, with support for various response styles and model sizes.",
+      "summary": "Qwen Studio (chat.qwen.ai, rebranded from Qwen Chat) provides a web-based chat experience powered by the natively multimodal Qwen3.5, with strong multilingual text generation across ~201 languages and an extended-thinking reasoning mode.",
       "subFeatures": [
         {
-          "name": "Qwen Chat",
-          "description": "Web-based conversational interface with multi-turn dialogue, markdown rendering, and code highlighting"
+          "name": "Qwen Studio",
+          "description": "Web-based conversational interface (formerly 'Qwen Chat', now Qwen Studio at chat.qwen.ai) with multi-turn dialogue, markdown rendering, and code highlighting"
         },
         {
-          "name": "Multilingual Excellence",
-          "description": "Strong performance across Chinese, English, and other languages with native multilingual training — strongest Chinese-English bilingual model available"
+          "name": "Multilingual Coverage (~201 languages)",
+          "description": "Strong performance across Chinese, English, and roughly 201 languages in text via native multilingual training"
         },
         {
-          "name": "Model Size Options",
-          "description": "Range of model sizes from 0.5B to 110B+ parameters, allowing selection based on task complexity and resource constraints"
+          "name": "Open and Hosted Variants",
+          "description": "Qwen3.5-397B-A17B open weights (Apache-2.0), Qwen3.5-Plus hosted with 1M-token context and built-in tools, plus on-device Qwen3.5-Small models"
         },
         {
-          "name": "Thinking Mode",
-          "description": "QwQ reasoning model with step-by-step thinking for complex math, logic, and analysis tasks"
+          "name": "Extended Thinking Mode",
+          "description": "Step-by-step reasoning mode for complex math, logic, and analysis, built into the Qwen3.5/Qwen3.7 line"
         }
       ],
       "limitations": [
         "Web chat interface less polished than ChatGPT or Claude",
-        "Performance on non-Chinese/English languages varies",
-        "Context window varies by model variant (up to 1M tokens for Qwen2.5-Turbo)",
-        "Chat interface feature set smaller than major competitors"
+        "Performance on lower-resource languages varies",
+        "Qwen3.7 is preview/API-only with no open weights yet (as of May 2026)",
+        "Naming iterates quickly across Qwen3.5/3.6/3.7 releases"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Free access to Qwen chat with standard models" },
-        { "tier": "DashScope API", "details": "Qwen-Plus: $0.80/M input, $2.00/M output tokens; Qwen-Turbo: $0.30/M input, $0.60/M output" },
-        { "tier": "Self-Hosted (Free)", "details": "Open-source weights for local deployment under Apache 2.0 license" }
+        { "tier": "Free (Qwen Studio)", "details": "Free access to Qwen3.5 in Qwen Studio, including image generation, voice, and file analysis (rate limits at peak)" },
+        { "tier": "DashScope API", "details": "Qwen3.7-Max preview at $2.50/M input, $7.50/M output tokens; Qwen3.5-Plus pricing via Alibaba Cloud Model Studio" },
+        { "tier": "Self-Hosted (Free)", "details": "Qwen3.5-397B-A17B open weights under Apache-2.0 for local deployment (Qwen3.7 currently closed-weights)" }
       ],
       "versionHistory": [
-        { "version": "Qwen2.5", "date": "2024-09", "changes": "Major release with 72B flagship, 1M context Turbo, and strong coding performance" },
-        { "version": "QwQ-32B", "date": "2025-03", "changes": "Reasoning model competitive with o1 and DeepSeek-R1" },
-        { "version": "Qwen2", "date": "2024-06", "changes": "Second generation with improved multilingual and reasoning capabilities" },
-        { "version": "Qwen1.5", "date": "2024-02", "changes": "Alignment improvements and expanded model size range" }
+        { "version": "Qwen3.7", "date": "2026-05", "changes": "Preview/API-only (announced 2026-05-20): Qwen3.7-Max (text, 1M context, extended thinking) and Qwen3.7-Plus (multimodal); closed weights" },
+        { "version": "Qwen3.5", "date": "2026-02", "changes": "GA flagship (2026-02-17): natively multimodal early-fusion model, Apache-2.0 open weights, ~201 languages" },
+        { "version": "Qwen3.5-Omni", "date": "2026-03", "changes": "Real-time speech in/out with 113-language speech recognition added to the Qwen3.5 line" },
+        { "version": "Qwen2.5", "date": "2024-09", "changes": "Prior generation (now two generations behind), separate VL/Audio models" }
       ]
     },
     "research": {
       "category": "research",
       "supported": true,
-      "summary": "Qwen chat includes web search for finding current information, with the QwQ reasoning model providing deep analytical capabilities for complex research questions.",
+      "summary": "Qwen Studio includes web search for finding current information, with Qwen3.5/Qwen3.7 extended-thinking reasoning providing deep analytical capabilities for complex research questions.",
       "subFeatures": [
         {
           "name": "Web Search",
-          "description": "Search the web from within Qwen chat to find current information and provide cited responses"
+          "description": "Search the web from within Qwen Studio to find current information and provide cited responses"
         },
         {
           "name": "Reasoning-Based Analysis",
-          "description": "QwQ model provides deep analytical reasoning for complex research questions requiring multi-step logic"
+          "description": "Qwen3.5/Qwen3.7 extended-thinking mode provides deep analytical reasoning for complex research questions requiring multi-step logic"
         }
       ],
       "limitations": [
@@ -74,17 +74,17 @@
         { "tier": "API", "details": "No built-in web search in API" }
       ],
       "versionHistory": [
-        { "version": "Web Search", "date": "2024-09", "changes": "Web search integration in Qwen chat" }
+        { "version": "Web Search", "date": "2024-09", "changes": "Web search integration in the Qwen consumer app" }
       ]
     },
     "file-analysis": {
       "category": "file-analysis",
       "supported": true,
-      "summary": "Qwen supports multimodal file analysis including images, documents, and video through Qwen-VL (vision-language) models, with strong OCR capabilities especially for Chinese text.",
+      "summary": "Qwen3.5 is natively multimodal (early-fusion vision-language from pre-training), analyzing images, documents, and video directly in Qwen Studio without separate VL models, with strong OCR especially for Chinese text.",
       "subFeatures": [
         {
-          "name": "Image Analysis (Qwen-VL)",
-          "description": "Analyze images including documents, screenshots, diagrams, and photographs with the Qwen-VL vision-language model"
+          "name": "Native Image Analysis",
+          "description": "Analyze images including documents, screenshots, diagrams, and photographs directly with the natively multimodal Qwen3.5 model (no separate Qwen-VL model required)"
         },
         {
           "name": "Document OCR",
@@ -92,23 +92,23 @@
         },
         {
           "name": "Video Understanding",
-          "description": "Analyze video content with the Qwen2-VL model, understanding visual narratives and extracting information from video frames"
+          "description": "Analyze video content with Qwen3.5's unified vision-language understanding, extracting information from video frames"
         }
       ],
       "limitations": [
-        "File upload capabilities vary by interface (web vs API)",
+        "File upload capabilities vary by interface (Qwen Studio vs API)",
         "No sandboxed code execution for data analysis",
-        "Video analysis requires large model variants",
-        "Spreadsheet analysis limited to visual/OCR approach"
+        "Spreadsheet analysis limited to visual/OCR approach",
+        "Largest multimodal quality on hosted Qwen3.5-Plus rather than smallest on-device models"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Image and document upload in chat" },
+        { "tier": "Free (Qwen Studio)", "details": "Image and document upload in Qwen Studio" },
         { "tier": "API", "details": "Multimodal input at standard token pricing via DashScope" },
-        { "tier": "Self-Hosted", "details": "Qwen-VL open-source models for local deployment" }
+        { "tier": "Self-Hosted", "details": "Qwen3.5 open-weight models (Apache-2.0) for local multimodal deployment" }
       ],
       "versionHistory": [
-        { "version": "Qwen2-VL", "date": "2024-10", "changes": "Second-generation vision-language model with video understanding" },
-        { "version": "Qwen-VL", "date": "2024-01", "changes": "Initial vision-language model with image analysis" }
+        { "version": "Qwen3.5", "date": "2026-02", "changes": "Natively multimodal (early-fusion) vision-language replaces the separate Qwen-VL line" },
+        { "version": "Qwen2-VL", "date": "2024-10", "changes": "Prior-generation separate vision-language model with video understanding" }
       ]
     },
     "document-creation": {
@@ -141,65 +141,70 @@
     },
     "image-generation": {
       "category": "image-generation",
-      "supported": false,
-      "summary": "Qwen's primary models are text and vision-language focused. While Alibaba has image generation research (Wanx), it is not integrated into the Qwen chat experience as a user-facing feature.",
+      "supported": true,
+      "summary": "Qwen Studio now includes built-in image generation and editing for free, a first-class consumer feature in the Qwen3.5 era (it was not a polished consumer feature in the Qwen2.5 era).",
       "subFeatures": [
         {
-          "name": "Not Available in Qwen Chat",
-          "description": "Qwen chat focuses on text generation and vision understanding — image generation requires separate Alibaba Cloud services"
+          "name": "Image Generation in Qwen Studio",
+          "description": "Generate images from text prompts directly inside Qwen Studio (chat.qwen.ai) as a built-in, free feature"
+        },
+        {
+          "name": "Image Editing",
+          "description": "Edit and iterate on images within Qwen Studio's conversational interface"
         }
       ],
       "limitations": [
-        "No image generation in Qwen chat interface",
-        "Image generation requires separate Alibaba Cloud Wanx API",
-        "Not integrated into the conversational experience"
+        "Rate limits may apply at peak times on the free tier",
+        "Fine-grained composition and layout controls are limited",
+        "Quality varies by prompt and style relative to dedicated image models"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available in Qwen chat — available as separate Alibaba Cloud service" }
+        { "tier": "Free (Qwen Studio)", "details": "Image generation and editing included free in Qwen Studio" },
+        { "tier": "API", "details": "Image generation also available via Alibaba Cloud Model Studio / DashScope" }
       ],
       "versionHistory": [
-        { "version": "Qwen2.5", "date": "2024-09", "changes": "No image generation included in Qwen models" }
+        { "version": "Qwen3.5 (Qwen Studio)", "date": "2026-02", "changes": "Free built-in image generation and editing added to the consumer app" }
       ]
     },
     "prototyping": {
       "category": "prototyping",
       "supported": true,
-      "summary": "Qwen provides strong code generation capabilities competitive with GPT-4 and Claude on benchmarks, with specialized Qwen2.5-Coder variants optimized for software development tasks.",
+      "summary": "Qwen provides strong code generation and ships qwen-code, a terminal coding agent. Qwen3.5/Qwen3.7 are positioned as native multimodal agents, with a 1M-token context for working across large codebases.",
       "subFeatures": [
         {
           "name": "Code Generation",
-          "description": "Generate code in multiple languages with Qwen2.5-Coder achieving top scores on HumanEval and other coding benchmarks"
+          "description": "Generate code in multiple languages with the Qwen3.5/Qwen3.7 models, strong on coding benchmarks"
         },
         {
-          "name": "Specialized Coder Models",
-          "description": "Qwen2.5-Coder series with models from 1.5B to 32B parameters, optimized specifically for code generation, completion, and editing"
+          "name": "qwen-code Terminal Agent",
+          "description": "qwen-code is a terminal-based coding agent from the Qwen team for agentic, multi-step software tasks"
         },
         {
           "name": "Long Context Coding",
-          "description": "Up to 1M token context via Qwen2.5-Turbo enables working with entire large codebases in a single session"
+          "description": "Up to 1M-token context (Qwen3.5-Plus / Qwen3.7-Max) enables working with entire large codebases in a single session"
         }
       ],
       "limitations": [
-        "No sandboxed code execution environment",
-        "No live preview or interactive code runner",
-        "IDE integration limited to API-based extensions",
+        "No sandboxed code execution environment in the chat app",
+        "No live preview or interactive code runner in Qwen Studio",
+        "IDE integration limited to API-based extensions and qwen-code",
         "Local deployment of full models requires significant GPU resources"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Code generation in Qwen chat" },
-        { "tier": "API", "details": "Code generation via DashScope at standard pricing" },
-        { "tier": "Self-Hosted (Free)", "details": "Qwen2.5-Coder open-source models for local coding assistance" }
+        { "tier": "Free (Qwen Studio)", "details": "Code generation in Qwen Studio" },
+        { "tier": "API", "details": "Code generation via DashScope (Qwen3.5-Plus / Qwen3.7-Max)" },
+        { "tier": "Self-Hosted (Free)", "details": "Qwen3.5 open weights (Apache-2.0) for local coding assistance" }
       ],
       "versionHistory": [
-        { "version": "Qwen2.5-Coder-32B", "date": "2024-11", "changes": "Top-performing open-source coding model, competitive with GPT-4o on coding tasks" },
-        { "version": "Qwen2.5-Coder", "date": "2024-09", "changes": "Specialized coding model series with multiple size options" },
-        { "version": "CodeQwen1.5", "date": "2024-04", "changes": "First dedicated coding model in the Qwen family" }
+        { "version": "qwen-code", "date": "2026", "changes": "Terminal coding agent launched alongside the Qwen3.5/3.7 agent push" },
+        { "version": "Qwen3.5", "date": "2026-02", "changes": "Native multimodal model with strong agentic coding" },
+        { "version": "Qwen2.5-Coder-32B", "date": "2024-11", "changes": "Prior-generation top open-source coding model" }
       ]
     },
     "personalization": {
       "category": "personalization",
       "supported": false,
-      "summary": "Qwen chat has minimal personalization features. API users can set system prompts, but the web interface lacks custom instructions, memory, or preference systems.",
+      "summary": "Qwen Studio has minimal personalization features. API users can set system prompts, but the consumer app lacks custom instructions, memory, or preference systems.",
       "subFeatures": [
         {
           "name": "System Prompts (API)",
@@ -231,56 +236,57 @@
         },
         {
           "name": "Ultra-Long Context (1M Tokens)",
-          "description": "Qwen2.5-Turbo supports up to 1M tokens of context, enabling analysis of entire books, codebases, or document collections in a single session"
+          "description": "Hosted Qwen3.5-Plus (and Qwen3.7-Max) support up to 1M tokens of context, enabling analysis of entire books, codebases, or document collections in a single session"
         }
       ],
       "limitations": [
         "No cross-session memory system",
         "No knowledge base uploads for persistent context",
-        "1M context available only on Turbo variant via API",
+        "1M context delivered via hosted Qwen3.5-Plus / Qwen3.7-Max",
         "No project or workspace organization"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Conversation history with standard context" },
-        { "tier": "API (Qwen2.5-Turbo)", "details": "Up to 1M token context at standard pricing" }
+        { "tier": "Free (Qwen Studio)", "details": "Conversation history with standard context" },
+        { "tier": "API (Qwen3.5-Plus)", "details": "Up to 1M token context via Alibaba Cloud Model Studio" }
       ],
       "versionHistory": [
-        { "version": "Qwen2.5-Turbo 1M", "date": "2024-09", "changes": "1M token context window — one of the largest available" },
-        { "version": "Qwen2 128K", "date": "2024-06", "changes": "128K context window support" }
+        { "version": "Qwen3.5-Plus 1M", "date": "2026-02", "changes": "1M-token context on the hosted Qwen3.5-Plus model" },
+        { "version": "Qwen2.5-Turbo 1M", "date": "2024-09", "changes": "Prior-generation 1M-token context variant" }
       ]
     },
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Qwen supports agentic use through its API with function calling and tool use capabilities. The Qwen-Agent framework provides an open-source toolkit for building autonomous agents.",
+      "summary": "Qwen3.5 and Qwen3.7 are explicitly positioned as native multimodal agents. Qwen3.7-Max demonstrated long-horizon autonomous runs (a 35-hour session with 1,158 tool calls), and qwen-code plus the Qwen-Agent framework support building autonomous agents via API.",
       "subFeatures": [
         {
+          "name": "Native Multimodal Agents",
+          "description": "Qwen3.5/Qwen3.7 are designed as native multimodal agents; Qwen3.7-Max demonstrated a 35-hour autonomous run with 1,158 tool calls"
+        },
+        {
+          "name": "qwen-code & Qwen-Agent",
+          "description": "qwen-code terminal agent and the open-source Qwen-Agent framework for building autonomous agents with tool use, planning, and memory"
+        },
+        {
           "name": "Function Calling (API)",
-          "description": "Native function calling and tool use support in the Qwen API, enabling agents to interact with external systems"
-        },
-        {
-          "name": "Qwen-Agent Framework",
-          "description": "Open-source agent framework from the Qwen team for building autonomous agents with tool use, planning, and memory"
-        },
-        {
-          "name": "Open-Source Agent Ecosystem",
-          "description": "Qwen models supported in LangChain, LlamaIndex, AutoGen, and other agent frameworks for building custom agentic applications"
+          "description": "Native function calling and tool use in the Qwen API, enabling agents to interact with external systems"
         }
       ],
       "limitations": [
-        "No built-in agent features in web chat interface",
-        "No browser automation or autonomous task execution in chat",
-        "Agent building requires external framework and development",
-        "Function calling quality varies by model size"
+        "No built-in autonomous agent runner in the Qwen Studio chat interface",
+        "No browser automation in the chat app itself",
+        "Programmatic agent building requires the API or external frameworks",
+        "Qwen3.7 agent capabilities are preview/API-only as of May 2026"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "No agent features in web interface" },
-        { "tier": "API", "details": "Function calling at standard DashScope pricing" },
-        { "tier": "Self-Hosted", "details": "Open-source models for custom agent deployment" }
+        { "tier": "Free (Qwen Studio)", "details": "No built-in agent runner in the chat app" },
+        { "tier": "API", "details": "Function calling and agentic models (Qwen3.5-Plus / Qwen3.7-Max) at DashScope pricing" },
+        { "tier": "Self-Hosted", "details": "Open-weight Qwen3.5 models for custom agent deployment" }
       ],
       "versionHistory": [
-        { "version": "Qwen-Agent Framework", "date": "2024-09", "changes": "Open-source agent framework released" },
-        { "version": "Function Calling", "date": "2024-06", "changes": "Native tool use and function calling in Qwen2 API" }
+        { "version": "Qwen3.7-Max", "date": "2026-05", "changes": "Demonstrated 35-hour autonomous operation with 1,158 tool calls (preview)" },
+        { "version": "qwen-code", "date": "2026", "changes": "Terminal coding agent released" },
+        { "version": "Qwen-Agent Framework", "date": "2024-09", "changes": "Open-source agent framework released" }
       ]
     },
     "connectors": {
@@ -299,7 +305,7 @@
       ],
       "limitations": [
         "No native third-party integrations in web interface",
-        "No plugin or extension ecosystem in Qwen chat",
+        "No plugin or extension ecosystem in Qwen Studio",
         "No direct Google Drive, Slack, or productivity tool connectors",
         "DashScope API primarily targets Alibaba Cloud ecosystem"
       ],
@@ -309,36 +315,35 @@
       ],
       "versionHistory": [
         { "version": "OpenAI-Compatible API", "date": "2024-06", "changes": "DashScope API with OpenAI format compatibility" },
-        { "version": "Hugging Face Release", "date": "2024-09", "changes": "Qwen2.5 full model family released on Hugging Face" }
+        { "version": "Qwen3.5 Open Weights", "date": "2026-02", "changes": "Qwen3.5-397B-A17B released on Hugging Face/ModelScope under Apache-2.0" }
       ]
     },
     "dictation": {
       "category": "dictation",
       "supported": true,
-      "summary": "Qwen includes the Qwen-Audio model for speech understanding and audio processing, though dictation is not a primary feature of the standard chat interface.",
+      "summary": "Qwen3.5-Omni makes voice a first-class consumer feature in Qwen Studio: real-time speech in/out, voice control, and voice cloning, with 113-language speech recognition and 36-language synthesis.",
       "subFeatures": [
         {
-          "name": "Qwen-Audio Model",
-          "description": "Specialized audio-language model that can understand speech, analyze audio content, and process voice inputs"
+          "name": "Real-Time Voice (Qwen3.5-Omni)",
+          "description": "Real-time speech input and output with voice control and voice cloning, built into Qwen Studio as a first-class consumer feature"
         },
         {
           "name": "Multilingual Speech Recognition",
-          "description": "Audio understanding across multiple languages, particularly strong in Chinese and English"
+          "description": "Speech recognition across 113 languages and dialects, with synthesis across 36 languages"
         }
       ],
       "limitations": [
-        "Audio features not deeply integrated into standard Qwen chat",
-        "Requires Qwen-Audio model variant — not available in all interfaces",
-        "No real-time voice conversation mode",
-        "Primarily a research model, not a polished dictation product"
+        "Voice cloning and real-time modes may be subject to rate limits at peak",
+        "Synthesis covers fewer languages (36) than recognition (113)",
+        "Voice quality varies by device and connection"
       ],
       "pricingTiers": [
-        { "tier": "API", "details": "Qwen-Audio available through DashScope API" },
-        { "tier": "Self-Hosted", "details": "Open-source Qwen-Audio model for local deployment" }
+        { "tier": "Free (Qwen Studio)", "details": "Real-time voice in/out included in the consumer app" },
+        { "tier": "API", "details": "Qwen3.5-Omni speech available through Alibaba Cloud Model Studio / DashScope" }
       ],
       "versionHistory": [
-        { "version": "Qwen2-Audio", "date": "2024-07", "changes": "Second-generation audio-language model with improved speech understanding" },
-        { "version": "Qwen-Audio", "date": "2023-11", "changes": "Initial audio-language model release" }
+        { "version": "Qwen3.5-Omni", "date": "2026-03", "changes": "Real-time speech in/out, voice control and cloning; 113-language recognition, 36-language synthesis" },
+        { "version": "Qwen2-Audio", "date": "2024-07", "changes": "Prior-generation audio-language research model" }
       ]
     }
   },
@@ -347,6 +352,9 @@
     "qwen-blog",
     "qwen-huggingface",
     "qwen-chat",
-    "alibaba-dashscope"
+    "alibaba-dashscope",
+    "qwen35-release",
+    "qwen-hub",
+    "qwen37-max"
   ]
 }

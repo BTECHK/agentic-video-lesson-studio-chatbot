@@ -1,7 +1,7 @@
 {
   "id": "perplexity",
   "name": "Perplexity",
-  "vendor": "Perplexity",
+  "vendor": "Perplexity AI",
   "productId": "perplexity",
   "surface": "Web app",
   "isPrimarySurface": true,
@@ -24,8 +24,8 @@
         },
         {
           "name": "Model Selection",
-          "description": "Pro users can select from multiple underlying models including GPT-4o, Claude 3.5 Sonnet, and Perplexity's own models",
-          "availableOn": ["Pro"]
+          "description": "Pro/Max users can select from frontier models in the model picker, including GPT-5.x, Claude Opus 4.6, Gemini 3.1 Pro, and Perplexity's own Sonar models",
+          "availableOn": ["Pro", "Max"]
         },
         {
           "name": "Focus Modes",
@@ -39,11 +39,14 @@
         "Writing mode is basic compared to ChatGPT Canvas or Claude Artifacts"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Basic search with limited Pro Search queries per day" },
-        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, model selection, file uploads, higher limits" }
+        { "tier": "Free", "details": "Basic search with limited Pro Search queries per day; Sonar default model" },
+        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, model picker (GPT-5.x, Claude Opus 4.6, Gemini 3.1 Pro), file uploads, higher limits" },
+        { "tier": "Max ($200/mo)", "details": "Top frontier models (o3-pro-class, Opus-class agent), unlimited everything, priority access" },
+        { "tier": "Enterprise Pro ($40/seat)", "details": "SSO/SCIM, SOC 2, 500 Deep Research queries/seat/day" },
+        { "tier": "Enterprise Max ($325/seat)", "details": "Unlimited everything plus org analytics" }
       ],
       "versionHistory": [
-        { "version": "Focus Modes", "date": "2024-06", "changes": "Source-specific search filters for Academic, YouTube, Reddit, and more" },
+        { "version": "Model Picker (frontier models)", "date": "2026-05", "changes": "Picker includes GPT-5.x, Claude Opus 4.6, Gemini 3.1 Pro, and Sonar" },
         { "version": "Pro Search", "date": "2024-02", "changes": "Enhanced multi-step search with deeper source analysis" },
         { "version": "Launch", "date": "2023-01", "changes": "Initial answer engine with real-time web search and citations" }
       ]
@@ -72,6 +75,11 @@
           "availableOn": ["Pro"]
         },
         {
+          "name": "Deep Research Deliverables",
+          "description": "Deep Research and Pro Search can emit structured outputs directly — PowerPoint, spreadsheet, dashboard, or website — via Labs",
+          "availableOn": ["Pro", "Max"]
+        },
+        {
           "name": "Source Transparency",
           "description": "Every claim is linked to its source with numbered citations, allowing users to verify information by clicking through to original articles"
         }
@@ -80,62 +88,68 @@
         "Cannot access paywalled academic papers (only abstracts and metadata)",
         "Search results biased toward well-indexed English-language sources",
         "Pro Search limited to a set number of daily queries on free tier",
-        "Cannot analyze or cross-reference user-uploaded documents with web sources",
+        "Labs deliverables capped on Pro (~50 queries/mo); unlimited on Max",
         "Academic search relies on available open-access and indexed papers"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "Basic web search with citations, limited Pro Search (5/day)" },
-        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, Academic focus, Pages, priority source access" }
+        { "tier": "Free", "details": "Basic web search with citations, limited Pro Search (~5/day) and Deep Research (~5/day)" },
+        { "tier": "Pro ($20/mo)", "details": "Unlimited Pro Search, ~20 Deep Research/day, Academic focus, Pages, Labs (~50/mo)" },
+        { "tier": "Max ($200/mo)", "details": "Unlimited Pro Search, Deep Research and Labs; Perplexity Computer multi-model orchestration" },
+        { "tier": "Enterprise Pro ($40/seat)", "details": "500 Deep Research queries/seat/day with SSO/SCIM and SOC 2" }
       ],
       "versionHistory": [
+        { "version": "Deep Research Deliverables", "date": "2026-03", "changes": "Structured outputs (PPTX, spreadsheet, dashboard, website) emitted directly" },
+        { "version": "Perplexity Computer", "date": "2026-02-27", "changes": "Agentic system orchestrating 19 models for complex multi-hour workflows (Max)" },
         { "version": "Pages", "date": "2024-05", "changes": "Convert research threads into shareable articles" },
-        { "version": "Pro Search", "date": "2024-02", "changes": "Multi-step deep research with clarifying questions" },
-        { "version": "Academic Focus", "date": "2024-01", "changes": "Dedicated academic paper search mode" },
-        { "version": "Citations", "date": "2023-01", "changes": "Inline numbered citations from launch" }
+        { "version": "Pro Search", "date": "2024-02", "changes": "Multi-step deep research with clarifying questions" }
       ]
     },
     "file-analysis": {
       "category": "file-analysis",
       "supported": true,
-      "summary": "Perplexity Pro supports file uploads for analysis, including PDFs, images, and documents, allowing users to ask questions about uploaded content and cross-reference with web search results.",
+      "summary": "Perplexity supports file uploads for analysis on all tiers — including PDFs, images, and documents — allowing users to ask questions about uploaded content and cross-reference with web search results. Free tier gets ~40 MB/file, ~10 files/prompt, ~30-day retention.",
       "subFeatures": [
         {
           "name": "PDF Analysis",
           "description": "Upload PDF documents and ask questions about their content, with Perplexity extracting and analyzing text and tables",
-          "availableOn": ["Pro"]
+          "availableOn": ["Free", "Pro", "Max"]
         },
         {
           "name": "Image Analysis",
           "description": "Upload images for visual question answering, identifying objects, reading text, and analyzing visual content",
-          "availableOn": ["Pro"]
+          "availableOn": ["Free", "Pro", "Max"]
         },
         {
           "name": "Document Q&A",
           "description": "Ask specific questions about uploaded documents and receive answers with references to specific sections",
-          "availableOn": ["Pro"]
+          "availableOn": ["Free", "Pro", "Max"]
         }
       ],
       "limitations": [
-        "File upload limited to Pro subscribers",
+        "Free tier capped at ~40 MB/file, ~10 files/prompt, ~30-day retention; paid tiers raise these limits",
         "Cannot process video or audio files",
-        "File size limits more restrictive than competitors",
-        "No code execution environment for data analysis",
-        "Cannot analyze multiple files in a single conversation"
+        "No code execution environment for data analysis"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "No file upload capability" },
-        { "tier": "Pro ($20/mo)", "details": "PDF, image, and document uploads with analysis" }
+        { "tier": "Free", "details": "PDF, image, and document uploads (~40 MB/file, ~10 files/prompt)" },
+        { "tier": "Pro ($20/mo)", "details": "Higher file upload limits and Spaces file library (50 files/Space)" },
+        { "tier": "Max ($200/mo)", "details": "Highest file upload and retention limits" }
       ],
       "versionHistory": [
-        { "version": "File Uploads", "date": "2024-03", "changes": "PDF, image, and document upload support for Pro users" },
-        { "version": "Image Analysis", "date": "2024-06", "changes": "Visual question answering for uploaded images" }
+        { "version": "File Uploads on Free", "date": "2026-05", "changes": "File upload (PDF/image/document) available on all tiers, no longer Pro-gated" },
+        { "version": "File Uploads", "date": "2024-03", "changes": "PDF, image, and document upload support introduced" }
       ]
     },
     "document-creation": {
       "category": "document-creation",
       "supported": true,
-      "summary": "Perplexity creates research-oriented documents through Pages, which converts search threads into polished, shareable articles with structured sections, citations, and a clean reading format.",
+      "summary": "Perplexity creates documents through Pages (shareable research articles) and Labs, a full document-to-deliverable pipeline that produces presentations (PPTX), spreadsheets (CSV), dashboards, and web apps.",
       "subFeatures": [
+        {
+          "name": "Labs",
+          "description": "Document-to-deliverable pipeline that generates PPTX presentations, CSV spreadsheets, dashboards, and web apps from a prompt or research thread",
+          "availableOn": ["Pro", "Max"]
+        },
         {
           "name": "Pages",
           "description": "Convert research conversations into formatted, shareable articles with sections, headers, and maintained citations that can be published with a public URL",
@@ -147,44 +161,46 @@
         }
       ],
       "limitations": [
-        "Pages limited to Pro subscribers",
-        "No collaborative document editing (read-only after creation)",
-        "Cannot create presentations, spreadsheets, or non-article formats",
-        "Limited formatting control compared to dedicated document editors",
-        "No template system for consistent document structures"
+        "Pages and Labs limited to Pro/Max subscribers",
+        "Labs has a monthly query cap on Pro (~50); unlimited on Max",
+        "No collaborative real-time document editing",
+        "Limited formatting control compared to dedicated document editors"
       ],
       "pricingTiers": [
         { "tier": "Free", "details": "Formatted chat responses only" },
-        { "tier": "Pro ($20/mo)", "details": "Pages for shareable research articles" }
+        { "tier": "Pro ($20/mo)", "details": "Pages plus Labs (~50 queries/mo) for PPTX, CSV, dashboards, web apps" },
+        { "tier": "Max ($200/mo)", "details": "Unlimited Labs deliverables" }
       ],
       "versionHistory": [
+        { "version": "Labs", "date": "2025-05", "changes": "Full document-to-deliverable pipeline (PPTX, CSV, dashboards, web apps)" },
         { "version": "Pages", "date": "2024-05", "changes": "Shareable research article creation from conversation threads" }
       ]
     },
     "image-generation": {
       "category": "image-generation",
       "supported": true,
-      "summary": "Perplexity Pro includes basic image generation using DALL-E and Stable Diffusion models, though this is a secondary feature rather than a core capability of the platform.",
+      "summary": "Perplexity includes image generation with a broad palette of models — GPT Image 1, FLUX.1, DALL-E 3, Google Nano Banana, Seedream 4.0, and Playground — though it remains a secondary feature rather than the platform's core focus.",
       "subFeatures": [
         {
           "name": "AI Image Generation",
-          "description": "Generate images from text prompts using integrated DALL-E and Playground models, available within the search interface",
-          "availableOn": ["Pro"]
+          "description": "Generate images from text prompts using a choice of integrated models including GPT Image 1, FLUX.1, DALL-E 3, Google Nano Banana, Seedream 4.0, and Playground",
+          "availableOn": ["Pro", "Max"]
         }
       ],
       "limitations": [
         "Image generation is a supplementary feature, not a core focus",
         "Quality and control inferior to dedicated image generation tools",
         "Limited image editing or refinement capabilities",
-        "Not available on free tier",
-        "Fewer style options and less prompt control than ChatGPT DALL-E or Gemini Imagen"
+        "Video generation capped (3/mo on Pro, 15/mo on Enterprise Max)"
       ],
       "pricingTiers": [
         { "tier": "Free", "details": "No image generation" },
-        { "tier": "Pro ($20/mo)", "details": "AI image generation with daily limits" }
+        { "tier": "Pro ($20/mo)", "details": "Image generation with model choice; 3 video generations/mo" },
+        { "tier": "Enterprise Max ($325/seat)", "details": "Image generation plus 15 video generations/mo" }
       ],
       "versionHistory": [
-        { "version": "Image Generation", "date": "2024-04", "changes": "DALL-E and Playground image generation for Pro users" }
+        { "version": "Expanded Model Palette", "date": "2026-05", "changes": "Image options include GPT Image 1, FLUX.1, DALL-E 3, Nano Banana, Seedream 4.0, Playground" },
+        { "version": "Image Generation", "date": "2024-04", "changes": "DALL-E and Playground image generation introduced" }
       ]
     },
     "prototyping": {
@@ -213,8 +229,13 @@
     "personalization": {
       "category": "personalization",
       "supported": true,
-      "summary": "Perplexity offers limited personalization through profile settings where users can set their preferred output language, profession, and interests to influence search relevance and response style.",
+      "summary": "Perplexity offers personalization through profile settings plus Memory — cross-conversation memory (upgraded to ~95% recall in February 2026) that carries context and preferences across sessions for Pro/Max users.",
       "subFeatures": [
+        {
+          "name": "Memory",
+          "description": "Cross-conversation memory that retains context and preferences across sessions; launched at ~77% recall and upgraded to ~95% recall in February 2026",
+          "availableOn": ["Pro", "Max"]
+        },
         {
           "name": "User Profile",
           "description": "Set profession, interests, and preferred output language to influence how Perplexity tailors responses to your background"
@@ -225,17 +246,18 @@
         }
       ],
       "limitations": [
+        "Full cross-conversation Memory is limited to Pro/Max subscribers",
         "No custom system prompts or detailed behavior configuration",
         "No equivalent to Custom GPTs or Claude Projects for specialized personas",
-        "Profile settings limited to basic demographic and preference information",
-        "No cross-conversation memory that learns preferences automatically",
-        "Cannot create reusable custom search configurations"
+        "Profile settings limited to basic demographic and preference information"
       ],
       "pricingTiers": [
         { "tier": "Free", "details": "Basic profile settings" },
-        { "tier": "Pro ($20/mo)", "details": "Same profile settings with Pro features" }
+        { "tier": "Pro ($20/mo)", "details": "Profile settings plus full cross-conversation Memory" },
+        { "tier": "Max ($200/mo)", "details": "Profile settings plus full cross-conversation Memory" }
       ],
       "versionHistory": [
+        { "version": "Memory (95% recall)", "date": "2026-02", "changes": "Cross-conversation memory upgraded from ~77% to ~95% recall" },
         { "version": "User Profile", "date": "2024-01", "changes": "Basic user profile settings for response personalization" }
       ]
     },
@@ -246,8 +268,13 @@
       "subFeatures": [
         {
           "name": "Spaces",
-          "description": "Organized workspaces that group related search threads with custom instructions, preferred AI models, and curated source lists for focused research",
+          "description": "Organized workspaces that group related search threads with custom instructions, preferred AI models, and curated source lists (50 files/Space) for focused research",
           "availableOn": ["Pro"]
+        },
+        {
+          "name": "Memory",
+          "description": "Cross-conversation memory that carries context across threads, upgraded to ~95% recall in February 2026",
+          "availableOn": ["Pro", "Max"]
         },
         {
           "name": "Search History",
@@ -259,90 +286,115 @@
         }
       ],
       "limitations": [
-        "Spaces require Pro subscription",
-        "No automatic knowledge accumulation across searches",
-        "Thread context does not carry between different threads",
-        "Spaces have limited storage for custom source files",
-        "No team-shared Spaces for collaborative research"
+        "Spaces and full Memory require Pro/Max subscription",
+        "Spaces have limited storage for custom source files (50 files/Space)",
+        "No team-shared Spaces for collaborative research on consumer tiers"
       ],
       "pricingTiers": [
         { "tier": "Free", "details": "Search history and thread continuity only" },
-        { "tier": "Pro ($20/mo)", "details": "Spaces for organized research workspaces" }
+        { "tier": "Pro ($20/mo)", "details": "Spaces (50 files/Space) plus cross-conversation Memory" },
+        { "tier": "Max ($200/mo)", "details": "Spaces and Memory with highest limits" }
       ],
       "versionHistory": [
-        { "version": "Spaces", "date": "2024-09", "changes": "Organized research workspaces with custom instructions and curated sources" },
-        { "version": "Collections", "date": "2024-03", "changes": "Initial thread organization feature (later evolved into Spaces)" }
+        { "version": "Memory (95% recall)", "date": "2026-02", "changes": "Cross-conversation memory upgraded from ~77% to ~95% recall" },
+        { "version": "Spaces", "date": "2024-09", "changes": "Organized research workspaces with custom instructions and curated sources" }
       ]
     },
     "agents": {
       "category": "agents",
-      "supported": false,
-      "summary": "Perplexity does not offer agentic capabilities. It is designed as a search and answer engine, not an autonomous agent platform. Pro Search performs multi-step research but does not take actions or interact with external systems.",
+      "supported": true,
+      "summary": "Perplexity offers agentic capabilities through Comet (its Chromium-based AI browser whose Comet Assistant takes actions across open tabs) and Perplexity Computer, a Max-tier multi-model orchestration system that executes complex, multi-hour workflows.",
       "subFeatures": [
         {
-          "name": "Pro Search (Research Only)",
-          "description": "Multi-step search process that autonomously refines queries and synthesizes results, but limited to information retrieval — cannot take actions or interact with external systems"
+          "name": "Comet Browsing Agent",
+          "description": "Comet Assistant inside Perplexity's AI browser navigates pages, summarizes, fills forms, and completes web tasks; free for all Perplexity account holders",
+          "availableOn": ["Free", "Pro", "Max"]
+        },
+        {
+          "name": "Perplexity Computer",
+          "description": "Agentic system that orchestrates 19 models in parallel to execute complex, multi-hour workflows; being extended to Pro/Enterprise",
+          "availableOn": ["Max"]
+        },
+        {
+          "name": "Background Assistants",
+          "description": "Parallel/async agents that work off a to-do list in the background within Comet",
+          "availableOn": ["Max"]
+        },
+        {
+          "name": "Pro Search",
+          "description": "Multi-step search process that autonomously refines queries and synthesizes results from deeper source analysis",
+          "availableOn": ["Pro", "Max"]
         }
       ],
       "limitations": [
-        "No autonomous task execution capability",
-        "Cannot interact with external APIs or services",
-        "No computer use or browser automation",
-        "Pro Search limited to information gathering and synthesis",
-        "No tool use or function calling framework"
+        "Perplexity Computer and Background Assistants are Max-only (Computer being extended to Pro/Enterprise)",
+        "Comet Assistant actions are bounded by browser permissions and site defenses",
+        "Pro Search itself is information retrieval, not action-taking"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "No agent capabilities on any tier" }
+        { "tier": "Free", "details": "Comet browsing agent (Comet Assistant)" },
+        { "tier": "Pro ($20/mo)", "details": "Comet agent plus unlimited Pro Search" },
+        { "tier": "Max ($200/mo)", "details": "Perplexity Computer (10k credits/mo), Background Assistants, Opus-class agent" }
       ],
       "versionHistory": [
-        { "version": "N/A", "date": "2025-05", "changes": "No agent features have been released" }
+        { "version": "Perplexity Computer", "date": "2026-02-27", "changes": "Multi-model agentic orchestration (19 models) for long-horizon tasks (Max)" },
+        { "version": "Comet free for all", "date": "2025-10-02", "changes": "Comet AI browser with browsing agent made free for all account holders worldwide" }
       ]
     },
     "connectors": {
       "category": "connectors",
-      "supported": false,
-      "summary": "Perplexity does not offer integrations with external tools, services, or data sources beyond its built-in web search. There is no plugin system, extension framework, or connector protocol.",
+      "supported": true,
+      "summary": "Perplexity connects to external tools through Spaces connectors. Pro adds Gmail, Google Calendar, Notion, and GitHub; Enterprise adds Outlook, Linear, Slack, Google Drive, SharePoint, OneDrive, Dropbox, and Box.",
       "subFeatures": [
         {
-          "name": "Web Search Only",
-          "description": "Perplexity connects to the open web through its search engine but does not integrate with specific third-party services, productivity tools, or user data sources"
+          "name": "Pro Connectors",
+          "description": "Connect Gmail, Google Calendar, Notion, and GitHub to Spaces so Perplexity can search and reason over your data alongside the web",
+          "availableOn": ["Pro", "Max"]
+        },
+        {
+          "name": "Enterprise Connectors",
+          "description": "Adds Outlook, Linear, Slack, Google Drive, SharePoint, OneDrive, Dropbox, and Box for organization-wide knowledge access",
+          "availableOn": ["Enterprise Pro", "Enterprise Max"]
         }
       ],
       "limitations": [
-        "No integration with Google Workspace, Microsoft 365, or other productivity suites",
-        "No plugin or extension ecosystem",
-        "No API-based connector framework for third-party tools",
-        "Cannot access private data sources or internal company databases",
-        "No equivalent to MCP, GPT Actions, or Gemini Extensions"
+        "Connectors require a Pro subscription or higher",
+        "Broader connector set (Slack, Outlook, Drive, etc.) requires Enterprise",
+        "Connector data access governed by each provider's permissions"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "No connector capabilities on any tier" }
+        { "tier": "Free", "details": "Web search only; no third-party connectors" },
+        { "tier": "Pro ($20/mo)", "details": "Gmail, Google Calendar, Notion, GitHub connectors" },
+        { "tier": "Enterprise ($40–$325/seat)", "details": "Adds Outlook, Linear, Slack, Google Drive, SharePoint, OneDrive, Dropbox, Box" }
       ],
       "versionHistory": [
-        { "version": "N/A", "date": "2025-05", "changes": "No connector features have been released" }
+        { "version": "Connectors", "date": "2026-05", "changes": "Pro connectors (Gmail/Calendar/Notion/GitHub) and expanded Enterprise connectors available" }
       ]
     },
     "dictation": {
       "category": "dictation",
-      "supported": false,
-      "summary": "Perplexity does not offer native voice input or dictation capabilities. Users interact through text-based search queries. Mobile users can use OS-level dictation as a workaround.",
+      "supported": true,
+      "summary": "Perplexity supports voice input via mobile dictation (mic in the search box) and a full Voice Mode that holds a spoken back-and-forth with live, cited web results on screen.",
       "subFeatures": [
         {
-          "name": "No Native Voice Input",
-          "description": "Perplexity lacks built-in speech-to-text or voice search — all queries must be typed or pasted, though OS-level dictation can be used as a workaround"
+          "name": "Mobile Voice Dictation",
+          "description": "Tap the microphone in the search box on mobile to dictate queries with built-in speech-to-text"
+        },
+        {
+          "name": "Voice Mode",
+          "description": "Rich spoken back-and-forth with live web results displayed on screen; iOS-first with Android/desktop rolling out"
         }
       ],
       "limitations": [
-        "No voice input in web or mobile apps",
-        "No voice response or text-to-speech output",
-        "No real-time voice conversation mode",
-        "Users must rely on OS-level dictation for hands-free input"
+        "Voice Mode is iOS-first; Android and desktop support is still rolling out",
+        "Voice input quality depends on the device microphone and environment"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "No dictation feature available on any tier" }
+        { "tier": "Free", "details": "Mobile voice dictation and Voice Mode" },
+        { "tier": "Pro ($20/mo)", "details": "Voice Mode with Pro features" }
       ],
       "versionHistory": [
-        { "version": "N/A", "date": "2025-05", "changes": "No voice or dictation features have been released" }
+        { "version": "Voice Mode", "date": "2026-05", "changes": "Spoken back-and-forth with live cited web results (iOS-first, Android/desktop rolling out)" }
       ]
     }
   },
@@ -354,6 +406,12 @@
     "perplexity-pro-search",
     "perplexity-pages",
     "perplexity-collections",
-    "perplexity-about"
+    "perplexity-about",
+    "perplexity-max",
+    "perplexity-labs",
+    "perplexity-comet",
+    "perplexity-computer",
+    "perplexity-enterprise-pricing",
+    "perplexity-changelog"
   ]
 }

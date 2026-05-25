@@ -6,17 +6,17 @@
   "surface": "Claude Code",
   "isPrimarySurface": false,
   "priority": "P0",
-  "description": "Anthropic's CLI-first agentic coding tool that operates directly in the terminal, using Claude models to read, edit, and create files across entire codebases with tool use, MCP server integration, hooks, and IDE extensions.",
+  "description": "Anthropic's agentic coding tool available across the Terminal CLI, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web (claude.ai/code). Powered by Opus 4.7 and Sonnet 4.6 with 1M-token context, it reads, edits, and creates files across entire codebases with tool use, MCP server integration, hooks, background agents, and CI integrations.",
   "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
       "supported": true,
-      "summary": "Claude Code provides a conversational terminal interface for discussing code, asking questions about the codebase, and receiving explanations. It supports multi-turn conversations with full project context.",
+      "summary": "Claude Code provides a conversational interface for discussing code across multiple surfaces — Terminal CLI, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web — with multi-turn conversations grounded in full project context.",
       "subFeatures": [
         {
-          "name": "Terminal Chat Interface",
-          "description": "Interactive REPL-style conversation in the terminal with streaming responses, markdown rendering, and syntax-highlighted code output"
+          "name": "Multi-Surface Chat Interface",
+          "description": "Interactive conversation available in the terminal REPL, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web at claude.ai/code, with streaming responses and syntax-highlighted code"
         },
         {
           "name": "Codebase-Aware Conversation",
@@ -32,18 +32,18 @@
         }
       ],
       "limitations": [
-        "Terminal-only interface — no web UI for chat (use claude.ai for web chat)",
-        "No rich media rendering in terminal output",
-        "Context window constrained by model limits (200K tokens for Claude Sonnet/Opus)",
-        "Session history not persisted across separate terminal sessions by default"
+        "Context window bounded by model limits — up to 1M tokens on Opus 4.7 and Sonnet 4.6",
+        "Terminal output has no rich media rendering",
+        "Session history not persisted across separate sessions by default"
       ],
       "pricingTiers": [
-        { "tier": "Claude Code (Max $100/mo)", "details": "Included in Claude Max subscription with usage limits based on plan tier" },
-        { "tier": "Claude Code (Max $200/mo)", "details": "Higher usage limits for heavy coding workflows" },
-        { "tier": "API Usage", "details": "Pay-per-token via Anthropic API key for direct API-backed usage" }
+        { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Claude Code included with usage-based limits; no free tier for Claude Code" },
+        { "tier": "Max (from $100/mo)", "details": "Higher usage limits for intensive coding workflows" },
+        { "tier": "API Usage", "details": "Pay-per-token at Sonnet 4.6 / Opus 4.7 rates; Terminal CLI and VS Code also support AWS Bedrock and Vertex AI" }
       ],
       "versionHistory": [
-        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability with Claude Opus 4 and Sonnet 4 model support" },
+        { "version": "Claude Code (Opus 4.7 / Sonnet 4.6)", "date": "2026", "changes": "Now powered by Opus 4.7 (adds an xhigh effort level) and Sonnet 4.6 with 1M-token context" },
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability with agentic coding model support" },
         { "version": "Claude Code Beta", "date": "2025-02", "changes": "Public beta launch with tool use, file editing, and terminal commands" }
       ]
     },
@@ -188,11 +188,12 @@
         "Long-running processes may need manual management"
       ],
       "pricingTiers": [
-        { "tier": "Claude Code (Max $100/mo)", "details": "Full prototyping capabilities with usage-based limits" },
-        { "tier": "API Usage", "details": "Pay-per-token for unlimited prototyping sessions" }
+        { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Full prototyping capabilities with usage-based limits" },
+        { "tier": "Max (from $100/mo)", "details": "Higher limits for intensive prototyping workflows" },
+        { "tier": "API Usage", "details": "Pay-per-token for prototyping sessions" }
       ],
       "versionHistory": [
-        { "version": "Claude Code GA", "date": "2025-05", "changes": "Opus 4 and Sonnet 4 models with enhanced agentic coding" },
+        { "version": "Claude Code (Opus 4.7 / Sonnet 4.6)", "date": "2026", "changes": "Opus 4.7 and Sonnet 4.6 with enhanced agentic coding and 1M-token context" },
         { "version": "Extended Thinking", "date": "2025-03", "changes": "Enhanced reasoning for complex multi-file refactoring tasks" },
         { "version": "Claude Code Beta", "date": "2025-02", "changes": "Multi-file editing with bash command execution" }
       ]
@@ -274,23 +275,35 @@
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Claude Code is a fully agentic coding system that autonomously plans, executes, and verifies multi-step coding tasks. It uses tools (file read/write, bash, grep, glob) in autonomous loops and supports sub-agent orchestration.",
+      "summary": "Claude Code is a fully agentic coding system that autonomously plans, executes, and verifies multi-step coding tasks. It offers an /agents dashboard for running many full sessions in parallel, background agents, an Agent SDK, routines/scheduled jobs, CI integrations, and Slack-driven PRs.",
       "subFeatures": [
         {
           "name": "Autonomous Task Execution",
           "description": "Independently plans multi-step coding tasks, selects tools, reads files, writes code, runs tests, and iterates until the task is complete"
         },
         {
+          "name": "Agents Dashboard and Background Agents",
+          "description": "The /agents dashboard runs several full Claude Code sessions in parallel as background agents, with status tracking and result review"
+        },
+        {
+          "name": "Agent SDK",
+          "description": "SDK for building custom agents on top of Claude Code's agentic runtime"
+        },
+        {
+          "name": "Routines and Scheduled Tasks",
+          "description": "Cron-style recurring jobs (e.g., morning PR reviews, weekly dependency audits) that run on Anthropic-managed infrastructure"
+        },
+        {
+          "name": "CI/CD Integrations",
+          "description": "GitHub Actions and GitLab CI/CD integration to auto-review PRs and triage issues in pipelines; @Claude on a Slack thread returns a PR"
+        },
+        {
+          "name": "Remote Control and Dispatch",
+          "description": "Continue sessions from a phone and trigger runs via Telegram, Discord, iMessage, or webhooks; /ultrareview runs cloud-based parallel code review"
+        },
+        {
           "name": "Tool Use Framework",
           "description": "Built-in tools for file operations (Read, Write, Edit), shell commands (Bash), search (Grep, Glob), and external integrations (MCP)"
-        },
-        {
-          "name": "Sub-Agent Spawning",
-          "description": "Can spawn sub-agents for parallel or delegated tasks, enabling orchestration of complex multi-step workflows"
-        },
-        {
-          "name": "MCP Server Integration",
-          "description": "Connect to external Model Context Protocol servers for additional tools, data sources, and capabilities beyond the built-in set"
         },
         {
           "name": "Headless Mode",
@@ -299,16 +312,17 @@
       ],
       "limitations": [
         "Agent operates within local filesystem permissions",
-        "No built-in sandboxing — executes with user's system permissions",
+        "No built-in sandboxing for local sessions — executes with user's system permissions",
         "Long-running agentic loops consume significant token usage",
         "Complex multi-repo operations require manual configuration"
       ],
       "pricingTiers": [
-        { "tier": "Claude Code (Max $100/mo)", "details": "Full agentic capabilities with usage-based limits" },
-        { "tier": "Claude Code (Max $200/mo)", "details": "Higher limits for intensive agentic workflows" },
-        { "tier": "API Usage", "details": "Pay-per-token for unlimited agentic execution" }
+        { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Full agentic capabilities with usage-based limits; no free tier" },
+        { "tier": "Max (from $100/mo)", "details": "Higher limits for intensive agentic workflows" },
+        { "tier": "API Usage", "details": "Pay-per-token for agentic execution" }
       ],
       "versionHistory": [
+        { "version": "Agents Dashboard, Routines, CI and Slack", "date": "2026", "changes": "/agents dashboard with background agents, Agent SDK, routines/scheduled jobs, GitHub/GitLab CI integration, Slack-driven PRs, and /ultrareview" },
         { "version": "Sub-Agents", "date": "2025-05", "changes": "Agent tool for spawning sub-agents and parallel task execution" },
         { "version": "Headless Mode", "date": "2025-04", "changes": "Non-interactive execution for CI/CD and automation" },
         { "version": "MCP Integration", "date": "2025-04", "changes": "Model Context Protocol server support for extensible tool use" },
@@ -326,24 +340,29 @@
         },
         {
           "name": "IDE Extensions",
-          "description": "VS Code extension and JetBrains plugin that bring Claude Code capabilities directly into the IDE with inline code actions"
+          "description": "Mature VS Code/Cursor extension (inline diffs, @-mentions, plan review) and JetBrains plugin that bring Claude Code directly into the IDE"
         },
         {
           "name": "Git and GitHub Integration",
           "description": "Native git operations and GitHub CLI integration for branch management, PR creation, and code review workflows"
+        },
+        {
+          "name": "Chrome Integration",
+          "description": "Connect to Chrome to inspect and debug live web apps from within Claude Code"
         }
       ],
       "limitations": [
         "MCP servers require manual setup and configuration",
-        "IDE extension features are a subset of full CLI capabilities",
+        "Some IDE extension features differ from the full CLI",
         "No native integration with project management tools without MCP",
         "MCP ecosystem is still maturing — not all services have servers"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "MCP and IDE integrations included; some MCP servers may have their own costs" }
+        { "tier": "Paid Claude plans (Pro/Max/Team/Enterprise)", "details": "MCP, IDE, and Chrome integrations included; some MCP servers may have their own costs" }
       ],
       "versionHistory": [
-        { "version": "IDE Extensions", "date": "2025-05", "changes": "VS Code and JetBrains IDE integration plugins" },
+        { "version": "Chrome Integration", "date": "2026", "changes": "Debug live web apps from within Claude Code" },
+        { "version": "IDE Extensions (mature)", "date": "2025", "changes": "VS Code/Cursor extension with inline diffs, @-mentions, and plan review; JetBrains plugin" },
         { "version": "MCP Integration", "date": "2025-04", "changes": "Model Context Protocol server support" },
         { "version": "Git Integration", "date": "2025-02", "changes": "Native git operations from Claude Code" }
       ]
@@ -373,10 +392,15 @@
   },
   "sourceRefs": [
     "claude-code-docs",
+    "claude-code-overview-new",
+    "claude-code-product",
+    "claude-code-changelog",
+    "claude-code-models-overview",
     "claude-code-github",
     "claude-code-mcp",
     "claude-code-hooks",
     "claude-code-pricing",
+    "claude-code-pricing-new",
     "claude-code-best-practices"
   ]
 }

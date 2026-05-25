@@ -15,6 +15,26 @@
       "id": "manus-pricing",
       "url": "https://manus.im/pricing",
       "title": "Manus Pricing Plans"
+    },
+    {
+      "id": "manus-plans-docs",
+      "url": "https://manus.im/docs/introduction/plans",
+      "title": "Manus Plans and Credits Documentation"
+    },
+    {
+      "id": "manus-tools",
+      "url": "https://manus.im/tools",
+      "title": "Manus Tools and Connectors"
+    },
+    {
+      "id": "manus-meta-blocked-cnbc",
+      "url": "https://www.cnbc.com/2026/04/27/meta-manus-china-blocks-acquisition-ai-startup.html",
+      "title": "China Blocks Meta's $2B Manus Acquisition (CNBC, 2026-04-27)"
+    },
+    {
+      "id": "manus-unwind-tc",
+      "url": "https://techcrunch.com/2026/04/27/china-vetoes-metas-2b-manus-deal-after-months-long-probe/",
+      "title": "China Vetoes Meta-Manus Deal (TechCrunch, 2026-04-27)"
     }
   ]
 }

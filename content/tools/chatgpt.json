@@ -6,7 +6,7 @@
   "surface": "Web app",
   "isPrimarySurface": true,
   "priority": "P0",
-  "description": "OpenAI's conversational AI assistant powered by GPT-4o and GPT-4.1 models, offering text generation, code assistance, image generation, file analysis, and web browsing through a chat interface.",
+  "description": "OpenAI's conversational AI assistant powered by the GPT-5.5 model family (GPT-5.5 Instant is the universal default since 2026-05-05; GPT-5.5 Thinking and Pro on paid tiers), offering text generation, code assistance, image generation, file analysis, and web browsing through a chat interface. GPT-4o and GPT-4.1 were retired from ChatGPT on 2026-02-13.",
   "url": "https://chat.openai.com",
   "capabilities": {
     "writing-chat": {
@@ -33,27 +33,33 @@
         },
         {
           "name": "Model Selection",
-          "description": "Users can switch between GPT-4o, GPT-4o mini, GPT-4.1, and o-series reasoning models within a conversation",
-          "availableOn": ["Plus", "Team", "Enterprise"]
+          "description": "Users can switch between GPT-5.5 Instant (default), GPT-5.5 Thinking, and GPT-5.5 Pro within a conversation; GPT-5.4 Thinking/Pro remain selectable on paid tiers. GPT-4o, GPT-4.1, and o-series models were retired from ChatGPT on 2026-02-13",
+          "availableOn": ["Plus", "Pro", "Business", "Enterprise"]
         }
       ],
       "limitations": [
-        "Context window limited to 128K tokens for GPT-4o",
+        "GPT-5.5 context window is 1M tokens via the API; the ChatGPT product applies conversation-management limits below the raw model maximum",
+        "GPT-5.5 Thinking and Pro variants are paid-tier only (Free uses GPT-5.5 Instant)",
         "Canvas not available on free tier",
-        "Free tier limited to GPT-4o mini with restricted GPT-4o access",
         "System prompt customization only available via API, not ChatGPT UI"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "GPT-4o mini default, limited GPT-4o access, basic chat features" },
-        { "tier": "Plus ($20/mo)", "details": "Full GPT-4o, o-series reasoning models, Canvas, higher rate limits" },
-        { "tier": "Team ($25/user/mo)", "details": "Plus features plus admin console, workspace management, higher limits" },
-        { "tier": "Enterprise (custom)", "details": "Unlimited GPT-4o, advanced admin, SSO/SCIM, audit logs, dedicated capacity" }
+        { "tier": "Free", "details": "GPT-5.5 Instant default, basic chat features, limited usage" },
+        { "tier": "Go ($8/mo)", "details": "More messages and uploads than Free; sits between Free and Plus; no Agent mode or data connectors" },
+        { "tier": "Plus ($20/mo)", "details": "GPT-5.5 Instant/Thinking/Pro and GPT-5.4 variants, Canvas, higher rate limits" },
+        { "tier": "Pro ($100/mo)", "details": "5x Plus usage, GPT-5.5 Pro, ChatGPT Pulse, higher Codex usage" },
+        { "tier": "Pro ($200/mo)", "details": "20x Plus usage, highest-usage option" },
+        { "tier": "Business (custom/user)", "details": "Team plan with admin console, workspace management, higher limits" },
+        { "tier": "Enterprise (custom)", "details": "Highest limits, advanced admin, SSO/SCIM, audit logs, dedicated capacity" }
       ],
       "versionHistory": [
-        { "version": "GPT-4.1", "date": "2025-04", "changes": "Improved instruction following, long-context performance up to 1M tokens via API" },
-        { "version": "GPT-4o", "date": "2024-05", "changes": "Natively multimodal model with vision and faster responses, 128K context" },
-        { "version": "GPT-4 Turbo", "date": "2024-01", "changes": "128K context window, knowledge cutoff April 2024, JSON mode" },
-        { "version": "GPT-4", "date": "2023-03", "changes": "Major reasoning upgrade, 8K/32K context options" }
+        { "version": "GPT-5.5 Instant", "date": "2026-05-05", "changes": "Became the universal default model for all ChatGPT users; 52.5% fewer hallucinated claims vs GPT-5.3 Instant on high-stakes prompts; 1M-token context in API" },
+        { "version": "GPT-5.5", "date": "2026-04-23", "changes": "GPT-5.5 family launched (Instant, Thinking, Pro); GA in API 2026-04-24" },
+        { "version": "GPT-5.4", "date": "2026", "changes": "Thinking and Pro variants; remains available to paid users" },
+        { "version": "GPT-5.3", "date": "2025", "changes": "GPT-5.3 Instant was the prior default; remains available to paid users before retirement" },
+        { "version": "GPT-5", "date": "2025", "changes": "GPT-5 generation (Instant and Thinking); both retired from ChatGPT on 2026-02-13" },
+        { "version": "GPT-4.1", "date": "2025-04", "changes": "Improved instruction following, long-context up to 1M tokens via API; retired from ChatGPT 2026-02-13" },
+        { "version": "GPT-4o", "date": "2024-05", "changes": "Natively multimodal model with vision and faster responses, 128K context; retired from ChatGPT 2026-02-13" }
       ]
     },
     "research": {
@@ -103,7 +109,7 @@
         },
         {
           "name": "Image Understanding",
-          "description": "Analyze uploaded images including charts, diagrams, screenshots, handwritten text, and photos using GPT-4o vision"
+          "description": "Analyze uploaded images including charts, diagrams, screenshots, handwritten text, and photos using GPT-5.5 multimodal vision"
         },
         {
           "name": "Document Parsing",
@@ -171,17 +177,16 @@
     "image-generation": {
       "category": "image-generation",
       "supported": true,
-      "summary": "ChatGPT integrates DALL-E 3 and GPT-4o native image generation for creating images from text prompts, with editing capabilities and style controls.",
+      "summary": "ChatGPT generates images via ChatGPT Images 2.0 (released 2026-04-21), available on all tiers including Free, with editing capabilities and style controls. The earlier DALL-E 3 model is being phased out.",
       "subFeatures": [
         {
-          "name": "DALL-E 3 Integration",
-          "description": "Generate high-quality images from text descriptions with improved prompt following and text rendering",
-          "availableOn": ["Plus", "Team", "Enterprise"]
+          "name": "ChatGPT Images 2.0",
+          "description": "Current image generation model (released 2026-04-21), available on all tiers including Free in Instant mode; produces high-quality images with strong prompt following and text rendering"
         },
         {
-          "name": "GPT-4o Native Image Generation",
-          "description": "Image generation directly from GPT-4o model with better instruction following, text in images, and consistent character generation",
-          "availableOn": ["Plus", "Team", "Enterprise"]
+          "name": "Thinking Image Generation",
+          "description": "Self-verifying, batched image generation that can search during generation for higher-fidelity results",
+          "availableOn": ["Plus", "Pro", "Business", "Enterprise"]
         },
         {
           "name": "Image Editing",
@@ -193,21 +198,20 @@
         }
       ],
       "limitations": [
-        "DALL-E 3 generation limited to a set number per time window on Plus tier",
         "Cannot generate images of real public figures by policy",
         "No precise spatial layout control — prompt-dependent results",
         "Image editing capabilities limited compared to dedicated tools like Photoshop",
-        "Not available on Free tier"
+        "Thinking (self-verifying) image generation is limited to paid tiers; Free uses Instant mode only"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "No DALL-E access, limited GPT-4o image generation" },
-        { "tier": "Plus ($20/mo)", "details": "DALL-E 3 and GPT-4o image generation with daily limits" },
+        { "tier": "Free", "details": "ChatGPT Images 2.0 in Instant mode with usage limits" },
+        { "tier": "Plus ($20/mo)", "details": "ChatGPT Images 2.0 with Thinking image generation, higher limits" },
         { "tier": "Enterprise (custom)", "details": "Higher generation limits, content policy customization options" }
       ],
       "versionHistory": [
+        { "version": "ChatGPT Images 2.0", "date": "2026-04-21", "changes": "New image generation model available on all tiers incl. Free; Thinking (self-verifying) mode on paid tiers" },
         { "version": "GPT-4o Image Gen", "date": "2025-03", "changes": "Native image generation from GPT-4o with better text rendering and consistency" },
-        { "version": "DALL-E 3", "date": "2023-10", "changes": "Major quality upgrade with better prompt adherence and text rendering" },
-        { "version": "DALL-E 2", "date": "2023-03", "changes": "Initial ChatGPT image generation integration" }
+        { "version": "DALL-E 3", "date": "2023-10", "changes": "Major quality upgrade with better prompt adherence; being phased out as of 2026" }
       ]
     },
     "prototyping": {
@@ -325,39 +329,40 @@
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "ChatGPT supports agentic capabilities through Custom GPTs with Actions (API integrations), Operator for browser-based task automation, and Deep Research for autonomous multi-step investigation.",
+      "summary": "ChatGPT supports agentic capabilities through the unified ChatGPT agent (a virtual browser, code interpreter, terminal, and file handling), Custom GPTs with Actions (API integrations), and Deep Research for autonomous multi-step investigation. The former Operator product was merged into ChatGPT agent.",
       "subFeatures": [
+        {
+          "name": "ChatGPT agent",
+          "description": "Unified agent (formerly Operator) with a virtual browser, code interpreter, terminal, and file handling that can navigate websites and perform multi-step tasks autonomously",
+          "availableOn": ["Plus", "Pro", "Business", "Enterprise"]
+        },
         {
           "name": "Custom GPT Actions",
           "description": "Connect Custom GPTs to external APIs via OpenAPI schemas, enabling them to take actions like sending emails, querying databases, or updating records",
-          "availableOn": ["Plus", "Team", "Enterprise"]
-        },
-        {
-          "name": "Operator",
-          "description": "Browser-based agent that can navigate websites and perform tasks autonomously, such as booking reservations or filling forms",
-          "availableOn": ["Pro"]
+          "availableOn": ["Plus", "Pro", "Business", "Enterprise"]
         },
         {
           "name": "Deep Research Agent",
           "description": "Autonomous research agent that browses multiple sources, synthesizes findings, and produces comprehensive reports",
-          "availableOn": ["Plus", "Team", "Enterprise"]
+          "availableOn": ["Plus", "Pro", "Business", "Enterprise"]
         }
       ],
       "limitations": [
-        "Operator limited to Pro tier ($200/mo) and specific supported websites",
+        "ChatGPT agent has per-tier monthly message caps: Plus 40 messages/month, Pro 400 messages/month (not unlimited)",
+        "ChatGPT agent is not available on Free or Go tiers",
         "Custom GPT Actions require technical setup with OpenAPI specifications",
-        "No general-purpose computer use or desktop automation",
         "Deep Research limited to information gathering, cannot take external actions",
-        "Agent capabilities fragmented across different features rather than unified"
+        "On Enterprise/Edu the agent is off by default and admin-gated"
       ],
       "pricingTiers": [
-        { "tier": "Free", "details": "No agent capabilities" },
-        { "tier": "Plus ($20/mo)", "details": "Custom GPT Actions, Deep Research" },
-        { "tier": "Pro ($200/mo)", "details": "Operator browser agent, unlimited Deep Research" },
-        { "tier": "Enterprise (custom)", "details": "Custom GPT Actions with enterprise API integrations" }
+        { "tier": "Free", "details": "No ChatGPT agent" },
+        { "tier": "Plus ($20/mo)", "details": "ChatGPT agent (40 messages/month), Custom GPT Actions, Deep Research" },
+        { "tier": "Pro ($100/$200/mo)", "details": "ChatGPT agent (400 messages/month), Custom GPT Actions, full Deep Research" },
+        { "tier": "Enterprise (custom)", "details": "ChatGPT agent admin-gated (off by default), Custom GPT Actions with enterprise API integrations" }
       ],
       "versionHistory": [
-        { "version": "Operator", "date": "2025-01", "changes": "Browser-based autonomous task agent for Pro users" },
+        { "version": "ChatGPT agent", "date": "2025", "changes": "Unified agent merging Operator with a virtual browser, code interpreter, terminal, and file handling" },
+        { "version": "Operator", "date": "2025-01", "changes": "Browser-based autonomous task agent (later merged into ChatGPT agent)" },
         { "version": "Deep Research", "date": "2025-02", "changes": "Multi-step autonomous research with source synthesis" },
         { "version": "GPT Actions", "date": "2023-11", "changes": "API integration framework for Custom GPTs" }
       ]
@@ -450,6 +455,13 @@
     "openai-custom-gpts",
     "openai-voice-mode",
     "openai-memory",
-    "openai-data-analysis"
+    "openai-data-analysis",
+    "openai-gpt-5-5",
+    "openai-gpt-5-5-instant",
+    "openai-retiring-gpt-4o",
+    "openai-chatgpt-pricing",
+    "openai-chatgpt-pro-tiers",
+    "openai-chatgpt-go",
+    "openai-chatgpt-agent"
   ]
 }

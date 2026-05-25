@@ -40,6 +40,36 @@
       "id": "perplexity-about",
       "url": "https://www.perplexity.ai/about",
       "title": "About Perplexity AI"
+    },
+    {
+      "id": "perplexity-max",
+      "url": "https://www.perplexity.ai/hub/blog/introducing-perplexity-max",
+      "title": "Introducing Perplexity Max"
+    },
+    {
+      "id": "perplexity-labs",
+      "url": "https://www.perplexity.ai/hub/blog/introducing-perplexity-labs",
+      "title": "Introducing Perplexity Labs"
+    },
+    {
+      "id": "perplexity-comet",
+      "url": "https://www.perplexity.ai/comet",
+      "title": "Comet — Perplexity's AI Browser"
+    },
+    {
+      "id": "perplexity-computer",
+      "url": "https://techcrunch.com/2026/02/27/perplexitys-new-computer-is-another-bet-that-users-need-many-ai-models/",
+      "title": "Perplexity Computer Launch (TechCrunch)"
+    },
+    {
+      "id": "perplexity-enterprise-pricing",
+      "url": "https://www.perplexity.ai/enterprise/pricing",
+      "title": "Perplexity Enterprise Pricing"
+    },
+    {
+      "id": "perplexity-changelog",
+      "url": "https://www.perplexity.ai/changelog/what-we-shipped---february-20th-2026",
+      "title": "Perplexity Changelog — Memory Upgrade (Feb 2026)"
     }
   ]
 }

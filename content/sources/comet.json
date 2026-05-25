@@ -1,20 +1,20 @@
 {
-  "vendor": "Comet",
+  "vendor": "Perplexity AI",
   "sources": [
     {
-      "id": "comet-browser-overview",
-      "url": "https://www.comet.com",
-      "title": "Comet Browser Automation Platform"
+      "id": "comet-product-page",
+      "url": "https://www.perplexity.ai/comet",
+      "title": "Comet — Perplexity's AI Browser"
     },
     {
-      "id": "comet-docs",
-      "url": "https://docs.comet.com",
-      "title": "Comet Documentation and User Guide"
+      "id": "comet-free-worldwide",
+      "url": "https://www.perplexity.ai/hub/blog/comet-is-now-available-to-everyone-worldwide",
+      "title": "Comet Is Now Available to Everyone Worldwide"
     },
     {
-      "id": "comet-pricing",
-      "url": "https://www.comet.com/pricing",
-      "title": "Comet Pricing Plans"
+      "id": "comet-free-techcrunch",
+      "url": "https://techcrunch.com/2025/10/02/perplexitys-comet-ai-browser-now-free-max-users-get-new-background-assistant/",
+      "title": "Perplexity's Comet AI Browser Now Free; Max Users Get Background Assistant (TechCrunch)"
     }
   ]
 }

@@ -6,333 +6,332 @@
   "surface": "Cowork",
   "isPrimarySurface": false,
   "priority": "P0",
-  "description": "Anthropic's multi-agent orchestration platform that enables background agents to work on tasks in parallel, with a web-based IDE environment for code editing, file management, and autonomous task execution using Claude models.",
-  "url": "https://www.anthropic.com/news/cowork",
+  "description": "Claude Cowork is the knowledge-work agent mode in the Claude desktop app (macOS/Windows). It connects to local files and 15+ connectors (Google Workspace, Slack, DocuSign, Excel, PowerPoint, Chrome, and premium data sources like FactSet, MSCI, S&P Global, and Harvey) to run multi-step knowledge-work tasks end to end — organizing files, building spreadsheets, preparing reports — including scheduled and recurring jobs. Powered by Opus 4.7 and Sonnet 4.6. It is the non-coding sibling to Claude Code.",
+  "url": "https://claude.com/product/cowork",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
       "supported": true,
-      "summary": "Cowork provides a web-based chat interface integrated with a development environment, allowing users to converse with Claude while simultaneously viewing and editing code, files, and terminal output.",
+      "summary": "Cowork is an agent mode in the Claude desktop app where users describe a knowledge-work goal in chat; Cowork proposes a plan, executes it end to end, and allows mid-task redirection.",
       "subFeatures": [
         {
-          "name": "Integrated Chat and IDE",
-          "description": "Side-by-side chat interface with a full development environment including file explorer, code editor, and terminal"
+          "name": "Desktop App Agent Chat",
+          "description": "Conversational interface in the Claude desktop app (macOS/Windows) where users brief Cowork on a task; users switch between Chat, Code, and Cowork tabs"
         },
         {
-          "name": "Task-Oriented Conversations",
-          "description": "Start conversations that become background tasks, with Claude autonomously working through multi-step coding objectives"
+          "name": "Plan-Then-Execute Tasks",
+          "description": "Cowork shows a plan for a multi-step knowledge-work task, then executes it end to end, building spreadsheets, preparing reports, and organizing files"
         },
         {
-          "name": "Multi-Agent Chat",
-          "description": "Launch multiple agents simultaneously, each handling a different task, with unified status tracking and result viewing"
+          "name": "Mid-Task Redirection",
+          "description": "Users can steer or correct Cowork while a task is running, adjusting scope or approach without restarting"
         }
       ],
       "limitations": [
-        "Web-only interface — no CLI access for Cowork-specific features",
-        "Requires Claude Pro or Team subscription",
-        "Agent conversations are task-scoped, not persistent across tasks",
-        "Currently in early access with evolving feature set"
+        "Runs in the Claude desktop app (macOS/Windows), not a web interface",
+        "Available only on paid Claude plans (Pro/Max/Team/Enterprise)",
+        "Focused on knowledge work, not software coding (use Claude Code for coding)"
       ],
       "pricingTiers": [
-        { "tier": "Claude Pro ($20/mo)", "details": "Access to Cowork with background agents and limited concurrent tasks" },
-        { "tier": "Claude Max ($100/mo)", "details": "Higher concurrency limits for parallel background agents" },
-        { "tier": "Claude Max ($200/mo)", "details": "Maximum concurrency and usage limits for intensive workflows" }
+        { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Cowork agent mode included, drawing on the subscription's usage pool" },
+        { "tier": "Max (from $100/mo)", "details": "Higher usage limits for intensive knowledge-work tasks" },
+        { "tier": "Team / Enterprise", "details": "Admin controls, usage visibility, and private plugin marketplaces" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent orchestration platform with background agents and web-based IDE" }
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Knowledge-work agent mode launched in research preview in the Claude desktop app" },
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "12 new connectors, native Excel/PowerPoint research preview, private plugin marketplaces, and admin controls" }
       ]
     },
     "research": {
       "category": "research",
       "supported": true,
-      "summary": "Cowork agents can browse the web and search for information as part of their task execution, combining code-focused research with broader web research capabilities.",
+      "summary": "Cowork performs multi-step research as part of knowledge-work tasks — navigating Chrome, pulling from connected data sources (FactSet, MSCI, S&P Global), and synthesizing findings into reports.",
       "subFeatures": [
         {
-          "name": "Web Browsing in Agent Tasks",
-          "description": "Background agents can browse the web to research libraries, APIs, documentation, and best practices as part of coding tasks"
+          "name": "Web and Chrome Research",
+          "description": "Navigates Chrome to gather information from the web as part of a knowledge-work task"
         },
         {
-          "name": "Codebase Exploration",
-          "description": "Agents navigate and search project files, understand architecture, and trace dependencies within the development environment"
+          "name": "Connected Data Sources",
+          "description": "Pulls from premium connectors such as FactSet, MSCI, S&P Global, and Harvey to research financial, market, and legal information"
+        },
+        {
+          "name": "Report Synthesis",
+          "description": "Synthesizes research into prepared reports and spreadsheets as task deliverables"
         }
       ],
       "limitations": [
-        "Web browsing limited to agent task context",
-        "Cannot access authenticated or paywalled content",
-        "Research results integrated into task output, not standalone research reports",
-        "Browser capabilities still maturing in agent environment"
+        "Premium data connectors (FactSet, MSCI, S&P Global, Harvey) require the organization's own subscription and are typically Enterprise-gated",
+        "Cannot access authenticated or paywalled content without a configured connector",
+        "Research is scoped to the active knowledge-work task"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Web research included as part of agent task execution" }
+        { "tier": "Pro / Max", "details": "Web and Chrome research included; standard connectors" },
+        { "tier": "Enterprise", "details": "Premium data connectors subject to the organization's own licensing" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Web browsing integrated into background agent capabilities" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Added FactSet, MSCI, S&P Global, Harvey, Similarweb, and other research connectors" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Web and Chrome research within agent tasks" }
       ]
     },
     "file-analysis": {
       "category": "file-analysis",
       "supported": true,
-      "summary": "Cowork provides a full file explorer and editor within its web-based IDE, allowing agents and users to read, analyze, and navigate project files with syntax highlighting and project structure awareness.",
+      "summary": "Cowork reads and analyzes local files and folders on the user's machine, plus files from connected services, using them as inputs for multi-step knowledge-work tasks.",
       "subFeatures": [
         {
-          "name": "Web-Based File Explorer",
-          "description": "Visual file tree navigator with the ability to browse, open, and read any file in the project workspace"
+          "name": "Local File and Folder Access",
+          "description": "Reads local files and folders on the user's machine to analyze, organize, and transform their contents"
         },
         {
-          "name": "Code Editor with Analysis",
-          "description": "Syntax-highlighted code editor that agents use to read, understand, and modify files during task execution"
+          "name": "Spreadsheet and Document Analysis",
+          "description": "Parses spreadsheets and documents (including via native Excel/PowerPoint) to extract, summarize, and restructure data"
         },
         {
-          "name": "Terminal Output Analysis",
-          "description": "Integrated terminal where agents run commands and analyze build output, test results, and error messages"
+          "name": "Connector-Sourced Files",
+          "description": "Analyzes files retrieved from connected services such as Google Drive and DocuSign"
         }
       ],
       "limitations": [
-        "File access limited to the workspace environment",
-        "Large binary files may not be viewable in the web editor",
-        "Analysis capabilities depend on the underlying Claude model",
-        "No specialized tooling for database or image file analysis"
+        "Native Excel/PowerPoint handling is in research preview",
+        "Local file access is governed by desktop-app permissions",
+        "Analysis quality depends on the underlying Claude model"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "File analysis included in all Cowork-enabled plans" }
+        { "tier": "Paid Claude plans (Pro/Max/Team/Enterprise)", "details": "Local file and connector-sourced file analysis included" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Web-based IDE with file explorer, editor, and terminal" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Native Excel/PowerPoint research preview for reading and producing files" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Local file and folder analysis within agent tasks" }
       ]
     },
     "document-creation": {
       "category": "document-creation",
       "supported": true,
-      "summary": "Cowork agents create documentation, configuration files, and text-based artifacts as part of their coding tasks, writing directly to the project workspace.",
+      "summary": "Cowork produces real knowledge-work deliverables — spreadsheets, presentations, and reports — handing off native .xlsx and .pptx files rather than only exporting to them.",
       "subFeatures": [
         {
-          "name": "Agent-Generated Documentation",
-          "description": "Background agents create README files, API docs, architecture documents, and configuration files as part of task completion"
+          "name": "Native Excel and PowerPoint Output",
+          "description": "Builds and hands off real .xlsx and .pptx files (research preview), not just text exports"
         },
         {
-          "name": "Multi-File Creation",
-          "description": "Agents create multiple coordinated files in a single task, including source code and accompanying documentation"
+          "name": "Report and Spreadsheet Preparation",
+          "description": "Prepares reports, fills spreadsheets, and assembles deliverables as the output of a multi-step task"
         }
       ],
       "limitations": [
-        "Limited to text-based file formats",
-        "No PDF, DOCX, or presentation generation",
-        "Document creation is part of coding tasks, not a standalone document tool",
+        "Native Excel/PowerPoint output is in research preview",
+        "Document creation is part of a knowledge-work task, not a standalone editor",
         "No collaborative real-time document editing between users"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Document creation included as part of agent task execution" }
+        { "tier": "Paid Claude plans (Pro/Max/Team/Enterprise)", "details": "Report, spreadsheet, and presentation creation included" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-file creation and documentation generation in agent tasks" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Native Excel/PowerPoint file creation in research preview" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Spreadsheet and report generation within agent tasks" }
       ]
     },
     "image-generation": {
       "category": "image-generation",
       "supported": false,
-      "summary": "Cowork does not include image generation capabilities. It is focused on code and development tasks.",
+      "summary": "Cowork does not generate images. It is a knowledge-work agent focused on files, spreadsheets, reports, and connected data.",
       "subFeatures": [
         {
           "name": "Not Available",
-          "description": "Cowork is a development-focused platform — image generation is not part of its feature set"
+          "description": "Image generation is not part of Cowork's knowledge-work feature set"
         }
       ],
       "limitations": [
         "No image generation capability",
-        "No integration with image generation APIs within the platform",
+        "No integration with image generation APIs",
         "Cannot create visual assets or graphics"
       ],
       "pricingTiers": [
         { "tier": "All tiers", "details": "Not available" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Launched without image generation" }
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Launched without image generation" }
       ]
     },
     "prototyping": {
       "category": "prototyping",
-      "supported": true,
-      "summary": "Cowork excels at prototyping through its multi-agent architecture — users can describe what they want built and background agents scaffold entire projects, implement features, and run tests autonomously in a sandboxed environment.",
+      "supported": false,
+      "summary": "Cowork is not a coding or app-prototyping tool. It is the knowledge-work agent mode; software prototyping and coding belong to Claude Code.",
       "subFeatures": [
         {
-          "name": "Multi-Agent Project Scaffolding",
-          "description": "Launch multiple agents to work on different parts of a project simultaneously — frontend, backend, tests, and configuration in parallel"
-        },
-        {
-          "name": "Sandboxed Development Environment",
-          "description": "Each agent works in an isolated environment with a full development setup including package managers, build tools, and test frameworks"
-        },
-        {
-          "name": "Live Preview",
-          "description": "View running applications and web previews within the Cowork environment during development"
-        },
-        {
-          "name": "Iterative Refinement",
-          "description": "Review agent output in the IDE, provide feedback, and launch follow-up tasks to refine the implementation"
+          "name": "Not a Coding Tool",
+          "description": "Cowork focuses on knowledge work (files, spreadsheets, reports, connectors); use Claude Code for software prototyping and coding"
         }
       ],
       "limitations": [
-        "Sandbox environments may have limited package availability",
-        "Complex infrastructure setups (databases, message queues) may not be fully supported",
-        "Parallel agent coordination is managed by the platform, not user-directed",
-        "Preview capabilities limited to web-based applications"
+        "Does not scaffold applications or write production code",
+        "No sandboxed dev environment or live app preview",
+        "Coding workflows are handled by Claude Code instead"
       ],
       "pricingTiers": [
-        { "tier": "Claude Pro ($20/mo)", "details": "Background agents with basic concurrency for prototyping" },
-        { "tier": "Claude Max ($100/mo)", "details": "Higher concurrency for parallel prototyping agents" }
+        { "tier": "All tiers", "details": "Not applicable — Cowork is for knowledge work, not coding" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent prototyping with parallel task execution and web-based IDE" }
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Positioned as a knowledge-work agent, distinct from Claude Code's coding focus" }
       ]
     },
     "personalization": {
       "category": "personalization",
       "supported": true,
-      "summary": "Cowork supports project-level configuration and preferences that guide agent behavior, coding conventions, and task execution style within the workspace.",
+      "summary": "Cowork is tailored through task instructions and the set of connected services and plugins available to the agent, with enterprise admins able to curate approved connectors and agents.",
       "subFeatures": [
         {
-          "name": "Project Configuration",
-          "description": "Configure project-level instructions and conventions that all agents follow when working in the workspace"
+          "name": "Task Instructions",
+          "description": "Provide specific instructions and constraints for individual knowledge-work tasks to tailor Cowork's approach"
         },
         {
-          "name": "Task Customization",
-          "description": "Provide specific instructions and constraints for individual agent tasks to tailor their approach"
+          "name": "Connector and Plugin Configuration",
+          "description": "Choose which connectors and plugins Cowork can use; enterprises curate approved catalogues via private plugin marketplaces"
         }
       ],
       "limitations": [
-        "No persistent user profile across workspaces",
-        "Configuration options still evolving in early access",
-        "No per-user preference system within shared team workspaces",
-        "Limited to text-based instruction configuration"
+        "Premium connectors require the organization's own licensing",
+        "Enterprise curation and admin controls govern what agents may access",
+        "Native Excel/PowerPoint configuration is in research preview"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Workspace and task customization included" }
+        { "tier": "Pro / Max", "details": "Task instructions and standard connector configuration" },
+        { "tier": "Team / Enterprise", "details": "Private plugin marketplaces and admin-curated connector catalogues" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Project-level configuration for agent behavior customization" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Private plugin marketplaces and admin controls for curating connectors and agents" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Per-task instruction configuration" }
       ]
     },
     "persistent-context": {
       "category": "persistent-context",
       "supported": true,
-      "summary": "Cowork maintains persistent context through its workspace model — project files, agent task history, and configuration persist across sessions within a workspace.",
+      "summary": "Cowork sustains work over time through scheduled and recurring jobs that keep running on Anthropic-managed infrastructure, plus persistent connections to the user's files and connected services.",
       "subFeatures": [
         {
-          "name": "Workspace Persistence",
-          "description": "Project workspace with all files, configurations, and agent task history persists between sessions"
+          "name": "Scheduled and Recurring Jobs",
+          "description": "Daily, weekly, or monthly knowledge-work jobs that keep running on Anthropic-managed infrastructure"
         },
         {
-          "name": "Task History",
-          "description": "Complete history of background agent tasks, their instructions, and results maintained within the workspace"
-        },
-        {
-          "name": "Git Integration",
-          "description": "Changes tracked through git within the workspace, providing full version history and the ability to review agent-made changes"
+          "name": "Persistent Connectors",
+          "description": "Standing connections to local files and connected services (Google Workspace, Slack, DocuSign, and more) reused across tasks"
         }
       ],
       "limitations": [
-        "Context limited to individual workspace scope",
-        "No cross-workspace context sharing",
-        "Agent memory does not persist between separate tasks",
-        "Workspace storage has size limits"
+        "Scheduled jobs run on Anthropic-managed infrastructure subject to plan limits",
+        "Context is scoped to the connected services and files the agent is granted",
+        "Per-task memory is bounded by the model context window"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Workspace persistence included in all Cowork-enabled plans" }
+        { "tier": "Paid Claude plans (Pro/Max/Team/Enterprise)", "details": "Scheduled/recurring jobs and persistent connectors included" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Persistent workspaces with task history and git integration" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Expanded connector ecosystem for persistent data access" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Scheduled and recurring knowledge-work jobs" }
       ]
     },
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Cowork's defining feature is multi-agent orchestration — users launch background agents that work autonomously and in parallel on coding tasks, with the platform managing scheduling, isolation, and result aggregation.",
+      "summary": "Cowork's defining feature is its knowledge-work agent: it runs a multi-step task end to end — organizing files, building spreadsheets, preparing reports — connecting to local files and 15+ services, and scheduling recurring jobs. It is the non-coding sibling to Claude Code.",
       "subFeatures": [
         {
-          "name": "Background Agents",
-          "description": "Launch autonomous coding agents that work in the background on multi-step tasks while you focus on other work or review completed results"
+          "name": "End-to-End Knowledge-Work Agent",
+          "description": "Runs a multi-step task from plan to completion — organizing files, building spreadsheets, preparing reports — with mid-task redirection"
         },
         {
-          "name": "Parallel Task Execution",
-          "description": "Run multiple agents simultaneously on different tasks — each agent gets its own isolated environment and works independently"
+          "name": "Local Files and App Access",
+          "description": "Reads local files and folders, opens apps, fills spreadsheets, and navigates Chrome for research as part of a task"
         },
         {
-          "name": "Agent Status Tracking",
-          "description": "Monitor the progress of all active background agents with real-time status updates, logs, and completion notifications"
+          "name": "Connector-Driven Actions",
+          "description": "Acts across 15+ connectors (Google Workspace, Slack, DocuSign, Excel, PowerPoint, FactSet, MSCI, S&P Global, Harvey) to complete work"
         },
         {
-          "name": "Autonomous Tool Use",
-          "description": "Agents autonomously use file editing, terminal commands, web browsing, and other tools to complete their assigned tasks"
+          "name": "Scheduled and Recurring Tasks",
+          "description": "Schedules daily/weekly/monthly jobs that keep running on Anthropic-managed infrastructure"
         }
       ],
       "limitations": [
-        "Concurrent agent limits based on subscription tier",
-        "Agents cannot directly communicate with each other during execution",
-        "Complex inter-task dependencies must be manually managed by the user",
-        "Agent execution time has platform-imposed limits"
+        "Runs one knowledge-work task at a time, not many parallel coding agents (that is Claude Code's /agents)",
+        "Premium data connectors require the organization's own licensing",
+        "Native Excel/PowerPoint handling is in research preview"
       ],
       "pricingTiers": [
-        { "tier": "Claude Pro ($20/mo)", "details": "Background agents with limited concurrency" },
-        { "tier": "Claude Max ($100/mo)", "details": "Higher agent concurrency and longer execution times" },
-        { "tier": "Claude Max ($200/mo)", "details": "Maximum agent concurrency for intensive multi-agent workflows" }
+        { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Knowledge-work agent included, drawing on the subscription's usage pool" },
+        { "tier": "Max (from $100/mo)", "details": "Higher usage limits for intensive agent tasks" },
+        { "tier": "Team / Enterprise", "details": "Admin controls, usage visibility, and curated connector catalogues" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Multi-agent orchestration with background agents and parallel execution" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "12 new connectors, native Excel/PowerPoint preview, private plugin marketplaces, and admin controls" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Knowledge-work agent mode launched in the Claude desktop app" }
       ]
     },
     "connectors": {
       "category": "connectors",
       "supported": true,
-      "summary": "Cowork integrates with GitHub for repository management and version control, with the development environment supporting standard developer tool ecosystems.",
+      "summary": "Cowork's headline feature is its connector ecosystem — 15+ integrations spanning productivity, communication, document, and premium data sources — that let the agent act across a user's tools.",
       "subFeatures": [
         {
-          "name": "GitHub Integration",
-          "description": "Import repositories from GitHub, push changes, create branches, and manage pull requests from within the Cowork workspace"
+          "name": "Productivity and Communication Connectors",
+          "description": "Google Workspace (Gmail, Drive, Calendar), Slack, and Chrome for everyday productivity and communication tasks"
         },
         {
-          "name": "Development Tool Ecosystem",
-          "description": "Workspace environments include standard development tools — package managers, build systems, and testing frameworks"
+          "name": "Document and Office Connectors",
+          "description": "DocuSign plus native Excel and PowerPoint (research preview) for working with and producing documents"
+        },
+        {
+          "name": "Premium Data Connectors",
+          "description": "FactSet, MSCI, S&P Global, and Harvey (legal) for financial, market, and legal knowledge work — typically Enterprise-gated"
+        },
+        {
+          "name": "Go-To-Market Connectors",
+          "description": "Apollo, Clay, Outreach, Similarweb, LegalZoom, and WordPress for sales, marketing, and publishing workflows"
         }
       ],
       "limitations": [
-        "GitHub is the primary version control integration at launch",
-        "No direct integration with project management tools (Jira, Linear)",
-        "No Slack or communication tool integration",
-        "External API integrations limited to what agents can access via web browsing"
+        "Premium data connectors (FactSet, MSCI, S&P Global, Harvey) require the organization's own subscription and are typically Enterprise-gated",
+        "Native Excel/PowerPoint connectors are in research preview",
+        "Enterprise admins control which connectors are available via private plugin marketplaces"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "GitHub integration and development tools included" }
+        { "tier": "Pro / Max", "details": "Standard connectors such as Google Workspace, Slack, DocuSign, and Chrome" },
+        { "tier": "Team / Enterprise", "details": "Premium data connectors (licensing required) and admin-curated catalogues" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "GitHub repository integration and standard development tool support" }
+        { "version": "Enterprise Update", "date": "2026-02-24", "changes": "Added 12 connectors (Google Calendar, Drive, Gmail, DocuSign, Apollo, Clay, Outreach, Similarweb, MSCI, LegalZoom, FactSet, WordPress, Harvey, S&P Global) plus native Excel/PowerPoint preview" },
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Initial connector ecosystem for knowledge-work tasks" }
       ]
     },
     "dictation": {
       "category": "dictation",
       "supported": false,
-      "summary": "Cowork does not include voice input or dictation capabilities. All interaction is through text-based chat and IDE interfaces.",
+      "summary": "Cowork does not provide voice input or dictation. Interaction is through the Claude desktop app's text chat.",
       "subFeatures": [
         {
           "name": "Not Available",
-          "description": "Cowork is a web-based development platform with text input only — no voice or speech-to-text support"
+          "description": "Cowork is operated through text in the Claude desktop app — no voice or speech-to-text support"
         }
       ],
       "limitations": [
         "No voice input or dictation support",
         "No audio processing capabilities",
-        "Web interface is text-input only"
+        "Desktop app interaction is text-based"
       ],
       "pricingTiers": [
         { "tier": "All tiers", "details": "Not available" }
       ],
       "versionHistory": [
-        { "version": "Cowork Launch", "date": "2025-05", "changes": "Launched without voice capabilities" }
+        { "version": "Cowork Research Preview", "date": "2026-01", "changes": "Launched without voice capabilities" }
       ]
     }
   },
   "sourceRefs": [
-    "cowork-announcement",
-    "cowork-docs",
-    "claude-code-pricing"
+    "cowork-product",
+    "cowork-enterprise-plugins",
+    "cowork-cnbc",
+    "anthropic-models-overview",
+    "anthropic-pricing-claude"
   ]
 }
