@@ -3,6 +3,14 @@ import type { LLMProviderInterface, LLMRequest, LLMResponse, LLMMessage } from '
 import { getSystemPrompt } from './system-prompt';
 import { parseCitations } from '../citations';
 
+// Current, non-deprecated default. The previous hardcoded `claude-sonnet-4-20250514`
+// reaches end-of-life 2026-06-15 and is unavailable to newer API accounts (see #30).
+export const DEFAULT_ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+
+export function resolveAnthropicModel(): string {
+  return process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
+}
+
 export class AnthropicProvider implements LLMProviderInterface {
   private client: Anthropic;
 
@@ -22,7 +30,7 @@ export class AnthropicProvider implements LLMProviderInterface {
       .map((m) => ({ role: m.role, content: m.content }));
 
     const response = await this.client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: resolveAnthropicModel(),
       max_tokens: 1024,
       system: systemPrompt,
       messages,
