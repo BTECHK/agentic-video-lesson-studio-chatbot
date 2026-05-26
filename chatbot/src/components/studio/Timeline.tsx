@@ -10,7 +10,7 @@ import { TransportBar } from './TransportBar';
 import { Inspector, type Comment } from './Inspector';
 import { StatusBadge } from './StatusBadge';
 import type { StagedComment } from '@/lib/comments';
-import { openEdits, editsForScene, moveInOrder, type StagedEdit } from '@/lib/edits';
+import { openEdits, editsForScene, type StagedEdit } from '@/lib/edits';
 
 /** Map a persisted staged comment to the inspector's view shape. */
 function toViewComment(c: StagedComment): Comment {
@@ -173,54 +173,42 @@ export function Timeline({
     [lesson.id],
   );
 
-  // Current scene order (one animation clip per scene). Pending order tracks the
-  // latest staged reorder so successive moves compose.
-  const lessonOrder = lesson.tracks.animation.map((c) => sceneIdOf(c));
-  const lastOrderEdit = [...openEdits(edits)].reverse().find((e) => e.field === 'order');
-  const [pendingOrder, setPendingOrder] = useState<string[]>(
-    lastOrderEdit ? lastOrderEdit.value.split(',').filter(Boolean) : lessonOrder,
-  );
-
-  const moveScene = useCallback(
-    (clip: Clip, dir: 'earlier' | 'later') => {
-      const next = moveInOrder(pendingOrder, sceneIdOf(clip), dir);
-      if (next.join(',') === pendingOrder.join(',')) return; // no-op at the ends
-      setPendingOrder(next);
-      fetch('/api/edits', {
+  // Apply all staged edits. When the rebuild pipeline is gated off (the common
+  // case until the Docker rebuild loop lands, #47), the route returns 503 with a
+  // friendly message and the edits STAY staged — we surface that honestly rather
+  // than as a scary "network error" (only true connection failures say that).
+  const applyEdits = useCallback(async () => {
+    setEditMsg('Applying…');
+    let res: Response;
+    try {
+      res = await fetch('/api/edits/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lessonId: lesson.id, field: 'order', value: next.join(',') }),
-      })
-        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('reorder failed'))))
-        .then(({ edit }: { edit: StagedEdit }) => {
-          // Mirror the store: a new order edit supersedes prior open ones.
-          setEdits((prev) => [
-            ...prev.map((e) => (e.field === 'order' && e.status === 'open' ? { ...e, status: 'dismissed' as const } : e)),
-            edit,
-          ]);
-          setEditMsg('Scene order changed. Apply to rebuild the video.');
-        })
-        .catch(() => setEditMsg('Could not stage reorder.'));
-    },
-    [lesson.id, pendingOrder],
-  );
-
-  // Apply all staged edits → writes script.json + regenerates (host-gated route).
-  const applyEdits = useCallback(() => {
-    setEditMsg('Applying…');
-    fetch('/api/edits/apply', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lessonId: lesson.id }),
-    })
-      .then((res) => res.json())
-      .then((j) => {
-        setEditMsg(j.message || j.error || 'Done.');
-        if (j.status === 'applying') {
-          setEdits((prev) => prev.map((e) => (e.status === 'open' ? { ...e, status: 'applied' as const } : e)));
-        }
-      })
-      .catch(() => setEditMsg('Network error applying edits.'));
+        body: JSON.stringify({ lessonId: lesson.id }),
+      });
+    } catch {
+      setEditMsg("Couldn't reach the server — is the app still running?");
+      return;
+    }
+    let j: { status?: string; message?: string; error?: string } = {};
+    try {
+      j = await res.json();
+    } catch {
+      /* non-JSON error body */
+    }
+    if (res.status === 503) {
+      // Gated, not broken: edits remain staged and safe.
+      setEditMsg(j.message ?? 'Your edits are saved. Rebuilding the video runs on the pipeline host.');
+      return;
+    }
+    if (!res.ok) {
+      setEditMsg(j.error ?? `Apply failed (${res.status}). Your edits are still staged.`);
+      return;
+    }
+    setEditMsg(j.message ?? 'Done.');
+    if (j.status === 'applying') {
+      setEdits((prev) => prev.map((e) => (e.status === 'open' ? { ...e, status: 'applied' as const } : e)));
+    }
   }, [lesson.id]);
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
@@ -335,7 +323,6 @@ export function Timeline({
           onClose={() => setSelected(null)}
           onComment={(text) => addComment(selected, text)}
           onStageEdit={(value) => stageEdit(selected, value)}
-          onMove={(dir) => moveScene(selected, dir)}
         />
       )}
     </div>

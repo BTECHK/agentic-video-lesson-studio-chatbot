@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getLessonDirectory } from '@/lib/lesson-directory';
 
 interface HubLink {
   label: string;
@@ -15,9 +16,8 @@ interface Hub {
 const HUBS: Hub[] = [
   {
     heading: 'Lesson Planning',
-    blurb: 'Author, generate, and review animated lessons before they ship to Teachable.',
+    blurb: 'Generate scripts and track lessons. Finished videos are reviewed async via the Drive bundle (Studio is parked until cloud).',
     links: [
-      { label: 'Studio', href: '/studio', description: 'Multi-track timeline — review and annotate a lesson.' },
       { label: 'Generate', href: '/studio/generate', description: 'Outline → fact-checked script → MP4.' },
       { label: 'Lesson Library', href: '/studio/menu', description: 'Every lesson and its render status.' },
     ],
@@ -40,7 +40,17 @@ const HUBS: Hub[] = [
   },
 ];
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
+  const lessons = getLessonDirectory();
+  const stats = [
+    { label: 'Lessons', value: lessons.length },
+    { label: 'Videos rendered', value: lessons.filter((l) => l.hasVideo).length },
+    { label: 'Drafts pending', value: lessons.filter((l) => l.hasDraft).length },
+    { label: 'Stale scenes', value: lessons.reduce((n, l) => n + l.staleCount, 0) },
+  ];
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)' }}>
       <section style={{ maxWidth: 1040, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) 32px 32px' }}>
@@ -85,6 +95,36 @@ export default function Home() {
           repository, and keeping content fresh. The student-facing course lives on Teachable;
           the public marketing page is a <Link href="/marketing" style={{ color: 'var(--accent)', fontWeight: 600 }}>separate surface</Link>.
         </p>
+      </section>
+
+      <section style={{ maxWidth: 1040, margin: '0 auto', padding: '0 32px 24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              style={{
+                padding: '16px 20px',
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius)',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 30,
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                  color: s.label === 'Stale scenes' && s.value > 0 ? 'var(--limitation-text)' : 'var(--text)',
+                }}
+              >
+                {s.value}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginTop: 2 }}>
+                {s.label}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section style={{ maxWidth: 1040, margin: '0 auto', padding: '0 32px 80px', display: 'flex', flexDirection: 'column', gap: 36 }}>

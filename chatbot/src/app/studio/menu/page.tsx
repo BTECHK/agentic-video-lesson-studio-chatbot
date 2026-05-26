@@ -23,7 +23,7 @@ export default function MenuPage() {
     <main style={{ maxWidth: 880, margin: '0 auto', padding: '1.5rem', fontFamily: 'var(--font)' }}>
       <h1 style={{ fontSize: 20, fontWeight: 700 }}>Lessons</h1>
       <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-        Your lesson directory. Open one in the Studio timeline, or generate/regenerate its script.
+        Your lesson directory. Generate or regenerate a lesson&rsquo;s script; finished videos are reviewed via the Drive review bundle.
       </p>
 
       {lessons.length === 0 && (
@@ -49,15 +49,6 @@ export default function MenuPage() {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-              <Link
-                href={`/studio?lesson=${encodeURIComponent(l.lessonId)}`}
-                style={{
-                  textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)',
-                  border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '0.35rem 0.7rem',
-                }}
-              >
-                Open timeline
-              </Link>
               <Link
                 href={`/studio/generate?lesson=${encodeURIComponent(l.lessonId)}`}
                 style={{

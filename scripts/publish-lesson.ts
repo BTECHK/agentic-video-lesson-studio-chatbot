@@ -1,18 +1,33 @@
 /**
- * Stage a rendered lesson MP4 for manual Teachable upload (#28).
+ * Package a rendered lesson into a self-contained REVIEW BUNDLE (#45, #28).
  *
- * Teachable has no programmatic upload API, so this is the honest handoff:
- * validate the final render against the brief's constraints, copy it to a
- * clearly-named `publish/<id>.mp4` staging master, and write a manifest a human
- * uses to do the manual upload.
+ * Async review model: the bundle goes into a Drive-synced (git-ignored) folder;
+ * Instructor watches the MP4 in Google Drive and records edits in REVIEW-NOTES.md
+ * (timestamp + scene id + change). The tech lead pastes any emailed notes into
+ * that same file (it's in git), and Claude Code applies them + re-renders.
  *
- * Usage: tsx scripts/publish-lesson.ts [lessonId]   (default: module-1)
- *        tsx scripts/publish-lesson.ts module-1 --source out/module-1.mp4
+ * Teachable has no upload API, so the same MP4 is also the upload-ready master.
+ *
+ * Bundle layout:  <REVIEW_BUNDLE_DIR>/<id>/
+ *   <id>.mp4            the video (watch in Drive)
+ *   script-reference.md scene-by-scene narration (cite scenes by id)
+ *   manifest.json       version stamp (scriptHash → detects video/script drift)
+ *   REVIEW-NOTES.md     reviewer's notes (NEVER overwritten if it exists)
+ *
+ * Usage: tsx scripts/publish-lesson.ts [lessonId] [--source out/<id>.mp4]
+ *   REVIEW_BUNDLE_DIR env points at the Drive-synced folder (default: ./publish)
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { runMain } from '../src/lib/logger';
-import { validatePublishCandidate, buildPublishManifest } from '../src/lib/publish';
+import {
+  validatePublishCandidate,
+  buildBundleManifest,
+  scriptReferenceMarkdown,
+  reviewNotesTemplate,
+  hashScript,
+  type ScriptBlock,
+} from '../src/lib/publish';
 
 runMain('publish', async (log) => {
   const lessonId = process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'module-1';
@@ -32,27 +47,67 @@ runMain('publish', async (log) => {
     return 1;
   }
 
-  const publishDir = path.join(process.cwd(), 'publish');
-  fs.mkdirSync(publishDir, { recursive: true });
-  const destMp4 = path.join(publishDir, `${lessonId}.mp4`);
-  fs.copyFileSync(absSource, destMp4);
+  // Source content for the version stamp + script reference.
+  const lessonDir = path.join(process.cwd(), 'content', 'lessons', lessonId);
+  const scriptPath = path.join(lessonDir, 'script.json');
+  let blocks: ScriptBlock[] = [];
+  let scriptHash = 'no-script';
+  if (fs.existsSync(scriptPath)) {
+    const raw = fs.readFileSync(scriptPath, 'utf-8');
+    scriptHash = hashScript(raw);
+    const parsed = JSON.parse(raw) as { blocks?: ScriptBlock[] };
+    blocks = Array.isArray(parsed.blocks) ? parsed.blocks : [];
+  } else {
+    log.warn('no script.json — bundle will omit the script reference', { lessonId });
+  }
 
-  const manifest = buildPublishManifest({
+  let title = lessonId;
+  const lessonJson = path.join(lessonDir, 'lesson.json');
+  if (fs.existsSync(lessonJson)) {
+    const l = JSON.parse(fs.readFileSync(lessonJson, 'utf-8')) as { lesson?: { title?: string } };
+    title = l.lesson?.title ?? lessonId;
+  }
+
+  // Bundle dir (Drive-synced; git-ignored). Override with REVIEW_BUNDLE_DIR.
+  const baseDir = process.env.REVIEW_BUNDLE_DIR
+    ? path.resolve(process.env.REVIEW_BUNDLE_DIR)
+    : path.join(process.cwd(), 'publish');
+  const bundleDir = path.join(baseDir, lessonId);
+  fs.mkdirSync(bundleDir, { recursive: true });
+
+  const videoFile = `${lessonId}.mp4`;
+  fs.copyFileSync(absSource, path.join(bundleDir, videoFile));
+
+  if (blocks.length > 0) {
+    fs.writeFileSync(
+      path.join(bundleDir, 'script-reference.md'),
+      scriptReferenceMarkdown(lessonId, title, blocks),
+    );
+  }
+
+  const manifest = buildBundleManifest({
     lessonId,
-    sourcePath: sourcePath.split(path.sep).join('/'),
+    title,
+    videoFile,
     bytes,
     publishedAt: new Date().toISOString(),
+    scriptHash,
+    blockCount: blocks.length,
   });
-  fs.writeFileSync(
-    path.join(publishDir, `${lessonId}.manifest.json`),
-    JSON.stringify(manifest, null, 2) + '\n',
-  );
+  fs.writeFileSync(path.join(bundleDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 
-  log.info('staged for manual Teachable upload', {
+  // Never clobber existing reviewer notes — only seed the template once.
+  const notesPath = path.join(bundleDir, 'REVIEW-NOTES.md');
+  if (!fs.existsSync(notesPath)) {
+    fs.writeFileSync(notesPath, reviewNotesTemplate(lessonId, title));
+  }
+
+  log.info('review bundle ready', {
     lessonId,
-    dest: `publish/${lessonId}.mp4`,
+    bundle: path.relative(process.cwd(), bundleDir),
     sizeMb: manifest.sizeMb,
+    scriptHash,
   });
-  log.info(manifest.upload);
+  log.info('Share via the Drive-synced folder; reviewer fills REVIEW-NOTES.md.');
   return 0;
 });
