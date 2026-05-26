@@ -82,7 +82,7 @@ export function ChatInterface({ accessMode, accessCode }: { accessMode: AccessMo
     <div
       className="flex flex-col max-w-3xl mx-auto w-full overflow-hidden"
       style={{
-        height: 'calc(100vh - 48px - 1rem)',
+        height: 'calc(100vh - 1rem)',
         marginTop: '0.5rem',
         border: '1px solid rgba(28, 28, 28, 0.15)',
         borderRadius: 'var(--radius)',

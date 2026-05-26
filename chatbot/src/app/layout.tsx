@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Syne } from "next/font/google";
-import { TopNav } from "@/components/TopNav";
+import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
 const syne = Syne({
@@ -22,9 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${syne.variable} h-full`}>
-      <body className="min-h-full flex flex-col" style={{ fontFamily: "var(--font)" }}>
-        <TopNav />
-        {children}
+      <body className="min-h-full" style={{ fontFamily: "var(--font)", display: "flex", minHeight: "100vh" }}>
+        <Sidebar />
+        <main style={{ flex: 1, minWidth: 0, height: "100vh", overflowY: "auto" }}>{children}</main>
       </body>
     </html>
   );
