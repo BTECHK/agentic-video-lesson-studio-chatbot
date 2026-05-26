@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { OutlineSummary } from '@/lib/generate-source';
 
 interface FactCheck {
@@ -35,42 +35,102 @@ export function GeneratePanel({
   const [error, setError] = useState<string | null>(null);
   const [applyMsg, setApplyMsg] = useState<string | null>(null);
   const [canceled, setCanceled] = useState(false);
-  const abortRef = useRef<AbortController | null>(null);
+  // Poll handle for the status loop. The SERVER job runs independently of this
+  // component — clearing the interval (e.g. on unmount) never stops generation.
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollRef.current !== null) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, []);
+
+  // Read the decoupled job's status once and reflect it in local state.
+  const checkStatus = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/generate/status?lessonId=${encodeURIComponent(outline.lessonId)}`,
+      );
+      const json = await res.json().catch(() => ({}));
+      if (json.status === 'done') {
+        setDraft(json.draft);
+        setFactCheck(json.factCheck);
+        setPhase('drafted');
+        setCanceled(false);
+        stopPolling();
+      } else if (json.status === 'error') {
+        setError('Generation failed — check the server logs and try again.');
+        setPhase('idle');
+        stopPolling();
+      } else if (json.status === 'canceled') {
+        setCanceled(true);
+        setPhase('idle');
+        stopPolling();
+      } else if (json.status === 'running') {
+        setPhase('generating');
+      }
+      return json.status as string | undefined;
+    } catch {
+      return undefined;
+    }
+  }, [outline.lessonId, stopPolling]);
+
+  const startPolling = useCallback(() => {
+    stopPolling();
+    pollRef.current = setInterval(() => {
+      void checkStatus();
+    }, 3000);
+  }, [checkStatus, stopPolling]);
+
+  // On mount: resume. If a job is running, show progress + poll; if it already
+  // finished, show the draft. This is what survives navigation.
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const status = await checkStatus();
+      if (active && status === 'running') startPolling();
+    })();
+    return () => {
+      active = false;
+      stopPolling();
+    };
+  }, [checkStatus, startPolling, stopPolling]);
 
   async function generate() {
     setPhase('generating');
     setError(null);
     setApplyMsg(null);
     setCanceled(false);
-    const controller = new AbortController();
-    abortRef.current = controller;
     try {
+      // Fire-and-forget: POST returns immediately now (job runs in background).
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lessonId: outline.lessonId }),
-        signal: controller.signal,
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.detail || json.error || 'Generation failed');
-      setDraft(json.draft);
-      setFactCheck(json.factCheck);
-      setPhase('drafted');
+      startPolling();
     } catch (e) {
-      if (e instanceof DOMException && e.name === 'AbortError') {
-        setCanceled(true);
-        setPhase('idle');
-        return;
-      }
       setError(e instanceof Error ? e.message : 'Generation failed');
       setPhase('idle');
-    } finally {
-      abortRef.current = null;
     }
   }
 
-  function cancel() {
-    abortRef.current?.abort();
+  async function cancel() {
+    stopPolling();
+    try {
+      await fetch('/api/generate/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId: outline.lessonId }),
+      });
+    } catch {
+      // best effort — the server kills the job by recorded pid.
+    }
+    setCanceled(true);
+    setPhase('idle');
   }
 
   async function apply() {

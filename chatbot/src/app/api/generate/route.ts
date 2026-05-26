@@ -1,78 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * Studio Generate (CC-passthrough): runs the root headless generator, which uses
- * `claude -p` to draft a fact-checked script from the lesson's outline. Writes a
- * DRAFT (never the committed script.json); we return the draft + fact-check report
- * for review. Synchronous — generation takes ~1-2 min — with a hard timeout.
+ * Studio Generate (CC-passthrough), decoupled from the HTTP request (#44).
  *
- * Safe by design (gitignored draft, no committed mutation, no PRs), so it is not
- * env-gated; if `claude` is unavailable the run fails and we surface the error.
+ * The root headless generator (`claude -p`) takes ~100s. Previously it was
+ * awaited on the request and tied to `req.signal`, so client navigation aborted
+ * the fetch and killed the child — losing the run. Now POST spawns the generator
+ * as a DETACHED, unref'd background child, records a status file, and returns
+ * immediately `{ status: 'running' }`. The client polls GET /api/generate/status
+ * (and resumes on mount), and POST /api/generate/cancel kills the job on demand.
+ *
+ * Safe by design (gitignored draft, no committed mutation, no PRs).
  */
 const LESSON_RE = /^[a-z0-9-]+$/;
-const TIMEOUT_MS = 6 * 60 * 1000;
 
-/** Thrown when the client aborts the request (Studio Cancel). */
-export class GenerationAbortedError extends Error {
-  constructor() {
-    super('aborted');
-    this.name = 'GenerationAbortedError';
+interface StatusFile {
+  status: 'running' | 'done' | 'error' | 'canceled';
+  pid?: number;
+  startedAt?: string;
+}
+
+/** Path to the per-lesson generation status file. */
+export function statusFilePath(root: string, lessonId: string): string {
+  return path.join(root, 'content', 'lessons', lessonId, '.generate-status.json');
+}
+
+/** True if a process with this pid is currently alive. */
+function pidAlive(pid: number | undefined): boolean {
+  if (!pid) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
   }
 }
 
-interface RunOpts {
-  signal?: AbortSignal;
-  /** Injectable for tests; defaults to node:child_process spawn. */
-  spawnFn?: typeof spawn;
-}
-
-export function runGenerator(
-  lessonId: string,
-  root: string,
-  opts: RunOpts = {},
-): Promise<{ code: number; stderr: string }> {
-  const spawnFn = opts.spawnFn ?? spawn;
-  return new Promise((resolve, reject) => {
-    if (opts.signal?.aborted) {
-      reject(new GenerationAbortedError());
-      return;
-    }
-    const child = spawnFn('npx', ['tsx', 'scripts/generate-script-headless.ts', lessonId], {
-      cwd: root,
-      shell: true,
-    });
-    let stderr = '';
-    child.stderr?.on('data', (d) => (stderr += d));
-
-    const cleanup = () => {
-      clearTimeout(timer);
-      opts.signal?.removeEventListener('abort', onAbort);
-    };
-    const onAbort = () => {
-      child.kill();
-      cleanup();
-      reject(new GenerationAbortedError());
-    };
-    const timer = setTimeout(() => {
-      child.kill();
-      cleanup();
-      reject(new Error('generation timed out'));
-    }, TIMEOUT_MS);
-
-    opts.signal?.addEventListener('abort', onAbort);
-    child.on('error', (e) => {
-      cleanup();
-      reject(e);
-    });
-    child.on('close', (code) => {
-      cleanup();
-      resolve({ code: code ?? 1, stderr });
-    });
-  });
+function readStatusFile(file: string): StatusFile | null {
+  if (!existsSync(file)) return null;
+  try {
+    return JSON.parse(readFileSync(file, 'utf-8')) as StatusFile;
+  } catch {
+    return null;
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -93,32 +66,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Lesson has no outline to generate from' }, { status: 404 });
   }
 
-  let result: { code: number; stderr: string };
-  try {
-    result = await runGenerator(lessonId, root, { signal: req.signal });
-  } catch (e) {
-    if (e instanceof GenerationAbortedError) {
-      // Client canceled — the child has been killed. Response is moot (the
-      // client is gone) but return a clear status rather than a 500.
-      return NextResponse.json({ error: 'canceled' }, { status: 499 });
-    }
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : 'Generation failed to start' },
-      { status: 500 },
-    );
+  // Don't double-spawn: if a job is already running for this lesson, report it.
+  const statusFile = statusFilePath(root, lessonId);
+  const existing = readStatusFile(statusFile);
+  if (existing?.status === 'running' && pidAlive(existing.pid)) {
+    return NextResponse.json({ status: 'running' });
   }
 
-  const draftPath = path.join(dir, 'script.draft.json');
-  if (result.code !== 0 || !existsSync(draftPath)) {
-    return NextResponse.json(
-      { error: 'Generation failed', detail: result.stderr.slice(-400) },
-      { status: 500 },
-    );
-  }
+  // Detached, unref'd background child — NOT awaited, NOT tied to req.signal.
+  const child = spawn('npx', ['tsx', 'scripts/generate-script-headless.ts', lessonId], {
+    cwd: root,
+    detached: true,
+    stdio: 'ignore',
+    shell: true,
+  });
+  child.unref();
 
-  const draft = JSON.parse(await readFile(draftPath, 'utf-8'));
-  const reportPath = path.join(dir, 'script.factcheck.json');
-  const factCheck = existsSync(reportPath) ? JSON.parse(await readFile(reportPath, 'utf-8')) : null;
+  const record: StatusFile = {
+    status: 'running',
+    pid: child.pid,
+    startedAt: new Date().toISOString(),
+  };
+  writeFileSync(statusFile, `${JSON.stringify(record, null, 2)}\n`, 'utf-8');
 
-  return NextResponse.json({ status: 'drafted', draft, factCheck });
+  return NextResponse.json({ status: 'running' });
 }

@@ -1,44 +1,139 @@
-import { describe, it, expect, vi } from 'vitest';
-import { EventEmitter } from 'node:events';
-import { runGenerator, GenerationAbortedError } from '../src/app/api/generate/route';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
-/** Minimal fake child process: an EventEmitter with a stderr stream + kill spy. */
-function fakeChild() {
-  const child = new EventEmitter() as EventEmitter & { stderr: EventEmitter; kill: ReturnType<typeof vi.fn> };
-  child.stderr = new EventEmitter();
-  child.kill = vi.fn();
-  return child;
+/**
+ * #44 — generation is decoupled from the request: POST spawns a detached,
+ * unref'd background child, records a status file, and returns immediately.
+ * It must NOT tie the child to req.signal, and must not double-spawn a job
+ * that is already running. (Cancellation now lives in POST /api/generate/cancel,
+ * driven by the recorded pid — not by aborting the fetch.)
+ */
+
+// A scratch repo root: <tmp>/content/lessons/module-1/outline.json
+let root: string;
+const cwdSpy = vi.fn();
+
+function makeReq(body: unknown) {
+  return { json: async () => body } as never;
 }
 
-describe('runGenerator cancellation (#34)', () => {
-  it('rejects immediately if the signal is already aborted (no spawn)', async () => {
-    const spawnFn = vi.fn();
-    const controller = new AbortController();
-    controller.abort();
-    await expect(
-      runGenerator('module-1', '/root', { signal: controller.signal, spawnFn: spawnFn as never }),
-    ).rejects.toBeInstanceOf(GenerationAbortedError);
-    expect(spawnFn).not.toHaveBeenCalled();
+beforeEach(() => {
+  root = mkdtempSync(path.join(tmpdir(), 'gen-decouple-'));
+  const lessonDir = path.join(root, 'content', 'lessons', 'module-1');
+  mkdirSync(lessonDir, { recursive: true });
+  writeFileSync(path.join(lessonDir, 'outline.json'), '{}');
+  // route does path.join(process.cwd(), '..'); point cwd at <root>/app so '..' == root.
+  const appDir = path.join(root, 'app');
+  mkdirSync(appDir, { recursive: true });
+  vi.spyOn(process, 'cwd').mockImplementation(() => appDir);
+  cwdSpy.mockClear();
+  vi.resetModules();
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  rmSync(root, { recursive: true, force: true });
+});
+
+describe('POST /api/generate — detached background spawn (#44)', () => {
+  it('spawns detached + unref, writes a running status file, returns running — never tied to req.signal', async () => {
+    const unref = vi.fn();
+    const spawnArgs: unknown[] = [];
+    vi.doMock('node:child_process', () => ({
+      spawn: (...args: unknown[]) => {
+        spawnArgs.push(args);
+        return { pid: 4242, unref };
+      },
+    }));
+    const { POST, statusFilePath } = await import('../src/app/api/generate/route');
+
+    const res = await POST(makeReq({ lessonId: 'module-1' }));
+    expect(await res.json()).toEqual({ status: 'running' });
+    expect(unref).toHaveBeenCalledTimes(1);
+
+    // detached + ignored stdio, no signal anywhere
+    const [, , opts] = spawnArgs[0] as [string, string[], Record<string, unknown>];
+    expect(opts.detached).toBe(true);
+    expect(opts.stdio).toBe('ignore');
+    expect(opts.signal).toBeUndefined();
+
+    const statusFile = statusFilePath(root, 'module-1');
+    const status = JSON.parse(readFileSync(statusFile, 'utf-8'));
+    expect(status.status).toBe('running');
+    expect(status.pid).toBe(4242);
+    expect(typeof status.startedAt).toBe('string');
   });
 
-  it('kills the child and rejects when the request is aborted mid-run', async () => {
-    const child = fakeChild();
-    const spawnFn = vi.fn(() => child);
-    const controller = new AbortController();
-    const p = runGenerator('module-1', '/root', { signal: controller.signal, spawnFn: spawnFn as never });
+  it('does not double-spawn when a live job is already running', async () => {
+    let spawnCount = 0;
+    vi.doMock('node:child_process', () => ({
+      spawn: () => {
+        spawnCount += 1;
+        return { pid: process.pid, unref: vi.fn() }; // our own pid → guaranteed alive
+      },
+    }));
+    const { POST, statusFilePath } = await import('../src/app/api/generate/route');
 
-    controller.abort(); // client hit Cancel
+    // Pre-seed a running status file with a live pid (this test process).
+    const statusFile = statusFilePath(root, 'module-1');
+    writeFileSync(
+      statusFile,
+      JSON.stringify({ status: 'running', pid: process.pid, startedAt: new Date().toISOString() }),
+    );
 
-    await expect(p).rejects.toBeInstanceOf(GenerationAbortedError);
-    expect(child.kill).toHaveBeenCalledTimes(1);
+    const res = await POST(makeReq({ lessonId: 'module-1' }));
+    expect(await res.json()).toEqual({ status: 'running' });
+    expect(spawnCount).toBe(0); // reported existing job, did not spawn
   });
 
-  it('resolves with the exit code on normal completion', async () => {
-    const child = fakeChild();
-    const spawnFn = vi.fn(() => child);
-    const p = runGenerator('module-1', '/root', { spawnFn: spawnFn as never });
-    child.stderr.emit('data', 'some log');
-    child.emit('close', 0);
-    await expect(p).resolves.toEqual({ code: 0, stderr: 'some log' });
+  it('rejects an invalid lessonId without spawning', async () => {
+    let spawnCount = 0;
+    vi.doMock('node:child_process', () => ({
+      spawn: () => {
+        spawnCount += 1;
+        return { pid: 1, unref: vi.fn() };
+      },
+    }));
+    const { POST } = await import('../src/app/api/generate/route');
+    const res = await POST(makeReq({ lessonId: 'Bad Id!' }));
+    expect(res.status).toBe(400);
+    expect(spawnCount).toBe(0);
+  });
+
+  it('404s when the lesson has no outline', async () => {
+    vi.doMock('node:child_process', () => ({ spawn: () => ({ pid: 1, unref: vi.fn() }) }));
+    const { POST } = await import('../src/app/api/generate/route');
+    const res = await POST(makeReq({ lessonId: 'no-such-lesson' }));
+    expect(res.status).toBe(404);
+  });
+});
+
+describe('POST /api/generate/cancel (#44)', () => {
+  it('kills the recorded pid and marks the job canceled', async () => {
+    const { statusFilePath } = await import('../src/app/api/generate/route');
+    const { POST: cancel } = await import('../src/app/api/generate/cancel/route');
+
+    const killed: number[] = [];
+    vi.spyOn(process, 'kill').mockImplementation(((pid: number) => {
+      killed.push(pid);
+      return true;
+    }) as never);
+
+    const statusFile = statusFilePath(root, 'module-1');
+    writeFileSync(statusFile, JSON.stringify({ status: 'running', pid: 9999, startedAt: new Date().toISOString() }));
+
+    const res = await cancel(makeReq({ lessonId: 'module-1' }));
+    expect(await res.json()).toEqual({ status: 'canceled' });
+    expect(killed).toContain(9999);
+    expect(JSON.parse(readFileSync(statusFile, 'utf-8')).status).toBe('canceled');
+  });
+
+  it('no-ops cleanly when there is no status file', async () => {
+    const { POST: cancel } = await import('../src/app/api/generate/cancel/route');
+    const res = await cancel(makeReq({ lessonId: 'module-1' }));
+    expect(await res.json()).toEqual({ status: 'canceled' });
+    expect(existsSync(path.join(root, 'content', 'lessons', 'module-1', '.generate-status.json'))).toBe(false);
   });
 });

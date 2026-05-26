@@ -41,6 +41,9 @@ content/lessons/*/.regen-cache.json
 content/lessons/*/script.draft.json
 content/lessons/*/*.factcheck.json
 
+# Studio Generate background-job status (runtime state for #44, not source)
+content/lessons/*/.generate-status.json
+
 # Staged Studio comments (durable local review state)
 content/lessons/*/.comments.json
 
