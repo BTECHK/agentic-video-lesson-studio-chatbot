@@ -38,6 +38,13 @@ export function listLessonIds(): string[] {
   if (!fs.existsSync(LESSONS_DIR)) return [];
   return fs
     .readdirSync(LESSONS_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && fs.existsSync(path.join(LESSONS_DIR, d.name, 'lesson.json')))
+    // Skip underscore-prefixed dirs (e.g. _scene-preview) — internal QA
+    // fixtures, not real lessons; they shouldn't appear in the console.
+    .filter(
+      (d) =>
+        d.isDirectory() &&
+        !d.name.startsWith('_') &&
+        fs.existsSync(path.join(LESSONS_DIR, d.name, 'lesson.json')),
+    )
     .map((d) => d.name);
 }
