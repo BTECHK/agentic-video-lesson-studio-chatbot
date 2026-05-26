@@ -1,7 +1,7 @@
 'use client';
 
 import type { ToolData } from '@/lib/content-types';
-import { getBenchmark } from '@/lib/benchmarks';
+import { getBenchmark, BENCHMARK_SOURCES } from '@/lib/benchmarks';
 
 interface ComparisonTableProps {
   tools: ToolData[];
@@ -72,7 +72,8 @@ function formatPrice(n: number | null): string {
   return `$${n}`;
 }
 
-function formatContext(tokens: number): string {
+function formatContext(tokens: number | null): string {
+  if (tokens === null) return '—';
   if (tokens >= 1000000) return `${(tokens / 1000000).toFixed(0)}M`;
   return `${(tokens / 1000).toFixed(0)}K`;
 }
@@ -87,6 +88,7 @@ export function ComparisonTable({ tools }: ComparisonTableProps) {
   }
 
   return (
+    <div>
     <div
       style={{
         overflowX: 'auto',
@@ -175,7 +177,7 @@ export function ComparisonTable({ tools }: ComparisonTableProps) {
               const b = getBenchmark(t.id);
               return (
                 <td key={t.id} style={{ ...cellStyle, textAlign: 'center' }}>
-                  {b ? formatContext(b.contextWindow) : '—'}
+                  {formatContext(b?.contextWindow ?? null)}
                 </td>
               );
             })}
@@ -223,5 +225,33 @@ export function ComparisonTable({ tools }: ComparisonTableProps) {
         </tbody>
       </table>
     </div>
+    <BenchmarkSources />
+    </div>
+  );
+}
+
+function BenchmarkSources() {
+  return (
+    <p
+      style={{
+        marginTop: '0.75rem',
+        fontSize: '0.6875rem',
+        lineHeight: 1.5,
+        color: 'var(--text-muted)',
+        fontFamily: 'var(--font)',
+      }}
+    >
+      <strong style={{ fontWeight: 700 }}>Sources.</strong> Model, context window, and price
+      are vendor-official (each vendor&rsquo;s own docs, May 2026). Arena ELO is from{' '}
+      <a href={BENCHMARK_SOURCES.arenaElo.url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>
+        {BENCHMARK_SOURCES.arenaElo.label}
+      </a>{' '}
+      (as of {BENCHMARK_SOURCES.arenaElo.asOf}); Quality Index and Speed are from{' '}
+      <a href={BENCHMARK_SOURCES.qualityIndex.url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>
+        {BENCHMARK_SOURCES.qualityIndex.label}
+      </a>{' '}
+      ({BENCHMARK_SOURCES.qualityIndex.asOf}). &ldquo;—&rdquo; means not published, not yet rated, or
+      not comparable on that axis (e.g. coding-agent surfaces and answer engines).
+    </p>
   );
 }

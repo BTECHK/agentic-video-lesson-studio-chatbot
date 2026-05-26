@@ -46,3 +46,7 @@ content/lessons/*/.comments.json
 
 # Staged Studio edits (durable local review state)
 content/lessons/*/.edits.json
+
+# Teachable upload staging — generated MP4 masters + manifests are not source
+publish/*
+!publish/README.md

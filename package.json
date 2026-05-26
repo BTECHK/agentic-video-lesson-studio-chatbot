@@ -23,7 +23,8 @@
     "tts:build": "docker compose build tts",
     "tts:lesson": "tsx scripts/synthesize-lesson.ts",
     "align:lesson": "tsx scripts/align-lesson.ts",
-    "regenerate": "tsx scripts/regenerate.ts"
+    "regenerate": "tsx scripts/regenerate.ts",
+    "publish:lesson": "tsx scripts/publish-lesson.ts"
   },
   "keywords": [],
   "author": "",

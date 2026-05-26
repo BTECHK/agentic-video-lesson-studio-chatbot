@@ -12,8 +12,15 @@ import { test, expect } from '@playwright/test';
  * question, submit, and assert the response actually reflects retrieved
  * content (the chain fires) rather than a generic reply.
  */
-test('home page renders the hero heading', async ({ page }) => {
+test('home page renders the internal-console hero heading', async ({ page }) => {
   await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(
+    'The control room',
+  );
+});
+
+test('marketing surface still renders its hero heading', async ({ page }) => {
+  await page.goto('/marketing');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
     'Learn to work with',
   );

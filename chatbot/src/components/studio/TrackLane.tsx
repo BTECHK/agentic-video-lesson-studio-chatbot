@@ -8,11 +8,14 @@ export const HEADER_WIDTH = 200;
 export const LANE: Record<ClipKind, { height: number; icon: string; label: string }> = {
   animation: { height: 72, icon: '◆', label: 'Animation' },
   voiceover: { height: 64, icon: '♪', label: 'Voiceover' },
-  script: { height: 56, icon: '¶', label: 'Script' },
+  // The narration text IS the caption source (same words; captions only add
+  // per-word timing, which is audio-derived). The authoring view shows one
+  // Narration row; the timed-caption breakdown stays in the inspector.
+  script: { height: 64, icon: '¶', label: 'Narration' },
   captions: { height: 48, icon: '▭', label: 'Captions' },
 };
 
-export const TRACK_ORDER: ClipKind[] = ['animation', 'voiceover', 'script', 'captions'];
+export const TRACK_ORDER: ClipKind[] = ['animation', 'voiceover', 'script'];
 
 /** One horizontal track: a positioned row of clips on the shared time scale.
  *  Clips whose span contains the playhead get a faint wash so alignment reads. */
