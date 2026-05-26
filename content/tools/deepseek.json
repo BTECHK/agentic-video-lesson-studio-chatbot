@@ -2,44 +2,46 @@
   "id": "deepseek",
   "name": "DeepSeek",
   "vendor": "DeepSeek",
+  "productId": "deepseek",
+  "surface": "Web app",
+  "isPrimarySurface": true,
   "priority": "P1",
-  "description": "DeepSeek's open-source AI models and chat platform offering strong reasoning capabilities (DeepSeek-R1), competitive coding performance, and extremely cost-efficient API pricing, making advanced AI accessible at a fraction of competitor costs.",
+  "description": "DeepSeek's open-weight AI models and free chat platform. The current flagship is DeepSeek-V4 (V4-Pro and V4-Flash, released 2026-04-24, MIT-licensed) with a 1M-token context window and native multimodal image understanding; the earlier DeepSeek-R1 reasoning model remains available. Known for leading open-model agentic coding and extremely cost-efficient inference.",
   "url": "https://www.deepseek.com",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
       "supported": true,
-      "summary": "DeepSeek provides a conversational chat interface through its web app and API, with a reasoning model (R1) that shows chain-of-thought for complex queries and a general-purpose model (V3) for standard conversation.",
+      "summary": "DeepSeek provides a free conversational chat interface and API. The flagship DeepSeek-V4 (V4-Pro and V4-Flash) offers a built-in Thinking / Non-Thinking mode toggle and a 1M-token context window; the older DeepSeek-R1 reasoning model is still available.",
       "subFeatures": [
         {
-          "name": "DeepSeek Chat",
-          "description": "Web-based chat interface with multi-turn conversation, markdown rendering, and code highlighting"
+          "name": "DeepSeek Chat (V4)",
+          "description": "Web-based chat powered by DeepSeek-V4 with multi-turn conversation, markdown rendering, and code highlighting"
         },
         {
-          "name": "DeepThink (R1 Reasoning)",
-          "description": "Toggle deep reasoning mode that shows step-by-step thinking process for math, logic, and complex analysis tasks"
+          "name": "DeepThink (Thinking Mode)",
+          "description": "Toggle deep reasoning that shows step-by-step thinking for math, logic, and complex analysis; built into V4 and also available via the older R1 model"
         },
         {
-          "name": "Multi-Turn Conversations",
-          "description": "Full conversation history within sessions with the ability to branch and edit previous messages"
+          "name": "1M-Token Context",
+          "description": "Both V4-Pro and V4-Flash support a 1M-token context window, a large increase over the 64K context of the earlier V3/R1 models"
         }
       ],
       "limitations": [
         "Web interface less polished than ChatGPT or Claude",
         "English-primary but optimized for Chinese as well — other languages less supported",
-        "Context window of 64K tokens for V3, 64K for R1",
-        "Reasoning mode significantly slower due to chain-of-thought generation",
-        "Service availability may vary by region"
+        "Thinking mode is slower due to chain-of-thought generation",
+        "Service availability may vary by region with occasional capacity throttling at peak"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Free access to DeepSeek chat with both V3 and R1 models" },
-        { "tier": "API (V3)", "details": "$0.27/M input tokens, $1.10/M output tokens — among the cheapest frontier-class APIs" },
-        { "tier": "API (R1)", "details": "$0.55/M input tokens, $2.19/M output tokens — reasoning model at fraction of competitor cost" }
+        { "tier": "Free (Web)", "details": "Free access to DeepSeek chat with V4 (DeepThink and Search toggles)" },
+        { "tier": "API (V4-Pro / V4-Flash)", "details": "Per-token rates published on the official pricing page; V4-Flash positioned as a highly cost-effective option. See platform.deepseek.com/api-pricing for current rates" },
+        { "tier": "Open weights (MIT)", "details": "DeepSeek-V4-Pro and V4-Flash weights released under MIT license on Hugging Face — free to self-host" }
       ],
       "versionHistory": [
-        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Reasoning model matching o1 performance at fraction of cost, open-source weights" },
-        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "671B MoE model with strong general performance, trained for $5.6M" },
-        { "version": "DeepSeek-V2", "date": "2024-05", "changes": "MoE architecture with strong coding and math capabilities" }
+        { "version": "DeepSeek-V4", "date": "2026-04", "changes": "Current flagship (2026-04-24): V4-Pro (1.6T total / ~49B active) and V4-Flash (284B total / ~13B active) MoE models, 1M-token context, Thinking/Non-Thinking modes, MIT license" },
+        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Reasoning model matching o1-class performance; now the older model, superseded by V4 for most uses" },
+        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "671B MoE model (now obsolete; replaced by V4)" }
       ]
     },
     "research": {
@@ -80,8 +82,8 @@
           "description": "Upload PDFs, text files, and documents for DeepSeek to read, summarize, and answer questions about"
         },
         {
-          "name": "Image Understanding",
-          "description": "Analyze uploaded images including diagrams, screenshots, and photographs"
+          "name": "Native Image & Video Understanding",
+          "description": "DeepSeek-V4 integrates image and video understanding trained in during pre-training (native multimodality), analyzing diagrams, screenshots, and photographs — a capability absent in V3"
         },
         {
           "name": "Code File Analysis",
@@ -92,14 +94,14 @@
         "File size limits more restrictive than competitors",
         "No sandboxed code execution environment for data analysis",
         "Spreadsheet and CSV analysis limited to text-based parsing",
-        "Image analysis capabilities still maturing"
+        "Multimodal understanding is built into V4; older V3 was text-only"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "File uploads included in free chat" },
+        { "tier": "Free (Web)", "details": "File uploads and image analysis included in free chat" },
         { "tier": "API", "details": "Multimodal input supported in API at standard token pricing" }
       ],
       "versionHistory": [
-        { "version": "Multimodal V3", "date": "2024-12", "changes": "Image understanding added to V3 model" },
+        { "version": "DeepSeek-V4", "date": "2026-04", "changes": "Native multimodal image and video understanding trained in during pre-training" },
         { "version": "File Upload", "date": "2024-06", "changes": "Document upload support in chat interface" }
       ]
     },
@@ -128,48 +130,48 @@
         { "tier": "API", "details": "Structured output and JSON mode via API" }
       ],
       "versionHistory": [
-        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Enhanced technical writing with chain-of-thought reasoning" },
-        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "Improved document generation quality" }
+        { "version": "DeepSeek-V4", "date": "2026-04", "changes": "Stronger long-form and technical document generation with Thinking mode" },
+        { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Enhanced technical writing with chain-of-thought reasoning" }
       ]
     },
     "image-generation": {
       "category": "image-generation",
       "supported": false,
-      "summary": "DeepSeek does not include image generation capabilities. It is focused on text generation, reasoning, and code.",
+      "summary": "DeepSeek-V4 is natively multimodal and understands images, but image generation is not a confirmed user-facing feature in the consumer app. DeepSeek remains focused on text, reasoning, and code, with image understanding (not creation).",
       "subFeatures": [
         {
-          "name": "Not Available",
-          "description": "DeepSeek's models are text-focused — no image generation or visual creation capabilities are included"
+          "name": "No Confirmed Image Generation",
+          "description": "DeepSeek-V4 adds native image understanding, but text-to-image generation is not a confirmed feature in the chat app — DeepSeek's strength remains text, reasoning, and code"
         }
       ],
       "limitations": [
-        "No image generation model",
-        "No integration with image generation services",
-        "Cannot create visual assets or illustrations"
+        "No confirmed image generation feature in the consumer app",
+        "Native multimodality covers image understanding, not image creation",
+        "Cannot reliably create visual assets or illustrations"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "All tiers", "details": "Image generation not offered as a confirmed feature" }
       ],
       "versionHistory": [
-        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "No image generation included" }
+        { "version": "DeepSeek-V4", "date": "2026-04", "changes": "Adds native image understanding; image generation not confirmed in the consumer app" }
       ]
     },
     "prototyping": {
       "category": "prototyping",
       "supported": true,
-      "summary": "DeepSeek excels at code generation and is competitive with GPT-4 on coding benchmarks, making it effective for prototyping through its chat interface and API, though it lacks a code execution environment.",
+      "summary": "DeepSeek-V4 leads open models on agentic coding benchmarks and is explicitly optimized for developer toolchains like Claude Code, making it effective for prototyping through chat and API, though it lacks its own code execution environment.",
       "subFeatures": [
         {
-          "name": "Code Generation",
-          "description": "Generate code in multiple languages with strong performance on coding benchmarks (SWE-bench, HumanEval) competitive with GPT-4 and Claude"
+          "name": "Agentic Coding (V4)",
+          "description": "DeepSeek-V4 leads open models on agentic coding benchmarks and is tuned for agentic developer toolchains such as Claude Code"
         },
         {
-          "name": "Code Reasoning with R1",
-          "description": "Use the R1 reasoning model for complex algorithmic problems, debugging, and multi-step code architecture decisions"
+          "name": "Code Reasoning (Thinking Mode)",
+          "description": "Use V4's Thinking mode (or the older R1 model) for complex algorithmic problems, debugging, and multi-step code architecture decisions"
         },
         {
-          "name": "Open-Source Model Access",
-          "description": "Run DeepSeek models locally or on custom infrastructure for private prototyping without sending code to external servers"
+          "name": "Open-Weight Model Access",
+          "description": "Run DeepSeek-V4 locally or on custom infrastructure under MIT license for private prototyping without sending code to external servers"
         }
       ],
       "limitations": [
@@ -179,13 +181,13 @@
         "Local deployment requires significant GPU resources for full models"
       ],
       "pricingTiers": [
-        { "tier": "Free (Web)", "details": "Code generation in chat with V3 and R1" },
-        { "tier": "API", "details": "Extremely cost-efficient code generation via API" },
-        { "tier": "Self-Hosted (Free)", "details": "Open-source weights for local deployment" }
+        { "tier": "Free (Web)", "details": "Code generation in chat with DeepSeek-V4" },
+        { "tier": "API", "details": "Extremely cost-efficient code generation via API (V4-Pro / V4-Flash)" },
+        { "tier": "Self-Hosted (Free)", "details": "MIT-licensed open weights for local deployment" }
       ],
       "versionHistory": [
+        { "version": "DeepSeek-V4", "date": "2026-04", "changes": "Leads open models on agentic coding; optimized for Claude Code and similar toolchains" },
         { "version": "DeepSeek-R1", "date": "2025-01", "changes": "Reasoning model with strong code generation and debugging" },
-        { "version": "DeepSeek-V3", "date": "2024-12", "changes": "671B MoE model with top-tier coding performance" },
         { "version": "DeepSeek Coder V2", "date": "2024-06", "changes": "Specialized coding model with strong benchmark results" }
       ]
     },
@@ -216,20 +218,20 @@
     "persistent-context": {
       "category": "persistent-context",
       "supported": true,
-      "summary": "DeepSeek maintains conversation history within the web app, allowing users to revisit and continue previous conversations, though it lacks cross-session memory.",
+      "summary": "DeepSeek maintains conversation history within the web app and DeepSeek-V4 offers a 1M-token context for long single sessions, but it still lacks any persistent cross-session memory or projects.",
       "subFeatures": [
         {
           "name": "Conversation History",
           "description": "Saved conversations accessible from the sidebar, with the ability to continue or reference previous discussions"
         },
         {
-          "name": "Long Context Window",
-          "description": "64K token context window allowing extended conversations within a single session"
+          "name": "1M-Token Context Window",
+          "description": "DeepSeek-V4 supports a 1M-token context window (up from 64K on V3/R1), allowing extended conversations and large documents within a single session"
         }
       ],
       "limitations": [
-        "No cross-session memory system",
-        "No knowledge base or document upload for persistent context",
+        "No persistent cross-session memory system (still absent as of May 2026)",
+        "No projects or saved knowledge base for persistent context",
         "Conversation search limited to basic text matching",
         "No project or workspace organization"
       ],
@@ -328,6 +330,9 @@
     "deepseek-api-docs",
     "deepseek-github",
     "deepseek-r1-paper",
-    "deepseek-pricing"
+    "deepseek-pricing",
+    "deepseek-v4-release",
+    "deepseek-v4-pro-card",
+    "deepseek-updates"
   ]
 }

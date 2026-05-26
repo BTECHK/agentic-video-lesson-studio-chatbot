@@ -25,6 +25,21 @@
       "id": "deepseek-pricing",
       "url": "https://api-docs.deepseek.com/quick_start/pricing",
       "title": "DeepSeek API Pricing"
+    },
+    {
+      "id": "deepseek-v4-release",
+      "url": "https://api-docs.deepseek.com/news/news260424",
+      "title": "DeepSeek-V4 Release Note (2026-04-24)"
+    },
+    {
+      "id": "deepseek-v4-pro-card",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+      "title": "DeepSeek-V4-Pro Model Card (Hugging Face)"
+    },
+    {
+      "id": "deepseek-updates",
+      "url": "https://api-docs.deepseek.com/updates",
+      "title": "DeepSeek API Changelog"
     }
   ]
 }

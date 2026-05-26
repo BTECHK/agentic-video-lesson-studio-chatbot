@@ -40,6 +40,31 @@
       "id": "claude-code-best-practices",
       "url": "https://docs.anthropic.com/en/docs/claude-code/best-practices",
       "title": "Claude Code Best Practices"
+    },
+    {
+      "id": "claude-code-overview-new",
+      "url": "https://code.claude.com/docs/en/overview",
+      "title": "Claude Code Overview (code.claude.com)"
+    },
+    {
+      "id": "claude-code-product",
+      "url": "https://www.anthropic.com/product/claude-code",
+      "title": "Claude Code Product Page"
+    },
+    {
+      "id": "claude-code-changelog",
+      "url": "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
+      "title": "Claude Code Changelog"
+    },
+    {
+      "id": "claude-code-models-overview",
+      "url": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
+      "title": "Claude Models Overview (powers Claude Code)"
+    },
+    {
+      "id": "claude-code-pricing-new",
+      "url": "https://claude.com/pricing",
+      "title": "Claude Pricing (includes Claude Code)"
     }
   ]
 }

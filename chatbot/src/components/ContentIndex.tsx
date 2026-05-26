@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import type { ToolData } from '@/lib/content-types';
-import { getCapabilityCount } from '@/lib/content-types';
+import { getCapabilityCount, groupIntoProducts } from '@/lib/content-types';
 import { ToolCard } from './ToolCard';
 import { ToolRow } from './ToolRow';
 import { ViewToggle } from './ViewToggle';
@@ -27,6 +28,9 @@ export function ContentIndex({ tools }: { tools: ToolData[] }) {
     });
   }, [tools, priority, selectedCapabilities]);
 
+  const products = useMemo(() => groupIntoProducts(filtered), [filtered]);
+  const productCount = useMemo(() => groupIntoProducts(tools).length, [tools]);
+
   const totalSupported = tools.reduce((sum, t) => sum + getCapabilityCount(t).supported, 0);
 
   return (
@@ -36,7 +40,7 @@ export function ContentIndex({ tools }: { tools: ToolData[] }) {
           AI Tools Repository
         </h1>
         <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--text-muted)', fontFamily: 'var(--font)' }}>
-          {tools.length} tools tracked &middot; {totalSupported} total capabilities mapped
+          {productCount} products &middot; {tools.length} surfaces tracked &middot; {totalSupported} capabilities mapped
         </p>
       </div>
 
@@ -71,19 +75,84 @@ export function ContentIndex({ tools }: { tools: ToolData[] }) {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '0.75rem',
+            alignItems: 'start',
           }}
         >
-          {filtered.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
+          {products.map((product) => {
+            const extra = product.surfaces.filter((s) => s.id !== product.primary.id);
+            return (
+              <div key={product.productId} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <ToolCard tool={product.primary} />
+                {extra.length > 0 && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.375rem',
+                      alignItems: 'center',
+                      paddingLeft: '0.25rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.625rem',
+                        fontWeight: 700,
+                        color: 'var(--text-muted)',
+                        fontFamily: 'var(--font)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.03em',
+                      }}
+                    >
+                      Surfaces
+                    </span>
+                    {extra.map((s) => (
+                      <SurfaceChip key={s.id} surface={s} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {filtered.map((tool) => (
-            <ToolRow key={tool.id} tool={tool} />
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {products.map((product) => {
+            const extra = product.surfaces.filter((s) => s.id !== product.primary.id);
+            return (
+              <div key={product.productId} style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+                <ToolRow tool={product.primary} />
+                {extra.map((s) => (
+                  <div key={s.id} style={{ marginLeft: '1.5rem' }}>
+                    <ToolRow tool={s} />
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
+  );
+}
+
+function SurfaceChip({ surface }: { surface: ToolData }) {
+  return (
+    <Link
+      href={`/content/${surface.id}`}
+      style={{
+        fontSize: '0.6875rem',
+        fontWeight: 600,
+        fontFamily: 'var(--font)',
+        padding: '0.1875rem 0.5rem',
+        borderRadius: 'var(--radius)',
+        backgroundColor: 'var(--accent-soft)',
+        color: 'var(--accent)',
+        border: '1px solid var(--border)',
+        textDecoration: 'none',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {surface.surface}
+    </Link>
   );
 }

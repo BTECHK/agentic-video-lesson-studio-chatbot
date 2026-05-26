@@ -32,6 +32,9 @@ export const ToolSchema = z.object({
   id: z.string(),
   name: z.string(),
   vendor: z.string(),
+  productId: z.string(),
+  surface: z.string(),
+  isPrimarySurface: z.boolean(),
   priority: z.enum(['P0', 'P1']),
   description: z.string(),
   url: z.string().url(),
@@ -43,3 +46,58 @@ export type SubFeature = z.infer<typeof SubFeatureSchema>;
 export type VersionHistoryEntry = z.infer<typeof VersionHistoryEntrySchema>;
 export type CapabilityEntry = z.infer<typeof CapabilityEntrySchema>;
 export type Tool = z.infer<typeof ToolSchema>;
+
+export interface ProductGroup {
+  productId: string;
+  productName: string;
+  vendor: string;
+  primary: Tool;
+  surfaces: Tool[];
+}
+
+/**
+ * Groups tool surfaces into products by `productId`. The product takes its name
+ * and vendor from its primary surface, which is listed first. Total (never throws)
+ * so it is safe for rendering — integrity is enforced by validateProductInvariant.
+ */
+export function groupIntoProducts(tools: Tool[]): ProductGroup[] {
+  const order: string[] = [];
+  const byProduct = new Map<string, Tool[]>();
+  for (const t of tools) {
+    if (!byProduct.has(t.productId)) {
+      byProduct.set(t.productId, []);
+      order.push(t.productId);
+    }
+    byProduct.get(t.productId)!.push(t);
+  }
+  return order.map((productId) => {
+    const surfaces = byProduct.get(productId)!;
+    const primary = surfaces.find((s) => s.isPrimarySurface) ?? surfaces[0];
+    return {
+      productId,
+      productName: primary.name,
+      vendor: primary.vendor,
+      primary,
+      surfaces: [primary, ...surfaces.filter((s) => s !== primary)],
+    };
+  });
+}
+
+/** Returns one error string per product that does not have exactly one primary surface. */
+export function validateProductInvariant(tools: Tool[]): string[] {
+  const byProduct = new Map<string, Tool[]>();
+  for (const t of tools) {
+    if (!byProduct.has(t.productId)) byProduct.set(t.productId, []);
+    byProduct.get(t.productId)!.push(t);
+  }
+  const errors: string[] = [];
+  for (const [productId, surfaces] of byProduct) {
+    const primaries = surfaces.filter((s) => s.isPrimarySurface);
+    if (primaries.length !== 1) {
+      errors.push(
+        `product "${productId}" must have exactly one primary surface, found ${primaries.length} (surfaces: ${surfaces.map((s) => s.id).join(', ')})`,
+      );
+    }
+  }
+  return errors;
+}

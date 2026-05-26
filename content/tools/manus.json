@@ -2,8 +2,11 @@
   "id": "manus",
   "name": "Manus",
   "vendor": "Manus",
+  "productId": "manus",
+  "surface": "Web app",
+  "isPrimarySurface": true,
   "priority": "P1",
-  "description": "Manus is an autonomous AI agent platform that can browse the web, execute code, manage files, and complete complex multi-step tasks independently — positioning itself as a general-purpose AI agent that goes beyond chat to take real actions.",
+  "description": "Manus is an autonomous AI agent product (not a chat model) that plans and executes complex multi-step tasks — browsing the web, driving a local browser, running code, managing files, and using OAuth/MCP connectors. Its ownership is currently UNRESOLVED: Meta acquired Manus for ~$2B in December 2025, but China's NDRC blocked the deal on antimonopoly grounds in April 2026, and the founders are seeking ~$1B to re-independence with no confirmed outcome. Treat the vendor as unclear until this resolves.",
   "url": "https://manus.im",
   "capabilities": {
     "writing-chat": {
@@ -31,12 +34,13 @@
         "Agent may require clarification for ambiguous tasks"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited task credits per month" },
-        { "tier": "Plus ($39/mo)", "details": "More task credits with priority execution" },
-        { "tier": "Team", "details": "Shared workspace with team task management" }
+        { "tier": "Free", "details": "$0 — ~1,000 starter credits plus ~300 daily-refresh credits" },
+        { "tier": "Pro Entry ($20/mo)", "details": "~4,000 credits/mo with priority execution" },
+        { "tier": "Pro Mid ($40/mo)", "details": "~8,000 credits/mo for heavier autonomous work" },
+        { "tier": "Pro Top ($200/mo)", "details": "~40,000 credits/mo for the most intensive workloads" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Public launch of autonomous AI agent with chat-based task delegation" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Public launch of autonomous AI agent; generally available with multiple major feature updates since" }
       ]
     },
     "research": {
@@ -53,22 +57,28 @@
           "description": "Cross-reference information from dozens of websites to produce comprehensive, fact-checked research outputs"
         },
         {
+          "name": "Wide Research",
+          "description": "Parallelized research across many items or sources simultaneously, fanning out work for faster broad coverage"
+        },
+        {
           "name": "Research Report Generation",
           "description": "Produce formatted research reports with citations, comparisons, and analysis as downloadable documents"
         }
       ],
       "limitations": [
-        "Cannot access paywalled or login-protected content",
-        "Research quality depends on available public web sources",
+        "Login-protected content reachable only when using the Browser Operator or a connector",
+        "Research quality depends on available web sources",
         "May be slow for time-sensitive research (minutes per task)",
-        "Cannot guarantee accuracy of all extracted information"
+        "A single deep-research task can consume 900-1,000+ credits"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited research tasks per month" },
-        { "tier": "Plus ($39/mo)", "details": "More research tasks with higher priority" }
+        { "tier": "Free", "details": "~1,000 starter + ~300 daily credits; deep research can exhaust the free tier quickly" },
+        { "tier": "Pro Entry ($20/mo)", "details": "~4,000 credits/mo for more research tasks" },
+        { "tier": "Pro Top ($200/mo)", "details": "~40,000 credits/mo for high-volume Wide Research" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Autonomous multi-source web research capability" }
+        { "version": "Wide Research", "date": "2025", "changes": "Parallelized multi-source research added" },
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Autonomous multi-source web research capability" }
       ]
     },
     "file-analysis": {
@@ -92,11 +102,11 @@
         "Analysis depth depends on task context and instructions"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "File analysis as part of task credits" },
-        { "tier": "Plus ($39/mo)", "details": "Higher file size limits and more complex analysis tasks" }
+        { "tier": "Free","details": "File analysis as part of task credits" },
+        { "tier": "Pro Mid ($40/mo)","details": "Higher file size limits and more complex analysis tasks" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "File upload and analysis within agent tasks" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "File upload and analysis within agent tasks" }
       ]
     },
     "document-creation": {
@@ -124,11 +134,11 @@
         "No fine-grained document formatting controls"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Document creation as part of task credits" },
-        { "tier": "Plus ($39/mo)", "details": "Larger and more complex document generation" }
+        { "tier": "Free","details": "Document creation as part of task credits" },
+        { "tier": "Pro Mid ($40/mo)","details": "Larger and more complex document generation" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Multi-format document creation as task deliverables" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Multi-format document creation as task deliverables" }
       ]
     },
     "image-generation": {
@@ -150,7 +160,7 @@
         { "tier": "All tiers", "details": "Not available as native capability" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "No native image generation" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "No native image generation" }
       ]
     },
     "prototyping": {
@@ -174,44 +184,53 @@
         "No IDE integration or persistent development environment"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Code execution as part of task credits" },
-        { "tier": "Plus ($39/mo)", "details": "More complex code execution tasks with higher time limits" }
+        { "tier": "Free","details": "Code execution as part of task credits" },
+        { "tier": "Pro Mid ($40/mo)","details": "More complex code execution tasks with higher time limits" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Code execution capability within agent sandbox" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Code execution capability within agent sandbox" }
       ]
     },
     "personalization": {
       "category": "personalization",
-      "supported": false,
-      "summary": "Manus has minimal personalization features. Tasks are standalone and there is no persistent preference or instruction system across tasks.",
+      "supported": true,
+      "summary": "Manus now supports Project-scoped custom instructions: a Project carries persistent instructions and files across its tasks, though there is no single global preference profile spanning all work.",
       "subFeatures": [
         {
-          "name": "Task Instructions",
-          "description": "Provide detailed instructions for each task to guide agent behavior, but these do not persist across tasks"
+          "name": "Project Custom Instructions",
+          "description": "Set custom instructions at the Project level that persist across all tasks within that Project"
+        },
+        {
+          "name": "Per-Task Instructions",
+          "description": "Provide detailed instructions for an individual task to guide agent behavior for that run"
         }
       ],
       "limitations": [
-        "No persistent user preferences or instructions",
-        "No custom instruction system like ChatGPT",
-        "No memory of past task preferences",
-        "Each task starts from a clean state"
+        "No single global preference profile spanning all Projects",
+        "Personalization is scoped to a Project rather than a user-wide memory",
+        "No automatic learning of preferences across unrelated tasks"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "No dedicated personalization features" }
+        { "tier": "Free", "details": "Project and per-task instructions within free credits" },
+        { "tier": "Pro Mid ($40/mo)", "details": "More Projects with persistent custom instructions" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Per-task instruction system" }
+        { "version": "Projects", "date": "2025", "changes": "Project-scoped custom instructions added" },
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Per-task instruction system" }
       ]
     },
     "persistent-context": {
       "category": "persistent-context",
       "supported": true,
-      "summary": "Manus maintains a history of completed tasks and their deliverables, allowing users to review and reference past task results.",
+      "summary": "Manus offers Projects — bounded persistent workspaces with files, custom instructions, and scoped task history — alongside a full history of completed tasks and downloadable deliverables.",
       "subFeatures": [
         {
+          "name": "Projects",
+          "description": "Bounded persistent workspaces holding files, custom instructions, and scoped task history, so related tasks share context"
+        },
+        {
           "name": "Task History",
-          "description": "Complete history of all executed tasks with instructions, execution logs, and deliverables accessible in the dashboard"
+          "description": "Complete history of executed tasks with instructions, execution logs, and deliverables accessible in the dashboard"
         },
         {
           "name": "Deliverable Storage",
@@ -219,17 +238,18 @@
         }
       ],
       "limitations": [
-        "No cross-task memory or learning",
-        "Agent does not remember previous task context in new tasks",
+        "Persistent context is scoped to a Project rather than global cross-task memory",
+        "No automatic learning of preferences across unrelated tasks",
         "Storage limits on retained deliverables",
-        "No knowledge base or persistent document storage"
+        "Knowledge persistence tied to Project files"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited task history retention" },
-        { "tier": "Plus ($39/mo)", "details": "Extended task history and deliverable storage" }
+        { "tier": "Free", "details": "Projects and task history within free credits" },
+        { "tier": "Pro Mid ($40/mo)", "details": "More Projects, extended task history and deliverable storage" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Task history and deliverable storage dashboard" }
+        { "version": "Projects", "date": "2025", "changes": "Bounded persistent workspaces with files, instructions, and scoped history" },
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Task history and deliverable storage dashboard" }
       ]
     },
     "agents": {
@@ -242,67 +262,68 @@
           "description": "Agent analyzes the task objective, creates a multi-step execution plan, and works through each step independently"
         },
         {
-          "name": "Browser Automation",
-          "description": "Control a full web browser to navigate sites, fill forms, click buttons, scroll, and interact with web applications"
+          "name": "Browser Operator (Local Browser)",
+          "description": "Drives the user's local browser (not just a sandboxed one), giving the agent broader reach for authenticated web sessions, in addition to its own cloud browser"
+        },
+        {
+          "name": "Scheduled Tasks",
+          "description": "Recurring autonomous jobs (e.g., weekly competitor digests) that run on a schedule without user initiation"
         },
         {
           "name": "Code Execution Agent",
           "description": "Write and run code in a sandboxed environment to process data, make calculations, and generate outputs"
         },
         {
-          "name": "File Management",
-          "description": "Create, read, edit, and organize files within the agent's workspace as part of task execution"
-        },
-        {
           "name": "Multi-Tool Orchestration",
-          "description": "Seamlessly combine web browsing, code execution, and file management within a single complex task"
+          "description": "Seamlessly combine web browsing, code execution, connectors, and file management within a single complex task"
         }
       ],
       "limitations": [
-        "No desktop application control — limited to web browser and sandbox",
         "Complex tasks may take significant time (10+ minutes)",
         "Agent may make mistakes that require task restart",
-        "Cannot interact with mobile apps or native desktop software",
-        "CAPTCHA and anti-bot measures can block web tasks"
+        "Cannot interact with mobile apps or native desktop software beyond the browser",
+        "CAPTCHA and anti-bot measures can block web tasks",
+        "Autonomous runs consume credits quickly (900-1,000+ for a deep task)"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Limited task credits for agent execution" },
-        { "tier": "Plus ($39/mo)", "details": "More task credits, longer execution times, priority processing" },
-        { "tier": "Team", "details": "Shared agent workspace with team collaboration" }
+        { "tier": "Free", "details": "Limited credits for agent execution" },
+        { "tier": "Pro Entry ($20/mo)", "details": "~4,000 credits/mo with priority processing" },
+        { "tier": "Pro Top ($200/mo)", "details": "~40,000 credits/mo, longest execution times" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "General-purpose autonomous AI agent with multi-tool orchestration" },
-        { "version": "Manus Preview", "date": "2025-01", "changes": "Limited preview release with invite-only access" }
+        { "version": "Browser Operator", "date": "2025", "changes": "Agent can drive the user's local browser for authenticated sessions" },
+        { "version": "Scheduled Tasks", "date": "2025", "changes": "Recurring autonomous jobs that run on a schedule" },
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "General-purpose autonomous AI agent with multi-tool orchestration" }
       ]
     },
     "connectors": {
       "category": "connectors",
       "supported": true,
-      "summary": "Manus connects to the web through its built-in browser automation and can interact with any publicly accessible web service. It also provides API access for programmatic task submission.",
+      "summary": "Manus connects to authenticated third-party services through OAuth/MCP-based Connectors (Gmail, Google Calendar, Google Drive, Notion, GitHub, Slack, Stripe, HubSpot, Hugging Face and more), and can also reach any public site via its Browser Operator. Connectors are the primary integration story; there is no standalone public API at published pricing.",
       "subFeatures": [
         {
-          "name": "Web Service Interaction",
-          "description": "The agent can interact with any publicly accessible web service through browser automation — effectively connecting to any web-based tool"
+          "name": "Connectors (OAuth/MCP)",
+          "description": "Connect authenticated services — Gmail, Google Calendar, Google Drive, Notion, GitHub, Slack, Stripe, HubSpot, Hugging Face and more — via OAuth or MCP, with inline connector recommendations within tasks"
         },
         {
-          "name": "API Access",
-          "description": "Programmatic task submission and result retrieval through the Manus API for integration into workflows"
+          "name": "Browser Operator Reach",
+          "description": "Drive the user's local browser to interact with any publicly accessible web service, extending reach beyond explicit connectors"
         }
       ],
       "limitations": [
-        "No native integrations with specific third-party tools",
-        "Web service interaction limited to what a browser can access",
-        "No OAuth or SSO connectors for authenticated services",
-        "API integration requires development effort"
+        "No standalone public API for third-party programmatic task submission at published pricing",
+        "Connector coverage limited to supported OAuth/MCP services",
+        "Browser-based reach limited to what a browser can access",
+        "Some connectors require granting broad account permissions"
       ],
       "pricingTiers": [
-        { "tier": "Free Tier", "details": "Web interaction through browser agent" },
-        { "tier": "Plus ($39/mo)", "details": "API access for programmatic task submission" },
-        { "tier": "Team", "details": "Advanced API features and team integration" }
+        { "tier": "Free", "details": "Connectors and Browser Operator within free credits" },
+        { "tier": "Pro Entry ($20/mo)", "details": "Connectors with more monthly credits" },
+        { "tier": "Pro Top ($200/mo)", "details": "Highest credit allowance for connector-heavy workflows" }
       ],
       "versionHistory": [
-        { "version": "API Access", "date": "2025-04", "changes": "Programmatic API for task submission and result retrieval" },
-        { "version": "Manus Launch", "date": "2025-03", "changes": "Browser-based web service interaction" }
+        { "version": "Connectors", "date": "2025", "changes": "OAuth/MCP connectors for Gmail, Drive, Notion, GitHub, Slack, Stripe, HubSpot and more" },
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "Browser-based web service interaction" }
       ]
     },
     "dictation": {
@@ -324,13 +345,17 @@
         { "tier": "All tiers", "details": "Not available" }
       ],
       "versionHistory": [
-        { "version": "Manus Launch", "date": "2025-03", "changes": "No voice capabilities included" }
+        { "version": "Manus (GA)", "date": "2025-03", "changes": "No voice capabilities included" }
       ]
     }
   },
   "sourceRefs": [
     "manus-overview",
     "manus-docs",
-    "manus-pricing"
+    "manus-pricing",
+    "manus-plans-docs",
+    "manus-tools",
+    "manus-meta-blocked-cnbc",
+    "manus-unwind-tc"
   ]
 }

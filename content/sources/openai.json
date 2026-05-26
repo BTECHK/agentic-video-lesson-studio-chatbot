@@ -60,6 +60,41 @@
       "id": "openai-plugins-deprecation",
       "url": "https://help.openai.com/en/articles/8988022-winding-down-the-chatgpt-plugins-beta",
       "title": "ChatGPT Plugins Wind-Down"
+    },
+    {
+      "id": "openai-gpt-5-5",
+      "url": "https://openai.com/index/introducing-gpt-5-5/",
+      "title": "Introducing GPT-5.5"
+    },
+    {
+      "id": "openai-gpt-5-5-instant",
+      "url": "https://openai.com/index/gpt-5-5-instant/",
+      "title": "GPT-5.5 Instant — New Default Model for ChatGPT"
+    },
+    {
+      "id": "openai-retiring-gpt-4o",
+      "url": "https://openai.com/index/retiring-gpt-4o-and-older-models/",
+      "title": "Retiring GPT-4o and Older ChatGPT Models"
+    },
+    {
+      "id": "openai-chatgpt-pricing",
+      "url": "https://openai.com/chatgpt/pricing/",
+      "title": "ChatGPT Plans and Pricing"
+    },
+    {
+      "id": "openai-chatgpt-pro-tiers",
+      "url": "https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers",
+      "title": "About ChatGPT Pro Tiers"
+    },
+    {
+      "id": "openai-chatgpt-go",
+      "url": "https://openai.com/index/introducing-chatgpt-go/",
+      "title": "Introducing ChatGPT Go"
+    },
+    {
+      "id": "openai-chatgpt-agent",
+      "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+      "title": "ChatGPT Release Notes (ChatGPT agent, Images 2.0)"
     }
   ]
 }

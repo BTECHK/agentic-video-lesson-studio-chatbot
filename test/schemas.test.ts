@@ -43,6 +43,9 @@ function makeMinimalTool(overrides: Record<string, unknown> = {}) {
     url: 'https://example.com',
     capabilities,
     sourceRefs: ['test-source-1'],
+    productId: 'test-tool',
+    surface: 'Web app',
+    isPrimarySurface: true,
     ...overrides,
   };
 }
@@ -102,6 +105,26 @@ describe('ToolSchema', () => {
 
   it('rejects a tool with invalid URL', () => {
     expect(ToolSchema.safeParse(makeMinimalTool({ url: 'not-a-url' })).success).toBe(false);
+  });
+
+  it('accepts a tool with productId, surface, and isPrimarySurface', () => {
+    expect(ToolSchema.safeParse(makeMinimalTool()).success).toBe(true);
+  });
+
+  it('rejects a tool missing productId', () => {
+    const tool = makeMinimalTool();
+    delete (tool as Record<string, unknown>).productId;
+    expect(ToolSchema.safeParse(tool).success).toBe(false);
+  });
+
+  it('rejects a tool missing surface', () => {
+    const tool = makeMinimalTool();
+    delete (tool as Record<string, unknown>).surface;
+    expect(ToolSchema.safeParse(tool).success).toBe(false);
+  });
+
+  it('rejects a tool with non-boolean isPrimarySurface', () => {
+    expect(ToolSchema.safeParse(makeMinimalTool({ isPrimarySurface: 'yes' })).success).toBe(false);
   });
 });
 

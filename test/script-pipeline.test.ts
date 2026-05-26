@@ -16,7 +16,7 @@ function makeOutline(overrides: Record<string, unknown> = {}) {
       {
         id: 'sec1', title: 'S', objective: 'O',
         beats: [
-          { id: 'b1', summary: 'tools', toolRefs: ['claude', 'gemini'], capabilityRefs: ['writing-chat', 'dictation'] },
+          { id: 'b1', summary: 'tools', toolRefs: ['claude', 'gemini', 'deepseek'], capabilityRefs: ['writing-chat', 'dictation'] },
         ],
       },
     ],
@@ -81,8 +81,8 @@ describe('buildGroundingContext', () => {
   });
   it('captures unsupported capabilities with their supported flag', () => {
     const g = buildGroundingContext(makeOutline(), TOOLS_DIR);
-    // Claude has no native dictation in the codified facts
-    expect(g.capabilities['claude:dictation']?.supported).toBe(false);
+    // DeepSeek has no native dictation in the codified facts
+    expect(g.capabilities['deepseek:dictation']?.supported).toBe(false);
   });
 });
 
@@ -118,12 +118,12 @@ describe('factCheckScript', () => {
 
   it('notes (does not flag) a reference to an unsupported capability', () => {
     const script = makeScript([
-      { id: 'b1', sectionId: 'sec1', beatId: 'b1', sceneType: 'feature-grid', narration: 'Claude has no built-in dictation.', contentRefs: ['cap:claude:dictation'] },
+      { id: 'b1', sectionId: 'sec1', beatId: 'b1', sceneType: 'feature-grid', narration: 'DeepSeek has no built-in dictation.', contentRefs: ['cap:deepseek:dictation'] },
     ]);
     const r = factCheckScript(script, grounding);
     expect(r.ok).toBe(true);
     expect(r.notes).toHaveLength(1);
-    expect(r.notes[0].ref).toBe('cap:claude:dictation');
+    expect(r.notes[0].ref).toBe('cap:deepseek:dictation');
   });
 
   it('flags malformed refs', () => {

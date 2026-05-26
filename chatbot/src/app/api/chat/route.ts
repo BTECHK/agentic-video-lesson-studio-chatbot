@@ -3,6 +3,7 @@ import { ChatRequestSchema } from '@/lib/types';
 import { parseCitations, verifyCitations } from '@/lib/citations';
 import { sessionStore } from '@/lib/session';
 import { getLLMProvider } from '@/lib/llm/provider';
+import { classifyProviderError } from '@/lib/llm/errors';
 import { findRelevantContent, formatContentForPrompt } from '@/lib/content-retrieval';
 
 export async function POST(req: NextRequest) {
@@ -57,10 +58,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: cleanContent, citations: verifiedCitations });
   } catch (error) {
-    console.error('LLM call failed:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate response' },
-      { status: 500 },
-    );
+    const { status, message } = classifyProviderError(error);
+    // Log the real cause server-side (status + full error) so billing/model/auth
+    // failures are diagnosable; return only a user-safe message.
+    console.error('LLM call failed:', { status, error });
+    return NextResponse.json({ error: message }, { status });
   }
 }

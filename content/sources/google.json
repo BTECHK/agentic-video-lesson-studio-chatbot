@@ -50,6 +50,36 @@
       "id": "google-notebooklm",
       "url": "https://notebooklm.google.com",
       "title": "NotebookLM — AI Research Assistant"
+    },
+    {
+      "id": "google-gemini-3-5-flash",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+      "title": "Gemini 3.5 Flash Announcement (Google I/O 2026)"
+    },
+    {
+      "id": "google-gemini-model-family",
+      "url": "https://deepmind.google/models/gemini/",
+      "title": "Gemini Model Family Overview"
+    },
+    {
+      "id": "google-ai-subscriptions",
+      "url": "https://gemini.google/subscriptions/",
+      "title": "Gemini Subscriptions and Pricing"
+    },
+    {
+      "id": "google-one-ai-plans",
+      "url": "https://blog.google/products-and-platforms/products/google-one/google-ai-subscriptions/",
+      "title": "Google AI Subscription Tiers (I/O 2026)"
+    },
+    {
+      "id": "google-gemini-app-io-2026",
+      "url": "https://blog.google/products-and-platforms/products/gemini/gemini-3-gemini-app/",
+      "title": "Gemini App Overview — Gemini 3 and Gemini Agent"
+    },
+    {
+      "id": "google-gemini-release-notes",
+      "url": "https://gemini.google/release-notes/",
+      "title": "Gemini App Release Notes"
     }
   ]
 }

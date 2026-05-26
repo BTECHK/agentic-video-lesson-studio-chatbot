@@ -2,9 +2,12 @@
   "id": "codex",
   "name": "Codex",
   "vendor": "OpenAI",
+  "productId": "chatgpt",
+  "surface": "Codex",
+  "isPrimarySurface": false,
   "priority": "P0",
-  "description": "OpenAI's cloud-based coding agent and open-source CLI tool that runs in a sandboxed environment, performing multi-file code generation, editing, debugging, and agentic task execution using OpenAI models.",
-  "url": "https://openai.com/index/introducing-codex",
+  "description": "Codex is a coding-agent surface of ChatGPT (not a standalone product), included with ChatGPT paid plans with no separate subscription. It is accessed at chatgpt.com/codex and through dedicated surfaces — the flagship desktop app (computer use, memory, 90+ plugins, in-app browser, Goal mode), plus CLI, IDE extension, and Chrome extension — performing multi-file code generation, editing, debugging, and agentic task execution using OpenAI frontier models.",
+  "url": "https://developers.openai.com/codex",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",
@@ -31,35 +34,43 @@
         "No general-purpose writing — optimized specifically for code-related tasks"
       ],
       "pricingTiers": [
-        { "tier": "CLI (Free)", "details": "Open-source CLI using your own OpenAI API key, pay per token usage" },
-        { "tier": "Codex Cloud (Pro $200/mo)", "details": "Cloud-hosted agent with sandboxed execution included in ChatGPT Pro subscription" },
-        { "tier": "Codex Cloud (Team $25/user/mo)", "details": "Cloud agent access for teams with shared workspace" }
+        { "tier": "Free / Go ($8/mo)", "details": "Codex included for a limited time (promotional as of May 2026) with limited usage; CLI also usable with your own OpenAI API key (token billing)" },
+        { "tier": "Plus ($20/mo)", "details": "Codex included; GPT-5.5 / GPT-5.4 / GPT-5.4-mini / GPT-5.3-Codex within ChatGPT subscription (no separate Codex subscription)" },
+        { "tier": "Pro ($100/$200/mo)", "details": "Included; 5x Plus usage at $100, 20x Plus usage at $200; GPT-5.3-Codex-Spark research preview" },
+        { "tier": "Business / Enterprise / Edu (custom)", "details": "Included with larger VMs and admin controls; pay-as-you-go Codex-only seats (token billing) available" }
       ],
       "versionHistory": [
-        { "version": "Codex Cloud", "date": "2025-05", "changes": "Cloud-based coding agent with sandbox execution, parallel task processing" },
+        { "version": "GPT-5.5 added", "date": "2026-04-23", "changes": "GPT-5.5 added to the Codex model lineup as the default" },
+        { "version": "Codex desktop app", "date": "2026-02", "changes": "Desktop Codex app released; GPT-5.3-Codex and GPT-5.3-Codex-Spark models launched" },
+        { "version": "Codex Cloud", "date": "2025-05", "changes": "Cloud-based coding agent with sandbox execution, parallel task processing (Pro research preview 2025-05-16, Plus 2025-06-03)" },
         { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Open-source CLI tool released on GitHub for terminal-based coding assistance" }
       ]
     },
     "research": {
       "category": "research",
-      "supported": false,
-      "summary": "Codex does not include web browsing or research capabilities. It operates within the codebase context and does not search the internet for information.",
+      "supported": true,
+      "summary": "Since the April 2026 'Codex for almost everything' update, Codex has a built-in in-app browser and is explicitly pitched for research workflows, in addition to navigating the local codebase. Research support is partial — it is centered on the desktop app's browsing rather than a dedicated Deep Research feature.",
       "subFeatures": [
         {
+          "name": "In-App Browser",
+          "description": "Desktop Codex can browse the web with a built-in browser and users can annotate pages directly, enabling research workflows (added in the 2026-04-16 update)",
+          "availableOn": ["Codex desktop app"]
+        },
+        {
           "name": "Codebase Search",
-          "description": "Codex can search and navigate the local repository to find relevant files, functions, and patterns, but this is code navigation rather than web research"
+          "description": "Codex can search and navigate the local repository to find relevant files, functions, and patterns"
         }
       ],
       "limitations": [
-        "No web browsing or internet search capability",
-        "Cannot access documentation sites or Stack Overflow during execution",
-        "Knowledge limited to training data and provided repository context"
+        "Browsing/research is centered on the desktop app, not all surfaces",
+        "No dedicated multi-source Deep Research report feature like ChatGPT's web app",
+        "Research is oriented toward coding and product workflows"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available — Codex is a coding-focused tool without research features" }
+        { "tier": "Plus ($20/mo) and above", "details": "In-app browser and research workflows via the Codex desktop app, included with ChatGPT paid plans" }
       ],
       "versionHistory": [
-        { "version": "Codex Cloud", "date": "2025-05", "changes": "No research capability included at launch" }
+        { "version": "Codex for almost everything", "date": "2026-04-16", "changes": "Added in-app browser and research workflows to the Codex desktop app" }
       ]
     },
     "file-analysis": {
@@ -123,24 +134,25 @@
     },
     "image-generation": {
       "category": "image-generation",
-      "supported": false,
-      "summary": "Codex is a code-focused tool and does not generate images. It has no DALL-E or image generation integration.",
+      "supported": true,
+      "summary": "Image generation was added to the Codex desktop app in the April 2026 'Codex for almost everything' update, using gpt-image-1.5 for product concept and mockup visuals. Support is partial — limited to the desktop app surface.",
       "subFeatures": [
         {
-          "name": "Not Available",
-          "description": "Codex is designed for code generation and editing, not image creation"
+          "name": "Mockup and Concept Image Generation",
+          "description": "Desktop Codex uses gpt-image-1.5 to generate product concept and mockup visuals as part of coding and design workflows (added 2026-04-16)",
+          "availableOn": ["Codex desktop app"]
         }
       ],
       "limitations": [
-        "No image generation capability",
-        "No DALL-E integration",
-        "Cannot create diagrams, charts, or visual assets"
+        "Image generation is available only in the Codex desktop app, not the CLI, IDE extension, or web surface",
+        "Oriented toward product concepts and mockups rather than general-purpose art",
+        "Uses gpt-image-1.5 (not the ChatGPT web app's image stack)"
       ],
       "pricingTiers": [
-        { "tier": "All tiers", "details": "Not available" }
+        { "tier": "Plus ($20/mo) and above", "details": "Image generation in the Codex desktop app, included with ChatGPT paid plans" }
       ],
       "versionHistory": [
-        { "version": "Codex Cloud", "date": "2025-05", "changes": "Launched without image generation capabilities" }
+        { "version": "Codex for almost everything", "date": "2026-04-16", "changes": "Added gpt-image-1.5 image generation to the Codex desktop app" }
       ]
     },
     "prototyping": {
@@ -184,7 +196,7 @@
     "personalization": {
       "category": "personalization",
       "supported": true,
-      "summary": "Codex CLI supports configuration files and custom instructions that tailor its behavior to project-specific conventions, coding styles, and preferred patterns.",
+      "summary": "Codex supports project configuration files and custom instructions plus, since the April 2026 desktop update, cross-session memory that remembers preferences, recurring workflows, and tech stacks.",
       "subFeatures": [
         {
           "name": "Project Configuration",
@@ -192,20 +204,24 @@
         },
         {
           "name": "Model Selection",
-          "description": "Choose between different OpenAI models (GPT-4o, o3, o4-mini) based on task complexity and cost preferences"
+          "description": "Choose between Codex models — GPT-5.5 (default), GPT-5.4, GPT-5.4-mini, and GPT-5.3-Codex (plus GPT-5.3-Codex-Spark on Pro) — based on task complexity and cost preferences"
+        },
+        {
+          "name": "Memory",
+          "description": "Desktop Codex remembers preferences, recurring workflows, and tech stacks across sessions (added 2026-04-16; personalization rolling out to Enterprise, Edu, and EU/UK users in May 2026)",
+          "availableOn": ["Codex desktop app"]
         }
       ],
       "limitations": [
-        "No persistent memory across separate sessions",
+        "Cross-session memory is centered on the desktop app",
         "Configuration limited to project-level files",
-        "No user profile or preference system",
-        "No learning from past interactions"
+        "Personalization still rolling out to Enterprise, Edu, and EU/UK regions as of May 2026"
       ],
       "pricingTiers": [
-        { "tier": "CLI (Free)", "details": "Full project configuration support" },
-        { "tier": "Codex Cloud", "details": "Project configuration carried into sandbox environment" }
+        { "tier": "Plus ($20/mo) and above", "details": "Project configuration, model selection, and cross-session memory included with ChatGPT paid plans" }
       ],
       "versionHistory": [
+        { "version": "Codex for almost everything", "date": "2026-04-16", "changes": "Added cross-session memory (preferences, workflows, tech stacks) to the desktop app" },
         { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Project configuration file support for customizing agent behavior" }
       ]
     },
@@ -245,39 +261,44 @@
     "agents": {
       "category": "agents",
       "supported": true,
-      "summary": "Codex is fundamentally an agentic coding tool. The cloud agent autonomously plans, writes, tests, and commits code changes in a sandboxed environment, processing multiple tasks in parallel.",
+      "summary": "Codex is fundamentally an agentic coding tool. Agents autonomously plan, write, test, and commit code changes in sandboxed environments and run multiple tasks in parallel. The April 2026 desktop app adds computer use (its own cursor across Mac apps) and Goal mode (work toward a defined outcome across turns).",
       "subFeatures": [
         {
           "name": "Autonomous Code Agent",
-          "description": "Cloud agent independently reads the codebase, plans changes, writes code, runs tests, and presents verified results as a pull request or diff"
+          "description": "Agent independently reads the codebase, plans changes, writes code, runs tests, and presents verified results as a pull request or diff"
+        },
+        {
+          "name": "Computer Use",
+          "description": "Desktop Codex can see, click, and type with its own cursor across all Mac apps, with multiple agents running in parallel without interfering with the user's own work (added 2026-04-16)",
+          "availableOn": ["Codex desktop app"]
+        },
+        {
+          "name": "Goal Mode",
+          "description": "Define an outcome plus success criteria and Codex works toward it across turns; available in the desktop app, IDE extension, and CLI (GA 2026-04-16)"
         },
         {
           "name": "Parallel Task Processing",
-          "description": "Run multiple coding tasks simultaneously, each in an isolated sandbox environment",
-          "availableOn": ["Codex Cloud"]
+          "description": "Run multiple coding tasks simultaneously, each in an isolated sandbox environment"
         },
         {
           "name": "Agentic Tool Use",
-          "description": "Agent uses shell commands, file operations, test runners, and linters autonomously to complete tasks"
-        },
-        {
-          "name": "Sandbox Execution",
-          "description": "Each task runs in an isolated container with the full repository, ensuring safe code execution without affecting the main codebase",
-          "availableOn": ["Codex Cloud"]
+          "description": "Agent uses shell commands, file operations, test runners, linters, and 90+ plugins (Skills, app integrations, MCP servers) autonomously to complete tasks"
         }
       ],
       "limitations": [
-        "Sandbox has no internet access — cannot install packages not already in the repo",
-        "Cannot interact with external services, databases, or APIs during execution",
-        "Task scope limited to single-repository changes",
+        "Cloud sandbox has limited internet access — cannot install packages not already in the repo",
+        "Computer use is limited to the desktop app (Mac apps)",
+        "Task scope generally limited to single-repository changes",
         "Human review required before merging agent-generated changes"
       ],
       "pricingTiers": [
-        { "tier": "CLI (Free)", "details": "Single-task agentic coding via API key" },
-        { "tier": "Codex Cloud (Pro $200/mo)", "details": "Parallel autonomous agents with sandbox execution" },
-        { "tier": "Codex Cloud (Team $25/user/mo)", "details": "Shared agent workspace with team collaboration" }
+        { "tier": "Free / Go ($8/mo)", "details": "Limited agentic coding included for a limited time (promotional); CLI also via API key" },
+        { "tier": "Plus ($20/mo)", "details": "Agentic coding included with ChatGPT subscription; parallel agents and sandbox execution" },
+        { "tier": "Pro ($100/$200/mo)", "details": "5x Plus usage at $100, 20x at $200; GPT-5.3-Codex-Spark research preview" },
+        { "tier": "Business / Enterprise (custom)", "details": "Larger VMs and admin controls; pay-as-you-go Codex-only seats available" }
       ],
       "versionHistory": [
+        { "version": "Codex for almost everything", "date": "2026-04-16", "changes": "Desktop app adds computer use, Goal mode GA, 90+ plugins (Skills, app integrations, MCP servers)" },
         { "version": "Codex Cloud", "date": "2025-05", "changes": "Cloud-based autonomous coding agent with parallel task execution" },
         { "version": "Codex CLI 0.1", "date": "2025-04", "changes": "Terminal-based agentic coding with tool use" }
       ]
@@ -285,30 +306,33 @@
     "connectors": {
       "category": "connectors",
       "supported": true,
-      "summary": "Codex integrates with GitHub for repository access, pull request creation, and code review workflows. The cloud agent can be triggered from the ChatGPT interface.",
+      "summary": "Codex integrates with GitHub for repository access and pull requests, runs as an IDE extension and Chrome extension, and (since the April 2026 desktop update) supports 90+ plugins including Atlassian Rovo, CircleCI, CodeRabbit, GitLab Issues, Microsoft Suite, Neon by Databricks, Remotion, and Render via Skills, app integrations, and MCP servers.",
       "subFeatures": [
         {
           "name": "GitHub Integration",
-          "description": "Cloud agent clones repositories from GitHub, creates branches, and opens pull requests with completed changes",
-          "availableOn": ["Codex Cloud"]
+          "description": "Agent clones repositories from GitHub, creates branches, and opens pull requests with completed changes"
         },
         {
-          "name": "ChatGPT Interface",
-          "description": "Codex Cloud tasks can be initiated from the ChatGPT web interface, bridging conversational AI with code agent execution",
-          "availableOn": ["Codex Cloud"]
+          "name": "90+ Plugins (Skills, App Integrations, MCP)",
+          "description": "Desktop Codex connects to 90+ plugins including Atlassian Rovo, CircleCI, CodeRabbit, GitLab Issues, Microsoft Suite, Neon by Databricks, Remotion, and Render (added 2026-04-16)",
+          "availableOn": ["Codex desktop app"]
+        },
+        {
+          "name": "ChatGPT and Multi-Surface Access",
+          "description": "Codex tasks can be initiated from chatgpt.com/codex and across the desktop app, IDE extension, and Chrome extension, all gated by a ChatGPT plan"
         }
       ],
       "limitations": [
-        "GitHub is the only supported version control platform at launch",
-        "No native IDE integration (VS Code, JetBrains)",
-        "CLI operates on local filesystem only — no cloud storage connectors",
-        "No Slack, Jira, or project management tool integration"
+        "Full 90+ plugin catalog is centered on the desktop app",
+        "GitHub is the primary version-control integration",
+        "CLI operates on the local filesystem",
+        "All surfaces require ChatGPT plan credentials"
       ],
       "pricingTiers": [
-        { "tier": "CLI (Free)", "details": "Local filesystem only" },
-        { "tier": "Codex Cloud", "details": "GitHub integration for repository access and PR creation" }
+        { "tier": "Plus ($20/mo) and above", "details": "GitHub integration, IDE/Chrome extensions, and 90+ plugins included with ChatGPT paid plans" }
       ],
       "versionHistory": [
+        { "version": "Codex for almost everything", "date": "2026-04-16", "changes": "Added 90+ plugins (Skills, app integrations, MCP servers) and in-app browser to the desktop app" },
         { "version": "Codex Cloud", "date": "2025-05", "changes": "GitHub repository integration with PR workflow" }
       ]
     },
@@ -340,6 +364,12 @@
     "codex-cli-announcement",
     "codex-cli-docs",
     "codex-sandbox-docs",
-    "openai-codex-pricing"
+    "openai-codex-pricing",
+    "codex-developers",
+    "codex-models",
+    "codex-pricing-developers",
+    "codex-for-almost-everything",
+    "codex-changelog",
+    "codex-chatgpt-plan"
   ]
 }

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MockProvider } from '@/lib/llm/mock-provider';
 import { getLLMProvider } from '@/lib/llm/provider';
+import { resolveAnthropicModel, DEFAULT_ANTHROPIC_MODEL } from '@/lib/llm/anthropic-provider';
 
 describe('MockProvider', () => {
   it('returns a response echoing the user message', async () => {
@@ -84,5 +85,23 @@ describe('getLLMProvider', () => {
     vi.stubEnv('LLM_PROVIDER', 'anthropic');
     const provider = getLLMProvider();
     expect(provider.constructor.name).toBe('AnthropicProvider');
+  });
+});
+
+describe('resolveAnthropicModel', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('defaults to a current, non-deprecated model', () => {
+    vi.stubEnv('ANTHROPIC_MODEL', '');
+    expect(resolveAnthropicModel()).toBe(DEFAULT_ANTHROPIC_MODEL);
+    // Guard against regressing to the EOL model from #30.
+    expect(DEFAULT_ANTHROPIC_MODEL).not.toBe('claude-sonnet-4-20250514');
+  });
+
+  it('honors an ANTHROPIC_MODEL override', () => {
+    vi.stubEnv('ANTHROPIC_MODEL', 'claude-opus-4-7');
+    expect(resolveAnthropicModel()).toBe('claude-opus-4-7');
   });
 });

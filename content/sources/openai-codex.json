@@ -25,6 +25,36 @@
       "id": "openai-codex-pricing",
       "url": "https://openai.com/pricing",
       "title": "OpenAI API and Codex Pricing"
+    },
+    {
+      "id": "codex-developers",
+      "url": "https://developers.openai.com/codex",
+      "title": "Codex — OpenAI Developers"
+    },
+    {
+      "id": "codex-models",
+      "url": "https://developers.openai.com/codex/models",
+      "title": "Codex Models — OpenAI Developers"
+    },
+    {
+      "id": "codex-pricing-developers",
+      "url": "https://developers.openai.com/codex/pricing",
+      "title": "Codex Pricing — OpenAI Developers"
+    },
+    {
+      "id": "codex-for-almost-everything",
+      "url": "https://openai.com/index/codex-for-almost-everything/",
+      "title": "Codex for (almost) everything"
+    },
+    {
+      "id": "codex-changelog",
+      "url": "https://developers.openai.com/codex/changelog",
+      "title": "Codex Changelog — OpenAI Developers"
+    },
+    {
+      "id": "codex-chatgpt-plan",
+      "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
+      "title": "Using Codex with your ChatGPT plan"
     }
   ]
 }

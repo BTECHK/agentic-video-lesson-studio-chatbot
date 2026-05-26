@@ -50,6 +50,66 @@
       "id": "anthropic-mcp",
       "url": "https://modelcontextprotocol.io/introduction",
       "title": "Model Context Protocol (MCP) Specification"
+    },
+    {
+      "id": "anthropic-models-overview",
+      "url": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
+      "title": "Claude Models Overview (Opus 4.7, Sonnet 4.6, Haiku 4.5)"
+    },
+    {
+      "id": "anthropic-opus-4-7",
+      "url": "https://www.anthropic.com/news/claude-opus-4-7",
+      "title": "Introducing Claude Opus 4.7"
+    },
+    {
+      "id": "anthropic-pricing-claude",
+      "url": "https://claude.com/pricing",
+      "title": "Claude Pricing"
+    },
+    {
+      "id": "anthropic-file-creation",
+      "url": "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude",
+      "title": "Create and Edit Files with Claude"
+    },
+    {
+      "id": "anthropic-memory",
+      "url": "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context",
+      "title": "Use Claude's Chat Search and Memory"
+    },
+    {
+      "id": "anthropic-research-agent",
+      "url": "https://support.claude.com/en/articles/11088861-using-research-on-claude",
+      "title": "Using Research on Claude"
+    },
+    {
+      "id": "anthropic-dictation",
+      "url": "https://support.claude.com/en/articles/10065434-using-dictation-on-claude-mobile",
+      "title": "Using Dictation on Claude Mobile"
+    },
+    {
+      "id": "anthropic-projects-help",
+      "url": "https://support.claude.com/en/articles/9517075-what-are-projects",
+      "title": "What Are Projects"
+    },
+    {
+      "id": "anthropic-slack",
+      "url": "https://support.claude.com/en/articles/12461605-using-claude-in-slack",
+      "title": "Using Claude in Slack"
+    },
+    {
+      "id": "cowork-product",
+      "url": "https://claude.com/product/cowork",
+      "title": "Claude Cowork Product Page"
+    },
+    {
+      "id": "cowork-enterprise-plugins",
+      "url": "https://claude.com/blog/cowork-plugins-across-enterprise",
+      "title": "Cowork Plugins Across the Enterprise"
+    },
+    {
+      "id": "cowork-cnbc",
+      "url": "https://www.cnbc.com/2026/02/24/anthropic-claude-cowork-office-worker.html",
+      "title": "Anthropic Claude Cowork for Office Workers (CNBC)"
     }
   ]
 }

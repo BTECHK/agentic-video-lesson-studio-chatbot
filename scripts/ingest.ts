@@ -66,6 +66,29 @@ function getToolIdsForVendor(vendor: string): string[] {
   return ids;
 }
 
+/**
+ * Classifies enabled vendors by whether automated scraping can refresh them.
+ * A vendor whose sources are ALL reference-only is "auto-scrape-inactive" — the
+ * traditional scraper skips reference-only sources, so a scheduled run cannot
+ * refresh it; it needs a Claude-assisted refresh (npm run ingest:llm) on the host.
+ */
+export function classifyVendorSources(
+  config: IngestConfig,
+): { active: string[]; referenceOnly: string[] } {
+  const active: string[] = [];
+  const referenceOnly: string[] = [];
+  for (const [id, vendor] of Object.entries(config.vendors)) {
+    if (!vendor.enabled) continue;
+    const modes = Object.values(vendor.sources).map((s) => s.scrapeMode);
+    if (modes.length > 0 && modes.every((m) => m === 'reference-only')) {
+      referenceOnly.push(id);
+    } else {
+      active.push(id);
+    }
+  }
+  return { active, referenceOnly };
+}
+
 // --- Scrape + diff + PR pipeline for a single vendor ---
 
 async function processVendor(
@@ -216,6 +239,17 @@ export async function runIngest(
       const deleted = rotateLogs();
       if (deleted > 0) {
         console.log(`[ingest] Rotated ${deleted} old log files`);
+      }
+
+      // Honest staleness signal: the traditional scraper skips reference-only
+      // sources, so a vendor with only reference-only sources cannot be refreshed
+      // here. Surface that explicitly so a weekly no-op is never mistaken for
+      // "everything is fresh" (the 15-month-drift failure mode).
+      const { active, referenceOnly } = classifyVendorSources(config);
+      if (referenceOnly.length > 0) {
+        const msg = `auto-scrape inactive for ${referenceOnly.length} vendor(s) with only reference-only sources (${referenceOnly.join(', ')}) — run a Claude-assisted refresh on the host: npm run ingest:llm --vendor <id>`;
+        console.warn(`[ingest] WARNING: ${msg}`);
+        log({ event: 'scheduled_reference_only', referenceOnlyVendors: referenceOnly, activeVendors: active, message: msg });
       }
 
       const vendors = getEnabledVendors(config);
