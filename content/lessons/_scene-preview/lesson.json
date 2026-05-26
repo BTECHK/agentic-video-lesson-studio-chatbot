@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0",
+  "id": "_scene-preview",
+  "lesson": {
+    "title": "Scene Preview (verification fixture)",
+    "topic": "Internal",
+    "module": "QA",
+    "duration": 1800
+  },
+  "scenes": [
+    {
+      "id": "preview-comparison",
+      "type": "comparison-chats",
+      "start": 0,
+      "duration": 300,
+      "content": {
+        "eyebrow": "Lesson 1.2 · Picking the right assistant",
+        "title": "Same request. *Three assistants.*",
+        "caption": "Same input. *Three different styles.*",
+        "prompt": "Write a two-line note telling my team the Friday meeting moves to 3pm.",
+        "tools": [
+          { "id": "chatgpt", "name": "ChatGPT", "logo": "logo-chatgpt", "response": "Quick update: Friday's meeting moves to 3pm. Same room, same agenda." },
+          { "id": "claude", "name": "Claude", "logo": "logo-claude", "response": "Heads up, team: Friday's meeting now starts at 3pm. Everything else stays the same." },
+          { "id": "gemini", "name": "Gemini", "logo": "logo-gemini", "response": "Friday meeting update: the new start time is 3pm. See you there." }
+        ],
+        "tether": true
+      }
+    },
+    {
+      "id": "preview-setup",
+      "type": "setup-checklist",
+      "start": 300,
+      "duration": 300,
+      "content": {
+        "eyebrow": "Lesson 1.5 · Making the assistant yours",
+        "title": "Three settings that make it *yours*.",
+        "sub": "A few minutes per assistant, done once.",
+        "items": [
+          { "id": "about-you", "name": "About you", "why": "Your role and the work you do most.", "activateAt": 1.2 },
+          { "id": "answer-style", "name": "Answer style", "why": "Default length, tone, and format for replies.", "activateAt": 2.6 },
+          { "id": "memory", "name": "Memory", "why": "Carries context from one chat to the next.", "activateAt": 4.0 }
+        ],
+        "cursor": true
+      }
+    },
+    {
+      "id": "preview-voice",
+      "type": "voice-demo",
+      "start": 600,
+      "duration": 300,
+      "content": {
+        "eyebrow": "Lesson 1.5 · Talk instead of type",
+        "title": "Say it out loud.",
+        "sub": "Speaking is often faster than typing when you have a lot of context to share.",
+        "transcript": "I need a short agenda for Thursday's planning meeting. Three items, fifteen minutes each, and a reminder to bring last month's numbers.",
+        "transcriptLabel": "Live transcript"
+      }
+    },
+    {
+      "id": "preview-democue",
+      "type": "demo-cue",
+      "start": 900,
+      "duration": 300,
+      "content": {
+        "eyebrow": "Lesson 1.2 · Picking the right assistant",
+        "title": "Same request.\nThree assistants.",
+        "sub": "The same everyday request goes to ChatGPT, Claude, and Gemini, side by side.",
+        "meta": [
+          { "id": "tools", "k": "Tools on screen", "v": "ChatGPT, Claude, Gemini" },
+          { "id": "watch", "k": "What to watch for", "v": "Tone, length, structure." },
+          { "id": "why", "k": "Why this matters", "v": "Same input, different styles." }
+        ]
+      }
+    },
+    {
+      "id": "preview-digdeeper",
+      "type": "dig-deeper",
+      "start": 1200,
+      "duration": 300,
+      "content": {
+        "eyebrow": "Optional",
+        "title": "What a context window is",
+        "body": "Background for the curious: a context window is how much text a model can take into account at once. Not required to move on."
+      }
+    },
+    {
+      "id": "preview-progression",
+      "type": "progression-curve",
+      "start": 1500,
+      "duration": 300,
+      "content": {
+        "eyebrow": "A sample progression curve",
+        "title": "Where do *you* stand?",
+        "stages": [
+          { "tier": "01", "label": "Stage A" },
+          { "tier": "02", "label": "Stage B" },
+          { "tier": "03", "label": "Stage C" },
+          { "tier": "04", "label": "Stage D" },
+          { "tier": "05", "label": "Stage E" }
+        ],
+        "curve": "steady",
+        "destination": "→ next",
+        "marker": "here"
+      }
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-05-26",
+    "lastUpdated": "2026-09-30",
+    "authors": ["verification-fixture (synthetic sample content)"],
+    "factCheckedAt": null
+  }
+}
