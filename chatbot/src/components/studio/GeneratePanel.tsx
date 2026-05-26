@@ -82,10 +82,11 @@ export function GeneratePanel({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lessonId: outline.lessonId }),
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
+      // 503 = rebuild gated (not an error); the route's message explains it.
       setApplyMsg(json.message || json.error || 'Done.');
     } catch {
-      setApplyMsg('Network error applying.');
+      setApplyMsg("Couldn't reach the server — is the app still running?");
     } finally {
       setPhase('drafted');
     }

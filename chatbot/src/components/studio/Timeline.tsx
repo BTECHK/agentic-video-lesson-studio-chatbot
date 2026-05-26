@@ -173,22 +173,42 @@ export function Timeline({
     [lesson.id],
   );
 
-  // Apply all staged edits → writes script.json + regenerates (host-gated route).
-  const applyEdits = useCallback(() => {
+  // Apply all staged edits. When the rebuild pipeline is gated off (the common
+  // case until the Docker rebuild loop lands, #47), the route returns 503 with a
+  // friendly message and the edits STAY staged — we surface that honestly rather
+  // than as a scary "network error" (only true connection failures say that).
+  const applyEdits = useCallback(async () => {
     setEditMsg('Applying…');
-    fetch('/api/edits/apply', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lessonId: lesson.id }),
-    })
-      .then((res) => res.json())
-      .then((j) => {
-        setEditMsg(j.message || j.error || 'Done.');
-        if (j.status === 'applying') {
-          setEdits((prev) => prev.map((e) => (e.status === 'open' ? { ...e, status: 'applied' as const } : e)));
-        }
-      })
-      .catch(() => setEditMsg('Network error applying edits.'));
+    let res: Response;
+    try {
+      res = await fetch('/api/edits/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonId: lesson.id }),
+      });
+    } catch {
+      setEditMsg("Couldn't reach the server — is the app still running?");
+      return;
+    }
+    let j: { status?: string; message?: string; error?: string } = {};
+    try {
+      j = await res.json();
+    } catch {
+      /* non-JSON error body */
+    }
+    if (res.status === 503) {
+      // Gated, not broken: edits remain staged and safe.
+      setEditMsg(j.message ?? 'Your edits are saved. Rebuilding the video runs on the pipeline host.');
+      return;
+    }
+    if (!res.ok) {
+      setEditMsg(j.error ?? `Apply failed (${res.status}). Your edits are still staged.`);
+      return;
+    }
+    setEditMsg(j.message ?? 'Done.');
+    if (j.status === 'applying') {
+      setEdits((prev) => prev.map((e) => (e.status === 'open' ? { ...e, status: 'applied' as const } : e)));
+    }
   }, [lesson.id]);
 
   const allClips: Clip[] = TRACK_ORDER.flatMap((k) => lesson.tracks[k]);
