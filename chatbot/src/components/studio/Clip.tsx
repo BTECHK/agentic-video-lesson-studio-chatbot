@@ -15,7 +15,7 @@ import { StatusBadge } from './StatusBadge';
 const KIND_LABEL: Record<ClipData['kind'], string> = {
   animation: 'Animation',
   voiceover: 'Voiceover',
-  script: 'Script',
+  script: 'Narration',
   captions: 'Caption',
 };
 

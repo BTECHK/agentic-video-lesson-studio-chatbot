@@ -22,7 +22,7 @@ export interface Comment {
 const KIND_TITLE: Record<Clip['kind'], string> = {
   animation: 'Animation',
   voiceover: 'Voiceover',
-  script: 'Script',
+  script: 'Narration',
   captions: 'Caption',
 };
 
