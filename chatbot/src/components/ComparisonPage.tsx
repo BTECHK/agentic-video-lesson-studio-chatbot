@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import type { ToolData } from '@/lib/content-types';
 import { groupIntoProducts } from '@/lib/content-types';
-import { editorialPicks } from '@/lib/editorial';
+import { editorialPicks, BEST_FOR_NOTE } from '@/lib/editorial';
 import { ComparisonTable } from './ComparisonTable';
 
 interface ComparisonPageProps {
@@ -141,7 +141,7 @@ export function ComparisonPage({ tools }: ComparisonPageProps) {
       <div style={{ marginTop: '2.5rem' }}>
         <h2
           style={{
-            margin: '0 0 1rem',
+            margin: '0 0 0.375rem',
             fontSize: '1.125rem',
             fontWeight: 700,
             fontFamily: 'var(--font)',
@@ -149,6 +149,18 @@ export function ComparisonPage({ tools }: ComparisonPageProps) {
         >
           Best For...
         </h2>
+        <p
+          style={{
+            margin: '0 0 1rem',
+            fontSize: '0.75rem',
+            lineHeight: 1.5,
+            color: 'var(--text-muted)',
+            fontFamily: 'var(--font)',
+            maxWidth: 720,
+          }}
+        >
+          {BEST_FOR_NOTE}
+        </p>
         <div
           style={{
             display: 'grid',
@@ -166,17 +178,35 @@ export function ComparisonPage({ tools }: ComparisonPageProps) {
                 borderRadius: 'var(--radius)',
               }}
             >
-              <h3
-                style={{
-                  margin: '0 0 0.25rem',
-                  fontSize: '0.875rem',
-                  fontWeight: 700,
-                  fontFamily: 'var(--font)',
-                  color: 'var(--accent)',
-                }}
-              >
-                {pick.category}
-              </h3>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', margin: '0 0 0.25rem' }}>
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: '0.875rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font)',
+                    color: 'var(--accent)',
+                  }}
+                >
+                  {pick.category}
+                </h3>
+                <span
+                  title="Where this call comes from"
+                  style={{
+                    flexShrink: 0,
+                    fontSize: '0.5625rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    color: 'var(--text-muted)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius)',
+                    padding: '0.0625rem 0.3125rem',
+                  }}
+                >
+                  {pick.source === 'vendor' ? 'vendor' : pick.source === 'third-party' ? '3rd-party' : 'vendor + 3rd-party'}
+                </span>
+              </div>
               <p
                 style={{
                   margin: '0 0 0.625rem',
