@@ -16,24 +16,60 @@ import path from 'node:path';
 const LESSON_RE = /^[a-z0-9-]+$/;
 const TIMEOUT_MS = 6 * 60 * 1000;
 
-function runGenerator(lessonId: string, root: string): Promise<{ code: number; stderr: string }> {
+/** Thrown when the client aborts the request (Studio Cancel). */
+export class GenerationAbortedError extends Error {
+  constructor() {
+    super('aborted');
+    this.name = 'GenerationAbortedError';
+  }
+}
+
+interface RunOpts {
+  signal?: AbortSignal;
+  /** Injectable for tests; defaults to node:child_process spawn. */
+  spawnFn?: typeof spawn;
+}
+
+export function runGenerator(
+  lessonId: string,
+  root: string,
+  opts: RunOpts = {},
+): Promise<{ code: number; stderr: string }> {
+  const spawnFn = opts.spawnFn ?? spawn;
   return new Promise((resolve, reject) => {
-    const child = spawn('npx', ['tsx', 'scripts/generate-script-headless.ts', lessonId], {
+    if (opts.signal?.aborted) {
+      reject(new GenerationAbortedError());
+      return;
+    }
+    const child = spawnFn('npx', ['tsx', 'scripts/generate-script-headless.ts', lessonId], {
       cwd: root,
       shell: true,
     });
     let stderr = '';
-    child.stderr.on('data', (d) => (stderr += d));
+    child.stderr?.on('data', (d) => (stderr += d));
+
+    const cleanup = () => {
+      clearTimeout(timer);
+      opts.signal?.removeEventListener('abort', onAbort);
+    };
+    const onAbort = () => {
+      child.kill();
+      cleanup();
+      reject(new GenerationAbortedError());
+    };
     const timer = setTimeout(() => {
       child.kill();
+      cleanup();
       reject(new Error('generation timed out'));
     }, TIMEOUT_MS);
+
+    opts.signal?.addEventListener('abort', onAbort);
     child.on('error', (e) => {
-      clearTimeout(timer);
+      cleanup();
       reject(e);
     });
     child.on('close', (code) => {
-      clearTimeout(timer);
+      cleanup();
       resolve({ code: code ?? 1, stderr });
     });
   });
@@ -59,8 +95,13 @@ export async function POST(req: NextRequest) {
 
   let result: { code: number; stderr: string };
   try {
-    result = await runGenerator(lessonId, root);
+    result = await runGenerator(lessonId, root, { signal: req.signal });
   } catch (e) {
+    if (e instanceof GenerationAbortedError) {
+      // Client canceled — the child has been killed. Response is moot (the
+      // client is gone) but return a clear status rather than a 500.
+      return NextResponse.json({ error: 'canceled' }, { status: 499 });
+    }
     return NextResponse.json(
       { error: e instanceof Error ? e.message : 'Generation failed to start' },
       { status: 500 },

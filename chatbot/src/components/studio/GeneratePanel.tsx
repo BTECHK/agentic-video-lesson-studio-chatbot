@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { OutlineSummary } from '@/lib/generate-source';
 
 interface FactCheck {
@@ -34,16 +34,22 @@ export function GeneratePanel({
   const [factCheck, setFactCheck] = useState<FactCheck | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [applyMsg, setApplyMsg] = useState<string | null>(null);
+  const [canceled, setCanceled] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   async function generate() {
     setPhase('generating');
     setError(null);
     setApplyMsg(null);
+    setCanceled(false);
+    const controller = new AbortController();
+    abortRef.current = controller;
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lessonId: outline.lessonId }),
+        signal: controller.signal,
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.detail || json.error || 'Generation failed');
@@ -51,9 +57,20 @@ export function GeneratePanel({
       setFactCheck(json.factCheck);
       setPhase('drafted');
     } catch (e) {
+      if (e instanceof DOMException && e.name === 'AbortError') {
+        setCanceled(true);
+        setPhase('idle');
+        return;
+      }
       setError(e instanceof Error ? e.message : 'Generation failed');
       setPhase('idle');
+    } finally {
+      abortRef.current = null;
     }
+  }
+
+  function cancel() {
+    abortRef.current?.abort();
   }
 
   async function apply() {
@@ -112,8 +129,26 @@ export function GeneratePanel({
           {phase === 'generating' ? 'Generating… (1–2 min)' : draft ? 'Regenerate script' : 'Generate script'}
         </button>
         {phase === 'generating' && (
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            Headless Claude is drafting the script from your outline…
+          <>
+            <button
+              type="button"
+              onClick={cancel}
+              style={{
+                background: 'var(--bg-base)', color: 'var(--accent)', border: '1px solid var(--accent)',
+                borderRadius: 'var(--radius)', padding: '0.55rem 0.9rem', fontFamily: 'var(--font)',
+                fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer',
+              }}
+            >
+              Cancel
+            </button>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Headless Claude is drafting the script from your outline…
+            </span>
+          </>
+        )}
+        {canceled && (
+          <span role="status" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            Generation canceled.
           </span>
         )}
       </div>
