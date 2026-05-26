@@ -46,7 +46,6 @@ export function Inspector({
   onClose,
   onComment,
   onStageEdit,
-  onMove,
 }: {
   element: Clip;
   comments: Comment[];
@@ -55,7 +54,6 @@ export function Inspector({
   onClose: () => void;
   onComment: (text: string) => void;
   onStageEdit?: (value: string) => void;
-  onMove?: (dir: 'earlier' | 'later') => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [draft, setDraft] = useState('');
@@ -143,14 +141,6 @@ export function Inspector({
             {formatTime(element.startSec)} – {formatTime(element.startSec + element.durationSec)} · {element.label}
           </div>
 
-          {onMove && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Scene order:</span>
-              <button type="button" onClick={() => onMove('earlier')} style={moveBtn}>← earlier</button>
-              <button type="button" onClick={() => onMove('later')} style={moveBtn}>later →</button>
-            </div>
-          )}
-
           {element.kind === 'script' && onStageEdit && (
             <NarrationEditor
               initial={(element.payload as ScriptPayload).text}
@@ -213,11 +203,6 @@ export function Inspector({
   );
 }
 
-const moveBtn: React.CSSProperties = {
-  fontSize: 11, fontWeight: 600, fontFamily: 'var(--font)', color: 'var(--accent)',
-  background: 'transparent', border: '1px solid var(--border)', borderRadius: 'var(--radius)',
-  padding: '3px 8px', cursor: 'pointer',
-};
 
 function NarrationEditor({
   initial,
