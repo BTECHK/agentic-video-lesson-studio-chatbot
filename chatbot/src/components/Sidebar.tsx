@@ -22,7 +22,6 @@ const GROUPS: NavGroup[] = [
   {
     heading: 'Lesson Planning',
     items: [
-      { label: 'Studio', href: '/studio', match: (p) => p === '/studio' },
       { label: 'Generate', href: '/studio/generate', match: (p) => p.startsWith('/studio/generate') },
       { label: 'Lesson Library', href: '/studio/menu', match: (p) => p.startsWith('/studio/menu') },
     ],

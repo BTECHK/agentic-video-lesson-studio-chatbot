@@ -16,9 +16,8 @@ interface Hub {
 const HUBS: Hub[] = [
   {
     heading: 'Lesson Planning',
-    blurb: 'Author, generate, and review animated lessons before they ship to Teachable.',
+    blurb: 'Generate scripts and track lessons. Finished videos are reviewed async via the Drive bundle (Studio is parked until cloud).',
     links: [
-      { label: 'Studio', href: '/studio', description: 'Multi-track timeline — review and annotate a lesson.' },
       { label: 'Generate', href: '/studio/generate', description: 'Outline → fact-checked script → MP4.' },
       { label: 'Lesson Library', href: '/studio/menu', description: 'Every lesson and its render status.' },
     ],
