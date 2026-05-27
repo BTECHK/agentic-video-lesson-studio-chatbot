@@ -1,0 +1,17 @@
+# Wiki Log
+
+Append-only chronological record of operations on the wiki. Each entry begins with `## [YYYY-MM-DD] <op> | <description>` so it's parseable with `grep "^## \[" log.md | tail -N`.
+
+Operations:
+- `ingest` — a source was processed into the wiki.
+- `query` — a question was answered against the wiki (typically only logged when the answer was filed back as synthesis).
+- `lint` — a health check was run.
+- `schema` — the schema was modified.
+- `shard` — an index was sharded.
+
+---
+
+## [2026-05-26] schema | Set wiki purpose: architecture decisions, API behaviors, domain knowledge for the Sample Academy AI Content System.
+## [2026-05-26] ingest | Project README → project overview and source summary.
+## [2026-05-26] ingest | Codified Lesson Factory design spec → source [[codified-lesson-pipeline-design]], concepts [[codified-lesson-pipeline]] + [[timing-inversion]].
+## [2026-05-26] ingest | Studio Generate design spec → source [[studio-generate-design]], concept [[studio-generate]].

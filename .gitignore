@@ -53,3 +53,10 @@ content/lessons/*/.edits.json
 # Teachable upload staging — generated MP4 masters + manifests are not source
 publish/*
 !publish/README.md
+
+# Knowledge management stack
+# GitNexus code-intelligence index (regenerable: `npx gitnexus analyze`)
+.gitnexus/
+# Wiki raw source material — staged locally, not source-of-truth; the curated
+# wiki/ pages ARE tracked. (learnings.md, wiki/, CLAUDE.md, AGENTS.md stay tracked.)
+raw/
