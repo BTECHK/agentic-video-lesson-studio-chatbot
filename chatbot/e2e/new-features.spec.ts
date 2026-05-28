@@ -7,9 +7,22 @@ import { test, expect } from '@playwright/test';
  */
 const SHOTS = 'e2e/screenshots';
 
-test('chat exposes the TA / Office Hours mode toggle', async ({ page }) => {
+async function enterDemoChat(page: import('@playwright/test').Page) {
   await page.goto('/chat');
-  await page.getByRole('button', { name: 'Try Demo' }).click();
+  const tryDemo = page.getByRole('button', { name: 'Try Demo' });
+  await expect(tryDemo).toBeVisible();
+  await tryDemo.click();
+  // Hydration race guard: if the first click lands before handlers attach,
+  // the gate can remain visible; retry once and wait for composer readiness.
+  const composer = page.getByPlaceholder('Ask Tutor a question...');
+  if (!(await composer.isVisible().catch(() => false))) {
+    await tryDemo.click();
+  }
+  await expect(composer).toBeVisible();
+}
+
+test('chat exposes the TA / Office Hours mode toggle', async ({ page }) => {
+  await enterDemoChat(page);
 
   const ta = page.getByRole('button', { name: 'Teaching Assistant' });
   const office = page.getByRole('button', { name: 'Office Hours' });
