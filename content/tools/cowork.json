@@ -6,7 +6,7 @@
   "surface": "Cowork",
   "isPrimarySurface": false,
   "priority": "P0",
-  "description": "Claude Cowork is the knowledge-work agent mode in the Claude desktop app (macOS/Windows). It connects to local files and 15+ connectors (Google Workspace, Slack, DocuSign, Excel, PowerPoint, Chrome, and premium data sources like FactSet, MSCI, S&P Global, and Harvey) to run multi-step knowledge-work tasks end to end — organizing files, building spreadsheets, preparing reports — including scheduled and recurring jobs. Powered by Opus 4.7 and Sonnet 4.6. It is the non-coding sibling to Claude Code.",
+  "description": "Claude Cowork is the knowledge-work agent mode in the Claude desktop app (macOS/Windows). It connects to local files and 15+ connectors (Google Workspace, Slack, DocuSign, Excel, PowerPoint, Chrome, and premium data sources like FactSet, MSCI, S&P Global, and Harvey) to run multi-step knowledge-work tasks end to end — organizing files, building spreadsheets, preparing reports — including scheduled and recurring jobs. Powered by Opus 4.8 and Sonnet 4.6. It is the non-coding sibling to Claude Code.",
   "url": "https://claude.com/product/cowork",
   "capabilities": {
     "writing-chat": {

@@ -35,12 +35,12 @@
         },
         {
           "name": "Model Selection",
-          "description": "Switch between Claude Opus 4.7 (flagship, 1M-token context), Sonnet 4.6 (everyday workhorse, 1M-token context), and Haiku 4.5 (fast/low-cost, 200K context) based on task complexity and speed requirements",
+          "description": "Switch between Claude Opus 4.8 (flagship, 1M-token context), Sonnet 4.6 (everyday workhorse, 1M-token context), and Haiku 4.5 (fast/low-cost, 200K context) based on task complexity and speed requirements",
           "availableOn": ["Pro", "Max", "Team", "Enterprise"]
         }
       ],
       "limitations": [
-        "Opus 4.7 and Sonnet 4.6 offer a 1M-token context window; Haiku 4.5 is capped at 200K tokens",
+        "Opus 4.8, Opus 4.7, and Sonnet 4.6 offer a 1M-token context window; Haiku 4.5 is capped at 200K tokens",
         "Older Opus 4 and Sonnet 4 models are deprecated and retire 2026-06-15",
         "Free tier has lower rate limits and a daily message cap",
         "Response length can be conservative without explicit instruction to be thorough"
@@ -53,6 +53,7 @@
         { "tier": "Enterprise ($20/seat + API-rate usage)", "details": "All Team features plus spend controls, RBAC, SCIM, audit logs, HIPAA-ready" }
       ],
       "versionHistory": [
+        { "version": "Claude Opus 4.8", "date": "2026-05", "changes": "New flagship model and Anthropic's most capable: 1M-token context, adaptive thinking with a default 'high' effort level, stronger long-horizon agentic coding and tool triggering, and ~4x less likely than Opus 4.7 to overlook code flaws; same $5/$25 per-MTok pricing" },
         { "version": "Claude Opus 4.7", "date": "2026-04", "changes": "Flagship model: 1M-token context, step-change agentic coding over Opus 4.6, first Claude with high-res vision" },
         { "version": "Claude Sonnet 4.6", "date": "2026", "changes": "Everyday workhorse with 1M-token context and best speed/intelligence balance; extended and adaptive thinking" },
         { "version": "Claude Haiku 4.5", "date": "2025-10", "changes": "Fast, low-cost model with near-frontier intelligence at 200K context" },
@@ -102,15 +103,15 @@
     "file-analysis": {
       "category": "file-analysis",
       "supported": true,
-      "summary": "Claude can analyze uploaded files including PDFs, images, code files, CSVs, and text documents, with strong performance on long documents thanks to the 1M-token context window on Opus 4.7 and Sonnet 4.6.",
+      "summary": "Claude can analyze uploaded files including PDFs, images, code files, CSVs, and text documents, with strong performance on long documents thanks to the 1M-token context window on Opus 4.8 and Sonnet 4.6.",
       "subFeatures": [
         {
           "name": "PDF Analysis",
-          "description": "Read and analyze PDF documents including complex layouts, tables, and embedded images, leveraging the 1M-token context window on Opus 4.7 and Sonnet 4.6"
+          "description": "Read and analyze PDF documents including complex layouts, tables, and embedded images, leveraging the 1M-token context window on Opus 4.8 and Sonnet 4.6"
         },
         {
           "name": "Vision / Image Analysis",
-          "description": "Analyze uploaded images including photographs, diagrams, charts, screenshots, and handwritten content using Claude's native vision; Opus 4.7 adds high-resolution vision (~2576px / 3.75MP)"
+          "description": "Analyze uploaded images including photographs, diagrams, charts, screenshots, and handwritten content using Claude's native vision; high-resolution vision (~2576px / 3.75MP) was introduced with Opus 4.7 and carried forward in Opus 4.8"
         },
         {
           "name": "Code File Analysis",
@@ -296,7 +297,7 @@
       "subFeatures": [
         {
           "name": "Project Knowledge Bases",
-          "description": "Upload documents, code files, and data to a Project that are accessible across all conversations in that workspace, bounded by the model context window (up to 1M tokens on Opus 4.7 and Sonnet 4.6)",
+          "description": "Upload documents, code files, and data to a Project that are accessible across all conversations in that workspace, bounded by the model context window (up to 1M tokens on Opus 4.8 and Sonnet 4.6)",
           "availableOn": ["Free", "Pro", "Max", "Team", "Enterprise"]
         },
         {
@@ -364,7 +365,7 @@
         { "tier": "Enterprise ($20/seat + API-rate usage)", "details": "Full agent suite with admin controls and dedicated capacity" }
       ],
       "versionHistory": [
-        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability of agentic coding assistant, now powered by Opus 4.7 and Sonnet 4.6" },
+        { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability of agentic coding assistant, now powered by Opus 4.8 and Sonnet 4.6" },
         { "version": "Extended Thinking", "date": "2025-02", "changes": "Chain-of-thought reasoning for complex problems" },
         { "version": "Computer Use Beta", "date": "2024-10", "changes": "Desktop GUI interaction via screenshots and mouse/keyboard control" },
         { "version": "Tool Use", "date": "2024-04", "changes": "Function calling and structured tool integration via API" }
@@ -453,6 +454,7 @@
     "anthropic-models",
     "anthropic-models-overview",
     "anthropic-opus-4-7",
+    "anthropic-opus-4-8",
     "anthropic-api-reference",
     "anthropic-pricing",
     "anthropic-pricing-claude",

@@ -21,7 +21,7 @@ describe('benchmarks freshness (#35)', () => {
 
   it('uses current-generation flagship models', () => {
     expect(getBenchmark('chatgpt')?.primaryModel).toBe('GPT-5.5');
-    expect(getBenchmark('claude')?.primaryModel).toBe('Claude Opus 4.7');
+    expect(getBenchmark('claude')?.primaryModel).toBe('Claude Opus 4.8');
     expect(getBenchmark('gemini')?.primaryModel).toBe('Gemini 3.5 Flash');
     expect(getBenchmark('grok')?.primaryModel).toBe('Grok 4.3');
     expect(getBenchmark('deepseek')?.primaryModel).toBe('DeepSeek-V4');

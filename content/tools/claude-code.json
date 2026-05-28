@@ -6,7 +6,7 @@
   "surface": "Claude Code",
   "isPrimarySurface": false,
   "priority": "P0",
-  "description": "Anthropic's agentic coding tool available across the Terminal CLI, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web (claude.ai/code). Powered by Opus 4.7 and Sonnet 4.6 with 1M-token context, it reads, edits, and creates files across entire codebases with tool use, MCP server integration, hooks, background agents, and CI integrations.",
+  "description": "Anthropic's agentic coding tool available across the Terminal CLI, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web (claude.ai/code). Powered by Opus 4.8 and Sonnet 4.6 with 1M-token context, it reads, edits, and creates files across entire codebases with tool use, MCP server integration, hooks, background agents, and CI integrations.",
   "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
   "capabilities": {
     "writing-chat": {
@@ -32,17 +32,18 @@
         }
       ],
       "limitations": [
-        "Context window bounded by model limits — up to 1M tokens on Opus 4.7 and Sonnet 4.6",
+        "Context window bounded by model limits — up to 1M tokens on Opus 4.8 and Sonnet 4.6",
         "Terminal output has no rich media rendering",
         "Session history not persisted across separate sessions by default"
       ],
       "pricingTiers": [
         { "tier": "Pro ($17/mo annual, $20/mo monthly)", "details": "Claude Code included with usage-based limits; no free tier for Claude Code" },
         { "tier": "Max (from $100/mo)", "details": "Higher usage limits for intensive coding workflows" },
-        { "tier": "API Usage", "details": "Pay-per-token at Sonnet 4.6 / Opus 4.7 rates; Terminal CLI and VS Code also support AWS Bedrock and Vertex AI" }
+        { "tier": "API Usage", "details": "Pay-per-token at Sonnet 4.6 / Opus 4.8 rates; Terminal CLI and VS Code also support AWS Bedrock and Vertex AI" }
       ],
       "versionHistory": [
-        { "version": "Claude Code (Opus 4.7 / Sonnet 4.6)", "date": "2026", "changes": "Now powered by Opus 4.7 (adds an xhigh effort level) and Sonnet 4.6 with 1M-token context" },
+        { "version": "Claude Code (Opus 4.8 / Sonnet 4.6)", "date": "2026-05", "changes": "Now powered by Opus 4.8 — Anthropic's most capable model — with stronger long-horizon agentic coding, fewer compactions, better tool triggering, and a default 'high' effort level" },
+        { "version": "Claude Code (Opus 4.7 / Sonnet 4.6)", "date": "2026", "changes": "Powered by Opus 4.7 (adds an xhigh effort level) and Sonnet 4.6 with 1M-token context" },
         { "version": "Claude Code GA", "date": "2025-05", "changes": "General availability with agentic coding model support" },
         { "version": "Claude Code Beta", "date": "2025-02", "changes": "Public beta launch with tool use, file editing, and terminal commands" }
       ]
@@ -193,7 +194,7 @@
         { "tier": "API Usage", "details": "Pay-per-token for prototyping sessions" }
       ],
       "versionHistory": [
-        { "version": "Claude Code (Opus 4.7 / Sonnet 4.6)", "date": "2026", "changes": "Opus 4.7 and Sonnet 4.6 with enhanced agentic coding and 1M-token context" },
+        { "version": "Claude Code (Opus 4.8 / Sonnet 4.6)", "date": "2026-05", "changes": "Opus 4.8 and Sonnet 4.6 with enhanced long-horizon agentic coding and 1M-token context" },
         { "version": "Extended Thinking", "date": "2025-03", "changes": "Enhanced reasoning for complex multi-file refactoring tasks" },
         { "version": "Claude Code Beta", "date": "2025-02", "changes": "Multi-file editing with bash command execution" }
       ]

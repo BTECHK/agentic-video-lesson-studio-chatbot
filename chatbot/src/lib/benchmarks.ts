@@ -81,15 +81,18 @@ export const benchmarks: Record<string, BenchmarkEntry> = {
     speedTps: null,
   },
   claude: {
-    primaryModel: 'Claude Opus 4.7',
+    primaryModel: 'Claude Opus 4.8',
     contextWindow: 1000000,
     pricePerMTokens: 25,
-    arenaElo: 1503,
-    qualityIndex: 57,
+    // Opus 4.8 launched 2026-05-28; not yet rated by LMSYS Arena / Artificial
+    // Analysis (their scores are as-of mid-May 2026). null per the "not yet
+    // rated → show '—'" policy above; restore once 4.8 is rated.
+    arenaElo: null,
+    qualityIndex: null,
     speedTps: null,
   },
   'claude-code': {
-    primaryModel: 'Claude Opus 4.7',
+    primaryModel: 'Claude Opus 4.8',
     contextWindow: 1000000,
     pricePerMTokens: null,
     arenaElo: null,
@@ -97,7 +100,7 @@ export const benchmarks: Record<string, BenchmarkEntry> = {
     speedTps: null,
   },
   cowork: {
-    primaryModel: 'Claude Opus 4.7',
+    primaryModel: 'Claude Opus 4.8',
     contextWindow: 1000000,
     pricePerMTokens: null,
     arenaElo: null,
