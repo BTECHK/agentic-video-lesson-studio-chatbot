@@ -5,6 +5,8 @@ A content production and maintenance system for **Sample Academy**, an AI educat
 **The north star:** Run the asynchronous side of the course with minimal human intervention. The system does the work; humans approve the diff.
 
 
+> Live status is tracked in GitHub issues. Treat status callouts in this README as historical context.
+
 > **Status (2026-05-26):** The codified lesson pipeline is merged to `master` (PR #37). Since then: the chatbot P0 is **fixed** (#27/#30), all **14** lesson scene types are built (#28), tool content + compare benchmarks are refreshed to **web-verified May-2026 facts with attribution** (#25/#35/#36), the app is reorganized into a **left-sidebar internal console** with the marketing page as a separate surface (#32), and the Studio gained a **single Narration row** (#33) and a Generate **Cancel** button (#34). A manual **Teachable export/staging** step now produces upload-ready MP4s (#28). Awaiting Instructor: curriculum first-pass review (`.planning/curriculum/`, #31). Deferred: stakeholder demo animation (#2/#12), Studio Phase-G polish — waveform peaks/thumbnails/AI-regen (#18, asset/API-gated).
 
 ---
