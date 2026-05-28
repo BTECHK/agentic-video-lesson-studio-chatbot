@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/stop-gate.py"
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop-gate.py\""
           }
         ]
       }
