@@ -13,7 +13,7 @@
  * logging so a failed/empty generation is diagnosable, never silent.
  */
 import { spawn } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { OutlineSchema } from '../content/schemas/outline';
 import { ScriptSchema } from '../content/schemas/script';
@@ -21,7 +21,7 @@ import { buildGroundingContext } from '../src/lib/grounding';
 import { buildScriptPrompt } from '../src/lib/script-prompt';
 import { factCheckScript } from '../src/lib/fact-check';
 import { runMain, type Logger } from '../src/lib/logger';
-import { selectBackend, extractResultText, parseScriptFromText, withRetry } from '../src/lib/generation';
+import { selectBackend, withRetry, generateScriptObject } from '../src/lib/generation';
 
 /** Spawn a one-shot headless Claude run, feeding the prompt on stdin. */
 function runClaude(prompt: string): Promise<string> {
@@ -45,13 +45,25 @@ function runClaude(prompt: string): Promise<string> {
   });
 }
 
-async function generateViaClaudeCode(prompt: string, log: Logger): Promise<unknown> {
-  const stdout = await withRetry(() => runClaude(prompt), {
-    retries: 2,
-    baseDelayMs: 2000,
-    onRetry: (attempt, err) => log.warn('claude generation retry', { attempt, err }),
+async function generateViaClaudeCode(prompt: string, dir: string, log: Logger): Promise<unknown> {
+  // withRetry handles transient CLI failures (non-zero exit); generateScriptObject
+  // handles unparseable output — persisting raw and retrying with a repair prompt.
+  return generateScriptObject(prompt, {
+    runClaude: (p) =>
+      withRetry(() => runClaude(p), {
+        retries: 2,
+        baseDelayMs: 2000,
+        onRetry: (attempt, err) => log.warn('claude generation retry', { attempt, err }),
+      }),
+    persistRaw: (label, raw) => {
+      const failDir = join(dir, '.generate-failures');
+      mkdirSync(failDir, { recursive: true });
+      const file = join(failDir, `${Date.now()}-${label}.txt`);
+      writeFileSync(file, raw);
+      log.warn('persisted raw model output for diagnosis', { file });
+    },
+    log,
   });
-  return parseScriptFromText(extractResultText(stdout));
 }
 
 async function main(log: Logger): Promise<number> {
@@ -79,7 +91,7 @@ async function main(log: Logger): Promise<number> {
 
   let scriptObj: unknown;
   if (backend === 'claude-code') {
-    scriptObj = await generateViaClaudeCode(prompt, log);
+    scriptObj = await generateViaClaudeCode(prompt, dir, log);
   } else {
     log.error('anthropic-api backend not implemented in this build — set GENERATION_BACKEND=claude-code', { backend });
     return 1;
