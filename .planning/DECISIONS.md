@@ -45,4 +45,4 @@ Net: the entire MVP1 runs with **zero paid services**, consistent with the hard 
 
 ## Reversible-call log (autonomous decisions, newest first)
 
-- _(none yet)_
+- **#57 config (2026-05-28):** Canonical `LLM_PROVIDER` set = `mock | anthropic` for now; `claude-code` added by #63. Unset `LLM_PROVIDER` now defaults to **`mock`** (was `anthropic`) so an unconfigured deploy can't accidentally bill the paid API. `anthropic` fails closed (throws) when `ANTHROPIC_API_KEY` is missing, unconditionally (not NODE_ENV-gated) — choosing the paid provider without a key is always a misconfig. docker-compose default `claude-passthrough` (invalid, silently hit Anthropic) → `mock`. Validation lives in `chatbot/src/lib/config.ts` (`loadLLMConfig`).

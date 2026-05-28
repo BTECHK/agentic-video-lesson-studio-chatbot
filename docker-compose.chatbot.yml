@@ -8,7 +8,10 @@ services:
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - ACCESS_CODE=${ACCESS_CODE:?ACCESS_CODE must be set — no default; see chatbot/.env.example}
-      - LLM_PROVIDER=${LLM_PROVIDER:-claude-passthrough}
+      # Free 'mock' default (valid value; no key, no spend). 'anthropic' requires a
+      # key. Unknown values fail closed at startup (see chatbot/src/lib/config.ts).
+      # #63 will introduce the free 'claude-code' provider and make it the default.
+      - LLM_PROVIDER=${LLM_PROVIDER:-mock}
       - DEMO_MODULE_SCOPE=${DEMO_MODULE_SCOPE:-module-1}
       - NEXT_PUBLIC_DEV_BYPASS=${NEXT_PUBLIC_DEV_BYPASS:-false}
       - SESSION_DATA_DIR=/app/data/sessions

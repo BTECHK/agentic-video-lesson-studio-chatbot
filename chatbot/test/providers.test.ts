@@ -81,10 +81,22 @@ describe('getLLMProvider', () => {
     expect(provider).toBeInstanceOf(MockProvider);
   });
 
-  it('defaults to AnthropicProvider', () => {
+  it('defaults to the free MockProvider when LLM_PROVIDER is unset', () => {
+    vi.stubEnv('LLM_PROVIDER', undefined);
+    const provider = getLLMProvider();
+    expect(provider).toBeInstanceOf(MockProvider);
+  });
+
+  it('returns AnthropicProvider when LLM_PROVIDER=anthropic and a key is set', () => {
     vi.stubEnv('LLM_PROVIDER', 'anthropic');
+    vi.stubEnv('ANTHROPIC_API_KEY', 'sk-test');
     const provider = getLLMProvider();
     expect(provider.constructor.name).toBe('AnthropicProvider');
+  });
+
+  it('fails closed on an unknown LLM_PROVIDER instead of using the paid path', () => {
+    vi.stubEnv('LLM_PROVIDER', 'claude-passthrough');
+    expect(() => getLLMProvider()).toThrow(/Invalid LLM_PROVIDER/);
   });
 });
 
