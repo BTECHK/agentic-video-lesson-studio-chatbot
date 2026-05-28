@@ -30,6 +30,16 @@ export function parseCitations(content: string): { cleanContent: string; citatio
   return { cleanContent, citations };
 }
 
+/**
+ * Hallucination guard (Tutor invariant): drop any citation whose tool was not in
+ * the retrieved set, so the UI never shows a source the model fabricated. Tool-less
+ * (general module/lesson) citations are kept. Returns plain Citations for display.
+ */
+export function keepGroundedCitations(citations: Citation[], toolNames: string[]): Citation[] {
+  const verified = verifyCitations(citations, toolNames);
+  return citations.filter((_c, i) => verified[i].verified);
+}
+
 export function verifyCitations(citations: Citation[], toolNames: string[]): VerifiedCitation[] {
   const normalizedNames = toolNames.map((name) => name.toLowerCase());
 

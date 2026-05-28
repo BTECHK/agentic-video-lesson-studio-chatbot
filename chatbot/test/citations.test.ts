@@ -1,5 +1,40 @@
 import { describe, it, expect, vi } from 'vitest';
-import { parseCitations, verifyCitations } from '@/lib/citations';
+import { parseCitations, verifyCitations, keepGroundedCitations } from '@/lib/citations';
+import type { Citation } from '@/lib/types';
+
+describe('keepGroundedCitations (hallucination guard)', () => {
+  const cite = (id: string, tool?: string): Citation => ({
+    id,
+    module: 'Module 1',
+    lesson: 'Lesson 1',
+    tool,
+    snippet: 'x',
+  });
+
+  it('keeps a citation whose tool was retrieved', () => {
+    const kept = keepGroundedCitations([cite('c0', 'ChatGPT')], ['ChatGPT', 'Claude']);
+    expect(kept).toHaveLength(1);
+    expect(kept[0].tool).toBe('ChatGPT');
+  });
+
+  it('drops a citation whose tool was NOT retrieved (no fabricated sources)', () => {
+    const kept = keepGroundedCitations([cite('c0', 'MockTool')], ['ChatGPT']);
+    expect(kept).toHaveLength(0);
+  });
+
+  it('keeps a tool-less general citation', () => {
+    const kept = keepGroundedCitations([cite('c0')], ['ChatGPT']);
+    expect(kept).toHaveLength(1);
+  });
+
+  it('filters a mixed set down to only the grounded citations', () => {
+    const kept = keepGroundedCitations(
+      [cite('c0', 'ChatGPT'), cite('c1', 'Fabricated'), cite('c2')],
+      ['ChatGPT'],
+    );
+    expect(kept.map((c) => c.id)).toEqual(['c0', 'c2']);
+  });
+});
 
 describe('parseCitations', () => {
   it('extracts a single citation with module and lesson', () => {
