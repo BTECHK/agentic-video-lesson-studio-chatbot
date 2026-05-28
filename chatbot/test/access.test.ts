@@ -6,7 +6,8 @@ describe('validateAccessCode', () => {
     vi.unstubAllEnvs();
   });
 
-  it('accepts the correct access code', () => {
+  it('accepts the correct access code when ACCESS_CODE is set', () => {
+    vi.stubEnv('ACCESS_CODE', 'demo-access-code');
     expect(validateAccessCode('demo-access-code')).toBe(true);
   });
 
@@ -24,12 +25,27 @@ describe('validateAccessCode', () => {
     expect(validateAccessCode('demo-access-code')).toBe(false);
   });
 
-  it('bypasses validation when dev bypass is enabled', () => {
+  it('honors dev bypass in non-production', () => {
+    vi.stubEnv('NODE_ENV', 'development');
     vi.stubEnv('NEXT_PUBLIC_DEV_BYPASS', 'true');
     expect(validateAccessCode('anything')).toBe(true);
   });
 
+  it('ignores dev bypass in production (cannot be enabled by accident)', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('NEXT_PUBLIC_DEV_BYPASS', 'true');
+    vi.stubEnv('ACCESS_CODE', '');
+    expect(validateAccessCode('anything')).toBe(false);
+  });
+
+  it('fails closed when ACCESS_CODE is unset — no hardcoded fallback', () => {
+    vi.stubEnv('ACCESS_CODE', '');
+    expect(validateAccessCode('demo-access-code')).toBe(false);
+    expect(validateAccessCode('anything')).toBe(false);
+  });
+
   it('rejects wrong-length codes without timing leak', () => {
+    vi.stubEnv('ACCESS_CODE', 'demo-access-code');
     expect(validateAccessCode('short')).toBe(false);
     expect(validateAccessCode('this-is-way-too-long-to-be-correct')).toBe(false);
   });

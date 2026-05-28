@@ -7,7 +7,7 @@ services:
       - "3001:3001"
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - ACCESS_CODE=${ACCESS_CODE:-demo-access-code}
+      - ACCESS_CODE=${ACCESS_CODE:?ACCESS_CODE must be set — no default; see chatbot/.env.example}
       - LLM_PROVIDER=${LLM_PROVIDER:-claude-passthrough}
       - DEMO_MODULE_SCOPE=${DEMO_MODULE_SCOPE:-module-1}
       - NEXT_PUBLIC_DEV_BYPASS=${NEXT_PUBLIC_DEV_BYPASS:-false}
