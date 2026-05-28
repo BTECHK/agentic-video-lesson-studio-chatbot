@@ -13,6 +13,10 @@ describe('loadLLMConfig', () => {
     expect(loadLLMConfig({ LLM_PROVIDER: 'mock' })).toEqual({ provider: 'mock' });
   });
 
+  it('accepts the free claude-code provider without requiring an API key', () => {
+    expect(loadLLMConfig({ LLM_PROVIDER: 'claude-code' })).toEqual({ provider: 'claude-code' });
+  });
+
   it('accepts anthropic when ANTHROPIC_API_KEY is present', () => {
     expect(
       loadLLMConfig({ LLM_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'sk-test' }),

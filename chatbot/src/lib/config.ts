@@ -2,11 +2,14 @@ import { z } from 'zod';
 
 // Server-only config validation (#57, audit P1.6/P1.12).
 //
-// Canonical LLM provider set. #63 will add 'claude-code' (the free CLI provider).
+// Canonical LLM provider set:
+//   mock        — free, deterministic, no external calls (dev/test/CI default).
+//   claude-code — free Tutor chat via the headless `claude -p` CLI (#63), no API key.
+//   anthropic   — paid API; requires ANTHROPIC_API_KEY.
 // Anything outside this set fails closed instead of silently routing to the paid
 // Anthropic path — the old `default:` fall-through in getLLMProvider (and the stale
 // docker-compose `claude-passthrough` value) was exactly that bug.
-const ProviderSchema = z.enum(['mock', 'anthropic']);
+const ProviderSchema = z.enum(['mock', 'claude-code', 'anthropic']);
 export type LLMProviderName = z.infer<typeof ProviderSchema>;
 
 export interface LLMConfig {

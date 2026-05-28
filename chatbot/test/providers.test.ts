@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MockProvider } from '@/lib/llm/mock-provider';
+import { ClaudeCodeProvider } from '@/lib/llm/claude-code-provider';
 import { getLLMProvider } from '@/lib/llm/provider';
 import { resolveAnthropicModel, DEFAULT_ANTHROPIC_MODEL } from '@/lib/llm/anthropic-provider';
 
@@ -85,6 +86,12 @@ describe('getLLMProvider', () => {
     vi.stubEnv('LLM_PROVIDER', undefined);
     const provider = getLLMProvider();
     expect(provider).toBeInstanceOf(MockProvider);
+  });
+
+  it('returns ClaudeCodeProvider when LLM_PROVIDER=claude-code (free, no key)', () => {
+    vi.stubEnv('LLM_PROVIDER', 'claude-code');
+    const provider = getLLMProvider();
+    expect(provider).toBeInstanceOf(ClaudeCodeProvider);
   });
 
   it('returns AnthropicProvider when LLM_PROVIDER=anthropic and a key is set', () => {

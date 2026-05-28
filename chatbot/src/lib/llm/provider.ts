@@ -1,6 +1,7 @@
 import type { LLMProviderInterface } from './types';
 import { AnthropicProvider } from './anthropic-provider';
 import { MockProvider } from './mock-provider';
+import { ClaudeCodeProvider } from './claude-code-provider';
 import { loadLLMConfig } from '../config';
 
 export function getLLMProvider(): LLMProviderInterface {
@@ -10,6 +11,8 @@ export function getLLMProvider(): LLMProviderInterface {
   switch (provider) {
     case 'mock':
       return new MockProvider();
+    case 'claude-code':
+      return new ClaudeCodeProvider();
     case 'anthropic':
       return new AnthropicProvider();
   }

@@ -45,4 +45,6 @@ Net: the entire MVP1 runs with **zero paid services**, consistent with the hard 
 
 ## Reversible-call log (autonomous decisions, newest first)
 
+- **#63 chat provider (2026-05-28):** Built `ClaudeCodeProvider` (`chatbot/src/lib/llm/claude-code-provider.ts`) — free Tutor chat via headless `claude -p --output-format json`, prompt fed on stdin (no shell injection), injectable runner for tests, 120s timeout. Reuses the proven spawn pattern from `scripts/generate-script-headless.ts`. `claude-code` requires no key. **docker-compose default stays `mock`** (the container image has no `claude` CLI / authed session); `claude-code` is the host/demo provider — set `LLM_PROVIDER=claude-code` in `chatbot/.env` for the live demo. Full route E2E proof deferred to #64.
+
 - **#57 config (2026-05-28):** Canonical `LLM_PROVIDER` set = `mock | anthropic` for now; `claude-code` added by #63. Unset `LLM_PROVIDER` now defaults to **`mock`** (was `anthropic`) so an unconfigured deploy can't accidentally bill the paid API. `anthropic` fails closed (throws) when `ANTHROPIC_API_KEY` is missing, unconditionally (not NODE_ENV-gated) — choosing the paid provider without a key is always a misconfig. docker-compose default `claude-passthrough` (invalid, silently hit Anthropic) → `mock`. Validation lives in `chatbot/src/lib/config.ts` (`loadLLMConfig`).
