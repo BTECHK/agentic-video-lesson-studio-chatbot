@@ -9,7 +9,7 @@ function fmtDuration(sec: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-/** Studio · Menu — the lesson directory. Lists every lesson with at-a-glance status. */
+/** Studio Menu - the lesson directory with a clear sample-vs-curriculum label. */
 export default function MenuPage() {
   const lessons = getLessonDirectory();
   const card: React.CSSProperties = {
@@ -23,7 +23,7 @@ export default function MenuPage() {
     <main style={{ maxWidth: 880, margin: '0 auto', padding: '1.5rem', fontFamily: 'var(--font)' }}>
       <h1 style={{ fontSize: 20, fontWeight: 700 }}>Lessons</h1>
       <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-        Your lesson directory. Generate or regenerate a lesson&rsquo;s script; finished videos are reviewed via the Drive review bundle.
+        Your lesson directory. Generate or regenerate a lesson&apos;s script; finished videos are reviewed via the Drive review bundle.
       </p>
 
       {lessons.length === 0 && (
@@ -33,34 +33,72 @@ export default function MenuPage() {
       )}
 
       <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {lessons.map((l) => (
-          <div key={l.lessonId} style={{ ...card, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>{l.title}</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                {l.lessonId} · {l.scenes} scenes · {fmtDuration(l.durationSec)}
-                {l.hasVideo && <span> · 🎬 video</span>}
-                {l.hasDraft && <span> · ✎ draft</span>}
-                {l.staleCount > 0 ? (
-                  <span style={{ color: 'var(--limitation-text)' }}> · ↻ {l.staleCount} stale</span>
-                ) : (
-                  <span> · up to date</span>
+        {lessons.map((l) => {
+          const isSample = l.classification === 'sample';
+          return (
+            <div
+              key={l.lessonId}
+              style={{
+                ...card,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 16,
+                borderColor: isSample ? 'var(--limitation-border)' : 'var(--border)',
+              }}
+            >
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span>{l.title}</span>
+                  <span
+                    style={{
+                      border: `1px solid ${isSample ? 'var(--limitation-border)' : 'var(--feature-border)'}`,
+                      color: isSample ? 'var(--limitation-text)' : 'var(--feature-text)',
+                      background: isSample ? 'var(--limitation-bg)' : 'var(--feature-bg)',
+                      borderRadius: 999,
+                      padding: '0.1rem 0.45rem',
+                      fontSize: '0.66rem',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {l.classificationBadge}
+                  </span>
+                </div>
+                {l.classificationNote && (
+                  <div style={{ marginTop: 4, fontSize: '0.75rem', color: 'var(--limitation-text)', fontWeight: 600 }}>
+                    {l.classificationNote}
+                  </div>
                 )}
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                  {l.lessonId} - {l.scenes} scenes - {fmtDuration(l.durationSec)}
+                  {l.hasVideo && <span> - video</span>}
+                  {l.hasDraft && <span> - draft</span>}
+                  {l.staleCount > 0 ? (
+                    <span style={{ color: 'var(--limitation-text)' }}> - {l.staleCount} stale</span>
+                  ) : (
+                    <span> - up to date</span>
+                  )}
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                <Link
+                  href={`/studio/generate?lesson=${encodeURIComponent(l.lessonId)}`}
+                  style={{
+                    textDecoration: 'none',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    background: 'var(--accent)',
+                    borderRadius: 'var(--radius)',
+                    padding: '0.35rem 0.7rem',
+                  }}
+                >
+                  Generate
+                </Link>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-              <Link
-                href={`/studio/generate?lesson=${encodeURIComponent(l.lessonId)}`}
-                style={{
-                  textDecoration: 'none', fontSize: '0.78rem', fontWeight: 700, color: '#fff',
-                  background: 'var(--accent)', borderRadius: 'var(--radius)', padding: '0.35rem 0.7rem',
-                }}
-              >
-                Generate
-              </Link>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );
