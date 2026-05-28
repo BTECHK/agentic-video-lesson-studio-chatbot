@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { RegenTriggerSchema, buildRegenArgs } from '@/lib/regen-trigger';
 import { requireOperator } from '@/lib/operator-auth';
+import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
 
 /**
  * Studio regenerate trigger (CTRL-03). A clip comment posts here to kick the
@@ -17,34 +18,48 @@ import { requireOperator } from '@/lib/operator-auth';
 export async function POST(req: NextRequest) {
   const denied = requireOperator(req);
   if (denied) return denied;
+  const replay = readIdempotentReplay('regen', req);
+  if (replay) return replay;
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    return writeIdempotentResult('regen', req, { error: 'Invalid JSON' }, 400);
   }
 
   const parsed = RegenTriggerSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid request', details: parsed.error.issues }, { status: 400 });
+    return writeIdempotentResult(
+      'regen',
+      req,
+      { error: 'Invalid request', details: parsed.error.issues },
+      400,
+    );
   }
 
   let args: string[];
   try {
     args = buildRegenArgs(parsed.data);
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Bad trigger' }, { status: 400 });
+    return writeIdempotentResult(
+      'regen',
+      req,
+      { error: err instanceof Error ? err.message : 'Bad trigger' },
+      400,
+    );
   }
 
   if (process.env.REGEN_TRIGGER_ENABLED !== 'true') {
-    return NextResponse.json(
+    return writeIdempotentResult(
+      'regen',
+      req,
       {
         status: 'disabled',
         message: 'Regeneration runs on the pipeline host (REGEN_TRIGGER_ENABLED=true, docker + Remotion).',
         args,
       },
-      { status: 503 },
+      503,
     );
   }
 
@@ -56,5 +71,5 @@ export async function POST(req: NextRequest) {
   });
   child.unref();
 
-  return NextResponse.json({ status: 'queued', args });
+  return writeIdempotentResult('regen', req, { status: 'queued', args });
 }

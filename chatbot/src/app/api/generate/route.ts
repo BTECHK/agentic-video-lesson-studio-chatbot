@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { requireOperator } from '@/lib/operator-auth';
+import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
 
 /**
  * Studio Generate (CC-passthrough), decoupled from the HTTP request (#44).
@@ -17,6 +18,7 @@ import { requireOperator } from '@/lib/operator-auth';
  * Safe by design (gitignored draft, no committed mutation, no PRs).
  */
 const LESSON_RE = /^[a-z0-9-]+$/;
+const IDEMPOTENCY_ROUTE = 'generate';
 
 interface StatusFile {
   status: 'running' | 'done' | 'error' | 'canceled';
@@ -52,29 +54,36 @@ function readStatusFile(file: string): StatusFile | null {
 export async function POST(req: NextRequest) {
   const denied = requireOperator(req);
   if (denied) return denied;
+  const replay = readIdempotentReplay(IDEMPOTENCY_ROUTE, req);
+  if (replay) return replay;
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    return writeIdempotentResult(IDEMPOTENCY_ROUTE, req, { error: 'Invalid JSON' }, 400);
   }
   const { lessonId } = (body ?? {}) as { lessonId?: string };
   if (!lessonId || !LESSON_RE.test(lessonId)) {
-    return NextResponse.json({ error: 'Invalid lessonId' }, { status: 400 });
+    return writeIdempotentResult(IDEMPOTENCY_ROUTE, req, { error: 'Invalid lessonId' }, 400);
   }
 
   const root = path.join(process.cwd(), '..');
   const dir = path.join(root, 'content', 'lessons', lessonId);
   if (!existsSync(path.join(dir, 'outline.json'))) {
-    return NextResponse.json({ error: 'Lesson has no outline to generate from' }, { status: 404 });
+    return writeIdempotentResult(
+      IDEMPOTENCY_ROUTE,
+      req,
+      { error: 'Lesson has no outline to generate from' },
+      404,
+    );
   }
 
   // Don't double-spawn: if a job is already running for this lesson, report it.
   const statusFile = statusFilePath(root, lessonId);
   const existing = readStatusFile(statusFile);
   if (existing?.status === 'running' && pidAlive(existing.pid)) {
-    return NextResponse.json({ status: 'running' });
+    return writeIdempotentResult(IDEMPOTENCY_ROUTE, req, { status: 'running' });
   }
 
   // Detached, unref'd background child — NOT awaited, NOT tied to req.signal.
@@ -93,5 +102,5 @@ export async function POST(req: NextRequest) {
   };
   writeFileSync(statusFile, `${JSON.stringify(record, null, 2)}\n`, 'utf-8');
 
-  return NextResponse.json({ status: 'running' });
+  return writeIdempotentResult(IDEMPOTENCY_ROUTE, req, { status: 'running' });
 }

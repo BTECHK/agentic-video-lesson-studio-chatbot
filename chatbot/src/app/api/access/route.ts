@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateAccessCode } from '@/lib/access';
+import { requireRateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  const limited = requireRateLimit(req, 'access');
+  if (limited) return limited;
+
   let body: unknown;
   try {
     body = await req.json();

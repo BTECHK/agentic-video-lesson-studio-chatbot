@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { IngestTriggerSchema, buildIngestArgs } from '@/lib/ingest-trigger';
 import { requireOperator } from '@/lib/operator-auth';
+import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
 
 /**
  * Manual ingestion trigger (Phase 8.5). Builds safe CLI args and, when enabled
@@ -13,34 +14,48 @@ import { requireOperator } from '@/lib/operator-auth';
 export async function POST(req: NextRequest) {
   const denied = requireOperator(req);
   if (denied) return denied;
+  const replay = readIdempotentReplay('ingest', req);
+  if (replay) return replay;
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    return writeIdempotentResult('ingest', req, { error: 'Invalid JSON' }, 400);
   }
 
   const parsed = IngestTriggerSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid request', details: parsed.error.issues }, { status: 400 });
+    return writeIdempotentResult(
+      'ingest',
+      req,
+      { error: 'Invalid request', details: parsed.error.issues },
+      400,
+    );
   }
 
   let args: string[];
   try {
     args = buildIngestArgs(parsed.data);
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Bad trigger' }, { status: 400 });
+    return writeIdempotentResult(
+      'ingest',
+      req,
+      { error: err instanceof Error ? err.message : 'Bad trigger' },
+      400,
+    );
   }
 
   if (process.env.INGEST_TRIGGER_ENABLED !== 'true') {
-    return NextResponse.json(
+    return writeIdempotentResult(
+      'ingest',
+      req,
       {
         status: 'disabled',
         message: 'Ingestion triggering is disabled here. Run on the pipeline host with INGEST_TRIGGER_ENABLED=true.',
         args,
       },
-      { status: 503 },
+      503,
     );
   }
 
@@ -52,5 +67,5 @@ export async function POST(req: NextRequest) {
   });
   child.unref();
 
-  return NextResponse.json({ status: 'queued', args });
+  return writeIdempotentResult('ingest', req, { status: 'queued', args });
 }

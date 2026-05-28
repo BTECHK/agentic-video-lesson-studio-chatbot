@@ -12,6 +12,7 @@
     "check:fast": "npm run typecheck && npm run lint && npm run test",
     "check": "npm run check:fast",
     "check:build": "npm run build",
+    "check:e2e": "node scripts/check-e2e-proof.mjs",
     "test:e2e": "playwright test",
     "test": "vitest run",
     "test:watch": "vitest",

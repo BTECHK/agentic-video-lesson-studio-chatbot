@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
+import { requireRateLimit } from './rate-limit';
 
 // #60: deny-by-default authorization for operator/write routes (generate, ingest,
 // regen, apply, cancel, comments, edits). The env trigger flags only decide where
@@ -29,6 +30,8 @@ export function isOperatorAuthorized(req: NextRequest): boolean {
 
 /** Guard for operator routes: returns a 401 to short-circuit, or null to continue. */
 export function requireOperator(req: NextRequest): NextResponse | null {
+  const limited = requireRateLimit(req, 'operator');
+  if (limited) return limited;
   if (isOperatorAuthorized(req)) return null;
   return NextResponse.json({ error: 'Operator authorization required' }, { status: 401 });
 }

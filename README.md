@@ -9,6 +9,8 @@ A content production and maintenance system for **Sample Academy**, an AI educat
 
 ---
 
+> Canonical current-state tracking now lives in GitHub issues.
+
 ## Project Plan
 
 The system has three scopes from the [original brief](project-brief.md): **(1)** a content repository that tracks what AI tools can do, **(2)** a curriculum and lesson generation pipeline that turns that content into animated video lessons using Instructor's teaching philosophy, and **(3)** a support system where students can ask an AI teaching assistant questions grounded in actual course content.

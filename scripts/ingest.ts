@@ -103,8 +103,27 @@ async function processVendor(
     // 1. Scrape all active sources for this vendor
     const scrapeResults = await scrapeVendorSources(vendorId, sourceFile, config);
     printSummary(scrapeResults);
-
-    log({ event: 'scrape_complete', vendor: vendorId, results: scrapeResults.length });
+    const successCount = scrapeResults.filter((r) => r.status === 'success').length;
+    const skippedCount = scrapeResults.filter((r) => r.status === 'skipped').length;
+    const errorCount = scrapeResults.filter((r) => r.status === 'error').length;
+    log({
+      event: 'scrape_complete',
+      vendor: vendorId,
+      results: scrapeResults.length,
+      successes: successCount,
+      skipped: skippedCount,
+      errors: errorCount,
+    });
+    for (const scrape of scrapeResults) {
+      log({
+        event: 'source_scrape_result',
+        vendor: vendorId,
+        sourceId: scrape.sourceId,
+        status: scrape.status,
+        error: scrape.error,
+        sourceTimestamp: scrape.timestamp,
+      });
+    }
 
     // 2. Extract structured data from successful scrapes
     const successfulScrapes = scrapeResults.filter((r) => r.status === 'success' && r.data);

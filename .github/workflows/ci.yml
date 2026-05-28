@@ -43,6 +43,11 @@ jobs:
         working-directory: ${{ matrix.dir }}
         run: npm run check:fast
 
+      - name: Content checks
+        if: matrix.dir == '.'
+        working-directory: ${{ matrix.dir }}
+        run: npm run check:content
+
       - name: Build
         working-directory: ${{ matrix.dir }}
         run: npm run build

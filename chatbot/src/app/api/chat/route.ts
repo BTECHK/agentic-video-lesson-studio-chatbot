@@ -5,6 +5,7 @@ import { sessionStore } from '@/lib/session';
 import { getLLMProvider } from '@/lib/llm/provider';
 import { classifyProviderError } from '@/lib/llm/errors';
 import { findRelevantContent, formatContentForPrompt } from '@/lib/content-retrieval';
+import { requireRateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { message, sessionId, mode } = parsed.data;
+  const limited = requireRateLimit(req, 'chat', sessionId);
+  if (limited) return limited;
 
   const session = sessionStore.get(sessionId);
   if (!session) {
