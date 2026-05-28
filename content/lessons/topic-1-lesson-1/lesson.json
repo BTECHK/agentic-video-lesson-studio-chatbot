@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "1.0",
+  "id": "topic-1-lesson-1",
+  "lesson": {
+    "title": "How This Course Works",
+    "topic": "Getting Started with AI Assistants",
+    "module": "Topic 1",
+    "duration": 5414
+  },
+  "scenes": [
+    {
+      "id": "cover",
+      "type": "cover",
+      "start": 0,
+      "duration": 594,
+      "label": "pacing",
+      "content": {
+        "eyebrow": "Topic 1 · Lesson 1.1",
+        "title": [
+          "How this",
+          "course works."
+        ],
+        "sub": "Short lessons, one skill each, practiced in a real assistant.",
+        "stats": [
+          {
+            "id": "lessons",
+            "value": 5,
+            "label": "Short lessons"
+          },
+          {
+            "id": "minutes",
+            "value": 27,
+            "suffix": "min",
+            "label": "Topic total"
+          },
+          {
+            "id": "steps",
+            "value": 3,
+            "label": "Steps per lesson"
+          }
+        ]
+      },
+      "narration": {
+        "text": "Welcome to Topic 1, Getting Started with AI Assistants. Before we touch a tool, here's how the next five lessons work, and what you'll do in each one. Five short lessons, about twenty-seven minutes in total, and the same three steps every time. Let's start with the pace."
+      }
+    },
+    {
+      "id": "one-skill-at-a-time",
+      "type": "quote-card",
+      "start": 594,
+      "duration": 1158,
+      "label": "pacing",
+      "content": {
+        "eyebrow": "How the course is paced",
+        "quote": "One skill per lesson. You see it in a real assistant, then you try it on your own work.",
+        "attribution": "Course Instructor, Sample Academy"
+      },
+      "narration": {
+        "text": "Lessons in this course are short on purpose. Each one teaches one skill, and only one. You see that skill in an assistant first, so you know exactly what it looks like in practice. Then it's your turn, and you use it on something from your own week, not a made-up exercise. Here's why that matters. Watching someone else use a tool feels like learning, but on its own it doesn't build the skill. The practice step does. So every lesson ends with you doing the thing, on your own work, before you move on."
+      }
+    },
+    {
+      "id": "topic-1-map",
+      "type": "journey-map",
+      "start": 1752,
+      "duration": 918,
+      "label": "map-rhythm",
+      "content": {
+        "eyebrow": "Topic 1 at a glance",
+        "title": "You're right here",
+        "sub": "Five short lessons. Each one adds a skill the next one uses.",
+        "variant": "standard",
+        "stops": [
+          {
+            "id": "lesson-1-1",
+            "label": "1.1",
+            "title": "How This Course Works",
+            "state": "active"
+          },
+          {
+            "id": "lesson-1-2",
+            "label": "1.2",
+            "title": "Picking the Right Assistant",
+            "state": "todo"
+          },
+          {
+            "id": "lesson-1-3",
+            "label": "1.3",
+            "title": "Writing Clear Prompts",
+            "state": "todo"
+          },
+          {
+            "id": "lesson-1-4",
+            "label": "1.4",
+            "title": "Checking the Output",
+            "state": "todo"
+          },
+          {
+            "id": "lesson-1-5",
+            "label": "1.5",
+            "title": "Making the Assistant Yours",
+            "state": "todo"
+          }
+        ]
+      },
+      "narration": {
+        "text": "Here's the whole topic on one line. You're at the start, in Lesson 1.1. Next, in Lesson 1.2, you'll pick the right assistant for a task. In 1.3, you'll write a clear prompt. In 1.4, you'll check what comes back before you rely on it. And in 1.5, you'll make the assistant yours. Each lesson adds a skill the next one uses. Automating your work comes later, in Topic 3, once these basics are solid."
+      }
+    },
+    {
+      "id": "lesson-rhythm",
+      "type": "recap-grid",
+      "start": 2670,
+      "duration": 858,
+      "label": "map-rhythm",
+      "content": {
+        "eyebrow": "Every lesson, same rhythm",
+        "title": "Three steps, every time",
+        "cards": [
+          {
+            "id": "see",
+            "n": "01",
+            "title": "See the idea",
+            "body": "One short concept, one clear example."
+          },
+          {
+            "id": "watch",
+            "n": "02",
+            "title": "Watch it in a tool",
+            "body": "The skill shown step by step in an assistant."
+          },
+          {
+            "id": "try",
+            "n": "03",
+            "title": "Try it on your own task",
+            "body": "The practice step that makes it stick."
+          }
+        ]
+      },
+      "narration": {
+        "text": "Every lesson in this topic runs the same three steps. One: see the idea, a short concept with one clear example. Two: watch it in a tool, the skill shown step by step in an assistant. Three: try it on your own task, the practice step that makes it stick. Same rhythm, every time. So you always know what's coming, and you can spend your attention on the skill itself."
+      }
+    },
+    {
+      "id": "practice-setup",
+      "type": "setup-checklist",
+      "start": 3528,
+      "duration": 1363,
+      "label": "ready",
+      "content": {
+        "eyebrow": "Before Lesson 1.2",
+        "title": "Get ready to practice",
+        "sub": "Four quick things. Tick them off as you go.",
+        "items": [
+          {
+            "id": "open-assistant",
+            "name": "Open an assistant you can already use",
+            "why": "Any assistant from the course tool list works for Topic 1.",
+            "activateAt": 3
+          },
+          {
+            "id": "fresh-chat",
+            "name": "Start a fresh chat for practice",
+            "why": "Keeps course practice separate from your other conversations.",
+            "activateAt": 12
+          },
+          {
+            "id": "practice-log",
+            "name": "Start a one-line practice log",
+            "why": "Note what you tried and what came back, every lesson.",
+            "activateAt": 21
+          },
+          {
+            "id": "real-task",
+            "name": "Pick one real task from your week",
+            "why": "You'll reuse it in every Topic 1 lesson.",
+            "activateAt": 30
+          }
+        ],
+        "cursor": true
+      },
+      "narration": {
+        "text": "Before Lesson 1.2, let's get you ready to practice. Four quick things. First, open an assistant you can already use. Any assistant from the course tool list works for this topic. Second, start a fresh chat just for practice, so your course work stays separate from everything else. Third, start a one-line practice log: a note where you write down what you tried and what came back, every lesson. And fourth, pick one real task from your week. Something you'd happily hand off, like a status update or a meeting summary. Pause here for a moment and write it in your log. You'll reuse that task in every lesson of this topic."
+      }
+    },
+    {
+      "id": "up-next",
+      "type": "preview-band",
+      "start": 4891,
+      "duration": 523,
+      "label": "ready",
+      "content": {
+        "eyebrow": "Up next · Lesson 1.2",
+        "title": "Picking the Right Assistant"
+      },
+      "narration": {
+        "text": "Got your task written down? Good. Hold onto it. In the next lesson, we'll pick the right assistant for it, and you'll see why one assistant can suit a task better than another. Up next: Picking the Right Assistant. See you there."
+      }
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-09-30",
+    "lastUpdated": "2026-09-30",
+    "authors": [
+      "Sample Academy (synthetic sample content)"
+    ],
+    "factCheckedAt": null
+  }
+}

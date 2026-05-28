@@ -18,6 +18,15 @@ export const OutlineBeatSchema = z.object({
   toolRefs: z.array(z.string()).optional(),
   /** Capability category ids referenced (CAPABILITY_CATEGORIES). */
   capabilityRefs: z.array(z.string()).optional(),
+  /**
+   * Explicit scene `content` for this beat. The outline is the human curriculum
+   * layer and is authoritative for slide copy (see STRATEGY.md), so when a beat
+   * supplies content the planner uses it verbatim instead of the grounding/default
+   * for that scene type. Shape must match the scene type's content schema
+   * (validated downstream by LessonSchema). Omit it for data-derived scenes
+   * (tool-card-reveal, capability-table) that should auto-populate from grounding.
+   */
+  content: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const OutlineSectionSchema = z.object({

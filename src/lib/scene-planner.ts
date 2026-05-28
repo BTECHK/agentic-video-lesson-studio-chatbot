@@ -74,6 +74,13 @@ export function buildSceneContent(
   const eyebrow = outline.lesson.module;
   const toolIds = Object.keys(grounding.tools);
 
+  // The outline (human curriculum layer) is authoritative for slide content. When the
+  // beat supplies explicit `content`, use it verbatim — it is validated against the scene
+  // type's content schema downstream by LessonSchema. This is how a lesson renders Instructor's
+  // actual journey stops / expectations cards rather than the per-type stub below.
+  const beat = section?.beats.find((b) => b.id === block.beatId);
+  if (beat?.content) return beat.content;
+
   switch (block.sceneType) {
     case 'cover':
       return {

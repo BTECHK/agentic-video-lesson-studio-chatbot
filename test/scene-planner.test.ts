@@ -74,3 +74,77 @@ describe('planLesson', () => {
     expect(writingRow!.cells[claudeIdx]).toBe('Y');
   });
 });
+
+describe('outline-driven scene content', () => {
+  // A beat may carry explicit `content` — the human curriculum layer (outline.json)
+  // is authoritative for slide content (STRATEGY.md), so the planner must use it
+  // verbatim instead of the hardcoded per-type default. This is what lets a lesson
+  // render Instructor's actual journey-map stops / expectations cards rather than a stub.
+  const journeyStops = [
+    { id: 't0', label: 'Step 1', title: 'Start', state: 'done' },
+    { id: 't1', label: 'Step 2', title: 'Middle', state: 'active' },
+    { id: 't2', label: 'Step 3', title: 'End', state: 'todo' },
+  ];
+
+  const outlineWithContent = OutlineSchema.parse({
+    schemaVersion: '1.0',
+    id: 'fixture-1',
+    lesson: { title: 'How This Course Works', topic: 'Foundations', module: 'Topic 1' },
+    sections: [
+      {
+        id: 'journey',
+        title: 'The course journey',
+        objective: 'Show where this lesson sits.',
+        beats: [
+          {
+            id: 'journey-map',
+            summary: "Instructor's course journey, you-are-here on Topic 1.",
+            sceneTypeHint: 'journey-map',
+            content: {
+              eyebrow: 'Topic 1',
+              title: 'The course journey',
+              sub: "You're right here.",
+              stops: journeyStops,
+            },
+          },
+        ],
+      },
+    ],
+    meta: { createdAt: '2026-05-28', lastUpdated: '2026-05-28', authors: ['test'] },
+  });
+
+  const scriptWithContent = ScriptSchema.parse({
+    schemaVersion: '1.0',
+    lessonId: 'fixture-1',
+    blocks: [
+      {
+        id: 'journey-map',
+        sectionId: 'journey',
+        beatId: 'journey-map',
+        sceneType: 'journey-map',
+        narration: 'So here is where you are right now in the course.',
+      },
+    ],
+    meta: { generatedAt: '2026-05-28' },
+  });
+
+  it('uses a beat\'s explicit content verbatim instead of the hardcoded default', () => {
+    const g = buildGroundingContext(outlineWithContent, TOOLS_DIR);
+    const planned = planLesson(scriptWithContent, outlineWithContent, g);
+    const scene = planned.scenes[0];
+    expect(scene.type).toBe('journey-map');
+    expect((scene.content as { stops: unknown[] }).stops).toEqual(journeyStops);
+    // not the planner's hardcoded "meet/compare/personalize/practice" default
+    expect((scene.content as { stops: { id: string }[] }).stops.map((s) => s.id)).not.toContain(
+      'compare',
+    );
+  });
+
+  it('still produces a LessonSchema-valid lesson from outline-driven content', () => {
+    const g = buildGroundingContext(outlineWithContent, TOOLS_DIR);
+    const planned = planLesson(scriptWithContent, outlineWithContent, g);
+    const result = LessonSchema.safeParse(planned);
+    if (!result.success) console.error(JSON.stringify(result.error.issues, null, 2));
+    expect(result.success).toBe(true);
+  });
+});

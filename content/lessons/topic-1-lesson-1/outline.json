@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0",
+  "id": "topic-1-lesson-1",
+  "lesson": {
+    "title": "How This Course Works",
+    "topic": "Getting Started with AI Assistants",
+    "module": "Topic 1"
+  },
+  "audience": "Working professionals who have tried an AI assistant a few times, mostly for one-off questions, and want repeatable results.",
+  "sections": [
+    {
+      "id": "pacing",
+      "title": "Welcome and how the course is paced",
+      "objective": "Welcome the learner and explain the pacing: short lessons, one skill each, practiced on their own work (course row T1.1.r1).",
+      "beats": [
+        {
+          "id": "cover",
+          "summary": "Title card with the shape of Topic 1: five short lessons, 27 minutes, three steps per lesson.",
+          "sceneTypeHint": "cover",
+          "content": {
+            "eyebrow": "Topic 1 · Lesson 1.1",
+            "title": ["How this", "course works."],
+            "sub": "Short lessons, one skill each, practiced in a real assistant.",
+            "stats": [
+              { "id": "lessons", "value": 5, "label": "Short lessons" },
+              { "id": "minutes", "value": 27, "suffix": "min", "label": "Topic total" },
+              { "id": "steps", "value": 3, "label": "Steps per lesson" }
+            ]
+          }
+        },
+        {
+          "id": "one-skill-at-a-time",
+          "summary": "Narrated moment: one skill per lesson, shown first, then practiced on the learner's own work.",
+          "sceneTypeHint": "quote-card",
+          "content": {
+            "eyebrow": "How the course is paced",
+            "quote": "One skill per lesson. You see it in a real assistant, then you try it on your own work.",
+            "attribution": "Course Instructor, Sample Academy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "map-rhythm",
+      "title": "Topic 1 at a glance and the lesson rhythm",
+      "objective": "Show the five Topic 1 lessons with 1.1 active, and name the three-step rhythm every lesson repeats (course row T1.1.r2).",
+      "beats": [
+        {
+          "id": "topic-1-map",
+          "summary": "Lesson-level map of Topic 1: 1.1 active, 1.2 to 1.5 ahead.",
+          "sceneTypeHint": "journey-map",
+          "content": {
+            "eyebrow": "Topic 1 at a glance",
+            "title": "You're right here",
+            "sub": "Five short lessons. Each one adds a skill the next one uses.",
+            "variant": "standard",
+            "stops": [
+              { "id": "lesson-1-1", "label": "1.1", "title": "How This Course Works", "state": "active" },
+              { "id": "lesson-1-2", "label": "1.2", "title": "Picking the Right Assistant", "state": "todo" },
+              { "id": "lesson-1-3", "label": "1.3", "title": "Writing Clear Prompts", "state": "todo" },
+              { "id": "lesson-1-4", "label": "1.4", "title": "Checking the Output", "state": "todo" },
+              { "id": "lesson-1-5", "label": "1.5", "title": "Making the Assistant Yours", "state": "todo" }
+            ]
+          }
+        },
+        {
+          "id": "lesson-rhythm",
+          "summary": "The rhythm every lesson repeats: see the idea, watch it in a tool, try it on your own task.",
+          "sceneTypeHint": "recap-grid",
+          "content": {
+            "eyebrow": "Every lesson, same rhythm",
+            "title": "Three steps, every time",
+            "cards": [
+              { "id": "see", "n": "01", "title": "See the idea", "body": "One short concept, one clear example." },
+              { "id": "watch", "n": "02", "title": "Watch it in a tool", "body": "The skill shown step by step in an assistant." },
+              { "id": "try", "n": "03", "title": "Try it on your own task", "body": "The practice step that makes it stick." }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ready",
+      "title": "Get ready to practice",
+      "objective": "Get the learner set up to practice before Lesson 1.2, including one real task from their week (course row T1.1.r3).",
+      "beats": [
+        {
+          "id": "practice-setup",
+          "summary": "Animated four-item setup checklist; the last item is the engagement pause (pick one real task).",
+          "sceneTypeHint": "setup-checklist",
+          "content": {
+            "eyebrow": "Before Lesson 1.2",
+            "title": "Get ready to practice",
+            "sub": "Four quick things. Tick them off as you go.",
+            "items": [
+              { "id": "open-assistant", "name": "Open an assistant you can already use", "why": "Any assistant from the course tool list works for Topic 1.", "activateAt": 3 },
+              { "id": "fresh-chat", "name": "Start a fresh chat for practice", "why": "Keeps course practice separate from your other conversations.", "activateAt": 12 },
+              { "id": "practice-log", "name": "Start a one-line practice log", "why": "Note what you tried and what came back, every lesson.", "activateAt": 21 },
+              { "id": "real-task", "name": "Pick one real task from your week", "why": "You'll reuse it in every Topic 1 lesson.", "activateAt": 30 }
+            ],
+            "cursor": true
+          }
+        },
+        {
+          "id": "up-next",
+          "summary": "Hand-off to Lesson 1.2.",
+          "sceneTypeHint": "preview-band",
+          "content": {
+            "eyebrow": "Up next · Lesson 1.2",
+            "title": "Picking the Right Assistant"
+          }
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-09-30",
+    "lastUpdated": "2026-09-30",
+    "authors": ["Sample Academy (synthetic sample content)"]
+  }
+}
