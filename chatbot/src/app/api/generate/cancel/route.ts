@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { RecordedStatus } from '@/lib/generation-status';
 import { statusFilePath } from '../route';
 import { requireOperator } from '@/lib/operator-auth';
+import { killProcessTree, waitForExit } from '@/lib/process-tree';
 
 /**
  * Cancel a decoupled Studio Generate job (#44): read the pid from the status
@@ -47,11 +48,11 @@ export async function POST(req: NextRequest) {
   }
 
   if (recorded?.pid) {
-    try {
-      process.kill(recorded.pid);
-    } catch {
-      // already dead — fine.
-    }
+    // Kill the whole tree (shell shim + the real tsx/claude child), then verify it
+    // exited before settling the status — otherwise cancel could report success
+    // while the expensive generation keeps running (#67).
+    killProcessTree(recorded.pid);
+    await waitForExit(recorded.pid, 3000);
   }
 
   writeFileSync(

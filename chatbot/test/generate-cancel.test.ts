@@ -115,22 +115,25 @@ describe('POST /api/generate — detached background spawn (#44)', () => {
 });
 
 describe('POST /api/generate/cancel (#44)', () => {
-  it('kills the recorded pid and marks the job canceled', async () => {
+  it('kills the recorded pid tree and marks the job canceled (#67)', async () => {
+    // Mock the process-tree seam so we assert the route tree-kills the recorded pid
+    // and waits for exit — without spawning a real taskkill / touching live pids.
+    const killCalls: number[] = [];
+    vi.doMock('@/lib/process-tree', () => ({
+      killProcessTree: (pid: number) => {
+        killCalls.push(pid);
+      },
+      waitForExit: async () => true,
+    }));
     const { statusFilePath } = await import('../src/app/api/generate/route');
     const { POST: cancel } = await import('../src/app/api/generate/cancel/route');
-
-    const killed: number[] = [];
-    vi.spyOn(process, 'kill').mockImplementation(((pid: number) => {
-      killed.push(pid);
-      return true;
-    }) as never);
 
     const statusFile = statusFilePath(root, 'module-1');
     writeFileSync(statusFile, JSON.stringify({ status: 'running', pid: 9999, startedAt: new Date().toISOString() }));
 
     const res = await cancel(makeReq({ lessonId: 'module-1' }));
     expect(await res.json()).toEqual({ status: 'canceled' });
-    expect(killed).toContain(9999);
+    expect(killCalls).toContain(9999); // whole tree killed by recorded pid
     expect(JSON.parse(readFileSync(statusFile, 'utf-8')).status).toBe('canceled');
   });
 
