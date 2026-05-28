@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { RegenTriggerSchema, buildRegenArgs } from '@/lib/regen-trigger';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Studio regenerate trigger (CTRL-03). A clip comment posts here to kick the
@@ -14,6 +15,9 @@ import { RegenTriggerSchema, buildRegenArgs } from '@/lib/regen-trigger';
  * is already stale.
  */
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

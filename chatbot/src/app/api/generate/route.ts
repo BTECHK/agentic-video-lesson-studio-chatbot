@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Studio Generate (CC-passthrough), decoupled from the HTTP request (#44).
@@ -49,6 +50,9 @@ function readStatusFile(file: string): StatusFile | null {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

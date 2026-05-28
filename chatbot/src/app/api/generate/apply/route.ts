@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { copyFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Apply a reviewed script draft: promote script.draft.json → script.json, then
@@ -14,6 +15,9 @@ import path from 'node:path';
 const LESSON_RE = /^[a-z0-9-]+$/;
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

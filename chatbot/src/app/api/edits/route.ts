@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loadEdits, addStagedEdit, updateEditStatus } from '@/lib/edits-store';
+import { requireOperator } from '@/lib/operator-auth';
 
 /** Staged content edits API (narration text). Persists to .edits.json per lesson. */
 const LESSON_RE = /^[a-z0-9-]+$/;
@@ -13,6 +14,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();
@@ -30,6 +34,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

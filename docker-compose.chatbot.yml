@@ -16,6 +16,9 @@ services:
       - LLM_PROVIDER=${LLM_PROVIDER:-mock}
       - DEMO_MODULE_SCOPE=${DEMO_MODULE_SCOPE:-module-1}
       - NEXT_PUBLIC_DEV_BYPASS=${NEXT_PUBLIC_DEV_BYPASS:-false}
+      # Operator/write-route auth (#60). Empty default = deny-by-default (operator
+      # routes return 401). Set OPERATOR_TOKEN to enable them in a deployed container.
+      - OPERATOR_TOKEN=${OPERATOR_TOKEN:-}
       - SESSION_DATA_DIR=/app/data/sessions
     # Persist chat sessions across container restarts (CHAT-05).
     volumes:

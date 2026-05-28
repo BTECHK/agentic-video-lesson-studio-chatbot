@@ -20,6 +20,9 @@ function makeReq(body: unknown) {
 }
 
 beforeEach(() => {
+  // Authorize as the local operator (#60): these tests exercise #44 spawn/cancel
+  // behavior, not the auth boundary. The dev bypass short-circuits before headers.
+  vi.stubEnv('NEXT_PUBLIC_DEV_BYPASS', 'true');
   root = mkdtempSync(path.join(tmpdir(), 'gen-decouple-'));
   const lessonDir = path.join(root, 'content', 'lessons', 'module-1');
   mkdirSync(lessonDir, { recursive: true });
@@ -34,6 +37,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
   rmSync(root, { recursive: true, force: true });
 });
 

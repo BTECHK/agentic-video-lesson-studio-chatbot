@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import type { RecordedStatus } from '@/lib/generation-status';
 import { statusFilePath } from '../route';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Cancel a decoupled Studio Generate job (#44): read the pid from the status
@@ -18,6 +19,9 @@ interface StatusFile {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

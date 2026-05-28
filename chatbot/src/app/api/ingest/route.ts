@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { IngestTriggerSchema, buildIngestArgs } from '@/lib/ingest-trigger';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Manual ingestion trigger (Phase 8.5). Builds safe CLI args and, when enabled
@@ -10,6 +11,9 @@ import { IngestTriggerSchema, buildIngestArgs } from '@/lib/ingest-trigger';
  * container) it returns 503 rather than pretending to run.
  */
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { loadEdits, markOpenEditsApplied } from '@/lib/edits-store';
 import { applyNarrationEdits, applyOrderEdit, openEdits } from '@/lib/edits';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Apply staged narration edits: write them into script.json (the source the
@@ -19,6 +20,9 @@ interface ScriptDoc {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();

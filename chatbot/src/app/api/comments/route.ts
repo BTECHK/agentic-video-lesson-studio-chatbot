@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loadComments, addStagedComment, updateCommentStatus } from '@/lib/comments-store';
+import { requireOperator } from '@/lib/operator-auth';
 
 /**
  * Staged comments API. Comments persist to content/lessons/<id>/.comments.json so
@@ -16,6 +17,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();
@@ -31,6 +35,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const denied = requireOperator(req);
+  if (denied) return denied;
+
   let body: unknown;
   try {
     body = await req.json();
