@@ -1,8 +1,10 @@
 name: CI
 
-# Push-time anti-phantom safety net. Runs the SAME checks as the local Stop
-# hook (typecheck + lint + test) and additionally the full builds, so "works
-# locally, fails CI" drift cannot hide. See .planning/PROJECT-PLAN-2026-05-23.md §7.
+# Push-time anti-phantom safety net. Gates are named honestly: a green
+# "Fast checks" means typecheck + lint + unit passed — NOT that the platform
+# works. "Build" proves the bundle compiles. Heavier honest gates
+# (check:content, e2e, render, workflow) run in their own steps/jobs.
+# See .planning/PROJECT-PLAN-2026-05-23.md §7 and .planning/AUDIT-IMPROVEMENTS-2026-05-27.md P0.1.
 
 on:
   push:
@@ -37,9 +39,9 @@ jobs:
         working-directory: ${{ matrix.dir }}
         run: npm install
 
-      - name: Check (typecheck + lint + test)
+      - name: Fast checks (typecheck + lint + unit)
         working-directory: ${{ matrix.dir }}
-        run: npm run check
+        run: npm run check:fast
 
       - name: Build
         working-directory: ${{ matrix.dir }}
