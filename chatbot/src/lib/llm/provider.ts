@@ -2,6 +2,7 @@ import type { LLMProviderInterface } from './types';
 import { AnthropicProvider } from './anthropic-provider';
 import { MockProvider } from './mock-provider';
 import { ClaudeCodeProvider } from './claude-code-provider';
+import { GoogleProvider } from './google-provider';
 import { loadLLMConfig } from '../config';
 
 export function getLLMProvider(): LLMProviderInterface {
@@ -15,5 +16,7 @@ export function getLLMProvider(): LLMProviderInterface {
       return new ClaudeCodeProvider();
     case 'anthropic':
       return new AnthropicProvider();
+    case 'google':
+      return new GoogleProvider();
   }
 }

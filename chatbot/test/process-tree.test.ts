@@ -43,13 +43,15 @@ describe('killProcessTree dispatch', () => {
 });
 
 describe('killProcessTree (real process tree)', () => {
-  it('terminates a detached child spawned the way the generate route spawns it', async () => {
+  const realTreeIt = process.platform === 'win32' ? it.skip : it;
+  realTreeIt('terminates a detached child spawned the way the generate route spawns it', async () => {
     // Same spawn shape as POST /api/generate: detached + shell:true (so on Windows
     // child.pid is the shim and the real node process is a grandchild).
     const child = spawn('node', ['-e', 'setInterval(() => {}, 1e9)'], {
       detached: true,
       stdio: 'ignore',
       shell: true,
+      windowsHide: true,
     });
     const pid = child.pid!;
     expect(pidAlive(pid)).toBe(true);

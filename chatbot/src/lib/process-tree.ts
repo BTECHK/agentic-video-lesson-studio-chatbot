@@ -25,7 +25,7 @@ export function killProcessTree(pid: number, deps: KillDeps = {}): void {
     const run =
       deps.runTaskkill ??
       ((p: number) => {
-        spawnSync('taskkill', taskkillArgs(p), { stdio: 'ignore' });
+        spawnSync('taskkill', taskkillArgs(p), { stdio: 'ignore', windowsHide: true });
       });
     run(pid);
     return;

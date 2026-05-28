@@ -3,6 +3,7 @@ import { MockProvider } from '@/lib/llm/mock-provider';
 import { ClaudeCodeProvider } from '@/lib/llm/claude-code-provider';
 import { getLLMProvider } from '@/lib/llm/provider';
 import { resolveAnthropicModel, DEFAULT_ANTHROPIC_MODEL } from '@/lib/llm/anthropic-provider';
+import { DEFAULT_GOOGLE_MODEL, resolveGoogleModel } from '@/lib/llm/google-provider';
 
 describe('MockProvider', () => {
   it('returns a response echoing the user message', async () => {
@@ -101,6 +102,13 @@ describe('getLLMProvider', () => {
     expect(provider.constructor.name).toBe('AnthropicProvider');
   });
 
+  it('returns GoogleProvider when LLM_PROVIDER=google and a key is set', () => {
+    vi.stubEnv('LLM_PROVIDER', 'google');
+    vi.stubEnv('GOOGLE_CHATBOT_API_KEY', 'gk-test');
+    const provider = getLLMProvider();
+    expect(provider.constructor.name).toBe('GoogleProvider');
+  });
+
   it('fails closed on an unknown LLM_PROVIDER instead of using the paid path', () => {
     vi.stubEnv('LLM_PROVIDER', 'claude-passthrough');
     expect(() => getLLMProvider()).toThrow(/Invalid LLM_PROVIDER/);
@@ -122,5 +130,21 @@ describe('resolveAnthropicModel', () => {
   it('honors an ANTHROPIC_MODEL override', () => {
     vi.stubEnv('ANTHROPIC_MODEL', 'claude-opus-4-7');
     expect(resolveAnthropicModel()).toBe('claude-opus-4-7');
+  });
+});
+
+describe('resolveGoogleModel', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('defaults to a stable Gemini model', () => {
+    vi.stubEnv('GOOGLE_MODEL', '');
+    expect(resolveGoogleModel()).toBe(DEFAULT_GOOGLE_MODEL);
+  });
+
+  it('honors a GOOGLE_MODEL override', () => {
+    vi.stubEnv('GOOGLE_MODEL', 'gemini-2.5-pro');
+    expect(resolveGoogleModel()).toBe('gemini-2.5-pro');
   });
 });

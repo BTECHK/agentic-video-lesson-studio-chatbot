@@ -13,6 +13,7 @@
     "check": "npm run check:fast",
     "check:build": "npm run build",
     "check:e2e": "node scripts/check-e2e-proof.mjs",
+    "check:google": "node scripts/check-google-key.mjs",
     "test:e2e": "playwright test",
     "test": "vitest run",
     "test:watch": "vitest",

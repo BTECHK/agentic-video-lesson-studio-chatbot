@@ -7,13 +7,19 @@ services:
       - "3001:3001"
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - ACCESS_CODE=${ACCESS_CODE:?ACCESS_CODE must be set — no default; see chatbot/.env.example}
-      # Free 'mock' default (valid value; no key, no spend). 'anthropic' requires a
-      # key. Unknown values fail closed at startup (see chatbot/src/lib/config.ts).
+      - GOOGLE_CHATBOT_API_KEY=${GOOGLE_CHATBOT_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ACCESS_CODE=${ACCESS_CODE:?ACCESS_CODE must be set - no default; see chatbot/.env.example}
+      # Free 'mock' default (valid value; no key, no spend). 'anthropic' and
+      # 'google' require API keys (GOOGLE_CHATBOT_API_KEY preferred, GOOGLE_API_KEY
+      # legacy fallback). Unknown values fail closed at startup
+      # (see chatbot/src/lib/config.ts).
       # The free 'claude-code' provider (#63) needs the claude CLI + an authed session,
-      # which live on the host (npm run dev), not in this image — so the container
+      # which live on the host (npm run dev), not in this image - so the container
       # default stays 'mock'.
       - LLM_PROVIDER=${LLM_PROVIDER:-mock}
+      - GOOGLE_MODEL=${GOOGLE_MODEL:-gemini-2.5-flash}
+      - GOOGLE_CHATBOT_DAILY_LIMIT=${GOOGLE_CHATBOT_DAILY_LIMIT:-200}
       - DEMO_MODULE_SCOPE=${DEMO_MODULE_SCOPE:-module-1}
       - NEXT_PUBLIC_DEV_BYPASS=${NEXT_PUBLIC_DEV_BYPASS:-false}
       # Operator/write-route auth (#60). Empty default = deny-by-default (operator

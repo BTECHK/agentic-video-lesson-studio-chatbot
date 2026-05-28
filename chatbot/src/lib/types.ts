@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export type AccessMode = 'demo' | 'student';
-export type LLMProvider = 'anthropic' | 'mock';
+export type LLMProvider = 'anthropic' | 'mock' | 'claude-code' | 'google';
 /** TA mode answers strictly from course content; Office Hours allows tangential exploration. */
 export type ChatMode = 'ta' | 'office-hours';
 

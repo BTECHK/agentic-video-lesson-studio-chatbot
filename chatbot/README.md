@@ -54,6 +54,20 @@ LLM_PROVIDER=mock
 # paid API provider
 # LLM_PROVIDER=anthropic
 # ANTHROPIC_API_KEY=your-key-here
+
+# alternate paid API provider (Gemini)
+# LLM_PROVIDER=google
+# GOOGLE_CHATBOT_API_KEY=your-chat-key-here
+# GOOGLE_API_KEY=legacy-fallback-only
+# GOOGLE_MODEL=gemini-2.5-flash
+# GOOGLE_CHATBOT_DAILY_LIMIT=200
+# Gemini quotas are per project, not per key.
+```
+
+Quick key validation before running full flows:
+
+```bash
+npm run check:google
 ```
 
 ---

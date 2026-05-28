@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
     detached: true,
     stdio: 'ignore',
     shell: true,
+    windowsHide: true,
   });
   child.unref();
 

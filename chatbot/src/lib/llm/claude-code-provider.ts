@@ -28,6 +28,7 @@ const defaultRunner: ClaudeRunner = (prompt, signal) =>
     const child = spawn('claude', ['-p', '--output-format', 'json'], {
       stdio: ['pipe', 'pipe', 'pipe'],
       shell: true,
+      windowsHide: true,
       signal,
     });
     let out = '';
