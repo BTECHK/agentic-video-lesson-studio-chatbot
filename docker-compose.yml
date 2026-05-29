@@ -45,6 +45,9 @@ services:
       - tts-models:/root/.cache/huggingface
     environment:
       - NODE_ENV=production
+      - GOOGLE_VOICE_API_KEY=${GOOGLE_VOICE_API_KEY}
+      - TTS_PAID_API_KEY=${TTS_PAID_API_KEY}
+      - GOOGLE_VOICE_DAILY_LIMIT=${GOOGLE_VOICE_DAILY_LIMIT:-150}
 
 volumes:
   tts-models:

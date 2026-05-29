@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "llm-wiki": {
+      "source": "praneybehl/llm-wiki-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/llm-wiki/SKILL.md",
+      "computedHash": "88e2b2e662330e27564ff4ed7fff479a2d659066a11c94ba7cd58e8979d3f218"
+    },
+    "self-learning": {
+      "source": "philschmid/self-learning-skill",
+      "sourceType": "github",
+      "skillPath": "skills/self-learning/SKILL.md",
+      "computedHash": "49adf9d6e9027ad37066afa0b7d894b5c59c62bc429b4cc7a914d3617b764861"
+    }
+  }
+}

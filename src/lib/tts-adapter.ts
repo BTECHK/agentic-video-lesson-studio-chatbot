@@ -5,7 +5,7 @@
  * Implementations:
  *   - kokoro      (default) Kokoro-82M, Apache-2.0, branded neutral voice.
  *   - chatterbox  MIT, reserved for a future custom-voice option.
- *   - paid        ElevenLabs/OpenAI — INERT unless TTS_PAID_API_KEY is set.
+ *   - paid        Cloud TTS path - INERT unless a paid voice key is set.
  *
  * The adapter contains only pure orchestration logic. The actual sidecar
  * invocation is injected (SidecarRunner) so it can be unit-tested without a
@@ -17,6 +17,9 @@ import { posix } from 'node:path';
 
 export const TTS_IMPLS = ['kokoro', 'chatterbox', 'paid'] as const;
 export type TtsImpl = (typeof TTS_IMPLS)[number];
+
+const DEFAULT_VOICE_DAILY_LIMIT = 150;
+const voiceUsageState = { dayKey: '', hits: 0 };
 
 /** Kokoro's branded neutral default voice. */
 export const TTS_DEFAULT_VOICE = 'af_heart';
@@ -42,9 +45,52 @@ export interface SynthPlanItem {
   wavPath: string;
 }
 
+function parsePositiveInt(raw: string | undefined, fallback: number): number {
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
+}
+
+function pacificDayKey(now: Date): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
+}
+
+/** Preferred dedicated voice key lane; legacy TTS_PAID_API_KEY remains valid. */
+export function resolveVoiceApiKey(env: Record<string, string | undefined> = process.env): string | undefined {
+  return env.GOOGLE_VOICE_API_KEY ?? env.TTS_PAID_API_KEY;
+}
+
+/** Local testing guardrail for paid voice calls/day (midnight Pacific reset). */
+export function consumeVoiceRequest(
+  env: Record<string, string | undefined> = process.env,
+  now = new Date(),
+): void {
+  const limit = parsePositiveInt(env.GOOGLE_VOICE_DAILY_LIMIT, DEFAULT_VOICE_DAILY_LIMIT);
+  const day = pacificDayKey(now);
+  if (voiceUsageState.dayKey !== day) {
+    voiceUsageState.dayKey = day;
+    voiceUsageState.hits = 0;
+  }
+  if (voiceUsageState.hits >= limit) {
+    throw new Error(
+      `Local voice daily cap reached (${limit}/day). Increase GOOGLE_VOICE_DAILY_LIMIT only if intended.`,
+    );
+  }
+  voiceUsageState.hits += 1;
+}
+
+export function resetVoiceUsageState(): void {
+  voiceUsageState.dayKey = '';
+  voiceUsageState.hits = 0;
+}
+
 /**
  * Choose the TTS implementation from the environment. Defaults to kokoro.
- * The paid slot is gated behind TTS_PAID_API_KEY so it is inert by default.
+ * The paid slot is gated behind a dedicated voice API key so it is inert by default.
  */
 export function selectImpl(env: Record<string, string | undefined> = {}): TtsImpl {
   const requested = env.TTS_IMPL ?? 'kokoro';
@@ -54,9 +100,9 @@ export function selectImpl(env: Record<string, string | undefined> = {}): TtsImp
     );
   }
   const impl = requested as TtsImpl;
-  if (impl === 'paid' && !env.TTS_PAID_API_KEY) {
+  if (impl === 'paid' && !resolveVoiceApiKey(env)) {
     throw new Error(
-      'TTS impl "paid" requires a paid API key (TTS_PAID_API_KEY) to be set; no paid service is used by default.',
+      'TTS impl "paid" requires GOOGLE_VOICE_API_KEY (or legacy TTS_PAID_API_KEY); no paid service is used by default.',
     );
   }
   return impl;
@@ -161,6 +207,9 @@ export type BatchRunner = (args: BatchArgs) => Promise<void>;
  */
 export const defaultBatchRunner: BatchRunner = ({ manifestPath, voice, impl }) =>
   new Promise((resolve, reject) => {
+    if (impl === 'paid') {
+      consumeVoiceRequest(process.env);
+    }
     const proc = spawn(
       'docker',
       [
@@ -230,7 +279,11 @@ export async function synthesize(
   if (text.trim().length === 0) {
     throw new Error('Cannot synthesize empty narration text.');
   }
-  const impl = selectImpl(options.env ?? process.env);
+  const env = options.env ?? process.env;
+  const impl = selectImpl(env);
+  if (impl === 'paid') {
+    consumeVoiceRequest(env);
+  }
   const runner = options.runner ?? defaultRunner;
   await runner({ text, voice: voice ?? TTS_DEFAULT_VOICE, outPath, impl });
   return { wavPath: outPath };

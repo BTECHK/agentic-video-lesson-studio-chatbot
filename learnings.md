@@ -4,7 +4,8 @@ Self-learning log. Read at the start of every task; update after every task. Whe
 
 ## What Has Worked
 
-_(empty — add confirmed approaches as they prove out)_
+- **TDD red→green→prove loop (confirmed 2026-05-27).** For each code fix: write the test encoding the bug/edge case → run and CONFIRM it fails (red) → implement → run and CONFIRM green by reading the actual output, not the exit code. This caught real bugs (#59 fail-closed, #62 injection guard) and even caught a brittle order-dependent regex in my own test before it gave a false pass. Pair with `gitnexus impact <fn>` before editing + `detect-changes` before commit.
+- **Lean board-driven batches (confirmed 2026-05-27).** GitHub Issues = source of truth; work 1–3 related issues per batch → mini-plan → TDD → prove → commit to master → close issue with an evidence comment (commands + output reviewed). Keeps progress visible + trackable; avoids big-bang.
 
 ## What Has Failed
 

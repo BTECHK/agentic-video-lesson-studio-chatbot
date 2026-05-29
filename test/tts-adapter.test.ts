@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   selectImpl,
   sceneWavPath,
@@ -6,6 +6,8 @@ import {
   synthesize,
   buildManifest,
   TTS_DEFAULT_VOICE,
+  resetVoiceUsageState,
+  resolveVoiceApiKey,
   type SidecarRunner,
 } from '../src/lib/tts-adapter';
 
@@ -14,6 +16,10 @@ import {
 function makeLesson(scenes: Array<{ id: string } & Record<string, unknown>>) {
   return { id: 'module-1', scenes };
 }
+
+afterEach(() => {
+  resetVoiceUsageState();
+});
 
 // --- selectImpl: env-driven implementation selection ---
 
@@ -38,8 +44,27 @@ describe('selectImpl', () => {
     expect(selectImpl({ TTS_IMPL: 'paid', TTS_PAID_API_KEY: 'sk-xxx' })).toBe('paid');
   });
 
+  it('also allows paid when GOOGLE_VOICE_API_KEY is present', () => {
+    expect(selectImpl({ TTS_IMPL: 'paid', GOOGLE_VOICE_API_KEY: 'gvk-xxx' })).toBe('paid');
+  });
+
   it('rejects paid when no paid api key is set (inert by default)', () => {
-    expect(() => selectImpl({ TTS_IMPL: 'paid' })).toThrow(/api key/i);
+    expect(() => selectImpl({ TTS_IMPL: 'paid' })).toThrow(/key/i);
+  });
+});
+
+describe('resolveVoiceApiKey', () => {
+  it('prefers GOOGLE_VOICE_API_KEY over TTS_PAID_API_KEY', () => {
+    expect(
+      resolveVoiceApiKey({
+        GOOGLE_VOICE_API_KEY: 'voice-key',
+        TTS_PAID_API_KEY: 'legacy-key',
+      }),
+    ).toBe('voice-key');
+  });
+
+  it('falls back to TTS_PAID_API_KEY', () => {
+    expect(resolveVoiceApiKey({ TTS_PAID_API_KEY: 'legacy-key' })).toBe('legacy-key');
   });
 });
 
@@ -160,7 +185,7 @@ describe('synthesize', () => {
   it('passes the selected impl through to the sidecar', async () => {
     const runner = vi.fn<SidecarRunner>().mockResolvedValue(undefined);
     await synthesize('Hi', 'af_heart', '/tmp/out.wav', {
-      env: { TTS_IMPL: 'chatterbox' },
+      env: { TTS_IMPL: 'chatterbox', GOOGLE_VOICE_DAILY_LIMIT: '10' },
       runner,
     });
     expect(runner).toHaveBeenCalledWith(
@@ -171,15 +196,30 @@ describe('synthesize', () => {
   it('propagates sidecar failures rather than fabricating success', async () => {
     const runner = vi.fn<SidecarRunner>().mockRejectedValue(new Error('sidecar exit 1'));
     await expect(
-      synthesize('Hello', 'af_heart', '/tmp/out.wav', { env: {}, runner }),
+      synthesize('Hello', 'af_heart', '/tmp/out.wav', { env: { GOOGLE_VOICE_DAILY_LIMIT: '10' }, runner }),
     ).rejects.toThrow(/sidecar exit 1/);
   });
 
   it('uses a default branded neutral voice when none is given', async () => {
     const runner = vi.fn<SidecarRunner>().mockResolvedValue(undefined);
-    await synthesize('Hello', undefined, '/tmp/out.wav', { env: {}, runner });
+    await synthesize('Hello', undefined, '/tmp/out.wav', { env: { GOOGLE_VOICE_DAILY_LIMIT: '10' }, runner });
     expect(runner).toHaveBeenCalledWith(
       expect.objectContaining({ voice: TTS_DEFAULT_VOICE }),
     );
+  });
+
+  it('enforces a local paid-voice daily cap', async () => {
+    const runner = vi.fn<SidecarRunner>().mockResolvedValue(undefined);
+    const env = {
+      TTS_IMPL: 'paid',
+      GOOGLE_VOICE_API_KEY: 'voice-key',
+      GOOGLE_VOICE_DAILY_LIMIT: '1',
+    };
+
+    await synthesize('Hello one', 'af_heart', '/tmp/out-1.wav', { env, runner });
+    await expect(
+      synthesize('Hello two', 'af_heart', '/tmp/out-2.wav', { env, runner }),
+    ).rejects.toThrow(/daily cap/i);
+    expect(runner).toHaveBeenCalledTimes(1);
   });
 });

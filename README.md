@@ -92,7 +92,18 @@ docker compose up
 npm run ingest -- --mode=poll --vendor=anthropic
 ```
 
-Chat requires `chatbot/.env.local` with `ANTHROPIC_API_KEY=your-key-here`.
+Chatbot keys (local):
+- `LLM_PROVIDER=google`
+- `GOOGLE_CHATBOT_API_KEY=...` (preferred; legacy fallback `GOOGLE_API_KEY`)
+- `GOOGLE_CHATBOT_DAILY_LIMIT=...` (local safety cap for testing)
+
+Voice keys (pipeline/TTS):
+- `GOOGLE_VOICE_API_KEY=...` (preferred; legacy fallback `TTS_PAID_API_KEY`)
+- `GOOGLE_VOICE_DAILY_LIMIT=...` (local safety cap for paid voice testing)
+
+Note: Gemini quotas are enforced per Google Cloud project, not per key. Separate
+chat/voice keys help compartmentalize credentials, but they still share quota if
+both keys are in the same AI Studio project.
 
 ---
 

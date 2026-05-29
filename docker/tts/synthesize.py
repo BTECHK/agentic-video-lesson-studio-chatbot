@@ -7,7 +7,7 @@ Implementations:
   kokoro      -- Kokoro-82M (Apache-2.0). Branded neutral default voice. DEFAULT.
   chatterbox  -- Resemble Chatterbox (MIT). Reserved for a future custom
                  voice. Requires a ~15s reference clip (see TODO below).
-  paid        -- ElevenLabs/OpenAI. Inert unless an API key env var is set.
+  paid        -- Cloud TTS lane (Google/ElevenLabs/OpenAI). Inert unless a key is set.
 
 We deliberately do NOT use XTTS-v2 or F5-TTS: their weights ship under
 non-commercial (CC-BY-NC) licenses and are unsafe for a commercial product.
@@ -122,16 +122,17 @@ def synth_chatterbox(text: str, voice: str, out_path: str) -> None:
 
 
 def synth_paid(text: str, voice: str, out_path: str) -> None:
-    """Paid cloud TTS (ElevenLabs/OpenAI). Inert unless an API key is set."""
+    """Paid cloud TTS lane. Inert unless an API key is set."""
     import os
 
-    if not os.environ.get("TTS_PAID_API_KEY"):
+    key = os.environ.get("GOOGLE_VOICE_API_KEY") or os.environ.get("TTS_PAID_API_KEY")
+    if not key:
         raise RuntimeError(
-            "paid impl requires TTS_PAID_API_KEY. No paid service is used by default."
+            "paid impl requires GOOGLE_VOICE_API_KEY (or legacy TTS_PAID_API_KEY)."
         )
     # TODO: implement the chosen paid provider call when/if a key is provisioned.
     raise NotImplementedError(
-        "paid impl is gated and not implemented; provide TTS_PAID_API_KEY and "
+        "paid impl is gated and not implemented; provide GOOGLE_VOICE_API_KEY and "
         "wire the provider call before use."
     )
 
