@@ -60,3 +60,6 @@ publish/*
 # Wiki raw source material — staged locally, not source-of-truth; the curated
 # wiki/ pages ARE tracked. (learnings.md, wiki/, CLAUDE.md, AGENTS.md stay tracked.)
 raw/
+
+# stray manual TTS test artifacts (real audio lives in <id>/audio/)
+content/lessons/*.wav
