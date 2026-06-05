@@ -19,11 +19,15 @@ Claude design work in session-SampleAcademy/
 Claude design work in session-SampleAcademy.zip
 drive-download-*
 
-# Ignore .claude/ machinery, but track committed quality-gate guarantees
+# Ignore .claude/ machinery, but track committed quality-gate guarantees +
+# the skills (shared with Instructor as part of the handoff).
 .claude/*
 !.claude/settings.json
 !.claude/hooks/
+!.claude/skills/
 .claude/settings.local.json
+# Still ignore local-only machinery even though skills are tracked:
+.claude/worktrees/
 
 # transient download staging
 .incoming/
@@ -63,3 +67,9 @@ raw/
 
 # stray manual TTS test artifacts (real audio lives in <id>/audio/)
 content/lessons/*.wav
+
+# Saved-webpage render assets (cruft) — keep the readable HTML, drop the _files bundle
+.planning/staging docs for improvments/*_files/
+
+# Python bytecode from watch skill runtime
+.claude/skills/**/__pycache__/
