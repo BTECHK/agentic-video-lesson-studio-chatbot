@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sample Academy — Animated Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #EDE8E3;
+    --accent: #8B2635;
+    --font: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: var(--font);
+    background: #0a0a0a;
+    color: #1C1C1C;
+    overflow: hidden;
+    height: 100vh; width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+  #root { width: 100vw; height: 100vh; position: relative; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ REAL BRAND SVG LOGOS ═════════════ -->
+<!-- Add a new logo here as <symbol id="logo-<name>" viewBox="0 0 24 24">…</symbol> -->
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+  <defs>
+    <symbol id="logo-chatgpt" viewBox="0 0 24 24">
+      <path fill="#0f0f0f" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4069-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+    </symbol>
+    <symbol id="logo-claude" viewBox="0 0 24 24">
+      <path fill="#D97757" d="M4.709 15.955l4.72-2.647.079-.23-.079-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.104 2.278.158 1.652.097 2.448.255h.389l.055-.158-.134-.097-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.146-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.004 1.81 2.508 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"/>
+    </symbol>
+    <symbol id="logo-gemini" viewBox="0 0 24 24">
+      <defs>
+        <linearGradient id="gem-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1C7DFF"/>
+          <stop offset="50%" stop-color="#9168C0"/>
+          <stop offset="100%" stop-color="#F65AA3"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#gem-grad)" d="M12 0a12 12 0 0 0 12 12 12 12 0 0 0-12 12A12 12 0 0 0 0 12 12 12 0 0 0 12 0z"/>
+    </symbol>
+    <symbol id="logo-perplexity" viewBox="0 0 24 24">
+      <path fill="#20B8CD" d="M22.3977 7.0896h-2.3106V.0676l-7.5094 6.3542V.1577h-1.1554v6.1966L4.4904 0v7.0896H1.6023v10.3976h2.8882V24l6.9318-6.3846v6.2739h1.1554v-6.4778l6.9318 6.3532v-6.8005h2.8882zm-3.4661-5.6932v5.6932h-6.7228zm-7.8783.2262v5.4669H4.9239zm-8.0772 6.6225h7.307l-7.307 6.2521zm2.8882 13.9497v-6.8356l6.9318-5.9328v6.4203zm8.0772.0214v-6.4297l6.9318 5.9535v-6.8577h-6.9318v-.0181l7.307 6.3547z"/>
+    </symbol>
+    <symbol id="logo-grok" viewBox="0 0 24 24">
+      <path fill="#0f0f0f" d="M9.27 19.64l-7.02-9.84 2.62-1.7 7.02 9.84-2.62 1.7zm5.46-15.28l7.02 9.84-2.62 1.7-7.02-9.84 2.62-1.7zM2.44 7.84l7.02 9.84h3.8L6.24 7.84h-3.8zm11.42 0l7.02 9.84h3.8L17.66 7.84h-3.8z"/>
+    </symbol>
+    <!-- Placeholder for unknown tools — render as striped square -->
+    <symbol id="logo-placeholder" viewBox="0 0 24 24">
+      <pattern id="stripe-pat" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)">
+        <rect width="2" height="4" fill="#dcd8cf"/>
+        <rect x="2" width="2" height="4" fill="#e9e6df"/>
+      </pattern>
+      <rect width="24" height="24" fill="url(#stripe-pat)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="root"></div>
+
+<!-- ═════════════ LESSON CONTENT (replace this with your JSON) ═════════════ -->
+<script type="application/json" id="lesson-content">
+{
+  "schemaVersion": "1.0",
+  "id": "example-lesson",
+  "lesson": {
+    "title": "Example lesson",
+    "topic": "Topic 0",
+    "module": "Module 0 of 0",
+    "duration": 8,
+    "brandLabel": "Sample Academy"
+  },
+  "scenes": [
+    {
+      "id": "cover",
+      "type": "cover",
+      "start": 0,
+      "duration": 8,
+      "label": "Example",
+      "content": {
+        "eyebrow": "Topic 0 · Example",
+        "title": ["This is a *placeholder*.", "Replace the JSON above."],
+        "sub": "Drop in real lesson content following the schema in references/05-content-schema.md."
+      }
+    }
+  ]
+}
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="animations.jsx"></script>
+<script type="text/babel" src="lesson-ui.jsx"></script>
+<script type="text/babel" src="lesson-renderer.jsx"></script>
+<script type="text/babel" src="lesson-shell.jsx"></script>
+
+</body>
+</html>
