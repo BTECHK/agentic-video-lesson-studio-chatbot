@@ -16,6 +16,7 @@ export default tseslint.config(
       'coverage/**',
       '.test-results/**',
       '.claude/**',
+      '.agents/**',
       'chatbot/**',
     ],
   },

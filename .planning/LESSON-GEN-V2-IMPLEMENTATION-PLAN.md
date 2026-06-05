@@ -44,12 +44,23 @@ TARGET: course-map.json → lesson-plan → deck/animation → script → MP4 �
 ## 3. Phased plan
 
 ### Phase 1 — Lock the authoring spine (the lesson-plan step) · *small*
-**Goal:** every new lesson starts from a `lesson-plan.md`, not the outline directly.
-- Use `lesson-plan` to produce `content/lessons/<id>/lesson-plan.md` for Topic 1 lesson 1 (re-plan
-  the existing draft) — proves the skill end-to-end and gives a reference artifact.
-- Add the lesson-plan as a required input in `STRATEGY.md`'s human→machine gate.
-- **Verify:** the re-planned lesson's blocks each map to an outline row id; meta-commentary like the
-  one the gate caught cannot exist (it's not in the plan).
+**The outline stays the source of truth and the human-in-the-loop starting point.** The lesson-plan is
+**derived from** the outline, never a competitor to it. The point of the plan is only this: the deck/
+script/animation should render **from the plan**, not leap straight from outline → slides (that leap is
+what produces "word soup"). Flow: `outline (SoT) → lesson-plan.md (journey) → render`.
+
+**Goal:** an *approved* `lesson-plan.md` exists before any rendering — authored either way:
+- **(a) Human-authored** — Instructor writes/edits the journey directly (max human-in-the-loop).
+- **(b) Claude-drafted** — `lesson-plan` generates it from the outline, then Instructor approves/edits.
+- **(c) Hybrid** — Claude drafts, human revises. The rule isn't *who* writes it; it's that an approved
+  plan exists. (Matches `STRATEGY.md`'s "nothing reaches `content/lessons/` until Instructor signs off.")
+
+Tasks:
+- Produce `content/lessons/topic-1-lesson-1/lesson-plan.md` (re-plan the existing draft) — proves the
+  skill end-to-end and gives a reference artifact. Support both authorship entry points.
+- Add the approved lesson-plan as the required input to rendering in `STRATEGY.md`'s human→machine gate.
+- **Verify:** the plan's blocks each map to an outline row id; meta-commentary like the one the gate
+  caught can't exist (it isn't in the plan).
 
 ### Phase 2 — Provider abstraction for transcription/review · *small, unblocks flexibility*
 **Goal:** one config point for "who transcribes / who reviews," so we can swap Gemini → specialized
