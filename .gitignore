@@ -73,3 +73,7 @@ content/lessons/*.wav
 
 # Python bytecode from watch skill runtime
 .claude/skills/**/__pycache__/
+
+# skills.sh CLI drops machine-absolute symlinks here; track .agents/ content + skills-lock.json instead.
+# Instructor recreates per-OS symlinks with `npx skills install`.
+.claude/skills/remotion-best-practices

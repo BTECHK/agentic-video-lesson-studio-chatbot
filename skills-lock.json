@@ -7,6 +7,12 @@
       "skillPath": "skills/llm-wiki/SKILL.md",
       "computedHash": "88e2b2e662330e27564ff4ed7fff479a2d659066a11c94ba7cd58e8979d3f218"
     },
+    "remotion-best-practices": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion/SKILL.md",
+      "computedHash": "d9457a606202a23c28b4c17b2611c65ecc09311ce46a5d93ffe8493d2e8ea4f3"
+    },
     "self-learning": {
       "source": "philschmid/self-learning-skill",
       "sourceType": "github",
