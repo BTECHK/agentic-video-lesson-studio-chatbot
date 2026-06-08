@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getLessonTimeline, listLessonIds } from './lesson-timeline';
 import { getLessonClassification, type LessonClassification } from './lesson-classification';
+import { getLessonGates, type GateBadge } from './lesson-gates';
 import { TRACK_KINDS } from './studio-timeline';
 
 const LESSONS_DIR = path.join(process.cwd(), '..', 'content', 'lessons');
@@ -18,6 +19,8 @@ export interface LessonDirEntry {
   staleCount: number;
   hasDraft: boolean;
   hasVideo: boolean;
+  gates: GateBadge[];
+  publishable: boolean;
 }
 
 /** Directory of all lessons with at-a-glance status — backs the Studio Menu. */
@@ -29,6 +32,7 @@ export function getLessonDirectory(): LessonDirEntry[] {
       const staleCount = TRACK_KINDS.flatMap((k) => t.tracks[k]).filter((c) => c.status === 'stale').length;
       const dir = path.join(LESSONS_DIR, lessonId);
       const classification = getLessonClassification(lessonId);
+      const lessonGates = getLessonGates(lessonId);
       return {
         lessonId,
         title: t.title,
@@ -40,6 +44,8 @@ export function getLessonDirectory(): LessonDirEntry[] {
         staleCount,
         hasDraft: fs.existsSync(path.join(dir, 'script.draft.json')),
         hasVideo: fs.existsSync(path.join(process.cwd(), '..', 'out', `${lessonId}.mp4`)),
+        gates: lessonGates.gates,
+        publishable: lessonGates.allGreen,
       };
     })
     .filter((e): e is LessonDirEntry => e !== null);

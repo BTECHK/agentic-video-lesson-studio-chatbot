@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getLessonDirectory } from '@/lib/lesson-directory';
+import type { GateState } from '@/lib/lesson-gates';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,15 @@ function fmtDuration(sec: number): string {
   const s = Math.round(sec % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
+
+/** DoD gate badge palette: pass = feature (green), fix = limitation (red), missing = neutral. */
+function gateColors(state: GateState): { border: string; color: string; bg: string } {
+  if (state === 'pass') return { border: 'var(--feature-border)', color: 'var(--feature-text)', bg: 'var(--feature-bg)' };
+  if (state === 'fix') return { border: 'var(--limitation-border)', color: 'var(--limitation-text)', bg: 'var(--limitation-bg)' };
+  return { border: 'var(--border)', color: 'var(--text-muted)', bg: 'transparent' };
+}
+
+const GATE_MARK: Record<GateState, string> = { pass: '✓', fix: '✗', missing: '·' };
 
 /** Studio Menu - the lesson directory with a clear sample-vs-curriculum label. */
 export default function MenuPage() {
@@ -79,8 +89,61 @@ export default function MenuPage() {
                     <span> - up to date</span>
                   )}
                 </div>
+                <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }} title="Definition of Done gates (A · B · C)">
+                  {l.gates.map((g) => {
+                    const c = gateColors(g.state);
+                    return (
+                      <span
+                        key={g.gate}
+                        title={`Gate ${g.gate} — ${g.label}: ${g.state}`}
+                        style={{
+                          border: `1px solid ${c.border}`,
+                          color: c.color,
+                          background: c.bg,
+                          borderRadius: 'var(--radius)',
+                          padding: '0.1rem 0.4rem',
+                          fontSize: '0.66rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {GATE_MARK[g.state]} {g.gate} {g.label}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
+                {l.publishable ? (
+                  <span
+                    title="All three gates green — ready for manual Teachable upload"
+                    style={{
+                      border: '1px solid var(--feature-border)',
+                      color: 'var(--feature-text)',
+                      background: 'var(--feature-bg)',
+                      borderRadius: 999,
+                      padding: '0.2rem 0.55rem',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                    }}
+                  >
+                    ✓ Ready to publish
+                  </span>
+                ) : (
+                  <span
+                    title="Publish blocked — Gates A·B·C must all pass first"
+                    style={{
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-muted)',
+                      borderRadius: 999,
+                      padding: '0.2rem 0.55rem',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      cursor: 'not-allowed',
+                    }}
+                  >
+                    Publish blocked
+                  </span>
+                )}
                 <Link
                   href={`/studio/generate?lesson=${encodeURIComponent(l.lessonId)}`}
                   style={{
