@@ -44,6 +44,8 @@ content/lessons/*/review/_sensors/
 
 # Regeneration DAG cache (content hashes; rebuilt on demand, not source)
 content/lessons/*/.regen-cache.json
+# Remotion render props (injected per-render from lesson.json; regenerable)
+content/lessons/*/.render-props.json
 
 # Generated drafts + fact-check reports (Studio Generate; review-then-apply, not source)
 content/lessons/*/script.draft.json

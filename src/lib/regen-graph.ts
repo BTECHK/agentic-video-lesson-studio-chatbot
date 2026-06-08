@@ -112,11 +112,39 @@ export function buildLessonNodes(lessonId: string, opts: BuildOptions = {}): Dag
     deps: ['align'],
     inputs: () => [readText(lessonPath)],
     output: outPath,
-    version: 1,
+    // v2: render now injects the lesson's props (was rendering module-1 defaults).
+    version: 2,
     run: () => runners.render(lessonId, outPath),
   };
 
   return [plan, ...ttsNodes, align, render];
+}
+
+/**
+ * Render-props injection for the `LessonVideo` composition.
+ *
+ * The composition's defaultProps are hardcoded to module-1 (src/Root.tsx), so a
+ * bare `remotion render … LessonVideo out.mp4` renders module-1 REGARDLESS of the
+ * lessonId — every other lesson's out/<id>.mp4 silently got module-1's content
+ * (caught by Gate C on topic-1-lesson-1). These helpers inject the target lesson's
+ * props so the render matches the lessonId.
+ */
+export function renderPropsPath(lessonId: string, root: string = process.cwd()): string {
+  return join(root, 'content', 'lessons', lessonId, '.render-props.json');
+}
+
+/** Wrap the lesson under the `lesson` prop key LessonVideoProps expects, write it, return the path. */
+export function writeRenderProps(lessonId: string, root: string = process.cwd()): string {
+  const lessonPath = join(root, 'content', 'lessons', lessonId, 'lesson.json');
+  const lesson = JSON.parse(readFileSync(lessonPath, 'utf-8'));
+  const propsPath = renderPropsPath(lessonId, root);
+  writeFileSync(propsPath, JSON.stringify({ lesson }));
+  return propsPath;
+}
+
+/** argv for rendering a specific lesson: LessonVideo + the injected props file. */
+export function lessonRenderArgv(outPath: string, propsPath: string): string[] {
+  return ['remotion', 'render', 'src/index.ts', 'LessonVideo', outPath, `--props=${propsPath}`];
 }
 
 /** Spawn a command, resolving on exit 0 and rejecting otherwise. */
@@ -145,5 +173,9 @@ export const defaultRunners: RegenRunners = {
     await defaultBatchRunner({ manifestPath, voice: TTS_DEFAULT_VOICE, impl: selectImpl(process.env) });
   },
   align: (lessonId) => exec('npx', ['tsx', 'scripts/align-lesson.ts', lessonId]),
-  render: (_lessonId, outPath) => exec('npx', ['remotion', 'render', 'src/index.ts', 'LessonVideo', outPath]),
+  render: async (lessonId, outPath) => {
+    // Inject THIS lesson's props — otherwise LessonVideo renders its module-1 default.
+    const propsPath = writeRenderProps(lessonId);
+    await exec('npx', lessonRenderArgv(outPath, propsPath));
+  },
 };
