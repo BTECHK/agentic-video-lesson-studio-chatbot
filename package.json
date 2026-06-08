@@ -18,6 +18,7 @@
     "gate:lesson": "tsx scripts/gate-lesson.ts",
     "gate:review": "tsx scripts/gate-review.ts",
     "gate:status": "tsx scripts/gate-status.ts",
+    "compile:course-map": "tsx scripts/compile-course-map.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:audit": "vitest run --reporter=json --outputFile=.test-results/results.json",

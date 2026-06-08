@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0",
+  "source": "course-outline.txt",
+  "topics": [
+    {
+      "id": "topic-0",
+      "number": 0,
+      "title": "Welcome",
+      "lessons": [
+        {
+          "id": "topic-0-lesson-1",
+          "number": "0.1",
+          "title": "Welcome to the Sample Course",
+          "minutes": 3,
+          "rows": [
+            {
+              "id": "T0.1.r1",
+              "minutes": 1,
+              "label": "Welcome and Course Promise A short hello and…",
+              "content": "Welcome and Course Promise A short hello and the single promise of the course: a dependable everyday routine with an AI assistant.",
+              "deliveryType": "talking-head"
+            },
+            {
+              "id": "T0.1.r2",
+              "minutes": 1,
+              "label": "Who This Course Is For Working professionals who…",
+              "content": "Who This Course Is For Working professionals who have tried an AI assistant a few times and want repeatable results.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T0.1.r3",
+              "minutes": 1,
+              "label": "The Topics Ahead A one-screen overview of the…",
+              "content": "The Topics Ahead A one-screen overview of the topics in this sample and how each one builds on the last.",
+              "deliveryType": "slide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "topic-1",
+      "number": 1,
+      "title": "Getting Started with AI Assistants",
+      "lessons": [
+        {
+          "id": "topic-1-lesson-1",
+          "number": "1.1",
+          "title": "How This Course Works",
+          "minutes": 3,
+          "rows": [
+            {
+              "id": "T1.1.r1",
+              "minutes": 1,
+              "label": "Welcome + How the Course Is Paced Short…",
+              "content": "Welcome + How the Course Is Paced Short lessons, one skill each. Every skill is shown in an assistant first, then practiced on the learner's own work.",
+              "deliveryType": "talking-head"
+            },
+            {
+              "id": "T1.1.r2",
+              "minutes": 1,
+              "label": "Topic 1 at a Glance + the Lesson…",
+              "content": "Topic 1 at a Glance + the Lesson Rhythm The five Topic 1 lessons as a map with 1.1 active, and the rhythm every lesson repeats: see the idea, watch it in a tool, try it on your own task.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T1.1.r3",
+              "minutes": 1,
+              "label": "Get Ready to Practice A four-item setup checklist.…",
+              "content": "Get Ready to Practice A four-item setup checklist. Engagement moment: pick one real task from your week and hold onto it. Hand-off to Lesson 1.2.",
+              "deliveryType": "demo"
+            }
+          ]
+        },
+        {
+          "id": "topic-1-lesson-2",
+          "number": "1.2",
+          "title": "Picking the Right Assistant",
+          "minutes": 6,
+          "rows": [
+            {
+              "id": "T1.2.r1",
+              "minutes": 2,
+              "label": "Side-by-Side Answers One everyday request answered by three…",
+              "content": "Side-by-Side Answers One everyday request answered by three assistants, to show that style differs while the fundamentals stay the same.",
+              "deliveryType": "demo"
+            },
+            {
+              "id": "T1.2.r2",
+              "minutes": 2,
+              "label": "The Assistants in This Course A short card…",
+              "content": "The Assistants in This Course A short card for each assistant profile used in the sample lessons.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T1.2.r3",
+              "minutes": 2,
+              "label": "Match the Tool to the Job A rule…",
+              "content": "Match the Tool to the Job A rule of thumb: pick one assistant for writing and one for research, then stick with them for a week.",
+              "deliveryType": "talking-head"
+            }
+          ]
+        },
+        {
+          "id": "topic-1-lesson-3",
+          "number": "1.3",
+          "title": "Writing Clear Prompts",
+          "minutes": 7,
+          "rows": [
+            {
+              "id": "T1.3.r1",
+              "minutes": 2,
+              "label": "Why Vague Prompts Disappoint A vague request next…",
+              "content": "Why Vague Prompts Disappoint A vague request next to a specific one, with the difference in the answers called out.",
+              "deliveryType": "demo"
+            },
+            {
+              "id": "T1.3.r2",
+              "minutes": 3,
+              "label": "The Three-Question Prompt Check Before sending a prompt,…",
+              "content": "The Three-Question Prompt Check Before sending a prompt, answer three questions: who is it for, what do you need, and what does done look like.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T1.3.r3",
+              "minutes": 2,
+              "label": "Rewrite a Prompt Together Learners rewrite a sample…",
+              "content": "Rewrite a Prompt Together Learners rewrite a sample prompt using the three questions while the instructor narrates.",
+              "deliveryType": "demo"
+            }
+          ]
+        },
+        {
+          "id": "topic-1-lesson-4",
+          "number": "1.4",
+          "title": "Checking the Output",
+          "minutes": 6,
+          "rows": [
+            {
+              "id": "T1.4.r1",
+              "minutes": 2,
+              "label": "Fluent Is Not the Same as Correct Why…",
+              "content": "Fluent Is Not the Same as Correct Why a confident, well-written answer can still be wrong, shown with an invented example.",
+              "deliveryType": "talking-head"
+            },
+            {
+              "id": "T1.4.r2",
+              "minutes": 2,
+              "label": "A Five-Point Review Checklist Facts, numbers, names, tone,…",
+              "content": "A Five-Point Review Checklist Facts, numbers, names, tone, and anything missing.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T1.4.r3",
+              "minutes": 2,
+              "label": "Spot the Problem A sample answer with two…",
+              "content": "Spot the Problem A sample answer with two planted errors for learners to find.",
+              "deliveryType": "demo"
+            }
+          ]
+        },
+        {
+          "id": "topic-1-lesson-5",
+          "number": "1.5",
+          "title": "Making the Assistant Yours",
+          "minutes": 5,
+          "rows": [
+            {
+              "id": "T1.5.r1",
+              "minutes": 2,
+              "label": "Personal Settings and Memory Tell the assistant once…",
+              "content": "Personal Settings and Memory Tell the assistant once who you are and how you like answers, then let memory carry that forward.",
+              "deliveryType": "demo"
+            },
+            {
+              "id": "T1.5.r2",
+              "minutes": 2,
+              "label": "Settings Walkthrough A stylized walkthrough of where the…",
+              "content": "Settings Walkthrough A stylized walkthrough of where the personalization settings live.",
+              "deliveryType": "demo"
+            },
+            {
+              "id": "T1.5.r3",
+              "minutes": 1,
+              "label": "Topic 1 Wrap-Up What learners can now do,…",
+              "content": "Topic 1 Wrap-Up What learners can now do, and a pointer to the next topic.",
+              "deliveryType": "slide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "number": 3,
+      "title": "Automating Everyday Work",
+      "lessons": [
+        {
+          "id": "topic-3-lesson-1",
+          "number": "3.1",
+          "title": "Mapping a Repetitive Task",
+          "minutes": 6,
+          "rows": [
+            {
+              "id": "T3.1.r1",
+              "minutes": 2,
+              "label": "Find the Task Worth Automating Look for work…",
+              "content": "Find the Task Worth Automating Look for work that is frequent, predictable, and low risk.",
+              "deliveryType": "slide"
+            },
+            {
+              "id": "T3.1.r2",
+              "minutes": 2,
+              "label": "Break It Into Steps Write the task down…",
+              "content": "Break It Into Steps Write the task down as inputs, a short numbered list of steps, and a single output.",
+              "deliveryType": "demo"
+            },
+            {
+              "id": "T3.1.r3",
+              "minutes": 2,
+              "label": "Decide What Stays Human Mark the steps that…",
+              "content": "Decide What Stays Human Mark the steps that need judgement and keep those with the learner.",
+              "deliveryType": "talking-head"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
