@@ -17,8 +17,7 @@ import fs from 'node:fs';
 import { spawn } from 'node:child_process';
 import { runMain } from '../src/lib/logger';
 import { runGate, type GateDeps, type GateOptions } from '../src/lib/gate-lesson';
-
-const JUDGE_TIMEOUT_MS = 600_000; // a video review is agentic (reads many frames)
+import { judgeViaClaudeCode } from '../src/lib/claude-judge';
 
 /** Run a Python sensor; return stdout. stderr is the sensor's progress log. */
 function runPython(argv: string[]): Promise<string> {
@@ -37,43 +36,6 @@ function runPython(argv: string[]): Promise<string> {
     child.stderr.on('data', (d) => (err += d));
     child.on('error', reject);
     child.on('close', (code) => (code === 0 ? resolve(out) : reject(new Error(`python ${argv[0]} exited ${code}: ${err.slice(-400)}`))));
-  });
-}
-
-/** Headless Claude Code as judge. Mirrors the proven claude-code-provider runner. */
-function judge(prompt: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), JUDGE_TIMEOUT_MS);
-    const child = spawn('claude', ['-p', '--output-format', 'json'], {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      shell: true,
-      windowsHide: true,
-      signal: controller.signal,
-    });
-    let out = '';
-    let err = '';
-    child.stdout.on('data', (d) => (out += d));
-    child.stderr.on('data', (d) => (err += d));
-    child.on('error', reject);
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      if (code !== 0) return reject(new Error(`claude exited ${code}: ${err.slice(0, 300)}`));
-      try {
-        const parsed = JSON.parse(out) as { result?: string; is_error?: boolean; subtype?: string };
-        if (parsed.is_error || (parsed.subtype && parsed.subtype !== 'success')) {
-          return reject(new Error(`claude returned an error result: ${parsed.subtype ?? 'unknown'}`));
-        }
-        if (typeof parsed.result !== 'string' || parsed.result.length === 0) {
-          return reject(new Error('claude result was empty'));
-        }
-        resolve(parsed.result);
-      } catch {
-        reject(new Error('claude output was not valid JSON'));
-      }
-    });
-    child.stdin.write(prompt);
-    child.stdin.end();
   });
 }
 
@@ -98,7 +60,7 @@ runMain('gate:lesson', async (log) => {
     exists: (p) => fs.existsSync(p),
     ensureDir: (p) => fs.mkdirSync(p, { recursive: true }),
     runPython,
-    judge,
+    judge: judgeViaClaudeCode,
     readText: (p) => fs.readFileSync(p, 'utf-8'),
     writeText: (p, s) => fs.writeFileSync(p, s),
     log,
