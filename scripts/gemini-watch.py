@@ -10,26 +10,34 @@ Use for a quick "does the Gemini path work?" test with an existing GEMINI_API_KE
 For the production gate, prefer: Gemini (or Groq Whisper) for the TRANSCRIPT,
 Claude as the REVIEWER (Claude is the brand/teaching judge).
 
+Backends are described in `scripts/review-providers.json` (one config point — add a
+row, no code change). Select one with `--provider <id>`; it resolves the key env
+candidates + model from that row. `--key-env` / `--model` still override directly.
+
 Usage:
   setx / export GEMINI_API_KEY=...        # or GOOGLE_API_KEY
   python scripts/gemini-watch.py out/<lesson>.mp4
+  python scripts/gemini-watch.py out/<lesson>.mp4 --provider gemini-voice
   python scripts/gemini-watch.py out/<lesson>.mp4 --model gemini-2.5-flash
+  python scripts/gemini-watch.py --list-providers
+  python scripts/gemini-watch.py out/<lesson>.mp4 --provider premium-multimodal --dry-run
 
 Pure official SDK: `pip install google-genai`.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import time
 from pathlib import Path
 
 DEFAULT_MODEL = os.environ.get("GOOGLE_MODEL", "gemini-2.5-flash")
+PROVIDERS_CONFIG = Path(__file__).resolve().parent / "review-providers.json"
 
-# Prioritized env var names to look for a key under. Project keys
-# (GOOGLE_VOICE_API_KEY / GOOGLE_CHATBOT_API_KEY) are checked too, so the gate
-# works with the keys already in your shell. Override with --key-env NAME.
+# Fallback prioritized env var names when no --provider/--key-env is given. Project
+# keys are included so the gate works with the keys already in your shell.
 KEY_ENV_CANDIDATES = (
     "GEMINI_API_KEY",
     "GOOGLE_API_KEY",
@@ -56,41 +64,123 @@ Watch the whole video (visuals + audio) and return, in markdown:
 Be concrete and cite timestamps."""
 
 
-def load_key(preferred_env: str | None = None) -> tuple[str, str]:
-    """Return (key, env_name_used). Checks --key-env first, then the candidates."""
-    names = (preferred_env,) if preferred_env else KEY_ENV_CANDIDATES
-    for name in names:
+def load_providers() -> dict:
+    """Read review-providers.json. Returns {} if missing (falls back to defaults)."""
+    if not PROVIDERS_CONFIG.exists():
+        return {}
+    try:
+        return json.loads(PROVIDERS_CONFIG.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"Invalid {PROVIDERS_CONFIG.name}: {e}")
+
+
+def find_provider(cfg: dict, provider_id: str) -> dict:
+    for p in cfg.get("providers", []):
+        if p.get("id") == provider_id:
+            return p
+    ids = ", ".join(p.get("id", "?") for p in cfg.get("providers", []))
+    raise SystemExit(f"Unknown provider '{provider_id}'. Available: {ids or '(none)'}")
+
+
+def load_key(candidates, required: bool = True) -> tuple[str | None, str | None]:
+    """Return (key, env_name_used). With required=False, returns (None, None) if absent."""
+    for name in candidates:
         if not name:
             continue
         v = os.environ.get(name)
         if v and v.strip():
             return v.strip(), name
-    raise SystemExit(
-        "No Gemini key found. Looked in: " + ", ".join(KEY_ENV_CANDIDATES) + ".\n"
-        "  PowerShell:  $env:GEMINI_API_KEY = '...'   (or use --key-env GOOGLE_VOICE_API_KEY)\n"
-        "  Get one at:  https://aistudio.google.com/apikey"
-    )
+    if required:
+        raise SystemExit(
+            "No API key found. Looked in: " + ", ".join(c for c in candidates if c) + ".\n"
+            "  PowerShell:  $env:GEMINI_API_KEY = '...'   (or use --key-env GOOGLE_VOICE_API_KEY)\n"
+            "  Get one at:  https://aistudio.google.com/apikey"
+        )
+    return None, None
+
+
+def print_providers(cfg: dict) -> int:
+    providers = cfg.get("providers", [])
+    if not providers:
+        print(f"No providers found in {PROVIDERS_CONFIG}")
+        return 1
+    default = cfg.get("default")
+    print(f"# Review providers ({PROVIDERS_CONFIG.name})\n")
+    for p in providers:
+        star = "  (default)" if p.get("id") == default else ""
+        print(f"- {p.get('id')}{star}  [{p.get('kind')}]  model={p.get('model')}")
+        print(f"    keyEnv: {', '.join(p.get('keyEnv', []))}")
+        if p.get("notes"):
+            print(f"    {p['notes']}")
+    return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(prog="gemini-watch")
-    ap.add_argument("source", help="Local video file path (e.g. out/topic-1-lesson-1.mp4)")
-    ap.add_argument("--model", default=DEFAULT_MODEL, help=f"Gemini model (default {DEFAULT_MODEL})")
+    ap.add_argument("source", nargs="?", help="Local video file path (e.g. out/topic-1-lesson-1.mp4)")
+    ap.add_argument("--provider", default=None, help="Provider id from review-providers.json (e.g. gemini-voice)")
+    ap.add_argument("--model", default=None, help=f"Model override (default: provider's, else {DEFAULT_MODEL})")
     ap.add_argument("--prompt", default=None, help="Override the review prompt")
-    ap.add_argument("--key-env", default=None, help="Env var name to read the key from (e.g. GOOGLE_VOICE_API_KEY)")
+    ap.add_argument("--key-env", default=None, help="Env var name to read the key from (overrides provider)")
+    ap.add_argument("--list-providers", action="store_true", help="List configured providers and exit")
+    ap.add_argument("--dry-run", action="store_true", help="Resolve provider/key/model and print, without uploading")
     args = ap.parse_args()
+
+    cfg = load_providers()
+
+    if args.list_providers:
+        return print_providers(cfg)
+
+    # Resolve the provider row (explicit --provider, else config default if present).
+    provider = None
+    provider_id = args.provider or cfg.get("default")
+    if provider_id and cfg:
+        provider = find_provider(cfg, provider_id)
+
+    # Key-env candidates: --key-env wins; else provider's keyEnv; else built-in fallback.
+    if args.key_env:
+        candidates = [args.key_env]
+    elif provider:
+        candidates = list(provider.get("keyEnv", []))
+    else:
+        candidates = list(KEY_ENV_CANDIDATES)
+
+    # Model: --model wins; else provider's model; else env/default.
+    model = args.model or (provider.get("model") if provider else None) or DEFAULT_MODEL
+
+    if args.dry_run:
+        key, key_src = load_key(candidates, required=False)
+        print(f"# gemini-watch dry-run")
+        print(f"provider:  {provider_id or '(none — built-in fallback)'}"
+              + (f"  [{provider.get('kind')}]" if provider else ""))
+        print(f"model:     {model}")
+        print(f"keyEnv:    {', '.join(candidates)}")
+        print(f"key found: {'yes, from $' + key_src if key else 'NO (set one of the keyEnv vars above)'}")
+        if provider and provider.get("kind") == "transcribe":
+            print("note:      this provider is transcribe-only - gemini-watch drives multimodal review;\n"
+                  "           use it for the Phase-3 transcript leg, not this multimodal pass.")
+        return 0
+
+    if not args.source:
+        ap.error("source video is required (or use --list-providers / --dry-run)")
 
     video = Path(args.source).expanduser().resolve()
     if not video.exists():
         raise SystemExit(f"File not found: {video}")
+
+    if provider and provider.get("kind") == "transcribe":
+        raise SystemExit(
+            f"Provider '{provider_id}' is transcribe-only; gemini-watch runs multimodal review.\n"
+            "Pick a multimodal provider (e.g. --provider gemini-voice) or use it for the transcript leg."
+        )
 
     try:
         from google import genai  # google-genai SDK
     except ImportError:
         raise SystemExit("Missing SDK. Install with: pip install google-genai")
 
-    key, key_src = load_key(args.key_env)
-    print(f"[gemini-watch] using key from ${key_src}", file=sys.stderr)
+    key, key_src = load_key(candidates)
+    print(f"[gemini-watch] provider={provider_id or 'fallback'} model={model} key=${key_src}", file=sys.stderr)
     client = genai.Client(api_key=key)
 
     print(f"[gemini-watch] uploading {video.name} ({video.stat().st_size/1e6:.1f} MB)…", file=sys.stderr)
@@ -104,15 +194,15 @@ def main() -> int:
     if f.state.name != "ACTIVE":
         raise SystemExit(f"Gemini file processing failed: state={f.state.name}")
 
-    print(f"[gemini-watch] reviewing with {args.model}…", file=sys.stderr)
+    print(f"[gemini-watch] reviewing with {model}…", file=sys.stderr)
     resp = client.models.generate_content(
-        model=args.model,
+        model=model,
         contents=[f, args.prompt or REVIEW_PROMPT],
     )
 
     print()
     print(f"# gemini-watch report — {video.name}")
-    print(f"_model: {args.model}_\n")
+    print(f"_provider: {provider_id or 'fallback'} · model: {model}_\n")
     print(resp.text)
 
     try:

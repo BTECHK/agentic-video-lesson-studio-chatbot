@@ -1,0 +1,43 @@
+{
+  "_comment": "Single config point for the lesson watch-gate's transcribe/review backends (Phase 2 of LESSON-GEN-V2-IMPLEMENTATION-PLAN). Adding a new backend = adding a row here, zero code change. gemini-watch.py reads this via --provider <id>. kind: 'multimodal' = watches video + listens in one pass (gemini-watch can drive it); 'transcribe' = audio→text only, used for the transcript leg of the Phase-3 production gate (Gemini/Groq = sensor; Claude = judge). keyEnv is a prioritized list; the first env var that is set wins. Secrets live in the environment / 1Password, never here.",
+  "default": "gemini-voice",
+  "providers": [
+    {
+      "id": "gemini-voice",
+      "kind": "multimodal",
+      "keyEnv": ["GOOGLE_VOICE_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY"],
+      "model": "gemini-2.5-flash",
+      "notes": "Dev default. Project 'voice/video' Gemini key. Native multimodal (frames + audio in one pass). Free tier."
+    },
+    {
+      "id": "gemini-chatbot",
+      "kind": "multimodal",
+      "keyEnv": ["GOOGLE_CHATBOT_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY"],
+      "model": "gemini-2.5-flash",
+      "notes": "Same capability as gemini-voice; separate project quota (the chatbot key)."
+    },
+    {
+      "id": "groq-whisper",
+      "kind": "transcribe",
+      "keyEnv": ["GROQ_API_KEY"],
+      "model": "whisper-large-v3",
+      "endpoint": "https://api.groq.com/openai/v1/audio/transcriptions",
+      "notes": "Transcript leg only (no video). Not yet wired; GROQ_API_KEY not set. For the Phase-3 production gate's transcript step."
+    },
+    {
+      "id": "openai-whisper",
+      "kind": "transcribe",
+      "keyEnv": ["OPENAI_API_KEY"],
+      "model": "whisper-1",
+      "endpoint": "https://api.openai.com/v1/audio/transcriptions",
+      "notes": "Fallback transcript provider. Transcript leg only."
+    },
+    {
+      "id": "premium-multimodal",
+      "kind": "multimodal",
+      "keyEnv": ["PREMIUM_REVIEW_API_KEY"],
+      "model": "TBD",
+      "notes": "Placeholder for a production specialized/paid reviewer. Proves the abstraction: this row was added with ZERO code change. Put per-key special considerations (rate limits, endpoint, auth quirks) here when wired."
+    }
+  ]
+}
