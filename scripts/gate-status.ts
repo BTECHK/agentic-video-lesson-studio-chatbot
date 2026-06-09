@@ -33,6 +33,7 @@ runMain('gate:status', async (log) => {
     A: read('review/FACT-CHECK-REPORT.md'),
     B: read('review/teaching-axis.md'),
     C: read('review/watch-gate.md'),
+    L: read('review/layout-gate.md'),
   });
 
   for (const g of summary.gates) {
@@ -41,7 +42,7 @@ runMain('gate:status', async (log) => {
 
   const decision = canPublish(summary);
   if (decision.ok) {
-    log.info('PUBLISH OK — all three gates green', { lessonId });
+    log.info('PUBLISH OK — all four gates green', { lessonId });
     return 0;
   }
   for (const r of decision.reasons) log.warn(r);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Syne';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, LEADING, space } from '../../brand/tokens';
 
 const { fontFamily } = loadFont('normal', {
   weights: ['400', '600', '700', '800'],
@@ -112,6 +112,46 @@ export const SceneFrame: React.FC<{
   </AbsoluteFill>
 );
 
+/**
+ * Pure style builders — exported so the typography contract is unit-testable
+ * (#72): leading comes from the LEADING scale, never hardcoded per component.
+ */
+export function eyebrowStyle(): React.CSSProperties {
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 14,
+    fontWeight: BRAND.font.weights.bold,
+    fontSize: 22,
+    lineHeight: LEADING.caps,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    color: BRAND.colors.accent,
+  };
+}
+
+export function sceneTitleStyle(size: number): React.CSSProperties {
+  return {
+    margin: 0,
+    fontWeight: BRAND.font.weights.extraBold,
+    fontSize: size,
+    lineHeight: LEADING.display,
+    letterSpacing: '-0.02em',
+    maxWidth: 1400,
+  };
+}
+
+export function sceneSubStyle(): React.CSSProperties {
+  return {
+    margin: 0,
+    fontWeight: BRAND.font.weights.regular,
+    fontSize: 30,
+    lineHeight: LEADING.body,
+    color: MUTED,
+    maxWidth: 1100,
+  };
+}
+
 /** Accent uppercase kicker that opens most scenes. */
 export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
@@ -119,21 +159,9 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = 
 }) => {
   const glide = useGlideIn(delay, 14);
   return (
-    <div
-      style={{
-        ...glide,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        fontWeight: BRAND.font.weights.bold,
-        fontSize: 22,
-        letterSpacing: '0.16em',
-        textTransform: 'uppercase',
-        color: BRAND.colors.accent,
-      }}
-    >
+    <div style={{ ...glide, ...eyebrowStyle() }}>
       <span
-        style={{ width: 40, height: 4, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }}
+        style={{ width: space(10), height: space(1), backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }}
       />
       {children}
     </div>
@@ -147,21 +175,7 @@ export const SceneTitle: React.FC<{
   size?: number;
 }> = ({ children, delay = 16, size = 84 }) => {
   const glide = useGlideIn(delay, 22);
-  return (
-    <h1
-      style={{
-        ...glide,
-        margin: 0,
-        fontWeight: BRAND.font.weights.extraBold,
-        fontSize: size,
-        lineHeight: 1.04,
-        letterSpacing: '-0.02em',
-        maxWidth: 1400,
-      }}
-    >
-      {children}
-    </h1>
-  );
+  return <h1 style={{ ...glide, ...sceneTitleStyle(size) }}>{children}</h1>;
 };
 
 /** Supporting sub-copy under a title. */
@@ -170,19 +184,5 @@ export const SceneSub: React.FC<{ children: React.ReactNode; delay?: number }> =
   delay = 28,
 }) => {
   const glide = useGlideIn(delay, 18);
-  return (
-    <p
-      style={{
-        ...glide,
-        margin: 0,
-        fontWeight: BRAND.font.weights.regular,
-        fontSize: 30,
-        lineHeight: 1.45,
-        color: MUTED,
-        maxWidth: 1100,
-      }}
-    >
-      {children}
-    </p>
-  );
+  return <p style={{ ...glide, ...sceneSubStyle() }}>{children}</p>;
 };

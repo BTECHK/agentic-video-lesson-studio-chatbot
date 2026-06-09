@@ -7,6 +7,7 @@ import type { SceneComponentProps } from '../lib/scene-types';
 import { registerLessonScenes } from './lesson-scenes/register';
 import { fontFamily } from './lesson-scenes/shared';
 import { LessonCaptions } from './lesson-scenes/LessonCaptions';
+import { LayoutProbe } from './lesson-scenes/LayoutProbe';
 
 registerLessonScenes();
 
@@ -22,7 +23,7 @@ export type LessonVideoProps = {
  * contiguous timeline with <Series> (one entry per scene `duration`), and
  * dispatches each scene to its registered component by `type`.
  */
-export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson }) => {
+export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson, layoutProbe }) => {
   return (
     <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase }}>
       <Series>
@@ -49,6 +50,7 @@ export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson }) => {
           );
         })}
       </Series>
+      {layoutProbe === true ? <LayoutProbe /> : null}
     </AbsoluteFill>
   );
 };
@@ -83,6 +85,7 @@ export const lessonMetadata: CalculateMetadataFunction<LessonVideoProps> = ({ pr
     width: BRAND.video.width,
     height: BRAND.video.height,
     fps: BRAND.video.fps,
-    props: { lesson },
+    // Spread preserves pass-through flags (e.g. gate:layout's `layoutProbe`).
+    props: { ...props, lesson },
   };
 };
