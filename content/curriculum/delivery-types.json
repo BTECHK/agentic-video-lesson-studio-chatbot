@@ -1,0 +1,158 @@
+{
+  "source": "original background content/sample-course-outline.docx",
+  "note": "SYNTHETIC SAMPLE: hand-written stand-in for the per-row delivery types that scripts/extract_delivery_types.py recovers from the colour-coded outline document.",
+  "counts": {
+    "talking-head": 5,
+    "slide": 8,
+    "demo": 8
+  },
+  "rows": [
+    {
+      "table": 0,
+      "row": 1,
+      "time": "1 min",
+      "contentHead": "Welcome and Course Promise",
+      "deliveryType": "talking-head"
+    },
+    {
+      "table": 0,
+      "row": 2,
+      "time": "1 min",
+      "contentHead": "Who This Course Is For",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 0,
+      "row": 3,
+      "time": "1 min",
+      "contentHead": "The Topics Ahead",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 1,
+      "row": 1,
+      "time": "1 min",
+      "contentHead": "Welcome + How the Course Is Paced",
+      "deliveryType": "talking-head"
+    },
+    {
+      "table": 1,
+      "row": 2,
+      "time": "1 min",
+      "contentHead": "Topic 1 at a Glance + the Lesson Rhythm",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 1,
+      "row": 3,
+      "time": "1 min",
+      "contentHead": "Get Ready to Practice",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 2,
+      "row": 1,
+      "time": "2 min",
+      "contentHead": "Side-by-Side Answers",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 2,
+      "row": 2,
+      "time": "2 min",
+      "contentHead": "The Assistants in This Course",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 2,
+      "row": 3,
+      "time": "2 min",
+      "contentHead": "Match the Tool to the Job",
+      "deliveryType": "talking-head"
+    },
+    {
+      "table": 3,
+      "row": 1,
+      "time": "2 min",
+      "contentHead": "Why Vague Prompts Disappoint",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 3,
+      "row": 2,
+      "time": "3 min",
+      "contentHead": "The Three-Question Prompt Check",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 3,
+      "row": 3,
+      "time": "2 min",
+      "contentHead": "Rewrite a Prompt Together",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 4,
+      "row": 1,
+      "time": "2 min",
+      "contentHead": "Fluent Is Not the Same as Correct",
+      "deliveryType": "talking-head"
+    },
+    {
+      "table": 4,
+      "row": 2,
+      "time": "2 min",
+      "contentHead": "A Five-Point Review Checklist",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 4,
+      "row": 3,
+      "time": "2 min",
+      "contentHead": "Spot the Problem",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 5,
+      "row": 1,
+      "time": "2 min",
+      "contentHead": "Personal Settings and Memory",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 5,
+      "row": 2,
+      "time": "2 min",
+      "contentHead": "Settings Walkthrough",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 5,
+      "row": 3,
+      "time": "1 min",
+      "contentHead": "Topic 1 Wrap-Up",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 6,
+      "row": 1,
+      "time": "2 min",
+      "contentHead": "Find the Task Worth Automating",
+      "deliveryType": "slide"
+    },
+    {
+      "table": 6,
+      "row": 2,
+      "time": "2 min",
+      "contentHead": "Break It Into Steps",
+      "deliveryType": "demo"
+    },
+    {
+      "table": 6,
+      "row": 3,
+      "time": "2 min",
+      "contentHead": "Decide What Stays Human",
+      "deliveryType": "talking-head"
+    }
+  ]
+}
