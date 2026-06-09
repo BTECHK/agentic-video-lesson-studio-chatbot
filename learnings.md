@@ -6,6 +6,7 @@ Self-learning log. Read at the start of every task; update after every task. Whe
 
 - **TDD red→green→prove loop (confirmed 2026-05-27).** For each code fix: write the test encoding the bug/edge case → run and CONFIRM it fails (red) → implement → run and CONFIRM green by reading the actual output, not the exit code. This caught real bugs (#59 fail-closed, #62 injection guard) and even caught a brittle order-dependent regex in my own test before it gave a false pass. Pair with `gitnexus impact <fn>` before editing + `detect-changes` before commit.
 - **Lean board-driven batches (confirmed 2026-05-27).** GitHub Issues = source of truth; work 1–3 related issues per batch → mini-plan → TDD → prove → commit to master → close issue with an evidence comment (commands + output reviewed). Keeps progress visible + trackable; avoids big-bang.
+- **Claude-as-judge gates over artifact checks (confirmed 2026-06-09).** Schema/render/audio checks pass "word soup" and even shipped a *wrong video* + typography defects. The 3-gate DoD (A fidelity · B teaching · C watch-the-MP4) with `gate:status` enforcement caught both. Judge = headless Claude Code (no key); Gemini only flags. **Caveat that bit us:** a frame-sampling visual review that checks content+brand but NOT *typography* waves through clipped glyphs / orphan punctuation / overlap → geometry needs its own DOM-measured gate (#73). Architecture/tooling rationale now in [[architecture-decisions]].
 
 ## What Has Failed
 
