@@ -32,10 +32,22 @@ All planning docs live in `.planning/`. Start with `.planning/ROADMAP.md` for th
 Mode: YOLO (auto-approve). Research + plan check + verifier enabled. Quality model profile (Opus).
 Use `/gsd-progress` to check status. Use `/gsd-plan-phase N` to plan a phase.
 
+## Content Delivery (Google Drive)
+
+Finalized, gate-green lesson artifacts are delivered to the shared Google Drive — NOT through git
+(MP4s too big). Local sync path: `<DRIVE_ROOT>\Content Development\Curriculum`
+(Drive folder id `<DRIVE_FOLDER_ID>`; also reachable via the Google Drive MCP connector).
+
+- Structure: `00 — START HERE/` (course overview + promo sizzle) · `Module N — <title>/Lesson N.M — <title>/`.
+- Exec-facing naming is **Module/Lesson** (repo keeps `topic-N-lesson-M`); per lesson ship exactly
+  three artifacts: `N.M Video.mp4` · `N.M Script.pdf` · `N.M Lesson Plan.pdf`. Learning material only —
+  never JSON, code, or internal planning docs.
+- A lesson may only be dropped here when `npm run gate:status -- <id>` exits 0 (A·B·C·L all green).
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (3749 symbols, 6139 relationships, 189 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (3842 symbols, 6258 relationships, 190 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
