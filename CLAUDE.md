@@ -27,6 +27,20 @@ All planning docs live in `.planning/`. Start with `.planning/ROADMAP.md` for th
 - **Official sources only.** AI tool claims must reference vendor docs, not training data.
 - **Teachable constraints.** Output is MP4 video (1080p, 30fps, <2GB). No HTML embeds.
 
+## Lesson Production Model — No Human Footage (LOCKED)
+
+**Every lesson is built end-to-end as pure animation. No screen recordings, no on-camera footage, ever.** This is locked and supersedes any earlier "hybrid" model (the idea that animation does slides while Instructor records the demos + talking-head) and any "BLOCKED ON INSTRUCTOR" framing in older planning docs. There are **no human-input blockers** to building lessons.
+
+- **All three delivery types render as Remotion scenes:**
+  - 🟦 **slide** → designed animated visuals (frameworks, charts, journey maps).
+  - 🟩 **demo** (in-tool moments) → **animated tool simulations**: `comparison-chats`, `voice-demo`, `setup-checklist`, the `ChatDemo` component, and richer `browser-demo`/`code-demo` scenes where needed. Never stitch in a screen recording; never present fabricated outputs as real — animate the interaction faithfully.
+  - 🟧 **talking-head** (a person speaking) → **narrated animated scenes**: `quote-card` scenes with TTS voiceover. No camera. (Lesson 1.1 already ships Instructor's spoken moments this way.)
+- **How lessons are composed (this is about taste, not fixed ratios):**
+  - The **course outline DOCX is the definitive foundation** — it sets scope, structure, and how each lesson is framed (`content/curriculum/course-map.json`, `delivery-types.json`). Scope comes only from here.
+  - The **rest of the content repository sets the taste** — Instructor's style, guardrails, frameworks, voice, and decision-making (see `.claude/skills/lesson-plan/SKILL.md`). These influence *how* it's built, not *what's in scope*.
+  - **Claude composes the lessons dynamically/agentically** from those inputs.
+- **Facts/pricing are verified agentically** against official vendor pages by the accuracy-sweep (Gate A / `accuracy-sweep`). Confirmed on an official source → use it; not findable on an official source → soften or drop the claim. **No human sign-off is required** — Instructor never has to confirm a price or feature. Only a genuine fetch/technical failure (page unreachable, tooling broken) is a legitimate blocker.
+
 ## Workflow
 
 Mode: YOLO (auto-approve). Research + plan check + verifier enabled. Quality model profile (Opus).
@@ -53,7 +67,7 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (4453 symbols, 7248 relationships, 231 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (4513 symbols, 7330 relationships, 231 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

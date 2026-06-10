@@ -64,10 +64,18 @@ See `references/03-scene-catalog.md` for the full schema. Match content to scene
 | Voice/audio feature highlight | `voice-demo` |
 | Recap with 3 numbered cards | `recap-grid` |
 | "Coming next" footer | `preview-band` |
-| Hook into a live demo Instructor will show | `demo-cue` |
 | Background context that's optional reading | `dig-deeper` |
 | Pre-class homework | `assignment-list` |
-| One pulled-out quote from Instructor | `quote-card` |
+| A spoken / talking-head moment (Instructor to camera) | `quote-card` (narrate over a pulled key line) |
+
+**Delivery type → scene (NO FOOTAGE — every beat is animated; see `CLAUDE.md` → "Lesson Production Model").**
+The outline tags rows 🟦 slide / 🟩 demo / 🟧 talking-head, but **all three render as animation**:
+- 🟩 **demo / in-tool** → animate it: `comparison-chats`, `setup-checklist`, `voice-demo`, or
+  `feature-grid`. Show clearly-illustrative, grounded interactions — never a real captured session,
+  never a capability absent from the facts.
+- 🟧 **talking-head** → narrate over `quote-card` (default; as in topic-1-lesson-1).
+- ⛔ **Do not use `demo-cue`** — it was a placeholder for a live recorded demo; this pipeline animates
+  the demo instead. (It remains a registered type only for backward compatibility.)
 
 If the content genuinely doesn't fit any scene type, **add a new one to `templates/lesson-renderer.jsx` and document it in `references/03-scene-catalog.md`** — don't hack an existing one.
 
