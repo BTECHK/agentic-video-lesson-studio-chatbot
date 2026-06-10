@@ -116,4 +116,27 @@ describe('getSystemPrompt', () => {
     expect(prompt).toContain('Tutor');
     expect(prompt).toContain('[Source:');
   });
+
+  // Persona naturalness (Instructor 2026-06-09): no per-turn self-intro, no canned refusal
+  it('includes the greeting guidance only on the first turn', () => {
+    const first = getSystemPrompt('student', 'c', 'ta', true);
+    const later = getSystemPrompt('student', 'c', 'ta', false);
+    expect(first).toContain('## Opening');
+    expect(first).toContain('first message of a new conversation');
+    expect(later).not.toContain('## Opening');
+  });
+
+  it('defaults to first-turn greeting (back-compat)', () => {
+    expect(getSystemPrompt('student')).toContain('## Opening');
+  });
+
+  it('does not hardcode a templated self-introduction or refusal sentence', () => {
+    const prompt = getSystemPrompt('student', 'c');
+    // The old robotic strings Instructor flagged must be gone.
+    expect(prompt).not.toContain('You introduce yourself as');
+    expect(prompt).not.toContain('respond EXACTLY');
+    // But the topic boundary itself stays.
+    expect(prompt).toContain('NOT about AI tools');
+    expect(prompt.toLowerCase()).toContain('vary the wording');
+  });
 });

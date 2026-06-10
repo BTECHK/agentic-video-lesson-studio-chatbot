@@ -1,0 +1,23 @@
+{
+  "name": "tutor-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone Sample Academy Tutor chatbot — Telegram-first, channel-adapter seam, Gemini free-tier provider. Deploys to Cloud Run (webhook-first).",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run test"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "tsx": "^4.19.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
+  }
+}
