@@ -15,14 +15,15 @@ const MockComponent: React.FC<SceneComponentProps> = () => null;
 // --- Scene Types ---
 
 describe('SceneTypes', () => {
-  it('has exactly 14 scene type entries', () => {
-    expect(SCENE_TYPES).toHaveLength(14);
+  it('has exactly 16 scene type entries', () => {
+    expect(SCENE_TYPES).toHaveLength(16);
   });
 
-  it('includes cover, journey-map, and quote-card', () => {
+  it('includes cover, journey-map, quote-card, and tool-demo', () => {
     expect(SCENE_TYPES).toContain('cover');
     expect(SCENE_TYPES).toContain('journey-map');
     expect(SCENE_TYPES).toContain('quote-card');
+    expect(SCENE_TYPES).toContain('tool-demo');
   });
 });
 

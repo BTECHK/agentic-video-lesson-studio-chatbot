@@ -12,17 +12,17 @@ describe('registerLessonScenes', () => {
     clearRegistry();
   });
 
-  it('registers a component for all 14 scene types', () => {
+  it('registers a component for all 16 scene types', () => {
     registerLessonScenes();
     for (const type of SCENE_TYPES) {
       expect(getSceneComponent(type), `missing component for ${type}`).not.toBeNull();
     }
-    expect(getRegisteredTypes()).toHaveLength(14);
+    expect(getRegisteredTypes()).toHaveLength(16);
   });
 
   it('is idempotent across repeated calls (HMR / multiple test imports)', () => {
     registerLessonScenes();
     registerLessonScenes();
-    expect(getRegisteredTypes()).toHaveLength(14);
+    expect(getRegisteredTypes()).toHaveLength(16);
   });
 });

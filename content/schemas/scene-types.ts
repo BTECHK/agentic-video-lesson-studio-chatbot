@@ -15,6 +15,8 @@ export const SCENE_TYPES = [
   'dig-deeper',
   'assignment-list',
   'quote-card',
+  'tool-demo',
+  'audit-quadrant',
 ] as const;
 
 export const SceneTypeSchema = z.enum(SCENE_TYPES);
@@ -200,6 +202,44 @@ export const QuoteCardContentSchema = z.object({
   attribution: z.string(),
 });
 
+export const ToolDemoContentSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  caption: z.string().optional(),
+  tool: z.object({ name: z.string(), logo: z.string().optional() }),
+  prompt: z.string(),
+  outputs: z
+    .array(
+      z.object({
+        id: z.string(),
+        kind: z.enum(['image', 'file', 'slides', 'app', 'text']),
+        label: z.string(),
+        sub: z.string().optional(),
+        badge: z.string().optional(),
+      }),
+    )
+    .min(1)
+    .max(3),
+});
+
+export const AuditQuadrantContentSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  yAxis: z.object({ top: z.string(), bottom: z.string() }),
+  xAxis: z.object({ left: z.string(), right: z.string() }),
+  tasks: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        cap: z.string(),
+        quadrant: z.enum(['tl', 'tr', 'bl', 'br']),
+      }),
+    )
+    .min(2)
+    .max(8),
+});
+
 /** Map scene type string to its content schema */
 export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'cover': CoverContentSchema,
@@ -216,6 +256,8 @@ export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'dig-deeper': DigDeeperContentSchema,
   'assignment-list': AssignmentListContentSchema,
   'quote-card': QuoteCardContentSchema,
+  'tool-demo': ToolDemoContentSchema,
+  'audit-quadrant': AuditQuadrantContentSchema,
 };
 
 export function getContentSchema(type: SceneType): z.ZodType {

@@ -13,6 +13,8 @@ import {
   SetupChecklistContentSchema,
   VoiceDemoContentSchema,
   DemoCueContentSchema,
+  ToolDemoContentSchema,
+  AuditQuadrantContentSchema,
 } from '../../../content/schemas/scene-types';
 
 // Inferred content types for the 14 scene types. Lesson-level validation
@@ -31,3 +33,5 @@ export type ComparisonChatsContent = z.infer<typeof ComparisonChatsContentSchema
 export type SetupChecklistContent = z.infer<typeof SetupChecklistContentSchema>;
 export type VoiceDemoContent = z.infer<typeof VoiceDemoContentSchema>;
 export type DemoCueContent = z.infer<typeof DemoCueContentSchema>;
+export type ToolDemoContent = z.infer<typeof ToolDemoContentSchema>;
+export type AuditQuadrantContent = z.infer<typeof AuditQuadrantContentSchema>;

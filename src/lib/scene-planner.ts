@@ -29,6 +29,7 @@ export const MIN_SECONDS: Partial<Record<SceneType, number>> = {
   'assignment-list': 5,
   'quote-card': 4,
   'preview-band': 3,
+  'tool-demo': 6,
 };
 export const DEFAULT_MIN_SECONDS = 3;
 
