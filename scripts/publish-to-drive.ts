@@ -141,10 +141,22 @@ runMain('publish:drive', async (log) => {
       log.warn('no lesson-plan.md to copy', { lessonId });
     }
 
-    // Script reference, if the review bundle produced one.
-    const scriptSrc = path.join(process.cwd(), 'publish', lessonId, 'script-reference.md');
-    if (fs.existsSync(scriptSrc)) {
-      copyAtomic(scriptSrc, path.join(destDir, `${target.artifacts.script}.md`));
+    // Script (the spoken narration). Prefer a review-bundle script-reference.md if one exists;
+    // otherwise derive it from the lesson's own script.json so EVERY lesson ships a Script
+    // alongside its Video + Lesson Plan (architectural consistency — see Drive delivery contract).
+    const scriptDest = path.join(destDir, `${target.artifacts.script}.md`);
+    const bundledScript = path.join(process.cwd(), 'publish', lessonId, 'script-reference.md');
+    if (fs.existsSync(bundledScript)) {
+      copyAtomic(bundledScript, scriptDest);
+    } else {
+      const derived = buildScriptReference(lessonDir);
+      if (derived) {
+        const tmp = `${scriptDest}.part`;
+        fs.writeFileSync(tmp, derived, 'utf-8');
+        fs.renameSync(tmp, scriptDest);
+      } else {
+        log.warn('no script.json to derive a Script from', { lessonId });
+      }
     }
   } catch (err) {
     // Connection drops / Drive eviction mid-copy land here — report, don't crash silently.
@@ -170,6 +182,40 @@ function safeList(dir: string): string[] {
   } catch {
     return [];
   }
+}
+
+/**
+ * Build a readable Script (the spoken voiceover) from a lesson's script.json, so every lesson
+ * ships a Script even when no review-bundle script-reference.md was produced. Returns null if
+ * there's no usable script.json.
+ */
+function buildScriptReference(lessonDir: string): string | null {
+  const scriptPath = path.join(lessonDir, 'script.json');
+  if (!fs.existsSync(scriptPath)) return null;
+  let data: { lessonId?: string; blocks?: { id?: string; narration?: string }[] };
+  try {
+    data = JSON.parse(fs.readFileSync(scriptPath, 'utf-8'));
+  } catch {
+    return null;
+  }
+  const blocks = data.blocks ?? [];
+  if (blocks.length === 0) return null;
+
+  let title = data.lessonId ?? 'Lesson';
+  const outlinePath = path.join(lessonDir, 'outline.json');
+  if (fs.existsSync(outlinePath)) {
+    try {
+      const o = JSON.parse(fs.readFileSync(outlinePath, 'utf-8')) as { lesson?: { title?: string } };
+      if (o.lesson?.title) title = o.lesson.title;
+    } catch {
+      /* fall back to lessonId */
+    }
+  }
+
+  const body = blocks
+    .map((b) => `### ${b.id ?? ''}\n\n${(b.narration ?? '').trim()}`)
+    .join('\n\n');
+  return `# ${title} — Script\n\n_Spoken narration (voiceover), in order. Generated from the lesson script._\n\n${body}\n`;
 }
 
 /** Copy via a temp file + rename so a dropped connection never leaves a truncated MP4. */
