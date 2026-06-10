@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseCourseOutline, resolveRowIds } from '../src/lib/course-map';
+import { applyDeliveryTypes, parseCourseOutline, resolveRowIds } from '../src/lib/course-map';
 
 const FIXTURE = [
   'Course Overview',
@@ -59,6 +59,30 @@ describe('parseCourseOutline', () => {
   it('marks delivery type unspecified (per-row colors are lost in DOCX→txt extraction)', () => {
     const map = parseCourseOutline(FIXTURE);
     expect(map.topics[0].lessons[0].rows[0].deliveryType).toBe('unspecified');
+  });
+
+  it('stamps recovered DOCX delivery types onto course rows in source order', () => {
+    const map = parseCourseOutline(FIXTURE);
+    const joined = applyDeliveryTypes(map, [
+      { contentHead: 'Topic 1 at a Glance', deliveryType: 'slide' },
+      { contentHead: 'The Topics Ahead A one-screen', deliveryType: 'slide' },
+      { contentHead: 'Skipped DOCX-only row', deliveryType: 'demo' },
+      { contentHead: "Get Ready to Practice", deliveryType: 'talking-head' },
+      { contentHead: 'Side-by-Side Answers', deliveryType: 'demo' },
+      { contentHead: 'The Assistants in This Course', deliveryType: 'slide' },
+    ]);
+
+    const rows = joined.map.topics.flatMap((t) => t.lessons.flatMap((l) => l.rows));
+    expect(rows.map((r) => r.deliveryType)).toEqual([
+      'slide',
+      'slide',
+      'talking-head',
+      'demo',
+      'slide',
+    ]);
+    expect(joined.matched).toBe(5);
+    expect(joined.missing).toHaveLength(0);
+    expect(joined.unused.map((r) => r.contentHead)).toEqual(['Skipped DOCX-only row']);
   });
 });
 

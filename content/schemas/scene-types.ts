@@ -42,6 +42,7 @@ export const JourneyMapContentSchema = z.object({
   eyebrow: z.string(),
   title: z.string(),
   sub: z.string(),
+  variant: z.enum(['standard', 'destination']).optional(),
   stops: z.array(
     z.object({
       id: z.string(),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
+import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { JourneyMapContent } from './content-types';
 import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, Pop } from './shared';
@@ -12,12 +12,12 @@ import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSu
 export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as JourneyMapContent;
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const n = c.stops.length;
-  const activeIndex = Math.max(0, c.stops.findIndex((s) => s.state === 'active'));
+  const isDestination = c.variant === 'destination';
+  const activeIndex = isDestination ? n - 1 : Math.max(0, c.stops.findIndex((s) => s.state === 'active'));
   const x0 = 1 / (2 * n); // center of first stop (fraction of width)
-  const xa = (activeIndex + 0.5) / n; // center of active stop
+  const xa = isDestination ? 1 - x0 : (activeIndex + 0.5) / n; // center of active stop or full path
 
   // Track draws 1.5s in; accent fill follows at 2.0s.
   const trackProgress = interpolate(frame, [45, 75], [0, 1], {
@@ -105,7 +105,7 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                   {stop.title}
                 </div>
               </Pop>
-              {stop.state === 'active' && (
+              {stop.state === 'active' && !isDestination && (
                 <Pop delay={90} style={{ marginTop: 18 }}>
                   <div
                     style={{

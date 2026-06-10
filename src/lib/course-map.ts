@@ -9,9 +9,8 @@
  * Row id     = `T<N>.<M>.r<k>` (the lesson-plan's fidelity anchors).
  *
  * NOTE: per-row delivery type (Slide/Demo/Talking-head) is COLOR-CODED in the
- * source DOCX and that color is lost in the .txt extraction — so rows are emitted
- * with deliveryType 'unspecified' rather than guessed. (Lesson-level dominant type
- * lives in the curated .planning/curriculum/topic-N/OUTLINE.md.)
+ * source DOCX and lost in the .txt extraction. parseCourseOutline emits rows as
+ * 'unspecified'; applyDeliveryTypes joins the recovered DOCX row colors back in.
  */
 
 export type DeliveryType = 'slide' | 'demo' | 'talking-head' | 'unspecified';
@@ -43,6 +42,20 @@ export interface CourseMap {
   schemaVersion: string;
   source: string;
   topics: CourseTopic[];
+}
+
+export type RecoveredDeliveryType = Exclude<DeliveryType, 'unspecified'>;
+
+export interface DeliveryTypeRow {
+  contentHead: string;
+  deliveryType: RecoveredDeliveryType;
+}
+
+export interface DeliveryTypeJoinResult {
+  map: CourseMap;
+  matched: number;
+  missing: CourseRow[];
+  unused: DeliveryTypeRow[];
 }
 
 const TOPIC_RE = /^Topic (\d+):\s*(.+)$/;
@@ -118,6 +131,87 @@ export function parseCourseOutline(text: string, source = 'course-outline.txt'):
   flushRow();
 
   return { schemaVersion: '1.0', source, topics };
+}
+
+function cloneCourseMap(map: CourseMap): CourseMap {
+  return {
+    ...map,
+    topics: map.topics.map((topic) => ({
+      ...topic,
+      lessons: topic.lessons.map((lesson) => ({
+        ...lesson,
+        rows: lesson.rows.map((row) => ({ ...row })),
+      })),
+    })),
+  };
+}
+
+function normalizeDeliveryText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[–—]/g, '-')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function isDeliveryMatch(rowContent: string, contentHead: string): boolean {
+  const row = normalizeDeliveryText(rowContent);
+  const head = normalizeDeliveryText(contentHead);
+  if (!row || !head) return false;
+  if (row.startsWith(head) || head.startsWith(row)) return true;
+
+  const prefixLength = Math.min(48, head.length);
+  if (prefixLength < 16) return false;
+  return row.includes(head.slice(0, prefixLength));
+}
+
+function findDeliveryMatch(
+  row: CourseRow,
+  deliveryRows: DeliveryTypeRow[],
+  startIndex: number,
+): number {
+  const maxLookahead = 12;
+  const end = Math.min(deliveryRows.length, startIndex + maxLookahead);
+  for (let i = startIndex; i < end; i += 1) {
+    if (isDeliveryMatch(row.content, deliveryRows[i].contentHead)) return i;
+  }
+  return -1;
+}
+
+/**
+ * Join recovered DOCX row colors onto the parsed text outline. The two sources
+ * share source order, but the DOCX can contain rows omitted from the plain-text
+ * parse, so the join walks forward and reports skipped delivery rows.
+ */
+export function applyDeliveryTypes(
+  map: CourseMap,
+  deliveryRows: DeliveryTypeRow[],
+): DeliveryTypeJoinResult {
+  const joined = cloneCourseMap(map);
+  const missing: CourseRow[] = [];
+  const unused: DeliveryTypeRow[] = [];
+  let matched = 0;
+  let deliveryIndex = 0;
+
+  for (const row of joined.topics.flatMap((topic) => topic.lessons.flatMap((lesson) => lesson.rows))) {
+    const matchIndex = findDeliveryMatch(row, deliveryRows, deliveryIndex);
+    if (matchIndex === -1) {
+      missing.push(row);
+      continue;
+    }
+
+    unused.push(...deliveryRows.slice(deliveryIndex, matchIndex));
+    row.deliveryType = deliveryRows[matchIndex].deliveryType;
+    matched += 1;
+    deliveryIndex = matchIndex + 1;
+  }
+
+  unused.push(...deliveryRows.slice(deliveryIndex));
+  return { map: joined, matched, missing, unused };
 }
 
 export interface ResolveResult {

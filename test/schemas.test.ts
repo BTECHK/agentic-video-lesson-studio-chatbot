@@ -11,6 +11,7 @@ import {
   CoverContentSchema,
   CapabilityTableContentSchema,
   QuoteCardContentSchema,
+  JourneyMapContentSchema,
   LessonSchema,
 } from '../content/schemas';
 
@@ -228,6 +229,21 @@ describe('SceneTypes', () => {
   it('validates QuoteCardContentSchema', () => {
     const data = { eyebrow: 'Take', quote: 'Something', attribution: 'Author' };
     expect(QuoteCardContentSchema.safeParse(data).success).toBe(true);
+  });
+
+  it('accepts the journey-map destination variant for promo path sweeps', () => {
+    const data = {
+      eyebrow: 'Journey',
+      title: 'From first prompt to finished work.',
+      sub: 'A full-path promo sweep, not a current-position marker.',
+      variant: 'destination',
+      stops: [
+        { id: 'a', label: 'Step 1', title: 'Alpha', state: 'done' },
+        { id: 'b', label: 'Step 2', title: 'Beta', state: 'done' },
+      ],
+    };
+    const parsed = JourneyMapContentSchema.parse(data) as typeof data;
+    expect(parsed.variant).toBe('destination');
   });
 });
 
