@@ -19,6 +19,8 @@ When this file exceeds ~300 lines or the wiki passes ~150 pages, shard into `wik
 - [[timing-inversion]] — narration audio length drives scene duration (the pipeline's conceptual core).
 - [[studio-generate]] — web-driven generation front door; GenerationProvider backends + draft→Apply gate.
 - [[architecture-decisions]] — running ADR log + ELI5: why each tool/architecture was chosen (Claude-as-engine, the 3 gates, Remotion video, Playwright capture, course-map, engine-agnostic verification). Stakeholder-defensible.
+- [[layout-integrity-gate]] — Gate L: DOM-measured no-clip/safe-area/overlap; the 4th gate (DoD now A·B·C·L).
+- [[standalone-bot]] — student-facing Tutor bot (bot/): Telegram-first, Gemini-free, Cloud Run webhook; channel-adapter seam + citation guard.
 
 ## Synthesis
 
