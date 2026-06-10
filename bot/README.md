@@ -241,6 +241,24 @@ printf '%s' "$(openssl rand -hex 16)" | gcloud secrets create tutor-webhook-secr
 > Update a secret later with `gcloud secrets versions add <name> --data-file=...`; the bot picks up
 > `:latest` on next deploy.
 
+**Grant Cloud Run access to the secrets** (one-time). The service runs as the project's default
+compute service account, which canNOT read secrets until you grant it the accessor role — without
+this, Part 8's deploy fails with `Permission denied on secret`:
+
+```powershell
+# PowerShell (Windows)
+$projNum = gcloud projects describe PROJECT_ID --format="value(projectNumber)"
+gcloud projects add-iam-policy-binding PROJECT_ID --member="serviceAccount:$projNum-compute@developer.gserviceaccount.com" --role="roles/secretmanager.secretAccessor"
+```
+
+```bash
+# macOS / Linux (bash)
+PROJ_NUM=$(gcloud projects describe PROJECT_ID --format='value(projectNumber)')
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="serviceAccount:${PROJ_NUM}-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
 ---
 
 ## Part 7 — Build the container image
@@ -280,9 +298,12 @@ gcloud run deploy tutor-bot `
   --image us-central1-docker.pkg.dev/PROJECT_ID/tutor/tutor-bot:latest `
   --region us-central1 `
   --allow-unauthenticated `
-  --set-env-vars LLM_PROVIDER=gemini,TELEGRAM_MODE=webhook `
-  --set-secrets GOOGLE_CHATBOT_API_KEY=tutor-gemini-key:latest,TELEGRAM_BOT_TOKEN=tutor-telegram-token:latest,TELEGRAM_WEBHOOK_SECRET=tutor-webhook-secret:latest
+  --set-env-vars "LLM_PROVIDER=gemini,TELEGRAM_MODE=webhook" `
+  --set-secrets "GOOGLE_CHATBOT_API_KEY=tutor-gemini-key:latest,TELEGRAM_BOT_TOKEN=tutor-telegram-token:latest,TELEGRAM_WEBHOOK_SECRET=tutor-webhook-secret:latest"
 ```
+
+> The quotes around the two comma-separated values are **required in PowerShell** — unquoted, PS
+> splits the list on commas into separate arguments and gcloud crashes with `Invalid secret spec`.
 
 ```bash
 # macOS / Linux (bash) — backslash = line continuation
@@ -353,6 +374,8 @@ and `last_error_message` empty.)
 | Container crash-loops / 500 on `/chat` | Missing/mis-named secret binding. The Gemini provider **fails fast** without `GOOGLE_CHATBOT_API_KEY`. Check `gcloud run services logs read ...`. |
 | Health check shows `"provider":"mock"` | You didn't set `LLM_PROVIDER=gemini` — re-run the deploy/update with it. |
 | `$env:…` prints blank in Part 6 | You reopened PowerShell (per-window vars). Re-set them, or paste the literals into the `Set-Content` lines. |
+| Deploy fails: `Permission denied on secret … roles/secretmanager.secretAccessor` | The Cloud Run runtime service account can't read the secrets — run the one-time grant at the end of Part 6, then re-deploy. |
+| `gcloud crashed (ValueError): Invalid secret spec` | PowerShell split an unquoted comma list into separate args. Quote the whole value: `--set-secrets "A=a:latest,B=b:latest"` (same for `--set-env-vars`). |
 
 ## Teardown (stop the bot's costs)
 
