@@ -83,3 +83,6 @@ content/lessons/*.wav
 # skills.sh CLI drops machine-absolute symlinks here; track .agents/ content + skills-lock.json instead.
 # Instructor recreates per-OS symlinks with `npx skills install`.
 .claude/skills/remotion-best-practices
+
+# per-machine Drive path for publish:drive
+drive.local.json

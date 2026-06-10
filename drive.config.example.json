@@ -1,0 +1,6 @@
+{
+  "_comment": "Per-machine Google Drive path for publishing learning artifacts. Copy this to drive.local.json (git-ignored) and set curriculumDir to YOUR machine's path. Or set the DRIVE_CURRICULUM_DIR env var (takes precedence). Used by: npm run publish:drive -- <lessonId>",
+  "_windows_example": "<DRIVE_ROOT>\\Content Development\\Curriculum",
+  "_macos_example": "/Users/<you>/Library/CloudStorage/GoogleDrive-<account>/.shortcut-targets-by-id/<DRIVE_SHORTCUT_ID>/Content Development/Curriculum",
+  "curriculumDir": ""
+}

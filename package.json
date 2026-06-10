@@ -33,7 +33,8 @@
     "tts:lesson": "tsx scripts/synthesize-lesson.ts",
     "align:lesson": "tsx scripts/align-lesson.ts",
     "regenerate": "tsx scripts/regenerate.ts",
-    "publish:lesson": "tsx scripts/publish-lesson.ts"
+    "publish:lesson": "tsx scripts/publish-lesson.ts",
+    "publish:drive": "tsx scripts/publish-to-drive.ts"
   },
   "keywords": [],
   "author": "",
