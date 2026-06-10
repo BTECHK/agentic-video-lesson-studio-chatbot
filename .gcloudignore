@@ -1,0 +1,11 @@
+# Controls what `gcloud builds submit` uploads as the build context.
+# We defer to .gitignore (keeps node_modules, out/, *.mp4, lesson audio, etc. out of the upload)
+# and additionally drop the local git history. content/tools/ + bot/ stay in — the Dockerfile needs them.
+.git
+.gcloudignore
+#!include:.gitignore
+out/
+content/lessons/
+node_modules/
+*.mp4
+.git/

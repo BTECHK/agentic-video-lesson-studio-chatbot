@@ -1,0 +1,20 @@
+# Cloud Build config for the Tutor bot.
+#
+# The image MUST be built from the REPO ROOT (the Dockerfile copies both `bot/` and
+# `content/tools/`), so `gcloud builds submit --tag` won't work — it expects a Dockerfile at the
+# context root. This config builds `bot/Dockerfile` against the repo-root context and pushes the
+# result to Artifact Registry.
+#
+# Run from the repo root (replace PROJECT_ID; us-central1 is the example region):
+#   gcloud builds submit --config bot/cloudbuild.yaml \
+#     --substitutions=_IMAGE=us-central1-docker.pkg.dev/PROJECT_ID/tutor/tutor-bot:latest .
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', 'bot/Dockerfile', '-t', '${_IMAGE}', '.']
+images:
+  - '${_IMAGE}'
+substitutions:
+  _IMAGE: 'tutor-bot:latest' # placeholder; always override with --substitutions
+options:
+  # Avoids the "build.service_account requires a logs bucket" error on newer projects.
+  logging: CLOUD_LOGGING_ONLY
