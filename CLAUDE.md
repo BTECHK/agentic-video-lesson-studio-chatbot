@@ -43,6 +43,12 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
   three artifacts: `N.M Video.mp4` · `N.M Script.pdf` · `N.M Lesson Plan.pdf`. Learning material only —
   never JSON, code, or internal planning docs.
 - A lesson may only be dropped here when `npm run gate:status -- <id>` exits 0 (A·B·C·L all green).
+- **Publish step (cross-machine):** `npm run publish:drive -- <lessonId>` copies the gate-green
+  Video + Lesson Plan (+ Script reference) into the right `Module/Lesson` folder (matched by number
+  prefix, tolerant of title punctuation). The Drive root is a **per-machine variable** — one mount per OS. Set `DRIVE_CURRICULUM_DIR` env **or** `drive.local.json`
+  (git-ignored; copy `drive.config.example.json`). Refuses unless gates are green (`--force` overrides)
+  and fails loudly with guidance if Drive is unmounted, the path moved, or the mount is read-only.
+  **Run this as the final step of every full lesson build.**
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
