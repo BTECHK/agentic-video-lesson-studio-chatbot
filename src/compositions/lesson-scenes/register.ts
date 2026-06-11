@@ -16,6 +16,7 @@ import { DemoCue } from './DemoCue';
 import { DigDeeper } from './DigDeeper';
 import { ToolDemo } from './ToolDemo';
 import { AuditQuadrant } from './AuditQuadrant';
+import { ScreenFlow } from './ScreenFlow';
 
 /**
  * Register every lesson scene component with the dispatcher (all 14 scene
@@ -40,6 +41,7 @@ export function registerLessonScenes(): void {
     'dig-deeper': DigDeeper,
     'tool-demo': ToolDemo,
     'audit-quadrant': AuditQuadrant,
+    'screen-flow': ScreenFlow,
   };
   for (const [type, component] of Object.entries(components)) {
     if (getSceneComponent(type) === null) {

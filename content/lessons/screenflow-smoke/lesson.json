@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0",
+  "id": "screenflow-smoke",
+  "lesson": {
+    "title": "ScreenFlow Smoke Test",
+    "topic": "Dev",
+    "module": "Dev",
+    "duration": 240
+  },
+  "scenes": [
+    {
+      "id": "build-custom-gpt",
+      "type": "screen-flow",
+      "start": 0,
+      "duration": 240,
+      "content": {
+        "eyebrow": "Custom GPT",
+        "title": "Build a *Custom GPT* in 4 steps",
+        "windowTitle": "ChatGPT — Create a GPT",
+        "fidelity": "cartoon",
+        "layout": "split",
+        "steps": [
+          {
+            "id": "s1",
+            "action": "navigate",
+            "target": "Explore GPTs",
+            "uiState": "GPT store homepage visible",
+            "dwell": 1.2
+          },
+          {
+            "id": "s2",
+            "action": "click",
+            "target": "Create",
+            "uiState": "Builder form open — Name and Description fields empty",
+            "dwell": 1.0
+          },
+          {
+            "id": "s3",
+            "action": "type",
+            "target": "Name field",
+            "typedText": "Study Coach",
+            "uiState": "Name field: 'Study Coach'",
+            "dwell": 0.8
+          },
+          {
+            "id": "s4",
+            "action": "reveal",
+            "target": "Preview panel",
+            "uiState": "Right panel shows GPT preview with name",
+            "dwell": 1.5
+          }
+        ],
+        "caption": "Clearly stylized — not a real screenshot.",
+        "targetPositions": {
+          "Explore GPTs": { "x": 20, "y": 15 },
+          "Create": { "x": 35, "y": 40 },
+          "Name field": { "x": 30, "y": 55 },
+          "Preview panel": { "x": 72, "y": 50 }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-06-11",
+    "lastUpdated": "2026-06-11",
+    "authors": ["dev"],
+    "factCheckedAt": null
+  }
+}

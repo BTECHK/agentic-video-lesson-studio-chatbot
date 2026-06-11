@@ -13,6 +13,7 @@ import {
   QuoteCardContentSchema,
   JourneyMapContentSchema,
   LessonSchema,
+  ScreenFlowContentSchema,
 } from '../content/schemas';
 
 // --- Helper factories ---
@@ -184,8 +185,8 @@ describe('SourceFileSchema', () => {
 });
 
 describe('SceneTypes', () => {
-  it('has exactly 16 scene type entries', () => {
-    expect(SCENE_TYPES).toHaveLength(16);
+  it('has exactly 17 scene type entries', () => {
+    expect(SCENE_TYPES).toHaveLength(17);
   });
 
   it('accepts valid scene types', () => {
@@ -244,6 +245,69 @@ describe('SceneTypes', () => {
     };
     const parsed = JourneyMapContentSchema.parse(data) as typeof data;
     expect(parsed.variant).toBe('destination');
+  });
+
+  it('validates ScreenFlowContentSchema — minimal valid block', () => {
+    const data = {
+      eyebrow: 'Custom GPT',
+      title: 'Build a *Custom GPT* step by step',
+      windowTitle: 'ChatGPT — Create a GPT',
+      fidelity: 'cartoon',
+      layout: 'split',
+      steps: [
+        { id: 's1', action: 'click', target: 'Create a GPT', uiState: 'Builder form open', dwell: 1 },
+      ],
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(true);
+  });
+
+  it('rejects ScreenFlowContentSchema with zero steps', () => {
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'cartoon', layout: 'full', steps: [],
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(false);
+  });
+
+  it('rejects ScreenFlowContentSchema with more than 8 steps', () => {
+    const step = { id: 'x', action: 'click', target: 'T', uiState: 'S', dwell: 1 };
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'cartoon', layout: 'full',
+      steps: Array.from({ length: 9 }, (_, i) => ({ ...step, id: `s${i}` })),
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(false);
+  });
+
+  it('rejects ScreenFlowContentSchema step with type action but no typedText', () => {
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'cartoon', layout: 'full',
+      steps: [{ id: 's1', action: 'type', target: 'Name field', uiState: 'text entered', dwell: 1 }],
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(false);
+  });
+
+  it('accepts ScreenFlowContentSchema with targetPositions', () => {
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'cartoon', layout: 'full',
+      steps: [{ id: 's1', action: 'click', target: 'Submit', uiState: 'submitted', dwell: 1 }],
+      targetPositions: { 'Submit': { x: 50, y: 50 } },
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(true);
+  });
+
+  it('accepts ScreenFlowContentSchema with hybrid fidelity and full layout', () => {
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'hybrid', layout: 'full',
+      steps: [{ id: 's1', action: 'navigate', target: 'Dashboard', uiState: 'dashboard visible', dwell: 1.5 }],
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(true);
+  });
+
+  it('rejects ScreenFlowContentSchema with dwell below 0.5', () => {
+    const data = {
+      eyebrow: 'E', title: 'T', windowTitle: 'W', fidelity: 'cartoon', layout: 'full',
+      steps: [{ id: 's1', action: 'click', target: 'Btn', uiState: 'done', dwell: 0.3 }],
+    };
+    expect(ScreenFlowContentSchema.safeParse(data).success).toBe(false);
   });
 });
 

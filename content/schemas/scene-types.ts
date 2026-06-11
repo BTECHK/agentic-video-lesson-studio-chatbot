@@ -17,6 +17,7 @@ export const SCENE_TYPES = [
   'quote-card',
   'tool-demo',
   'audit-quadrant',
+  'screen-flow',
 ] as const;
 
 export const SceneTypeSchema = z.enum(SCENE_TYPES);
@@ -240,6 +241,44 @@ export const AuditQuadrantContentSchema = z.object({
     .max(8),
 });
 
+export const ScreenFlowStepSchema = z.object({
+  id: z.string(),
+  action: z.enum(['click', 'type', 'navigate', 'reveal']),
+  target: z.string(),
+  typedText: z.string().optional(),
+  uiState: z.string(),
+  dwell: z.number().min(0.5),
+});
+
+export const ScreenFlowContentSchema = z
+  .object({
+    eyebrow: z.string(),
+    title: z.string(),
+    caption: z.string().optional(),
+    windowTitle: z.string(),
+    fidelity: z.enum(['cartoon', 'hybrid']),
+    layout: z.enum(['full', 'split']),
+    steps: z.array(ScreenFlowStepSchema).min(1).max(8),
+    // Optional author-supplied cursor positions: keys match step `target` values,
+    // values are { x, y } as percentages (0–100) within the window body.
+    // If omitted, cursor is hidden for that step (safe fallback).
+    targetPositions: z
+      .record(z.string(), z.object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) }))
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    // typedText is required when action === 'type'
+    data.steps.forEach((step, i) => {
+      if (step.action === 'type' && !step.typedText) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['steps', i, 'typedText'],
+          message: 'typedText is required when action is "type"',
+        });
+      }
+    });
+  });
+
 /** Map scene type string to its content schema */
 export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'cover': CoverContentSchema,
@@ -258,6 +297,7 @@ export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'quote-card': QuoteCardContentSchema,
   'tool-demo': ToolDemoContentSchema,
   'audit-quadrant': AuditQuadrantContentSchema,
+  'screen-flow': ScreenFlowContentSchema,
 };
 
 export function getContentSchema(type: SceneType): z.ZodType {
