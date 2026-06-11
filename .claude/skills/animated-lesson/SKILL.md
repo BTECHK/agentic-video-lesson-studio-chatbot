@@ -62,6 +62,8 @@ See `references/03-scene-catalog.md` for the full schema. Match content to scene
 | Sequential 3–7 settings or steps to enable | `setup-checklist` |
 | 2–6 features as named categories with examples | `feature-grid` |
 | Voice/audio feature highlight | `voice-demo` |
+| A tool generating an output (prompt → generating → result tiles) | `tool-demo` |
+| A multi-step in-tool walkthrough (click through a builder, page a dashboard) | `screen-flow` (see `references/08-simulated-screen-contract.md`) |
 | Recap with 3 numbered cards | `recap-grid` |
 | "Coming next" footer | `preview-band` |
 | Background context that's optional reading | `dig-deeper` |
@@ -70,9 +72,13 @@ See `references/03-scene-catalog.md` for the full schema. Match content to scene
 
 **Delivery type → scene (NO FOOTAGE — every beat is animated; see `CLAUDE.md` → "Lesson Production Model").**
 The outline tags rows 🟦 slide / 🟩 demo / 🟧 talking-head, but **all three render as animation**:
-- 🟩 **demo / in-tool** → animate it: `comparison-chats`, `setup-checklist`, `voice-demo`, or
-  `feature-grid`. Show clearly-illustrative, grounded interactions — never a real captured session,
-  never a capability absent from the facts.
+- 🟩 **demo / in-tool** → animate it: `comparison-chats`, `tool-demo`, `screen-flow`,
+  `setup-checklist`, or `voice-demo` (`feature-grid` only when the beat is genuinely a category
+  overview — a demo rendered as a static grid "tells instead of shows" and Gate B will hold it).
+  Show clearly-illustrative, grounded interactions per the simulated-screen contract
+  (`references/08-simulated-screen-contract.md`) — never a real captured session, never a
+  capability absent from the facts. Demo beats are multi-step and run at walkthrough pace — this
+  is how demo rows earn their outline minutes.
 - 🟧 **talking-head** → narrate over `quote-card` (default; as in topic-1-lesson-1).
 - ⛔ **Do not use `demo-cue`** — it was a placeholder for a live recorded demo; this pipeline animates
   the demo instead. (It remains a registered type only for backward compatibility.)
@@ -92,7 +98,7 @@ If the content genuinely doesn't fit any scene type, **add a new one to `templat
 
 - Learner-facing labels only: plain words on screen, no internal jargon (for example "Practice" and "Preview").
 - Bold/accent words carry the conceptual payload. In the JSON, mark accent words with asterisks: `"Sample line. *Accent.*"`. The renderer applies the crimson color.
-- Never fabricate demo outputs — use the `demo-cue` scene type when the live moment is on screen. Never type fake AI responses *as if* they're real outputs unless they're clearly marked as illustrative.
+- Never fabricate demo outputs — animate them as clearly-stylized simulations (`tool-demo`/`screen-flow`/`comparison-chats`, per `references/08-simulated-screen-contract.md`). Never type fake AI responses *as if* they're real outputs unless they're clearly marked as illustrative. (⛔ `demo-cue` stays forbidden — see the delivery-type rules above.)
 
 ## Logos
 
