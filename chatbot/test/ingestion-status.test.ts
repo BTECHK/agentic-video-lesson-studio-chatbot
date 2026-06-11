@@ -3,6 +3,7 @@ import {
   parseIngestLog,
   lastRunPerVendor,
   latestRun,
+  latestVendorStatus,
   freshnessLevel,
   periodDaysFor,
   nextScheduledRun,
@@ -51,6 +52,54 @@ describe('latestRun', () => {
 
   it('returns null when there is no completed run', () => {
     expect(latestRun([])).toBeNull();
+  });
+});
+
+describe('latestVendorStatus', () => {
+  it('maps each vendor to its status from the most recent run that mentions it', () => {
+    const events: IngestEvent[] = [
+      {
+        event: 'ingest_complete',
+        _logged: '2026-05-15T00:00:00.000Z',
+        results: [
+          { vendor: 'openai', status: 'success' },
+          { vendor: 'anthropic', status: 'success' },
+        ],
+      },
+      {
+        event: 'ingest_complete',
+        _logged: '2026-05-28T00:00:00.000Z',
+        results: [
+          { vendor: 'openai', status: 'skipped', error: 'no successful scrapes' },
+          { vendor: 'anthropic', status: 'success' },
+        ],
+      },
+    ];
+    const map = latestVendorStatus(events);
+    expect(map.openai).toBe('skipped');
+    expect(map.anthropic).toBe('success');
+  });
+
+  it('retains a vendor status from a prior run when the latest run omits it', () => {
+    const events: IngestEvent[] = [
+      {
+        event: 'ingest_complete',
+        _logged: '2026-05-28T00:00:00.000Z',
+        results: [{ vendor: 'openai', status: 'skipped' }],
+      },
+      {
+        event: 'ingest_complete',
+        _logged: '2026-05-28T00:01:00.000Z',
+        results: [{ vendor: 'anthropic', status: 'success' }],
+      },
+    ];
+    const map = latestVendorStatus(events);
+    expect(map.openai).toBe('skipped');
+    expect(map.anthropic).toBe('success');
+  });
+
+  it('returns an empty map when there are no completed runs', () => {
+    expect(latestVendorStatus([])).toEqual({});
   });
 });
 

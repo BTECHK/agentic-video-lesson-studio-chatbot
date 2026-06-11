@@ -5,6 +5,7 @@ import {
   parseIngestLog,
   lastRunPerVendor,
   latestRun,
+  latestVendorStatus,
   freshnessLevel,
   periodDaysFor,
   nextScheduledRun,
@@ -22,6 +23,8 @@ export interface VendorRow {
   enabled: boolean;
   lastRun?: string;
   freshness: FreshnessLevel;
+  /** True when the vendor's most recent ingest run result was 'skipped'. */
+  skipped: boolean;
 }
 
 export interface IngestionPanelData {
@@ -57,6 +60,7 @@ export function getIngestionPanelData(nowIso: string = new Date().toISOString())
 
   const events = parseIngestLog(readAllLogs());
   const perVendor = lastRunPerVendor(events);
+  const statuses = latestVendorStatus(events);
   const run = latestRun(events);
 
   const vendors: VendorRow[] = Object.entries(config.vendors ?? {})
@@ -65,6 +69,7 @@ export function getIngestionPanelData(nowIso: string = new Date().toISOString())
       enabled: cfg.enabled ?? true,
       lastRun: perVendor[vendor],
       freshness: freshnessLevel(perVendor[vendor], nowIso, period),
+      skipped: statuses[vendor] === 'skipped',
     }))
     .sort((a, b) => a.vendor.localeCompare(b.vendor));
 

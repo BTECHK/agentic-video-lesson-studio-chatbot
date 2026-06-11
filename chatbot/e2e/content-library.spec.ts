@@ -10,8 +10,8 @@ import { test, expect } from '@playwright/test';
  *  2. Known tool names from real data are visible (anti-phantom: proves the
  *     server read the JSON files, not a static stub).
  *  3. The page-level stats line reports >= 12 surfaces tracked.
- *  4. Stale/skipped source indicators: .fixme — ContentIndex currently has no
- *     per-card stale/skipped indicator; see concern below.
+ *  4. Stale/skipped source indicators render on affected tool cards
+ *     (data-freshness badge wired from ingestion-panel freshness).
  */
 
 const SHOTS = 'e2e/screenshots';
@@ -69,24 +69,15 @@ test('content library: all 12 tool cards are rendered (card count)', async ({ pa
   expect(count).toBeGreaterThanOrEqual(12);
 });
 
-// FIXME: ContentIndex does not currently render per-card stale/skipped source
-// indicators. The gap-check (#71) listed this as a required assertion.
-// Until the feature is implemented, this test is skipped with .fixme() to
-// record the contract without letting a false-green mask the gap.
-test.fixme(
+test(
   'content library: stale/skipped source indicators render on affected cards',
   async ({ page }) => {
-    // Expected behaviour (once implemented):
-    // Cards whose vendor source was last ingested beyond the stale threshold
-    // should display a visual freshness badge (e.g. "Stale" label or coloured dot).
-    // Cards with a skipped source should display a "skipped" indicator.
-    //
-    // Verify by navigating to /content and asserting at least one such indicator
-    // is present when the data contains a stale/skipped vendor entry.
-    //
-    // Implementation note: wire VendorRow.freshness from ingestion-panel.ts into
-    // ContentIndex/ToolCard props, then assert e.g.:
-    //   await expect(page.locator('[data-freshness="stale"]').first()).toBeVisible();
+    // Cards whose vendor source was last ingested beyond the stale threshold —
+    // or whose vendor was skipped in the latest ingest run — display a freshness
+    // badge wired from VendorRow freshness (ingestion-panel.ts) into
+    // ContentIndex/ToolCard. The data always contains at least one stale-class
+    // vendor: openai is "skipped" in every recorded ingest run locally, and an
+    // absent logs/ingest dir (fresh checkout/CI) makes every vendor stale.
     await page.goto('/content');
     await expect(page.locator('[data-freshness="stale"]').first()).toBeVisible();
   },

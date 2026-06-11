@@ -2,11 +2,25 @@
 
 import Link from 'next/link';
 import type { ToolData } from '@/lib/content-types';
+import type { FreshnessLevel } from '@/lib/ingestion-status';
+import type { VendorFreshness } from './ContentIndex';
 import { getCapabilityCount } from '@/lib/content-types';
 
 const PRIORITY_LABEL: Record<string, string> = { P0: 'Essential', P1: 'Supplementary' };
 
-export function ToolCard({ tool }: { tool: ToolData }) {
+// Same dot/label pattern as IngestionPanel.tsx.
+const DOT: Record<FreshnessLevel, string> = {
+  fresh: '#2e7d32',
+  aging: '#b88600',
+  stale: '#8B2635',
+};
+const FRESH_LABEL: Record<FreshnessLevel, string> = {
+  fresh: 'Fresh',
+  aging: 'Aging',
+  stale: 'Stale',
+};
+
+export function ToolCard({ tool, freshness }: { tool: ToolData; freshness?: VendorFreshness }) {
   const { supported, total } = getCapabilityCount(tool);
   const isP0 = tool.priority === 'P0';
 
@@ -51,8 +65,46 @@ export function ToolCard({ tool }: { tool: ToolData }) {
         </span>
       </div>
 
-      <p style={{ margin: '0 0 0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font)' }}>
+      <p
+        style={{
+          margin: '0 0 0.5rem',
+          fontSize: '0.75rem',
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
         {tool.vendor}
+        {freshness && freshness.level !== 'fresh' && (
+          <span
+            data-freshness={freshness.level}
+            title={
+              freshness.skipped
+                ? 'Source was skipped in the latest ingestion run'
+                : 'Source data refresh is overdue'
+            }
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              color: DOT[freshness.level],
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                backgroundColor: DOT[freshness.level],
+              }}
+            />
+            {freshness.skipped ? 'Skipped' : FRESH_LABEL[freshness.level]}
+          </span>
+        )}
       </p>
 
       <p
