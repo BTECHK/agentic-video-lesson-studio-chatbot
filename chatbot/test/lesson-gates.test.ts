@@ -11,9 +11,9 @@ describe('parseGateState', () => {
 });
 
 describe('getLessonGates', () => {
-  it('reports all three gates in order A, B, C', () => {
+  it('reports all five gates in order A, B, C, L, T', () => {
     const g = getLessonGates('topic-1-lesson-1');
-    expect(g.gates.map((x) => x.gate)).toEqual(['A', 'B', 'C']);
+    expect(g.gates.map((x) => x.gate)).toEqual(['A', 'B', 'C', 'L', 'T']);
   });
   it('a lesson with no review artifacts is all-missing and not publishable', () => {
     const g = getLessonGates('module-1');

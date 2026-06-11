@@ -105,6 +105,7 @@ runMain('publish:drive', async (log) => {
     B: read('review/teaching-axis.md'),
     C: read('review/watch-gate.md'),
     L: read('review/layout-gate.md'),
+    T: read('review/timing-gate.md'),
   });
   const decision = canPublish(gates);
   if (!decision.ok && !force) {
