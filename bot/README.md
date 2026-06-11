@@ -114,7 +114,7 @@ LLM_PROVIDER=gemini GOOGLE_CHATBOT_API_KEY=PASTE_GEMINI_KEY \
 TELEGRAM_BOT_TOKEN=PASTE_BOT_TOKEN TELEGRAM_MODE=longpoll npm start
 ```
 
-Expect a grounded answer ending with a `[Module …, Tool: …]` citation; off-topic gets redirected.
+Expect a grounded answer ending with a clean `Sources: <tool>` line; off-topic gets redirected.
 When happy, deploy the webhook version (Parts 5+).
 
 ---
@@ -354,8 +354,8 @@ open "$URL"; curl "$URL/healthz"
 gcloud run services logs read tutor-bot --region us-central1 --limit 50
 ```
 
-Then DM `https://t.me/<your_bot_username>` → a grounded answer ending with a `[Module …, Tool: …]`
-citation; an off-topic question gets redirected. (Optional: `curl.exe
+Then DM `https://t.me/<your_bot_username>` → a grounded answer ending with a clean `Sources: <tool>`
+line; an off-topic question gets redirected. (Optional: `curl.exe
 "https://api.telegram.org/bot<TOKEN>/getWebhookInfo"` — `url` should be your `*.run.app/telegram/webhook`
 and `last_error_message` empty.)
 
@@ -403,13 +403,16 @@ in it.)
 | `LLM_PROVIDER` | `mock` | `mock` (no key, tests/dev) or `gemini` (real). |
 | `GOOGLE_CHATBOT_API_KEY` | — | Gemini key; required when `LLM_PROVIDER=gemini` (falls back to `GOOGLE_API_KEY`). |
 | `GEMINI_MODEL` | `gemini-2.5-flash` | Override the Gemini model. |
+| `GEMINI_THINKING_BUDGET` | `0` | Gemini 2.5 "thinking" token budget. **Keep 0** for grounded Q&A — on with a tight token cap, the model burns the budget thinking and returns empty/truncated answers. |
 | `TELEGRAM_BOT_TOKEN` | — | From @BotFather (Part 2); enables the Telegram channel. |
 | `TELEGRAM_MODE` | `longpoll` | `longpoll` (local pilot) or `webhook` (Cloud Run). |
+| `TELEGRAM_ALLOWED_CHAT_IDS` | — (open) | Comma-separated chat ids to lock the bot to known testers; empty = anyone. Answers your "what if the bot link gets forwarded" case. |
 | `PUBLIC_URL` | — | This service's HTTPS base URL; required for `webhook` mode. |
 | `TELEGRAM_WEBHOOK_SECRET` | — | Secret in the webhook path **and** the `X-Telegram-Bot-Api-Secret-Token` header; required for `webhook` mode. |
 | `PORT` | `3100` (local); Cloud Run injects `8080` | HTTP port. Don't set it on Cloud Run. |
-| `RATE_LIMIT_PER_MIN` | `12` | Per-user message cap (abuse/cost guard). |
-| `MAX_OUTPUT_TOKENS` | `600` | Hard cap on model output length. |
+| `RATE_LIMIT_PER_MIN` | `12` | Per-user message cap (abuse/cost guard). Web `/chat` is keyed by **client IP**, not the client-supplied session id. |
+| `MAX_OUTPUT_TOKENS` | `1024` | Hard cap on model output length. |
+| `DAILY_REQUEST_CAP` | `1000` | Global daily request ceiling across all users/channels (quota/spend circuit breaker). `0` = unlimited; becomes the hard spend cap once a paid key is added. |
 
 Routes: `GET /` (web chat) · `GET /healthz` · `POST /chat` (`{message, sessionId}`) ·
 `POST /telegram/webhook` (Telegram webhook; authenticated by the secret header only).
@@ -420,12 +423,66 @@ Routes: `GET /` (web chat) · `GET /healthz` · `POST /chat` (`{message, session
 
 ---
 
-## Security (what applies here — see plan file for the full triage)
+## Security (what applies here — and what doesn't yet)
 
-Public bot + **public-safe tool data only** → no IP-exfiltration surface today. In place: backend-only
-key, prompt-injection containment (UNTRUSTED DATA fence), citation guard, per-user rate limit + token
-cap, session isolation, plain-text output. When RAG-over-lessons lands, paid lesson bodies must be
-access-gated at retrieval time in code (never indexed into this public bot).
+**Threat-model reality on the free tier.** The popular "exposed AI endpoint → $10k weekend bill"
+warning is about *paid, per-token* APIs. This bot runs on the **Gemini free tier**, where the spend
+ceiling is **$0** — the free quota *is* the cap. So denial-of-**wallet** is not a risk today; the real
+risks are **abuse/spam** and **quota exhaustion** (an availability problem, not a billing one). Don't
+buy Kong / Cloudflare API Shield / a JWT gateway for a free-tier pilot — that's enterprise scaffolding
+for a problem you don't have yet. Revisit the gateway story only when you wire in a **paid** key.
+
+**In place (code-enforced, not prompt-enforced):**
+- Backend-only API key (never in the prompt or client), public-safe tool data only → no exfiltration surface.
+- Prompt-injection containment (retrieved content fenced as UNTRUSTED DATA) + citation hallucination guard.
+- **Per-IP** rate limit on web `/chat` (an abuser can't bypass it by rotating the session id) + per-chat
+  limit on Telegram.
+- **Global daily request cap** (`DAILY_REQUEST_CAP`) — one circuit breaker across all users/channels.
+  It protects free-tier quota now and **becomes the hard spend cap the moment you add a paid key.**
+- **Telegram allowlist** (`TELEGRAM_ALLOWED_CHAT_IDS`) — lock the bot to known testers if the link gets forwarded.
+- Webhook secret in path **and** header, 1 MB body limit, message-length caps, session isolation, plain-text
+  output (no XSS), and graceful failure (provider errors never leak a raw 500 to the user).
+- **Reviewability:** every request logs one structured JSON line (`channel`, IP / chat id, message length,
+  outcome) to stdout → searchable in Cloud Run **Logs Explorer** (`outcome:"rate_limited"` /
+  `"daily_cap"` / `"not_allowlisted"` surfaces abuse). No message bodies are logged.
+
+**When you add a paid key (the upgrade path):** set `DAILY_REQUEST_CAP` to your real ceiling, add a
+Cloud **Billing budget + alert** as the backstop, and only then consider per-user token accounting / a
+gateway. When RAG-over-lessons lands, paid lesson bodies must be access-gated at retrieval time in code
+(never indexed into this public bot).
+
+## Turn the bot OFF when you're not testing (and back on)
+
+Cloud Run already **scales to zero** when idle, so an unused service costs ~nothing. But "scaled to zero"
+still means the URL is *reachable* — to make the endpoints **not open or searchable by the internet at
+all**, pull the public-invoker grant. This is instant and fully reversible (no rebuild, no redeploy):
+
+```powershell
+# OFF — the URL now returns 403 to everyone (Telegram + browsers). Nothing is processed.
+gcloud run services remove-iam-policy-binding tutor-bot --region us-central1 `
+  --member=allUsers --role=roles/run.invoker
+
+# Confirm it's dark:
+$URL = gcloud run services describe tutor-bot --region us-central1 --format="value(status.url)"
+curl.exe "$URL/healthz"        # → 403 Forbidden
+
+# ON — public again (the bot re-registers its Telegram webhook on next request):
+gcloud run services add-iam-policy-binding tutor-bot --region us-central1 `
+  --member=allUsers --role=roles/run.invoker
+```
+
+```bash
+# macOS / Linux (bash) — OFF / verify / ON
+gcloud run services remove-iam-policy-binding tutor-bot --region us-central1 \
+  --member=allUsers --role=roles/run.invoker
+URL=$(gcloud run services describe tutor-bot --region us-central1 --format='value(status.url)'); curl -s -o /dev/null -w '%{http_code}\n' "$URL/healthz"
+gcloud run services add-iam-policy-binding tutor-bot --region us-central1 \
+  --member=allUsers --role=roles/run.invoker
+```
+
+> Going away for a while? The full **Teardown** below removes the service entirely (and you redeploy
+> from Part 8 when you're back). The IAM toggle above is the right tool for "off overnight / between
+> demos"; teardown is for "done for now."
 
 ## What this shares with `chatbot/`
 

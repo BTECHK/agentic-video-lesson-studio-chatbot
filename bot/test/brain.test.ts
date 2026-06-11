@@ -44,36 +44,37 @@ describe('retrieval', () => {
   });
 });
 
-describe('respond — grounding + hallucination guard (Tutor invariant)', () => {
-  it('keeps a citation for a retrieved tool', async () => {
+describe('respond — grounding + the Tutor invariant (no fabricated sources)', () => {
+  it('lists a Source for a retrieved tool the answer names', async () => {
     const history: ChatTurn[] = [{ role: 'user', content: 'tell me about Claude for research' }];
-    const reply = await respond(
-      history,
-      true,
-      deps('Claude is great for research. [Source: Module 1, Lesson 2, Tool: Claude]'),
-    );
+    const reply = await respond(history, true, deps('Claude is great for research.'));
     expect(reply.citations).toHaveLength(1);
     expect(reply.citations[0].tool).toBe('Claude');
-    // citation markup is stripped from the display text
-    expect(reply.text).not.toContain('[Source:');
   });
 
-  it('DROPS a citation whose tool was not retrieved (no fabricated sources)', async () => {
-    // User asks about Claude (only Claude/ChatGPT exist); model fabricates a "Gemini" source.
+  it('strips stray source/tool markup from the display text', async () => {
     const history: ChatTurn[] = [{ role: 'user', content: 'tell me about Claude' }];
     const reply = await respond(
       history,
       true,
-      deps('Sure. [Source: Module 1, Lesson 1, Tool: Gemini]'),
+      deps('Claude is great (Tool: Anthropic). [Source: Module 1, Lesson 2, Tool: Claude]'),
     );
+    expect(reply.text).not.toContain('[Source:');
+    expect(reply.text).not.toContain('(Tool:');
+    expect(reply.text).toBe('Claude is great.');
+  });
+
+  it('never shows a source the model named but retrieval did not surface', async () => {
+    // User asks about Claude (only Claude/ChatGPT exist); model name-drops Gemini.
+    const history: ChatTurn[] = [{ role: 'user', content: 'tell me about Claude' }];
+    const reply = await respond(history, true, deps('Our pick is Gemini for that.'));
     expect(reply.citations.find((c) => c.tool === 'Gemini')).toBeUndefined();
     expect(reply.citations).toHaveLength(0);
   });
 
-  it('keeps tool-less (general) citations', async () => {
+  it('adds no Sources for a general answer that names no tool', async () => {
     const history: ChatTurn[] = [{ role: 'user', content: 'what is this course about' }];
-    const reply = await respond(history, true, deps('A course. [Source: Module 1, Lesson 1]'));
-    expect(reply.citations).toHaveLength(1);
-    expect(reply.citations[0].tool).toBeUndefined();
+    const reply = await respond(history, true, deps('A practical AI course.'));
+    expect(reply.citations).toHaveLength(0);
   });
 });

@@ -1,7 +1,8 @@
 import type { BrainDeps } from '../brain.js';
 import { respond } from '../brain.js';
 import { SessionStore } from '../session.js';
-import { RateLimiter } from '../rate-limit.js';
+import { RateLimiter, GlobalDailyCap } from '../rate-limit.js';
+import type { Citation } from '../types.js';
 
 /** Minimal Telegram Update shape (only what we use). */
 export interface TelegramUpdate {
@@ -17,6 +18,10 @@ export interface TelegramDeps extends BrainDeps {
   token: string;
   session?: SessionStore;
   limiter?: RateLimiter;
+  dailyCap?: GlobalDailyCap;
+  /** When set, the bot ONLY answers these chat ids and silently ignores everyone
+   * else (e.g. if the bot link gets forwarded around during a private pilot). */
+  allowedChatIds?: Set<string>;
   /** injectable for tests; defaults to global fetch */
   fetchImpl?: typeof fetch;
 }
@@ -26,11 +31,15 @@ const API = 'https://api.telegram.org';
 export class TelegramChannel {
   readonly session: SessionStore;
   private limiter: RateLimiter;
+  private dailyCap: GlobalDailyCap;
+  private allowedChatIds?: Set<string>;
   private fetchImpl: typeof fetch;
 
   constructor(private deps: TelegramDeps) {
     this.session = deps.session ?? new SessionStore();
     this.limiter = deps.limiter ?? new RateLimiter();
+    this.dailyCap = deps.dailyCap ?? new GlobalDailyCap();
+    this.allowedChatIds = deps.allowedChatIds;
     this.fetchImpl = deps.fetchImpl ?? fetch;
   }
 
@@ -41,6 +50,13 @@ export class TelegramChannel {
     const text = msg?.text?.trim();
     if (!msg || !text) return null;
     const chatId = String(msg.chat.id);
+
+    // Private-pilot allowlist: ignore anyone not approved (no reply at all, so a
+    // forwarded link reveals nothing). Empty/unset allowlist = open to all.
+    if (this.allowedChatIds && !this.allowedChatIds.has(chatId)) {
+      console.log(JSON.stringify({ t: new Date().toISOString(), ch: 'telegram', chatId, outcome: 'not_allowlisted' }));
+      return null;
+    }
 
     if (text === '/start') {
       this.session.reset(chatId);
@@ -55,11 +71,17 @@ export class TelegramChannel {
       await this.send(chatId, slow);
       return slow;
     }
+    if (!this.dailyCap.allow()) {
+      const busy = "I've hit my limit for today — please try again tomorrow.";
+      await this.send(chatId, busy);
+      return busy;
+    }
+    console.log(JSON.stringify({ t: new Date().toISOString(), ch: 'telegram', chatId, msgLen: text.length, outcome: 'ok' }));
 
     const firstTurn = this.session.isFirstTurn(chatId);
     const history = this.session.append(chatId, { role: 'user', content: text });
     const reply = await respond(history, firstTurn, this.deps);
-    const out = formatReply(reply.text, reply.citations.map((c) => c.snippet));
+    const out = formatReply(reply.text, reply.citations);
     this.session.append(chatId, { role: 'assistant', content: reply.text });
     await this.send(chatId, out);
     return out;
@@ -108,8 +130,15 @@ export class TelegramChannel {
   }
 }
 
-export function formatReply(text: string, citationSnippets: string[]): string {
-  if (citationSnippets.length === 0) return text;
-  const unique = [...new Set(citationSnippets)];
-  return `${text}\n\n— ${unique.map((s) => `[${s}]`).join('  ')}`;
+/**
+ * Render the grounded reply for a channel. The footer lists the TOOLS the answer
+ * draws on — clean display names, deduped — never the raw `[Source: Module…]`
+ * citation markup (the tool corpus has no lesson mapping, so module/lesson is not
+ * shown; surfacing it looked like leaked syntax). Tool-less general citations add
+ * no footer line.
+ */
+export function formatReply(text: string, citations: Citation[]): string {
+  const tools = [...new Set(citations.map((c) => c.tool).filter((t): t is string => !!t))];
+  if (tools.length === 0) return text;
+  return `${text}\n\nSources: ${tools.join(' · ')}`;
 }

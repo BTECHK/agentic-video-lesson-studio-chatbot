@@ -24,3 +24,37 @@ export class RateLimiter {
     return true;
   }
 }
+
+/**
+ * Global daily request ceiling — a single process-wide circuit breaker across ALL
+ * users/channels. On the Gemini free tier the spend cap is $0 (the free tier IS
+ * the ceiling), so this protects availability/quota today; the moment a PAID key
+ * is wired in, this same cap becomes the hard spend guard. Set DAILY_REQUEST_CAP=0
+ * to disable. In-memory (resets on cold start) — fine for a single-instance pilot;
+ * back it with a store when multi-instance.
+ */
+export class GlobalDailyCap {
+  private day = -1;
+  private count = 0;
+  constructor(
+    private cap = Number(process.env.DAILY_REQUEST_CAP ?? 1000),
+    private now: () => number = () => Date.now(),
+  ) {}
+
+  /** Returns true if under the daily cap; records the hit. Cap 0 = unlimited. */
+  allow(): boolean {
+    if (this.cap <= 0) return true;
+    const today = Math.floor(this.now() / 86_400_000);
+    if (today !== this.day) {
+      this.day = today;
+      this.count = 0;
+    }
+    if (this.count >= this.cap) return false;
+    this.count += 1;
+    return true;
+  }
+
+  get used(): number {
+    return this.count;
+  }
+}

@@ -2,7 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import type { BrainDeps } from './brain.js';
 import { respond } from './brain.js';
 import { SessionStore } from './session.js';
-import { RateLimiter } from './rate-limit.js';
+import { RateLimiter, GlobalDailyCap } from './rate-limit.js';
 import { TelegramChannel, type TelegramUpdate } from './channels/telegram.js';
 import { formatReply } from './channels/telegram.js';
 import { WEB_CHAT_HTML } from './web.js';
@@ -12,6 +12,20 @@ export interface ServerDeps extends BrainDeps {
   webhookSecret?: string;
   webSession?: SessionStore;
   webLimiter?: RateLimiter;
+  dailyCap?: GlobalDailyCap;
+}
+
+/** Client IP behind Cloud Run's proxy: first hop of x-forwarded-for, else socket. */
+function clientIp(req: IncomingMessage): string {
+  const xff = req.headers['x-forwarded-for'];
+  const raw = Array.isArray(xff) ? xff[0] : xff;
+  return (raw?.split(',')[0].trim() || req.socket.remoteAddress || 'unknown').slice(0, 64);
+}
+
+/** One structured line per request → searchable in Cloud Run Logs Explorer, so
+ * "who accessed it / is someone hammering it" is reviewable. No message bodies. */
+function logAccess(fields: Record<string, string | number>): void {
+  console.log(JSON.stringify({ t: new Date().toISOString(), ...fields }));
 }
 
 function readBody(req: IncomingMessage): Promise<string> {
@@ -40,6 +54,7 @@ function json(res: ServerResponse, code: number, body: unknown): void {
 export function createApp(deps: ServerDeps) {
   const webSession = deps.webSession ?? new SessionStore();
   const webLimiter = deps.webLimiter ?? new RateLimiter();
+  const dailyCap = deps.dailyCap ?? new GlobalDailyCap();
 
   return async function handler(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const url = new URL(req.url ?? '/', 'http://localhost');
@@ -65,8 +80,19 @@ export function createApp(deps: ServerDeps) {
       }
       const message = (parsed.message ?? '').toString().slice(0, 2000).trim();
       const sessionId = (parsed.sessionId ?? 'web-anon').toString().slice(0, 64);
+      const ip = clientIp(req);
       if (!message) return json(res, 400, { error: 'empty message' });
-      if (!webLimiter.allow(sessionId)) return json(res, 429, { error: 'slow down' });
+      // Rate-limit by IP, not the client-supplied sessionId (which an abuser just
+      // rotates). Then the global daily cap as a backstop against distributed spam.
+      if (!webLimiter.allow(ip)) {
+        logAccess({ ch: 'web', ip, msgLen: message.length, outcome: 'rate_limited' });
+        return json(res, 429, { error: 'slow down' });
+      }
+      if (!dailyCap.allow()) {
+        logAccess({ ch: 'web', ip, msgLen: message.length, outcome: 'daily_cap' });
+        return json(res, 429, { error: 'busy — try again tomorrow' });
+      }
+      logAccess({ ch: 'web', ip, msgLen: message.length, outcome: 'ok' });
 
       const firstTurn = webSession.isFirstTurn(sessionId);
       const history = webSession.append(sessionId, { role: 'user', content: message });
@@ -75,7 +101,7 @@ export function createApp(deps: ServerDeps) {
       return json(res, 200, {
         text: reply.text,
         citations: reply.citations,
-        display: formatReply(reply.text, reply.citations.map((c) => c.snippet)),
+        display: formatReply(reply.text, reply.citations),
       });
     }
 
