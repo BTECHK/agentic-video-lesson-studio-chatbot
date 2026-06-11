@@ -21,7 +21,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { join } from 'node:path';
-import type { DagNode } from './build-dag';
+import { runDag, type CacheState, type DagNode, type NodeOutcome } from './build-dag';
 import {
   lessonToSynthPlan,
   sceneWavPath,
@@ -118,6 +118,35 @@ export function buildLessonNodes(lessonId: string, opts: BuildOptions = {}): Dag
   };
 
   return [plan, ...ttsNodes, align, render];
+}
+
+export interface RegenOptions extends BuildOptions {
+  cache: CacheState;
+  dryRun?: boolean;
+}
+
+/**
+ * Two-pass regenerate: run `plan` FIRST, then rebuild the node set from the
+ * freshly-planned lesson.json before running the rest of the DAG.
+ *
+ * Fixes the two documented single-pass staleness bugs (learnings.md, bit
+ * topic-1-lesson-2 + a depth rebuild): (1) tts nodes hashed PRE-plan
+ * narration, so a narration edit shipped stale audio in one pass; (2) scene
+ * add/remove via plan left missing/orphaned tts nodes that errored. With the
+ * plan output on disk before node construction, both classes disappear.
+ *
+ * Dry runs keep single-pass semantics (plan doesn't execute, so the node set
+ * reflects the current lesson.json snapshot — same as before).
+ */
+export async function runLessonRegen(lessonId: string, opts: RegenOptions): Promise<NodeOutcome[]> {
+  const { cache, dryRun } = opts;
+  const planOnly = buildLessonNodes(lessonId, opts).filter((n) => n.id === 'plan');
+  const [planOutcome] = await runDag(planOnly, { cache, dryRun });
+
+  const nodes = buildLessonNodes(lessonId, opts);
+  const outcomes = await runDag(nodes, { cache, dryRun });
+  // The second pass sees plan as fresh (it just ran); report the real first-pass status.
+  return outcomes.map((o) => (o.id === 'plan' ? planOutcome : o));
 }
 
 /**

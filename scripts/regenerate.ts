@@ -14,8 +14,8 @@
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { runDag, type CacheState, type NodeStatus } from '../src/lib/build-dag';
-import { buildLessonNodes } from '../src/lib/regen-graph';
+import { type CacheState, type NodeStatus } from '../src/lib/build-dag';
+import { runLessonRegen } from '../src/lib/regen-graph';
 import { runMain, type Logger } from '../src/lib/logger';
 
 const STATUS_LEVEL: Record<NodeStatus, 'info' | 'warn' | 'error'> = {
@@ -39,10 +39,11 @@ async function main(log: Logger): Promise<number> {
     ? JSON.parse(readFileSync(cachePath, 'utf-8'))
     : {};
 
-  const nodes = buildLessonNodes(lessonId);
-  log.info('regenerating lesson', { lessonId, dryRun, nodes: nodes.length });
+  log.info('regenerating lesson', { lessonId, dryRun });
 
-  const outcomes = await runDag(nodes, { cache, dryRun });
+  // Two-pass: plan runs first, then the node set is built from the freshly-
+  // planned lesson.json (fixes stale-tts + scene-set-change staleness).
+  const outcomes = await runLessonRegen(lessonId, { cache, dryRun });
 
   for (const o of outcomes) {
     log[STATUS_LEVEL[o.status]](`node ${o.status}`, { id: o.id, status: o.status, ...(o.error ? { error: o.error } : {}) });
