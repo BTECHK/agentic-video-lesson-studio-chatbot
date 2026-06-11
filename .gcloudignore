@@ -1,11 +1,19 @@
-# Controls what `gcloud builds submit` uploads as the build context.
-# We defer to .gitignore (keeps node_modules, out/, *.mp4, lesson audio, etc. out of the upload)
-# and additionally drop the local git history. content/tools/ + bot/ stay in — the Dockerfile needs them.
-.git
-.gcloudignore
-#!include:.gitignore
-out/
-content/lessons/
-node_modules/
-*.mp4
-.git/
+# Upload ONLY what the Tutor bot image needs (bot/ + content/tools/).
+# Nested-whitelist idiom: ignore a level, re-include the one child you want.
+
+# Ignore all top-level entries…
+/*
+
+# …re-include the bot service
+!/bot
+
+# …re-include content, then ignore its children except tools
+!/content
+/content/*
+!/content/tools
+
+# Junk inside allowed dirs
+bot/node_modules
+bot/.test-results
+bot/.env
+bot/.env.*
