@@ -1,5 +1,13 @@
 import React from 'react';
-import { AbsoluteFill, Series, Audio, staticFile, type CalculateMetadataFunction } from 'remotion';
+import {
+  AbsoluteFill,
+  Series,
+  Audio,
+  staticFile,
+  interpolate,
+  useCurrentFrame,
+  type CalculateMetadataFunction,
+} from 'remotion';
 import { BRAND } from '../brand/tokens';
 import { LessonSchema, type Lesson } from '../../content/schemas/lesson';
 import { getSceneComponent } from '../lib/scene-dispatcher';
@@ -43,7 +51,9 @@ export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson, layoutProbe })
           const narration = scene.narration;
           return (
             <Series.Sequence key={scene.id} durationInFrames={scene.duration}>
-              {Component ? <Component {...props} /> : <MissingScene type={scene.type} />}
+              <SceneZoom zoom={scene.zoom} duration={scene.duration}>
+                {Component ? <Component {...props} /> : <MissingScene type={scene.type} />}
+              </SceneZoom>
               {narration?.audioSrc ? <Audio src={staticFile(narration.audioSrc)} /> : null}
               {narration?.words?.length ? <LessonCaptions words={narration.words} /> : null}
             </Series.Sequence>
@@ -51,6 +61,31 @@ export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson, layoutProbe })
         })}
       </Series>
       {layoutProbe === true ? <LayoutProbe /> : null}
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * Optional per-scene Ken Burns zoom (schema-bounded 0.85–1.2). Eases over the
+ * full scene with a gentle cubic so motion never reads as a cut; no-op when
+ * the scene carries no zoom. Captions render OUTSIDE this wrapper so the
+ * narration chip never scales.
+ */
+const SceneZoom: React.FC<{
+  zoom?: { from: number; to: number };
+  duration: number;
+  children: React.ReactNode;
+}> = ({ zoom, duration, children }) => {
+  const frame = useCurrentFrame();
+  if (!zoom) return <>{children}</>;
+  const scale = interpolate(frame, [0, duration], [zoom.from, zoom.to], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: (t) => 1 - Math.pow(1 - t, 3),
+  });
+  return (
+    <AbsoluteFill style={{ transform: `scale(${scale})`, transformOrigin: '50% 50%' }}>
+      {children}
     </AbsoluteFill>
   );
 };

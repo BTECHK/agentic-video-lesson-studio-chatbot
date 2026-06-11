@@ -353,4 +353,20 @@ describe('LessonSchema', () => {
   it('rejects empty object', () => {
     expect(LessonSchema.safeParse({}).success).toBe(false);
   });
+
+  it('accepts a scene with an optional zoom (subtle Ken Burns range)', () => {
+    const base = makeValidLesson();
+    (base.scenes[0] as Record<string, unknown>).zoom = { from: 1, to: 1.06 };
+    expect(LessonSchema.safeParse(base).success).toBe(true);
+  });
+
+  it('rejects zoom outside the 0.85–1.2 band (layout-safety bound)', () => {
+    const low = makeValidLesson();
+    (low.scenes[0] as Record<string, unknown>).zoom = { from: 0.5, to: 1 };
+    expect(LessonSchema.safeParse(low).success).toBe(false);
+
+    const high = makeValidLesson();
+    (high.scenes[0] as Record<string, unknown>).zoom = { from: 1, to: 1.5 };
+    expect(LessonSchema.safeParse(high).success).toBe(false);
+  });
 });
