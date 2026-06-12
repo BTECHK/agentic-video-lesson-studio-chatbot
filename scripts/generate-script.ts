@@ -3,9 +3,17 @@ import { join } from 'node:path';
 import { OutlineSchema } from '../content/schemas/outline';
 import { ScriptSchema } from '../content/schemas/script';
 import { buildGroundingContext } from '../src/lib/grounding';
-import { buildScriptPrompt } from '../src/lib/script-prompt';
+import { buildScriptPrompt, type ScriptLengthBudget } from '../src/lib/script-prompt';
 import { factCheckScript } from '../src/lib/fact-check';
+import { wordBudget, checkScriptLength, findLessonMinutes } from '../src/lib/word-budget';
 import { runMain, type Logger } from '../src/lib/logger';
+
+/** Outline minutes from course-map, or null for non-curriculum lessons (sizzle, samples). */
+function lookupMinutes(root: string, lessonId: string): number | null {
+  const courseMapPath = join(root, 'content', 'curriculum', 'course-map.json');
+  if (!existsSync(courseMapPath)) return null;
+  return findLessonMinutes(JSON.parse(readFileSync(courseMapPath, 'utf-8')), lessonId);
+}
 
 /**
  * Script generation CLI (SCRIPT-01 / SCRIPT-02).
@@ -41,9 +49,22 @@ function main(log: Logger): number {
   const outline = OutlineSchema.parse(JSON.parse(readFileSync(outlinePath, 'utf-8')));
   const grounding = buildGroundingContext(outline);
 
+  const outlineMinutes = lookupMinutes(root, lessonId);
+
   if (!checkMode) {
     const styleGuide = readFileSync(join(root, 'content', 'teaching', 'STYLE.md'), 'utf-8');
-    const prompt = buildScriptPrompt(outline, styleGuide, grounding);
+    let budget: ScriptLengthBudget | undefined;
+    if (outlineMinutes != null) {
+      budget = { outlineMinutes, ...wordBudget(outlineMinutes) };
+      log.info('length budget', {
+        outlineMinutes,
+        targetWords: budget.targetWords,
+        minWords: budget.minWords,
+      });
+    } else {
+      log.warn('lesson not in course-map — prompt carries no length budget', { lessonId });
+    }
+    const prompt = buildScriptPrompt(outline, styleGuide, grounding, budget);
     mkdirSync(lessonDir, { recursive: true });
     writeFileSync(promptPath, prompt, 'utf-8');
     log.info('script prompt written', {
@@ -80,6 +101,33 @@ function main(log: Logger): number {
     log.error('fact-check FAILED — pipeline blocked', { unverifiable: result.flags.length });
     return 1;
   }
+
+  // Pre-flight length check (Instructor's WPM constraint): fail a too-short script in
+  // seconds here, instead of Gate T failing it after a ~30-minute render.
+  if (outlineMinutes != null) {
+    const len = checkScriptLength(parsed.data, outlineMinutes);
+    const summary = {
+      words: len.words,
+      estimatedMinutes: Number(len.estimatedMinutes.toFixed(1)),
+      outlineMinutes,
+      band: `${len.minWords}–${len.maxWords}`,
+    };
+    if (len.verdict === 'SHORT') {
+      log.error(
+        `length check FAILED — script is ${len.words} words but a ${outlineMinutes}-minute lesson needs ≥${len.minWords} (target ~${len.targetWords}). The script summarizes instead of teaching — expand the under-allocated beats.`,
+        summary,
+      );
+      return 1;
+    }
+    if (len.verdict === 'LONG') {
+      log.warn('length check: script runs over the 120% ceiling — tighten before render', summary);
+    } else {
+      log.info('length check PASS', summary);
+    }
+  } else {
+    log.warn('length check skipped — lesson not in course-map', { lessonId });
+  }
+
   log.info('script valid and fully grounded', { lessonId });
   return 0;
 }
