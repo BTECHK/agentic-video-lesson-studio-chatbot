@@ -28,6 +28,13 @@ export const NarrationSchema = z.object({
   words: z.array(NarrationWordSchema).optional(),
 });
 
+/** Subtle per-scene Ken Burns zoom. Bounds keep text inside the safe area
+ * (Gate L measures post-transform rects, so violations still get caught). */
+export const SceneZoomSchema = z.object({
+  from: z.number().min(0.85).max(1.2),
+  to: z.number().min(0.85).max(1.2),
+});
+
 export const SceneBaseSchema = z.object({
   id: z.string(),
   type: SceneTypeSchema,
@@ -36,6 +43,7 @@ export const SceneBaseSchema = z.object({
   label: z.string().optional(),
   content: z.record(z.string(), z.unknown()),
   narration: NarrationSchema.optional(),
+  zoom: SceneZoomSchema.optional(),
 }).superRefine((scene, ctx) => {
   const contentSchema = SCENE_CONTENT_SCHEMAS[scene.type as SceneType];
   if (contentSchema) {

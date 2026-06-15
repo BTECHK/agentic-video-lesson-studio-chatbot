@@ -3,9 +3,9 @@
  *
  *   npm run gate:status -- <id>
  *
- * Reads the three review artifacts (FACT-CHECK-REPORT.md / teaching-axis.md /
- * watch-gate.md), prints each gate's state, and exits 0 only when all three are
- * green — so it can gate a Teachable-export step. It does NOT touch the review
+ * Reads the five review artifacts (FACT-CHECK-REPORT.md / teaching-axis.md /
+ * watch-gate.md / layout-gate.md / timing-gate.md), prints each gate's state,
+ * and exits 0 only when all five are green — so it can gate a Teachable-export step. It does NOT touch the review
  * bundle (publish-lesson.ts): that bundle is how Instructor reviews, which is what makes
  * Gate C pass — blocking it would deadlock. Publish stays a human action; this is
  * the precondition the human (or the studio button) checks first.
@@ -34,6 +34,7 @@ runMain('gate:status', async (log) => {
     B: read('review/teaching-axis.md'),
     C: read('review/watch-gate.md'),
     L: read('review/layout-gate.md'),
+    T: read('review/timing-gate.md'),
   });
 
   for (const g of summary.gates) {
@@ -42,7 +43,7 @@ runMain('gate:status', async (log) => {
 
   const decision = canPublish(summary);
   if (decision.ok) {
-    log.info('PUBLISH OK — all four gates green', { lessonId });
+    log.info('PUBLISH OK — all five gates green', { lessonId });
     return 0;
   }
   for (const r of decision.reasons) log.warn(r);

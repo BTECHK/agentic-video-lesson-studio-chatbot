@@ -5,11 +5,13 @@
  *
  * Convention: each gate artifact carries a machine-readable `Verdict: PASS|FIX` line
  * (Gate C already does; the Gate A/B runners emit the same). Missing file = not run.
+ * Gate T uses `Verdict: WARN` for the 60–130% band — the regex does not match WARN
+ * so it counts as not-green, matching FIX semantics for publish gating.
  */
 
 export type GateState = 'pass' | 'fix' | 'missing';
 
-export type GateId = 'A' | 'B' | 'C' | 'L';
+export type GateId = 'A' | 'B' | 'C' | 'L' | 'T';
 
 export interface GateDef {
   gate: GateId;
@@ -23,6 +25,7 @@ export const GATES: readonly GateDef[] = [
   { gate: 'B', name: 'Teaching axis', artifact: 'review/teaching-axis.md' },
   { gate: 'C', name: 'Watch gate', artifact: 'review/watch-gate.md' },
   { gate: 'L', name: 'Layout integrity', artifact: 'review/layout-gate.md' },
+  { gate: 'T', name: 'Timing integrity', artifact: 'review/timing-gate.md' },
 ] as const;
 
 /** A present file with no PASS verdict counts as not-green; an absent file is "missing". */
@@ -45,7 +48,7 @@ export interface LessonGateSummary {
 
 export function summarizeGates(
   lessonId: string,
-  contents: { A: string | null; B: string | null; C: string | null; L: string | null },
+  contents: { A: string | null; B: string | null; C: string | null; L: string | null; T: string | null },
 ): LessonGateSummary {
   const gates: GateStatus[] = GATES.map((g) => ({ ...g, state: parseGateState(contents[g.gate]) }));
   return { lessonId, gates, allGreen: gates.every((g) => g.state === 'pass') };
@@ -56,7 +59,7 @@ export interface PublishGateDecision {
   reasons: string[];
 }
 
-/** Publish is allowed only when all four gates are green. */
+/** Publish is allowed only when all five gates are green. */
 export function canPublish(summary: LessonGateSummary): PublishGateDecision {
   if (summary.allGreen) return { ok: true, reasons: [] };
   const reasons = summary.gates

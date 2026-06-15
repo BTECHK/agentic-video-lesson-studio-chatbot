@@ -1,6 +1,11 @@
 import { SCENE_TYPES } from '../../content/schemas/scene-types';
 import type { Outline } from '../../content/schemas/outline';
 import type { GroundingContext } from './grounding';
+import type { WordBudgetResult } from './word-budget';
+
+export interface ScriptLengthBudget extends WordBudgetResult {
+  outlineMinutes: number;
+}
 
 /**
  * Builds the script-generation prompt (SCRIPT-01). Following the project's "Claude Code passthrough"
@@ -24,10 +29,30 @@ function renderGrounding(grounding: GroundingContext): string {
   return `TOOLS (reference as tool:<id>):\n${tools}\n\nCAPABILITIES (reference as cap:<id>:<category>):\n${caps}`;
 }
 
+function renderLengthBudget(budget: ScriptLengthBudget, beatCount: number): string {
+  const perBeat = Math.round(budget.targetWords / Math.max(beatCount, 1));
+  return `# Length budget (HARD constraint — duration is audio-authoritative, so word count IS video length)
+This lesson's outline allots **${budget.outlineMinutes} minutes**. At the measured narration pace
+(~${Math.round(budget.paceWps * 60)} wpm), that means:
+- **Target: ~${budget.targetWords} words of narration total** (we author to ~85% of the outline slot).
+- **Hard floor: ${budget.minWords} words** — below this the rendered video fails the timing gate.
+- Ceiling: ${budget.maxWords} words.
+- Rough allocation: ~${perBeat} words per beat, weighted by each beat's row minutes (demo beats run
+  longer — they narrate input → output → what to notice at walkthrough pace).
+
+The objective is NOT length for its own sake — it is teaching depth: deliver each beat in full
+(idea, example, caveat), not a summary of it. If you finish a beat far under its allocation, you have
+summarized instead of taught — go back and teach it. Do not pad; expand by adding teaching moves
+(example, contrast, caveat), never filler.
+
+`;
+}
+
 export function buildScriptPrompt(
   outline: Outline,
   styleGuide: string,
   grounding: GroundingContext,
+  budget?: ScriptLengthBudget,
 ): string {
   const beats = outline.sections
     .map((s) => {
@@ -45,9 +70,11 @@ export function buildScriptPrompt(
     })
     .join('\n\n');
 
+  const beatCount = outline.sections.reduce((n, s) => n + s.beats.length, 0);
+
   return `You are generating a narrated lesson script for Sample Academy in the voice of the Course Instructor.
 
-# Voice & style (follow exactly)
+${budget ? renderLengthBudget(budget, beatCount) : ''}# Voice & style (follow exactly)
 ${styleGuide}
 
 # Grounding facts (the ONLY source of truth for tool claims)

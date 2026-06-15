@@ -13,6 +13,7 @@ export interface IngestEvent {
   changesFound?: number;
   prsCreated?: number;
   errors?: number;
+  results?: { vendor: string; status: string; error?: string }[];
   _logged: string;
   [key: string]: unknown;
 }
@@ -70,6 +71,24 @@ export function latestRun(events: IngestEvent[]): IngestRun | null {
     prsCreated: last.prsCreated ?? 0,
     errors: last.errors ?? 0,
   };
+}
+
+/**
+ * Each vendor's status ('success', 'skipped', ...) from the most recent
+ * ingest_complete summary that mentions it. A vendor missing from the latest
+ * summary keeps the status of the last run that included it.
+ */
+export function latestVendorStatus(events: IngestEvent[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  const completions = events
+    .filter((e) => e.event === 'ingest_complete' && Array.isArray(e.results))
+    .sort((a, b) => (a._logged < b._logged ? -1 : 1));
+  for (const e of completions) {
+    for (const r of e.results!) {
+      if (r.vendor && r.status) map[r.vendor] = r.status;
+    }
+  }
+  return map;
 }
 
 export function periodDaysFor(frequency: ScheduleFrequency): number {

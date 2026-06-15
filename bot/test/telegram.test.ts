@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TelegramChannel, formatReply, type TelegramUpdate } from '../src/channels/telegram.js';
 import { MockProvider } from '../src/provider.js';
-import { RateLimiter } from '../src/rate-limit.js';
-import type { ToolData } from '../src/types.js';
+import { RateLimiter, GlobalDailyCap } from '../src/rate-limit.js';
+import type { Citation, ToolData } from '../src/types.js';
 
 const TOOLS: ToolData[] = [
   {
@@ -15,7 +15,7 @@ const TOOLS: ToolData[] = [
   },
 ];
 
-function channel(opts: { perMinute?: number } = {}) {
+function channel(opts: { perMinute?: number; dailyCap?: GlobalDailyCap; allowedChatIds?: Set<string> } = {}) {
   const calls: { url: string; body: unknown }[] = [];
   const fetchImpl = vi.fn(async (url: string, init?: RequestInit) => {
     calls.push({ url, body: init?.body ? JSON.parse(init.body as string) : undefined });
@@ -27,9 +27,13 @@ function channel(opts: { perMinute?: number } = {}) {
     tools: TOOLS,
     fetchImpl,
     limiter: new RateLimiter(opts.perMinute ?? 12),
+    dailyCap: opts.dailyCap,
+    allowedChatIds: opts.allowedChatIds,
   });
   return { ch, calls };
 }
+
+const cite = (tool?: string): Citation => ({ module: 'Module 1', lesson: 'Lesson 1', tool, snippet: 'x' });
 
 const msg = (chatId: number, text: string): TelegramUpdate => ({
   update_id: 1,
@@ -73,13 +77,38 @@ describe('TelegramChannel', () => {
     expect(ch.session.history('100').length).toBeGreaterThan(0);
     expect(ch.session.history('200')).toHaveLength(0);
   });
+
+  it('ignores chat ids not on the allowlist (no reply)', async () => {
+    const { ch, calls } = channel({ allowedChatIds: new Set(['100']) });
+    expect(await ch.handleUpdate(msg(999, 'about Claude'))).toBeNull();
+    expect(calls).toHaveLength(0); // nothing sent back to a stranger
+  });
+
+  it('answers an allowlisted chat id', async () => {
+    const { ch } = channel({ allowedChatIds: new Set(['100']) });
+    expect(await ch.handleUpdate(msg(100, 'about Claude'))).toBeTruthy();
+  });
+
+  it('blocks once the global daily cap is exhausted', async () => {
+    const t = 1_000_000;
+    const cap = new GlobalDailyCap(1, () => t);
+    const { ch } = channel({ dailyCap: cap });
+    await ch.handleUpdate(msg(5, 'first about Claude'));
+    const second = await ch.handleUpdate(msg(6, 'second about Claude'));
+    expect(second).toContain('limit for today');
+  });
 });
 
 describe('formatReply', () => {
-  it('appends unique citation snippets', () => {
-    const out = formatReply('Answer.', ['Module 1, Lesson 2, Tool: Claude', 'Module 1, Lesson 2, Tool: Claude']);
+  it('renders a clean Sources line with deduped tool names', () => {
+    const out = formatReply('Answer.', [cite('Claude'), cite('Claude'), cite('ChatGPT')]);
     expect(out).toContain('Answer.');
+    expect(out).toContain('Sources: Claude · ChatGPT');
+    expect(out).not.toContain('[Source:'); // no raw citation markup
     expect(out.match(/Claude/g)!.length).toBe(1);
+  });
+  it('omits the footer for tool-less (general) citations', () => {
+    expect(formatReply('Just text.', [cite(undefined)])).toBe('Just text.');
   });
   it('returns text unchanged with no citations', () => {
     expect(formatReply('Just text.', [])).toBe('Just text.');

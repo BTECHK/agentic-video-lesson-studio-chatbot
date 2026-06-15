@@ -14,16 +14,17 @@ describe('parseGateState', () => {
 });
 
 describe('summarizeGates', () => {
-  it('is allGreen only when A, B, C and L all PASS', () => {
+  it('is allGreen only when A, B, C, L and T all PASS', () => {
     const s = summarizeGates('topic-1-lesson-1', {
       A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS',
+      T: 'Verdict: PASS',
     });
     expect(s.allGreen).toBe(true);
-    expect(s.gates.map((g) => g.gate)).toEqual(['A', 'B', 'C', 'L']);
+    expect(s.gates.map((g) => g.gate)).toEqual(['A', 'B', 'C', 'L', 'T']);
   });
   it('is not green when any gate is missing or failing', () => {
     const s = summarizeGates('topic-1-lesson-1', {
-      A: null, B: 'Verdict: PASS', C: 'Verdict: FIX', L: 'Verdict: PASS',
+      A: null, B: 'Verdict: PASS', C: 'Verdict: FIX', L: 'Verdict: PASS', T: 'Verdict: PASS',
     });
     expect(s.allGreen).toBe(false);
     expect(s.gates.find((g) => g.gate === 'A')!.state).toBe('missing');
@@ -31,23 +32,39 @@ describe('summarizeGates', () => {
   });
   it('is not green when the layout gate has not run', () => {
     const s = summarizeGates('topic-1-lesson-1', {
-      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: null,
+      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: null, T: 'Verdict: PASS',
     });
     expect(s.allGreen).toBe(false);
     expect(s.gates.find((g) => g.gate === 'L')!.state).toBe('missing');
   });
+  it('is not green when the timing gate has not run', () => {
+    const s = summarizeGates('topic-1-lesson-1', {
+      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS', T: null,
+    });
+    expect(s.allGreen).toBe(false);
+    expect(s.gates.find((g) => g.gate === 'T')!.state).toBe('missing');
+  });
+  it('is not green when the timing gate has a WARN verdict (WARN not in parseGateState regex)', () => {
+    const s = summarizeGates('topic-1-lesson-1', {
+      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS',
+      T: 'Verdict: WARN',
+    });
+    expect(s.allGreen).toBe(false);
+    expect(s.gates.find((g) => g.gate === 'T')!.state).toBe('fix');
+  });
 });
 
 describe('canPublish', () => {
-  it('allows publish when all four gates are green', () => {
+  it('allows publish when all five gates are green', () => {
     const s = summarizeGates('x', {
       A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS',
+      T: 'Verdict: PASS',
     });
     expect(canPublish(s).ok).toBe(true);
   });
   it('blocks publish and names the gates that are not passing', () => {
     const s = summarizeGates('x', {
-      A: null, B: 'Verdict: PASS', C: 'Verdict: FIX', L: null,
+      A: null, B: 'Verdict: PASS', C: 'Verdict: FIX', L: null, T: 'Verdict: PASS',
     });
     const d = canPublish(s);
     expect(d.ok).toBe(false);
@@ -55,5 +72,15 @@ describe('canPublish', () => {
     expect(d.reasons.join(' ')).toMatch(/Gate C/);
     expect(d.reasons.join(' ')).toMatch(/Gate L/);
     expect(d.reasons.join(' ')).not.toMatch(/Gate B/); // B passed
+    expect(d.reasons.join(' ')).not.toMatch(/Gate T/); // T passed
+  });
+  it('blocks publish when timing gate is WARN (WARN counts as not-green)', () => {
+    const s = summarizeGates('x', {
+      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS',
+      T: 'Verdict: WARN',
+    });
+    const d = canPublish(s);
+    expect(d.ok).toBe(false);
+    expect(d.reasons.join(' ')).toMatch(/Gate T/);
   });
 });

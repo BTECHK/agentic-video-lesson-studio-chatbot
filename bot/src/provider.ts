@@ -29,6 +29,13 @@ export class GeminiProvider implements LLMProvider {
   constructor(
     private apiKey: string,
     private model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash',
+    // Gemini 2.5 models spend output tokens on internal "thinking" BEFORE any
+    // visible text. Left on with a tight maxOutputTokens, the model routinely
+    // burns the whole budget thinking and returns finishReason=MAX_TOKENS with
+    // EMPTY text — which used to surface as a canned "I didn't catch that" line
+    // and read as a dumb bot. Default it OFF (budget 0) for grounded Q&A; set
+    // GEMINI_THINKING_BUDGET to re-enable per-request reasoning if ever needed.
+    private thinkingBudget = Number(process.env.GEMINI_THINKING_BUDGET ?? 0),
   ) {}
 
   async complete(system: string, history: ChatTurn[], maxOutputTokens: number): Promise<string> {
@@ -43,17 +50,36 @@ export class GeminiProvider implements LLMProvider {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: system }] },
         contents,
-        generationConfig: { maxOutputTokens, temperature: 0.7 },
+        generationConfig: {
+          maxOutputTokens,
+          temperature: 0.7,
+          thinkingConfig: { thinkingBudget: this.thinkingBudget },
+        },
       }),
     });
     if (!res.ok) {
+      // Thrown → caught in brain.respond → graceful reply (never a raw 500).
       throw new Error(`Gemini ${res.status}: ${(await res.text()).slice(0, 300)}`);
     }
     const data = (await res.json()) as {
-      candidates?: { content?: { parts?: { text?: string }[] } }[];
+      promptFeedback?: { blockReason?: string };
+      candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[];
     };
-    const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
-    return text.trim() || "I didn't catch that — try asking about a specific AI tool or lesson.";
+    const candidate = data.candidates?.[0];
+    const text = candidate?.content?.parts?.map((p) => p.text ?? '').join('').trim() ?? '';
+    if (text) return text;
+
+    // No visible text — say WHY in the logs, and return an on-persona line that
+    // never looks like an error or leaks internals to the student.
+    const reason = data.promptFeedback?.blockReason ?? candidate?.finishReason ?? 'EMPTY';
+    console.warn(`[tutor-bot] gemini empty response (reason=${reason}, model=${this.model})`);
+    if (reason === 'SAFETY' || data.promptFeedback?.blockReason) {
+      return "I can't help with that one — but ask me about any AI tool or a lesson and I'm all yours.";
+    }
+    if (reason === 'MAX_TOKENS') {
+      return "That answer ran long on my end — try asking about one specific tool or step and I'll keep it tight.";
+    }
+    return "I didn't quite catch that — try asking about a specific AI tool or lesson.";
   }
 }
 

@@ -27,13 +27,13 @@ All planning docs live in `.planning/`. Start with `.planning/ROADMAP.md` for th
 - **Official sources only.** AI tool claims must reference vendor docs, not training data.
 - **Teachable constraints.** Output is MP4 video (1080p, 30fps, <2GB). No HTML embeds.
 
-## Lesson Production Model — No Human Footage (LOCKED)
+## Lesson Production Model — Animation-First (footage = future upgrade)
 
-**Every lesson is built end-to-end as pure animation. No screen recordings, no on-camera footage, ever.** This is locked and supersedes any earlier "hybrid" model (the idea that animation does slides while Instructor records the demos + talking-head) and any "BLOCKED ON INSTRUCTOR" framing in older planning docs. There are **no human-input blockers** to building lessons.
+**Every lesson is built end-to-end as pure animation for launch. No screen recordings, no on-camera footage in the build loop.** This supersedes any earlier "hybrid" model (the idea that animation does slides while Instructor records the demos + talking-head) and any "BLOCKED ON INSTRUCTOR" framing in older planning docs. There are **no human-input blockers** to building lessons. *(Softened 2026-06-10, owner: real footage/live demos must never **block** the automated system — but swapping real screenshots/recordings into demo scenes later is an explicitly out-of-scope, down-the-line upgrade, not forbidden. The data-driven sceneType seam makes that a contained per-scene swap when the day comes.)*
 
 - **All three delivery types render as Remotion scenes:**
   - 🟦 **slide** → designed animated visuals (frameworks, charts, journey maps).
-  - 🟩 **demo** (in-tool moments) → **animated tool simulations**: `comparison-chats`, `voice-demo`, `setup-checklist`, the `ChatDemo` component, and richer `browser-demo`/`code-demo` scenes where needed. Never stitch in a screen recording; never present fabricated outputs as real — animate the interaction faithfully.
+  - 🟩 **demo** (in-tool moments) → **animated tool simulations**: `comparison-chats`, `voice-demo`, `setup-checklist`, `tool-demo`, the `ChatDemo` component, and `screen-flow` click-throughs where needed. Visual register: Anthropic-YouTube-style stylized/cartoon animation (gliding cursors, clicking buttons) by default; semi-realistic hybrid only where layout recognition is the teaching point. Don't stitch in screen recordings (future upgrade only); never present fabricated outputs as real — animate the interaction faithfully.
   - 🟧 **talking-head** (a person speaking) → **narrated animated scenes**: `quote-card` scenes with TTS voiceover. No camera. (Lesson 1.1 already ships Instructor's spoken moments this way.)
 - **How lessons are composed (this is about taste, not fixed ratios):**
   - The **course outline DOCX is the definitive foundation** — it sets scope, structure, and how each lesson is framed (`content/curriculum/course-map.json`, `delivery-types.json`). Scope comes only from here.
@@ -56,7 +56,7 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
 - Exec-facing naming is **Module/Lesson** (repo keeps `topic-N-lesson-M`); per lesson ship exactly
   three artifacts: `N.M Video.mp4` · `N.M Script.pdf` · `N.M Lesson Plan.pdf`. Learning material only —
   never JSON, code, or internal planning docs.
-- A lesson may only be dropped here when `npm run gate:status -- <id>` exits 0 (A·B·C·L all green).
+- A lesson may only be dropped here when `npm run gate:status -- <id>` exits 0 (A·B·C·L·T all green).
 - **Publish step (cross-machine):** `npm run publish:drive -- <lessonId>` copies the gate-green
   Video + Lesson Plan (+ Script reference) into the right `Module/Lesson` folder (matched by number
   prefix, tolerant of title punctuation). The Drive root is a **per-machine variable** — one mount per OS. Set `DRIVE_CURRICULUM_DIR` env **or** `drive.local.json`
@@ -67,7 +67,7 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (4831 symbols, 7699 relationships, 240 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (5198 symbols, 8212 relationships, 248 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

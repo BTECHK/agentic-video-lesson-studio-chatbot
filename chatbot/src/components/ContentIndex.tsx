@@ -3,13 +3,28 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import type { ToolData } from '@/lib/content-types';
+import type { FreshnessLevel } from '@/lib/ingestion-status';
 import { getCapabilityCount, groupIntoProducts } from '@/lib/content-types';
 import { ToolCard } from './ToolCard';
 import { ToolRow } from './ToolRow';
 import { ViewToggle } from './ViewToggle';
 import { FilterBar } from './FilterBar';
 
-export function ContentIndex({ tools }: { tools: ToolData[] }) {
+export interface VendorFreshness {
+  level: FreshnessLevel;
+  skipped: boolean;
+}
+
+/** Source freshness per tool vendor display name (e.g. "OpenAI"). */
+export type VendorFreshnessMap = Record<string, VendorFreshness>;
+
+export function ContentIndex({
+  tools,
+  vendorFreshness = {},
+}: {
+  tools: ToolData[];
+  vendorFreshness?: VendorFreshnessMap;
+}) {
   const [view, setView] = useState<'tile' | 'list'>('tile');
   const [priority, setPriority] = useState<'all' | 'P0' | 'P1'>('all');
   const [selectedCapabilities, setSelectedCapabilities] = useState<string[]>([]);
@@ -82,7 +97,7 @@ export function ContentIndex({ tools }: { tools: ToolData[] }) {
             const extra = product.surfaces.filter((s) => s.id !== product.primary.id);
             return (
               <div key={product.productId} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <ToolCard tool={product.primary} />
+                <ToolCard tool={product.primary} freshness={vendorFreshness[product.primary.vendor]} />
                 {extra.length > 0 && (
                   <div
                     style={{

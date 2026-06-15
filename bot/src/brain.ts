@@ -1,7 +1,7 @@
 import type { BrainReply, ChatTurn, LLMProvider, ToolData } from './types.js';
 import { findRelevantTools, formatToolsForPrompt } from './retrieval.js';
 import { buildSystemPrompt } from './prompt.js';
-import { parseCitations, keepGroundedCitations } from './citations.js';
+import { stripSourceMarkup, groundedSources } from './citations.js';
 
 export interface BrainDeps {
   provider: LLMProvider;
@@ -25,12 +25,23 @@ export async function respond(
   const toolContext = formatToolsForPrompt(retrieved);
   const system = buildSystemPrompt({ toolContext, firstTurn });
 
-  const raw = await deps.provider.complete(system, history, deps.maxOutputTokens ?? 600);
+  let raw: string;
+  try {
+    raw = await deps.provider.complete(system, history, deps.maxOutputTokens ?? 1024);
+  } catch (err) {
+    // The provider (e.g. Gemini key/quota/transport failure) must NEVER bubble
+    // up as a raw 500 — that used to render to the user as the bare word
+    // "internal". Log the real cause; reply in persona.
+    console.error('[tutor-bot] provider.complete failed', err);
+    return {
+      text: "I'm having a brief hiccup reaching my brain — give me a moment and ask again.",
+      citations: [],
+    };
+  }
 
-  const { cleanContent, citations } = parseCitations(raw);
-  const grounded = keepGroundedCitations(
-    citations,
-    retrieved.map((t) => t.name),
-  );
-  return { text: cleanContent || raw, citations: grounded };
+  // Strip any stray source/tool markup, then derive the Sources footer from the
+  // retrieved tools the answer actually names (grounded by construction).
+  const text = stripSourceMarkup(raw) || raw;
+  const citations = groundedSources(text, retrieved);
+  return { text, citations };
 }

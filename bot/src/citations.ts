@@ -1,34 +1,39 @@
-import type { Citation } from './types.js';
+import type { Citation, ToolData } from './types.js';
 
-const CITATION_REGEX = /\[Source: ([^\]]+)\]/g;
-
-export function parseCitations(content: string): { cleanContent: string; citations: Citation[] } {
-  const citations: Citation[] = [];
-  let match: RegExpExecArray | null;
-  const re = new RegExp(CITATION_REGEX);
-  while ((match = re.exec(content)) !== null) {
-    const raw = match[1];
-    const m = raw.match(/Module\s+(\d+)/i);
-    const l = raw.match(/Lesson\s+(\d+)/i);
-    const t = raw.match(/Tool:\s*([\w-]+)/i);
-    citations.push({
-      module: m ? `Module ${m[1]}` : 'General',
-      lesson: l ? `Lesson ${l[1]}` : 'General',
-      tool: t ? t[1] : undefined,
-      snippet: raw,
-    });
-  }
-  const cleanContent = content.replace(CITATION_REGEX, '').replace(/\s{2,}/g, ' ').trim();
-  return { cleanContent, citations };
+/**
+ * Strip any source/tool markup the model emitted into prose, then tidy the
+ * artifacts stripping leaves behind. The model is now TOLD not to write these
+ * (sources are added deterministically from the retrieved set), so this is the
+ * defensive backstop that guarantees a student never sees leaked "[Source: …]"
+ * or "(Tool: …)" syntax — the exact thing that read as broken output before.
+ */
+export function stripSourceMarkup(content: string): string {
+  return content
+    .replace(/\[Source:[^\]]*\]/gi, '')
+    .replace(/\[Tool:[^\]]*\]/gi, '')
+    .replace(/\((?:Tool|Source):[^)]*\)/gi, '')
+    .replace(/[ \t]+([.,;:!?])/g, '$1') // fix the " ." a stripped tag leaves
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 /**
- * Hallucination guard (the Tutor invariant): drop any citation whose tool was not
- * in the retrieved set, so a student is never shown a source the model fabricated.
- * Tool-less (general) citations are kept. This is a deterministic code control —
- * security does not live in the prompt.
+ * The grounded sources to display: the retrieved tools the answer actually names.
+ * Built from the retrieved set (never from model text), so the Tutor invariant —
+ * never show a source the model fabricated — holds by construction. Longer tool
+ * names win over substrings (e.g. "Claude Code" suppresses a bare "Claude" match).
  */
-export function keepGroundedCitations(citations: Citation[], retrievedToolNames: string[]): Citation[] {
-  const allowed = new Set(retrievedToolNames.map((n) => n.toLowerCase()));
-  return citations.filter((c) => !c.tool || allowed.has(c.tool.toLowerCase()));
+export function groundedSources(answer: string, retrieved: ToolData[]): Citation[] {
+  const lower = answer.toLowerCase();
+  const named = retrieved.filter((t) => lower.includes(t.name.toLowerCase()));
+  const sorted = [...named].sort((a, b) => b.name.length - a.name.length);
+  const kept: ToolData[] = [];
+  for (const t of sorted) {
+    if (!kept.some((k) => k.name.toLowerCase().includes(t.name.toLowerCase()))) kept.push(t);
+  }
+  // Preserve retrieval (relevance) order in the output.
+  return retrieved
+    .filter((t) => kept.includes(t))
+    .map((t) => ({ module: 'General', lesson: 'General', tool: t.name, snippet: t.name }));
 }

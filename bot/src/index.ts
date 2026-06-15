@@ -3,7 +3,7 @@ import { loadTools } from './tools.js';
 import { TelegramChannel } from './channels/telegram.js';
 import { startServer } from './server.js';
 import { SessionStore } from './session.js';
-import { RateLimiter } from './rate-limit.js';
+import { RateLimiter, GlobalDailyCap } from './rate-limit.js';
 
 /**
  * Entrypoint. Two channels share one brain:
@@ -24,6 +24,15 @@ async function main(): Promise<void> {
   const mode = process.env.TELEGRAM_MODE ?? 'longpoll';
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
 
+  // One global daily cap shared across BOTH channels (quota/spend circuit breaker).
+  const dailyCap = new GlobalDailyCap();
+  const allowlist = (process.env.TELEGRAM_ALLOWED_CHAT_IDS ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const allowedChatIds = allowlist.length ? new Set(allowlist) : undefined;
+  if (allowedChatIds) console.log(`[tutor-bot] Telegram allowlist active (${allowedChatIds.size} chat id(s)).`);
+
   let telegram: TelegramChannel | undefined;
   if (token) {
     telegram = new TelegramChannel({
@@ -33,13 +42,15 @@ async function main(): Promise<void> {
       maxOutputTokens,
       session: new SessionStore(),
       limiter: new RateLimiter(),
+      dailyCap,
+      allowedChatIds,
     });
   } else {
     console.warn('[tutor-bot] TELEGRAM_BOT_TOKEN unset — Telegram channel disabled (web /chat still works).');
   }
 
   // Cloud Run requires an HTTP listener on $PORT; always start the server.
-  startServer({ provider, tools, maxOutputTokens, telegram, webhookSecret });
+  startServer({ provider, tools, maxOutputTokens, telegram, webhookSecret, dailyCap });
 
   if (telegram) {
     if (mode === 'webhook') {
