@@ -19,10 +19,9 @@ const { fontFamily } = loadFont('normal', { weights: ['400', '600', '800'], subs
 export type SizzleFormat = '9:16' | '16:9';
 export type SizzleReelProps = { format?: SizzleFormat };
 
-// The reel is authored on a 16:9 stage; the 9:16 cut is the same stage fit to width
-// (so nothing clips). On-brand portrait re-layout + the captured-footage/music beats
-// land with the Playwright-capture increment — the rendered lesson MP4 is git-ignored,
-// so it is not a render-time dependency here.
+// The tour beats are authored on a 16:9 stage. 16:9 plays the stage full-bleed;
+// 9:16 frames that stage as a content band inside brand chrome (eyebrow + kinetic
+// caption), so the portrait cut fills the frame on-brand instead of letterboxing.
 const STAGE_W = 1920;
 const STAGE_H = 1080;
 export const SIZZLE_DURATION = 1800; // 60s @ 30fps
@@ -43,10 +42,50 @@ export const sizzleReelMetadata: CalculateMetadataFunction<SizzleReelProps> = ({
   };
 };
 
+// Kinetic captions, on their own timeline (the issue's 60s beat script). Each fades
+// in/out within its range; shown as a lower-third in 16:9 and the bottom band in 9:16.
+const CAPTIONS: { start: number; end: number; text: string }[] = [
+  { start: 0, end: 240, text: 'What if an outline became a finished lesson — automatically?' },
+  { start: 240, end: 720, text: 'Ask. Outline. Go.' },
+  { start: 720, end: 1200, text: 'Outline → Lesson Plan → Script.' },
+  { start: 1200, end: 1680, text: '3 quality gates. Automatically.' },
+  { start: 1680, end: 1800, text: 'From prompt to publish-ready.' },
+];
+
+const KineticCaption: React.FC<{ portrait: boolean }> = ({ portrait }) => {
+  const frame = useCurrentFrame();
+  const active = CAPTIONS.find((c) => frame >= c.start && frame < c.end);
+  if (!active) return null;
+  const local = frame - active.start;
+  const len = active.end - active.start;
+  const opacity = interpolate(local, [0, 14, len - 14, len], [0, 1, 1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const ty = interpolate(local, [0, 14], [18, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  return (
+    <div
+      style={{
+        fontFamily,
+        fontWeight: BRAND.font.weights.bold,
+        fontSize: portrait ? 52 : 38,
+        lineHeight: 1.2,
+        color: BRAND.colors.text,
+        textAlign: 'center',
+        maxWidth: portrait ? 920 : 1400,
+        opacity,
+        transform: `translateY(${ty}px)`,
+      }}
+    >
+      {active.text}
+    </div>
+  );
+};
+
 /**
- * Fades the incoming scene's whole container in over its first frames. Scenes have
- * opaque backgrounds, so without this an overlapping cut would just hard-swap; fading
- * the container lets the held outgoing scene show through → a smooth crossfade.
+ * Fades the incoming scene's container in over its first frames. Scenes have opaque
+ * backgrounds, so without this an overlapping cut would hard-swap; fading the
+ * container lets the held outgoing scene show through → a smooth crossfade.
  */
 const FadeIn: React.FC<{ children: React.ReactNode; frames?: number }> = ({ children, frames = 20 }) => {
   const f = useCurrentFrame();
@@ -54,61 +93,83 @@ const FadeIn: React.FC<{ children: React.ReactNode; frames?: number }> = ({ chil
   return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
 };
 
+const payoffCard = (
+  <AbsoluteFill
+    style={{
+      backgroundColor: BRAND.colors.bgBase,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 24,
+    }}
+  >
+    <div style={{ width: 80, height: 4, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }} />
+    <div style={{ fontFamily, fontWeight: BRAND.font.weights.bold, fontSize: 56, color: BRAND.colors.text, textAlign: 'center' }}>
+      Sample Academy
+    </div>
+    <div style={{ fontFamily, fontWeight: BRAND.font.weights.regular, fontSize: 28, color: BRAND.colors.accent, textAlign: 'center' }}>
+      AI that builds the course.
+    </div>
+  </AbsoluteFill>
+);
+
+/** The platform-tour beat stack (live-app shells today; swapped for Playwright capture later). */
+const SceneStage: React.FC = () => (
+  <AbsoluteFill>
+    <Sequence from={0} durationInFrames={300}><TitleCard /></Sequence>
+    <Sequence from={240} durationInFrames={540}><FadeIn><ChatDemo /></FadeIn></Sequence>
+    <Sequence from={720} durationInFrames={540}><FadeIn><ContentViewer /></FadeIn></Sequence>
+    <Sequence from={1200} durationInFrames={540}><FadeIn><ComparisonView /></FadeIn></Sequence>
+    <Sequence from={1680} durationInFrames={120}><FadeIn>{payoffCard}</FadeIn></Sequence>
+  </AbsoluteFill>
+);
+
 /**
  * SizzleReel — stakeholder demo tour, rendered to both 9:16 and 16:9 from one source.
  *
- * Reuses the PlatformWalkthrough scene shells (TitleCard → ChatDemo → ContentViewer →
- * ComparisonView) as the platform-tour beats, then a brand payoff card. The whole
- * 16:9 stage is scaled to the active frame width, so the portrait cut renders without
- * clipping. Render: `remotion render src/index.ts SizzleReel out/sizzle-16x9.mp4`
+ * 16:9 plays the authored stage full-bleed. 9:16 frames the same stage as a content
+ * band between a brand eyebrow and a kinetic caption, so the portrait cut fills the
+ * frame on-brand. Render: `remotion render src/index.ts SizzleReel out/sizzle-16x9.mp4`
  * and `--props '{"format":"9:16"}'` for the vertical cut.
  */
 export const SizzleReel: React.FC<SizzleReelProps> = () => {
-  const { width } = useVideoConfig();
-  const frame = useCurrentFrame();
-  const scale = width / STAGE_W; // 1 for 16:9, 0.5625 for the 9:16 fit-to-width cut
+  const { width, height } = useVideoConfig();
+  const portrait = height > width;
+  const scale = width / STAGE_W;
+  const bandH = STAGE_H * scale;
 
-  const outroOpacity =
-    frame >= 1680
-      ? interpolate(frame, [1680, 1800], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-      : 0;
+  // The stage scaled to the frame width — full-bleed in 16:9, a 1080×607 band in 9:16.
+  const band = (
+    <div style={{ width, height: bandH, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ width: STAGE_W, height: STAGE_H, position: 'absolute', top: 0, left: 0, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+        <SceneStage />
+      </div>
+    </div>
+  );
+
+  if (!portrait) {
+    return (
+      <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase, justifyContent: 'center', alignItems: 'center' }}>
+        {band}
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 80, display: 'flex', justifyContent: 'center', padding: '0 96px' }}>
+          <KineticCaption portrait={false} />
+        </div>
+      </AbsoluteFill>
+    );
+  }
 
   return (
-    <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase, justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ width: STAGE_W, height: STAGE_H, position: 'relative', overflow: 'hidden', transform: `scale(${scale})`, flexShrink: 0 }}>
-        <AbsoluteFill>
-          {/* Hook + chatbot + pipeline + comparison — the live-app tour beats.
-              Each beat underlaps the next by 60f: the incoming scene springs in over
-              the held outgoing one, so cuts crossfade with no bg-only gap (smooth-
-              transitions rule). The scenes settle-and-hold, so the overlap is clean. */}
-          <Sequence from={0} durationInFrames={300}><TitleCard /></Sequence>
-          <Sequence from={240} durationInFrames={540}><FadeIn><ChatDemo /></FadeIn></Sequence>
-          <Sequence from={720} durationInFrames={540}><FadeIn><ContentViewer /></FadeIn></Sequence>
-          <Sequence from={1200} durationInFrames={540}><FadeIn><ComparisonView /></FadeIn></Sequence>
-
-          {/* Payoff / CTA */}
-          <Sequence from={1680} durationInFrames={120}>
-            <AbsoluteFill
-              style={{
-                backgroundColor: BRAND.colors.bgBase,
-                opacity: outroOpacity,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 24,
-              }}
-            >
-              <div style={{ width: 80, height: 4, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }} />
-              <div style={{ fontFamily, fontWeight: BRAND.font.weights.bold, fontSize: 56, color: BRAND.colors.text, textAlign: 'center' }}>
-                From prompt to publish-ready.
-              </div>
-              <div style={{ fontFamily, fontWeight: BRAND.font.weights.regular, fontSize: 28, color: BRAND.colors.accent, textAlign: 'center' }}>
-                Sample Academy — AI that builds the course.
-              </div>
-            </AbsoluteFill>
-          </Sequence>
-        </AbsoluteFill>
+    <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', paddingTop: 150, paddingBottom: 170 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ width: 48, height: 4, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }} />
+        <div style={{ fontFamily, fontWeight: BRAND.font.weights.bold, fontSize: 34, letterSpacing: 2, color: BRAND.colors.text }}>
+          SAMPLE ACADEMY
+        </div>
+      </div>
+      {band}
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '0 80px' }}>
+        <KineticCaption portrait />
       </div>
     </AbsoluteFill>
   );
