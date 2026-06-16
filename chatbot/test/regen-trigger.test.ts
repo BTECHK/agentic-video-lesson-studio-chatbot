@@ -10,6 +10,20 @@ describe('buildRegenArgs', () => {
     expect(() => buildRegenArgs({ lessonId: '../etc/passwd' })).toThrow();
     expect(() => buildRegenArgs({ lessonId: 'a; rm -rf /' })).toThrow();
   });
+
+  it('threads sceneId and comment through so the AI-edit step receives them (#18)', () => {
+    expect(buildRegenArgs({ lessonId: 'module-1', sceneId: 'cover', comment: 'tighten the intro' })).toEqual([
+      'module-1',
+      '--scene',
+      'cover',
+      '--comment',
+      'tighten the intro',
+    ]);
+  });
+
+  it('rejects a sceneId with path/shell characters', () => {
+    expect(() => buildRegenArgs({ lessonId: 'module-1', sceneId: '../x' })).toThrow();
+  });
 });
 
 describe('RegenTriggerSchema', () => {
