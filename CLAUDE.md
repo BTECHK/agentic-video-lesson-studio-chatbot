@@ -67,7 +67,7 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (5198 symbols, 8212 relationships, 248 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (5352 symbols, 8459 relationships, 257 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
