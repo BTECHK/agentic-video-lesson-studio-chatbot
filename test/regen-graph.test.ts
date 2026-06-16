@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync, mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { buildLessonNodes, runLessonRegen, type RegenRunners } from '../src/lib/regen-graph';
+import { buildLessonNodes, runLessonRegen, dockerRenderArgv, type RegenRunners } from '../src/lib/regen-graph';
 import { runDag, type CacheState } from '../src/lib/build-dag';
 
 const LESSON_ID = 'test-lesson';
@@ -151,6 +151,20 @@ describe('regenerate (end to end over the temp fixture)', () => {
     expect(out.every((o) => o.status === 'rebuilt')).toBe(true);
     expect(calls).toEqual([]);
     expect(cache).toEqual({});
+  });
+});
+
+describe('dockerRenderArgv (Docker-first render leg, #47)', () => {
+  it('runs the render service with container-relative POSIX paths', () => {
+    const projectRoot = join(root, '..'); // any absolute root
+    const out = join(projectRoot, 'out', 'module-1.mp4');
+    const props = join(projectRoot, 'content', 'lessons', 'module-1', '.render-props.json');
+
+    expect(dockerRenderArgv(out, props, projectRoot)).toEqual([
+      'compose', 'run', '--rm', 'render',
+      'npx', 'remotion', 'render', 'src/index.ts', 'LessonVideo',
+      'out/module-1.mp4', '--props=content/lessons/module-1/.render-props.json',
+    ]);
   });
 });
 

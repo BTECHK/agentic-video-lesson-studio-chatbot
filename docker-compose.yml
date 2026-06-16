@@ -17,6 +17,12 @@ services:
       dockerfile: docker/Dockerfile.render
     volumes:
       - ./output:/app/output
+      # Per-lesson regen render (#47): mount the live content (edited script +
+      # injected .render-props.json), the mp4 output dir, and the composition
+      # source so `docker compose run --rm render …` reflects the current lesson.
+      - ./content:/app/content
+      - ./out:/app/out
+      - ./src:/app/src
     shm_size: '2gb'
     environment:
       - NODE_ENV=production

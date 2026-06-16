@@ -20,7 +20,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { spawn } from 'node:child_process';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { runDag, type CacheState, type DagNode, type NodeOutcome } from './build-dag';
 import {
   lessonToSynthPlan,
@@ -176,6 +176,19 @@ export function lessonRenderArgv(outPath: string, propsPath: string): string[] {
   return ['remotion', 'render', 'src/index.ts', 'LessonVideo', outPath, `--props=${propsPath}`];
 }
 
+/**
+ * `docker compose run` argv for the render leg (#47, Docker-first rebuild loop).
+ *
+ * Render is the one heavy step that needs Remotion + Chromium + ffmpeg, so — like
+ * the TTS leg (tts-adapter.ts) — it runs in the `render` service rather than on
+ * the host. Paths are made container-relative (POSIX) against /app, where
+ * docker-compose mounts ./content (props + lesson data) and ./out (the mp4).
+ */
+export function dockerRenderArgv(outPath: string, propsPath: string, root: string = process.cwd()): string[] {
+  const rel = (p: string) => relative(root, p).split(sep).join('/');
+  return ['compose', 'run', '--rm', 'render', 'npx', ...lessonRenderArgv(rel(outPath), rel(propsPath))];
+}
+
 /** Spawn a command, resolving on exit 0 and rejecting otherwise. */
 function exec(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -205,6 +218,8 @@ export const defaultRunners: RegenRunners = {
   render: async (lessonId, outPath) => {
     // Inject THIS lesson's props — otherwise LessonVideo renders its module-1 default.
     const propsPath = writeRenderProps(lessonId);
-    await exec('npx', lessonRenderArgv(outPath, propsPath));
+    // Render in the `render` Docker service (Remotion + Chromium + ffmpeg), mirroring
+    // the TTS leg — this is the Docker-first half of the in-app rebuild loop (#47).
+    await exec('docker', dockerRenderArgv(outPath, propsPath));
   },
 };
