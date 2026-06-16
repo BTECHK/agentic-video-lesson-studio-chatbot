@@ -11,9 +11,9 @@ import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
  * (REGEN_TRIGGER_ENABLED=true), where docker + Remotion are available; elsewhere
  * it returns 503 rather than pretending the rebuild ran.
  *
- * NOTE: applying the comment's *intent* to the upstream content (the AI edit
- * step) is not yet automated — this kicks the deterministic rebuild of whatever
- * is already stale.
+ * When a comment is present it is direction for the AI: regenerate.ts runs the
+ * AI-edit step (#18) to apply the comment to script.json, then the deterministic
+ * DAG cascades the change. With no comment it just rebuilds whatever is stale.
  */
 export async function POST(req: NextRequest) {
   const denied = requireOperator(req);

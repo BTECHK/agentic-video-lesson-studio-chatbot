@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { type CacheState, type NodeStatus } from '../src/lib/build-dag';
 import { runLessonRegen } from '../src/lib/regen-graph';
+import { aiEditScript, claudeAiEditGenerate } from '../src/lib/ai-regen';
 import { runMain, type Logger } from '../src/lib/logger';
 
 const STATUS_LEVEL: Record<NodeStatus, 'info' | 'warn' | 'error'> = {
@@ -29,8 +30,14 @@ async function main(log: Logger): Promise<number> {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry');
   const lessonId = args.find((a) => !a.startsWith('--'));
+  const flag = (name: string): string | undefined => {
+    const i = args.indexOf(name);
+    return i !== -1 && i + 1 < args.length ? args[i + 1] : undefined;
+  };
+  const sceneId = flag('--scene');
+  const comment = flag('--comment');
   if (!lessonId) {
-    log.error('usage: tsx scripts/regenerate.ts <lessonId> [--dry]');
+    log.error('usage: tsx scripts/regenerate.ts <lessonId> [--scene <id>] [--comment <text>] [--dry]');
     return 2;
   }
 
@@ -38,6 +45,13 @@ async function main(log: Logger): Promise<number> {
   const cache: CacheState = existsSync(cachePath)
     ? JSON.parse(readFileSync(cachePath, 'utf-8'))
     : {};
+
+  // A comment is direction for the AI (#18): apply it to script.json BEFORE the
+  // deterministic DAG, which then cascades the change (plan hashes script.json).
+  if (comment && !dryRun) {
+    log.info('applying AI edit from comment before rebuild', { lessonId, sceneId });
+    await aiEditScript(lessonId, { sceneId, comment }, { generate: claudeAiEditGenerate });
+  }
 
   log.info('regenerating lesson', { lessonId, dryRun });
 
