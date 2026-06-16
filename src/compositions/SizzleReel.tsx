@@ -2,6 +2,9 @@ import React from 'react';
 import {
   AbsoluteFill,
   Sequence,
+  Audio,
+  OffthreadVideo,
+  staticFile,
   useVideoConfig,
   useCurrentFrame,
   interpolate,
@@ -17,7 +20,9 @@ import { ComparisonView } from './scenes/ComparisonView';
 const { fontFamily } = loadFont('normal', { weights: ['400', '600', '800'], subsets: ['latin'] });
 
 export type SizzleFormat = '9:16' | '16:9';
-export type SizzleReelProps = { format?: SizzleFormat };
+/** Optional real footage (Layer A capture clips) + music, by `staticFile` path under public/. */
+export type SizzleCaptures = { chat?: string; content?: string; compare?: string };
+export type SizzleReelProps = { format?: SizzleFormat; captures?: SizzleCaptures; music?: string };
 
 // The tour beats are authored on a 16:9 stage. 16:9 plays the stage full-bleed;
 // 9:16 frames that stage as a content band inside brand chrome (eyebrow + kinetic
@@ -114,13 +119,21 @@ const payoffCard = (
   </AbsoluteFill>
 );
 
-/** The platform-tour beat stack (live-app shells today; swapped for Playwright capture later). */
-const SceneStage: React.FC = () => (
+/** A captured clip filling the stage (replaces a scene shell when footage is provided). */
+const clip = (src: string) => (
+  <OffthreadVideo src={staticFile(src)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+);
+
+/**
+ * The platform-tour beat stack. Each app beat renders its simulated shell, or — when
+ * a capture clip is supplied (Layer A) — the real recorded footage in its place.
+ */
+const SceneStage: React.FC<{ captures?: SizzleCaptures }> = ({ captures }) => (
   <AbsoluteFill>
     <Sequence from={0} durationInFrames={300}><TitleCard /></Sequence>
-    <Sequence from={240} durationInFrames={540}><FadeIn><ChatDemo /></FadeIn></Sequence>
-    <Sequence from={720} durationInFrames={540}><FadeIn><ContentViewer /></FadeIn></Sequence>
-    <Sequence from={1200} durationInFrames={540}><FadeIn><ComparisonView /></FadeIn></Sequence>
+    <Sequence from={240} durationInFrames={540}><FadeIn>{captures?.chat ? clip(captures.chat) : <ChatDemo />}</FadeIn></Sequence>
+    <Sequence from={720} durationInFrames={540}><FadeIn>{captures?.content ? clip(captures.content) : <ContentViewer />}</FadeIn></Sequence>
+    <Sequence from={1200} durationInFrames={540}><FadeIn>{captures?.compare ? clip(captures.compare) : <ComparisonView />}</FadeIn></Sequence>
     <Sequence from={1680} durationInFrames={120}><FadeIn>{payoffCard}</FadeIn></Sequence>
   </AbsoluteFill>
 );
@@ -133,7 +146,7 @@ const SceneStage: React.FC = () => (
  * frame on-brand. Render: `remotion render src/index.ts SizzleReel out/sizzle-16x9.mp4`
  * and `--props '{"format":"9:16"}'` for the vertical cut.
  */
-export const SizzleReel: React.FC<SizzleReelProps> = () => {
+export const SizzleReel: React.FC<SizzleReelProps> = ({ captures, music }) => {
   const { width, height } = useVideoConfig();
   const portrait = height > width;
   const scale = width / STAGE_W;
@@ -143,14 +156,17 @@ export const SizzleReel: React.FC<SizzleReelProps> = () => {
   const band = (
     <div style={{ width, height: bandH, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
       <div style={{ width: STAGE_W, height: STAGE_H, position: 'absolute', top: 0, left: 0, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-        <SceneStage />
+        <SceneStage captures={captures} />
       </div>
     </div>
   );
 
+  const musicBed = music ? <Audio src={staticFile(music)} /> : null;
+
   if (!portrait) {
     return (
       <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase, justifyContent: 'center', alignItems: 'center' }}>
+        {musicBed}
         {band}
         <div style={{ position: 'absolute', left: 0, right: 0, bottom: 80, display: 'flex', justifyContent: 'center', padding: '0 96px' }}>
           <KineticCaption portrait={false} />
@@ -161,6 +177,7 @@ export const SizzleReel: React.FC<SizzleReelProps> = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', paddingTop: 150, paddingBottom: 170 }}>
+      {musicBed}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ width: 48, height: 4, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }} />
         <div style={{ fontFamily, fontWeight: BRAND.font.weights.bold, fontSize: 34, letterSpacing: 2, color: BRAND.colors.text }}>
