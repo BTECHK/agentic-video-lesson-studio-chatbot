@@ -6,6 +6,7 @@ import { getLLMProvider } from '@/lib/llm/provider';
 import { classifyProviderError } from '@/lib/llm/errors';
 import { findRelevantContent, formatContentForPrompt } from '@/lib/content-retrieval';
 import { requireRateLimit } from '@/lib/rate-limit';
+import { logEvent } from '@/lib/log';
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -37,6 +38,7 @@ export async function POST(req: NextRequest) {
 
   sessionStore.addMessage(sessionId, { role: 'user', content: message });
 
+  const startedAt = Date.now();
   try {
     const provider = getLLMProvider();
     const messages = sessionStore.getMessages(sessionId);
@@ -61,12 +63,19 @@ export async function POST(req: NextRequest) {
     // retrieved for this turn (Tutor invariant, #64).
     const groundedCitations = keepGroundedCitations(citations, tools.map(t => t.name));
 
+    logEvent('chat.completed', {
+      provider: provider.constructor.name,
+      mode,
+      accessMode: session.accessMode,
+      citations: groundedCitations.length,
+      ms: Date.now() - startedAt,
+    });
     return NextResponse.json({ message: cleanContent, citations: groundedCitations });
   } catch (error) {
     const { status, message } = classifyProviderError(error);
     // Log the real cause server-side (status + full error) so billing/model/auth
     // failures are diagnosable; return only a user-safe message.
-    console.error('LLM call failed:', { status, error });
+    logEvent('chat.failed', { status, error: String(error), ms: Date.now() - startedAt });
     return NextResponse.json({ error: message }, { status });
   }
 }

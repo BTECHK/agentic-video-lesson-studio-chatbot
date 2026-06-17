@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { resolveGenerationStatus } from '../src/lib/generation-status';
+import {
+  resolveGenerationStatus,
+  isTerminalStatus,
+} from '../src/lib/generation-status';
 
 describe('resolveGenerationStatus (#44)', () => {
   it('no status file → idle', () => {
@@ -91,5 +94,17 @@ describe('resolveGenerationStatus (#44)', () => {
         draftExists: false,
       }),
     ).toBe('canceled');
+  });
+});
+
+describe('isTerminalStatus — write guard (#70 P1.10)', () => {
+  it('done/error/canceled are terminal (immovable)', () => {
+    expect(isTerminalStatus('done')).toBe(true);
+    expect(isTerminalStatus('error')).toBe(true);
+    expect(isTerminalStatus('canceled')).toBe(true);
+  });
+
+  it('running is not terminal (still settleable/cancelable)', () => {
+    expect(isTerminalStatus('running')).toBe(false);
   });
 });

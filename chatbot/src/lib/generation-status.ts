@@ -58,3 +58,12 @@ export function resolveGenerationStatus(input: ResolveInput): GenerationStatus {
 
   return draftFresh ? 'done' : 'error';
 }
+
+/**
+ * done/error/canceled are settled — once reached, the job never moves again.
+ * Guards status-file writes (#70 P1.10): a cancel arriving after the job already
+ * settled `done` must not clobber it back to `canceled`.
+ */
+export function isTerminalStatus(status: RecordedStatus): boolean {
+  return status === 'done' || status === 'error' || status === 'canceled';
+}

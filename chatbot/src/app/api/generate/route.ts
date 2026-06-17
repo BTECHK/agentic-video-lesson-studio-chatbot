@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { requireOperator } from '@/lib/operator-auth';
 import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
+import { logEvent } from '@/lib/log';
 
 /**
  * Studio Generate (CC-passthrough), decoupled from the HTTP request (#44).
@@ -102,6 +103,7 @@ export async function POST(req: NextRequest) {
     startedAt: new Date().toISOString(),
   };
   writeFileSync(statusFile, `${JSON.stringify(record, null, 2)}\n`, 'utf-8');
+  logEvent('generate.spawned', { lessonId, pid: child.pid });
 
   return writeIdempotentResult(IDEMPOTENCY_ROUTE, req, { status: 'running' });
 }

@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { resolveGenerationStatus, type RecordedStatus } from '@/lib/generation-status';
 import { statusFilePath } from '../route';
+import { logEvent } from '@/lib/log';
 
 /**
  * Status of a decoupled Studio Generate job (#44). Reads the status file, probes
@@ -69,6 +70,7 @@ export async function GET(req: NextRequest) {
       `${JSON.stringify({ ...recorded, status }, null, 2)}\n`,
       'utf-8',
     );
+    logEvent('generate.settled', { lessonId, status });
   }
 
   if (status === 'done' && draftExists) {

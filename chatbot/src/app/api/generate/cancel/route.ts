@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
-import type { RecordedStatus } from '@/lib/generation-status';
+import { isTerminalStatus, type RecordedStatus } from '@/lib/generation-status';
+import { logEvent } from '@/lib/log';
 import { statusFilePath } from '../route';
 import { requireOperator } from '@/lib/operator-auth';
 import { killProcessTree, waitForExit } from '@/lib/process-tree';
@@ -47,6 +48,13 @@ export async function POST(req: NextRequest) {
     recorded = null;
   }
 
+  // Already settled (done/error/canceled) — don't clobber the terminal state or
+  // kill an unrelated process that may now own the recycled pid (#70 P1.10).
+  if (recorded && isTerminalStatus(recorded.status)) {
+    logEvent('generate.cancel_noop', { lessonId, status: recorded.status });
+    return NextResponse.json({ status: recorded.status });
+  }
+
   if (recorded?.pid) {
     // Kill the whole tree (shell shim + the real tsx/claude child), then verify it
     // exited before settling the status — otherwise cancel could report success
@@ -60,6 +68,7 @@ export async function POST(req: NextRequest) {
     `${JSON.stringify({ ...(recorded ?? {}), status: 'canceled' }, null, 2)}\n`,
     'utf-8',
   );
+  logEvent('generate.canceled', { lessonId });
 
   return NextResponse.json({ status: 'canceled' });
 }
