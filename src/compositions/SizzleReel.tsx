@@ -22,7 +22,37 @@ const { fontFamily } = loadFont('normal', { weights: ['400', '600', '800'], subs
 export type SizzleFormat = '9:16' | '16:9';
 /** Optional real footage (Layer A capture clips) + music, by `staticFile` path under public/. */
 export type SizzleCaptures = { chat?: string; content?: string; compare?: string };
-export type SizzleReelProps = { format?: SizzleFormat; captures?: SizzleCaptures; music?: string };
+/**
+ * `payoff` is the finished-lesson MP4 (Layer B) — a `staticFile` path under public/.
+ * When set, it plays as the climax beat before the CTA (the "from prompt to
+ * publish-ready video" hard-cut); when absent the beat falls back to a brand card.
+ */
+export type SizzleReelProps = {
+  format?: SizzleFormat;
+  captures?: SizzleCaptures;
+  music?: string;
+  payoff?: string;
+};
+
+/** Beat id. */
+export type SizzleBeatId = 'title' | 'chat' | 'content' | 'compare' | 'payoff' | 'cta';
+
+/**
+ * The reel timeline (#74). One source of truth for beat placement so the cut
+ * points stay coherent (60-frame crossfade overlaps) and the finished-lesson
+ * payoff lands at ~50–58s before the 58–60s CTA. Ends exactly at SIZZLE_DURATION.
+ */
+export interface SizzleBeat { id: SizzleBeatId; from: number; duration: number }
+export const SIZZLE_BEATS: SizzleBeat[] = [
+  { id: 'title', from: 0, duration: 300 },
+  { id: 'chat', from: 240, duration: 540 },
+  { id: 'content', from: 720, duration: 540 },
+  { id: 'compare', from: 1200, duration: 360 },
+  { id: 'payoff', from: 1500, duration: 240 },
+  { id: 'cta', from: 1740, duration: 60 },
+];
+
+const beat = (id: SizzleBeatId): SizzleBeat => SIZZLE_BEATS.find((b) => b.id === id)!;
 
 // The tour beats are authored on a 16:9 stage. 16:9 plays the stage full-bleed;
 // 9:16 frames that stage as a content band inside brand chrome (eyebrow + kinetic
@@ -53,8 +83,8 @@ const CAPTIONS: { start: number; end: number; text: string }[] = [
   { start: 0, end: 240, text: 'What if an outline became a finished lesson — automatically?' },
   { start: 240, end: 720, text: 'Ask. Outline. Go.' },
   { start: 720, end: 1200, text: 'Outline → Lesson Plan → Script.' },
-  { start: 1200, end: 1680, text: '3 quality gates. Automatically.' },
-  { start: 1680, end: 1800, text: 'From prompt to publish-ready.' },
+  { start: 1200, end: 1500, text: '3 quality gates. Automatically.' },
+  { start: 1500, end: 1740, text: 'From prompt to publish-ready video.' },
 ];
 
 const KineticCaption: React.FC<{ portrait: boolean }> = ({ portrait }) => {
@@ -80,6 +110,11 @@ const KineticCaption: React.FC<{ portrait: boolean }> = ({ portrait }) => {
         maxWidth: portrait ? 920 : 1400,
         opacity,
         transform: `translateY(${ty}px)`,
+        // Linen scrim so the caption stays legible over footage (the payoff video);
+        // invisible over the linen-background tour beats. 4px radius — brand.
+        backgroundColor: 'rgba(237, 232, 227, 0.86)',
+        padding: portrait ? '16px 30px' : '12px 28px',
+        borderRadius: BRAND.radius,
       }}
     >
       {active.text}
@@ -125,16 +160,19 @@ const clip = (src: string) => (
 );
 
 /**
- * The platform-tour beat stack. Each app beat renders its simulated shell, or — when
- * a capture clip is supplied (Layer A) — the real recorded footage in its place.
+ * The platform-tour beat stack, placed from SIZZLE_BEATS. Each app beat renders its
+ * simulated shell, or — when a capture clip is supplied (Layer A) — the real recorded
+ * footage in its place. The `payoff` beat hard-cuts to the finished lesson MP4
+ * (Layer B) when provided, else a brand card so the prop-less render stays on-brand.
  */
-const SceneStage: React.FC<{ captures?: SizzleCaptures }> = ({ captures }) => (
+const SceneStage: React.FC<{ captures?: SizzleCaptures; payoff?: string }> = ({ captures, payoff }) => (
   <AbsoluteFill>
-    <Sequence from={0} durationInFrames={300}><TitleCard /></Sequence>
-    <Sequence from={240} durationInFrames={540}><FadeIn>{captures?.chat ? clip(captures.chat) : <ChatDemo />}</FadeIn></Sequence>
-    <Sequence from={720} durationInFrames={540}><FadeIn>{captures?.content ? clip(captures.content) : <ContentViewer />}</FadeIn></Sequence>
-    <Sequence from={1200} durationInFrames={540}><FadeIn>{captures?.compare ? clip(captures.compare) : <ComparisonView />}</FadeIn></Sequence>
-    <Sequence from={1680} durationInFrames={120}><FadeIn>{payoffCard}</FadeIn></Sequence>
+    <Sequence from={beat('title').from} durationInFrames={beat('title').duration}><TitleCard /></Sequence>
+    <Sequence from={beat('chat').from} durationInFrames={beat('chat').duration}><FadeIn>{captures?.chat ? clip(captures.chat) : <ChatDemo />}</FadeIn></Sequence>
+    <Sequence from={beat('content').from} durationInFrames={beat('content').duration}><FadeIn>{captures?.content ? clip(captures.content) : <ContentViewer />}</FadeIn></Sequence>
+    <Sequence from={beat('compare').from} durationInFrames={beat('compare').duration}><FadeIn>{captures?.compare ? clip(captures.compare) : <ComparisonView />}</FadeIn></Sequence>
+    <Sequence from={beat('payoff').from} durationInFrames={beat('payoff').duration}><FadeIn>{payoff ? clip(payoff) : payoffCard}</FadeIn></Sequence>
+    <Sequence from={beat('cta').from} durationInFrames={beat('cta').duration}><FadeIn>{payoffCard}</FadeIn></Sequence>
   </AbsoluteFill>
 );
 
@@ -146,7 +184,7 @@ const SceneStage: React.FC<{ captures?: SizzleCaptures }> = ({ captures }) => (
  * frame on-brand. Render: `remotion render src/index.ts SizzleReel out/sizzle-16x9.mp4`
  * and `--props '{"format":"9:16"}'` for the vertical cut.
  */
-export const SizzleReel: React.FC<SizzleReelProps> = ({ captures, music }) => {
+export const SizzleReel: React.FC<SizzleReelProps> = ({ captures, music, payoff }) => {
   const { width, height } = useVideoConfig();
   const portrait = height > width;
   const scale = width / STAGE_W;
@@ -156,7 +194,7 @@ export const SizzleReel: React.FC<SizzleReelProps> = ({ captures, music }) => {
   const band = (
     <div style={{ width, height: bandH, position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
       <div style={{ width: STAGE_W, height: STAGE_H, position: 'absolute', top: 0, left: 0, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-        <SceneStage captures={captures} />
+        <SceneStage captures={captures} payoff={payoff} />
       </div>
     </div>
   );
