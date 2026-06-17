@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import type { NarrationWord } from '../../../content/schemas/lesson';
 import { narrationToPages } from '../../lib/captions';
-import { fontFamily, BRAND, MUTED, HAIRLINE } from './shared';
+import { fontFamily, BRAND, MUTED } from './shared';
 
 /**
  * Word-synced caption band for a lesson scene. Words are scene-relative (ms
@@ -38,7 +38,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 96,
+        bottom: 52,
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',
@@ -47,14 +47,16 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
     >
       <div
         style={{
-          maxWidth: 1280,
-          padding: '20px 36px',
-          backgroundColor: 'rgba(237,232,227,0.82)',
-          border: `1px solid ${HAIRLINE}`,
+          maxWidth: 1180,
+          padding: '8px 26px',
+          // Borderless, soft frosted backing — reads as a clean subtitle, not a
+          // boxed UI chip. Blur keeps it legible over content without a hard edge.
+          backgroundColor: 'rgba(237,232,227,0.55)',
           borderRadius: BRAND.radius,
-          backdropFilter: 'blur(6px)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
           fontFamily,
-          fontSize: 40,
+          fontSize: 34,
           fontWeight: BRAND.font.weights.bold,
           lineHeight: 1.3,
           textAlign: 'center',
