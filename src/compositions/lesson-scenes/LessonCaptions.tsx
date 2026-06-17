@@ -38,7 +38,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 52,
+        bottom: 72,
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',

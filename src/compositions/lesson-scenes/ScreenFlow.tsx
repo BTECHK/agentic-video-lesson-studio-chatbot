@@ -413,44 +413,49 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
   delay,
 }) => {
   const pop = usePopIn(delay);
+  // Styled as a finished generated output — accent rule + 'Generated' kicker +
+  // the result text as readable content, then a couple of faint body lines — so
+  // it reads as produced output, not a skeleton with a developer note under it.
   return (
     <div
       style={{
         ...pop,
         borderRadius: BRAND.radius,
         border: `1px solid ${HAIRLINE}`,
+        borderLeft: `3px solid ${BRAND.colors.accent}`,
         backgroundColor: BRAND.colors.bgBase,
-        padding: 18,
+        padding: '16px 18px',
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
       }}
     >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ width: 7, height: 7, borderRadius: 999, backgroundColor: BRAND.colors.accent }} />
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: BRAND.font.weights.bold,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: BRAND.colors.accent,
+          }}
+        >
+          Generated
+        </span>
+      </div>
       <div
         style={{
-          height: 10,
-          width: '70%',
-          borderRadius: 4,
-          backgroundColor: HAIRLINE,
-        }}
-      />
-      <div
-        style={{
-          height: 10,
-          width: '90%',
-          borderRadius: 4,
-          backgroundColor: HAIRLINE,
-        }}
-      />
-      <div
-        style={{
-          fontSize: 17,
-          color: MUTED,
-          lineHeight: 1.35,
+          fontSize: 18,
+          fontWeight: BRAND.font.weights.semiBold,
+          color: BRAND.colors.text,
+          lineHeight: 1.4,
         }}
       >
         {step.uiState}
       </div>
+      <div style={{ height: 9, width: '88%', borderRadius: 4, backgroundColor: HAIRLINE }} />
+      <div style={{ height: 9, width: '72%', borderRadius: 4, backgroundColor: HAIRLINE }} />
     </div>
   );
 };

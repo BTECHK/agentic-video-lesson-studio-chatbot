@@ -47,7 +47,14 @@ const KNOWN: Record<string, React.ReactNode> = {
   grok: <path d="M58 12 L84 12 L42 88 L16 88 Z" fill="currentColor" />,
 };
 
+// Distinct monograms — used at small sizes where the geometric glyphs blur into
+// undifferentiated dots, and as the fallback for tools without a glyph.
 const MONOGRAMS: Record<string, string> = {
+  chatgpt: 'GPT',
+  claude: 'Cl',
+  gemini: 'Ge',
+  perplexity: 'Px',
+  grok: 'Gk',
   codex: 'Cx',
   deepseek: 'DS',
   manus: 'Mn',
@@ -55,6 +62,9 @@ const MONOGRAMS: Record<string, string> = {
   comet: 'Cm',
   cowork: 'Cw',
 };
+
+// Below this tile size the SVG glyphs don't resolve — use the monogram instead.
+const GLYPH_MIN_SIZE = 34;
 
 function toolKey(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -69,16 +79,24 @@ function monogram(name: string): string {
 
 export const ToolMark: React.FC<{ name: string; size?: number }> = ({ name, size = 36 }) => {
   const glyph = KNOWN[toolKey(name)];
-  if (glyph) {
+  if (glyph && size >= GLYPH_MIN_SIZE) {
     return (
       <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
         {glyph}
       </svg>
     );
   }
+  const mono = monogram(name);
   return (
-    <span style={{ fontWeight: BRAND.font.weights.extraBold, fontSize: size, lineHeight: 1 }}>
-      {monogram(name)}
+    <span
+      style={{
+        fontWeight: BRAND.font.weights.extraBold,
+        fontSize: Math.round(size * (mono.length >= 3 ? 0.72 : 0.92)),
+        lineHeight: 1,
+        letterSpacing: '-0.02em',
+      }}
+    >
+      {mono}
     </span>
   );
 };
