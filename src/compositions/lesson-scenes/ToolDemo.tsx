@@ -2,6 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolDemoContent } from './content-types';
+import { ToolMark } from './ToolMark';
 import {
   BRAND,
   MUTED,
@@ -86,7 +87,7 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
               fontSize: 22,
             }}
           >
-            {c.tool.name.charAt(0)}
+            <ToolMark name={c.tool.name} size={24} />
           </div>
           <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 24 }}>{c.tool.name}</div>
         </div>

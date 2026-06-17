@@ -3,6 +3,7 @@ import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolCardRevealContent } from './content-types';
 import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
+import { ToolMark } from './ToolMark';
 
 const CARD_BG = '#F7F4EF';
 
@@ -87,7 +88,7 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
           fontSize: 34,
         }}
       >
-        {name.charAt(0)}
+        <ToolMark name={name} size={38} />
       </div>
       <div
         style={{

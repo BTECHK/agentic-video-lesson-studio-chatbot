@@ -363,12 +363,48 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames }) => {
     .map((step, i) => ({ step, i }))
     .filter(({ step }) => step.action === 'reveal');
 
+  // A split flow with no reveal steps (e.g. a pure settings form) would leave the
+  // right panel blank, which reads as half-rendered. Show a calm "applied" state
+  // so the preview pane always carries weight.
+  if (revealSteps.length === 0) {
+    return <AppliedState />;
+  }
+
   return (
     <>
       {revealSteps.map(({ step, i }) => (
         <RevealBlock key={step.id} step={step} delay={stepStartFrames[i] ?? 0} />
       ))}
     </>
+  );
+};
+
+/** Settled "saved / applied" confirmation for reveal-less split flows. */
+const AppliedState: React.FC = () => {
+  const pop = usePopIn(40);
+  return (
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ ...pop, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+        <div
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 999,
+            backgroundColor: BRAND.colors.accent,
+            color: BRAND.colors.bgBase,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 13 L10 18 L19 6" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 24, color: BRAND.colors.text }}>Saved</div>
+        <div style={{ fontSize: 18, color: MUTED }}>Applied across your chats</div>
+      </div>
+    </div>
   );
 };
 

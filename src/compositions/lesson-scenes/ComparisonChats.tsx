@@ -2,6 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ComparisonChatsContent } from './content-types';
+import { ToolMark } from './ToolMark';
 import {
   BRAND,
   MUTED,
@@ -131,7 +132,7 @@ const ChatWindow: React.FC<{
             fontSize: 22,
           }}
         >
-          {name.charAt(0)}
+          <ToolMark name={name} size={24} />
         </div>
         <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 26 }}>{name}</div>
       </div>
