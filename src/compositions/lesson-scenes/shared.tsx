@@ -1,12 +1,36 @@
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
-import { loadFont } from '@remotion/google-fonts/Syne';
+import {
+  AbsoluteFill,
+  useCurrentFrame,
+  useVideoConfig,
+  spring,
+  interpolate,
+  staticFile,
+  delayRender,
+  continueRender,
+} from 'remotion';
 import { BRAND, LEADING, space } from '../../brand/tokens';
 
-const { fontFamily } = loadFont('normal', {
-  weights: ['400', '600', '700', '800'],
-  subsets: ['latin'],
-});
+/**
+ * Load Syne from the bundled local TTF instead of Google Fonts, so unattended
+ * batch renders never depend on network reachability — a single gstatic DNS blip
+ * otherwise fails the whole frame (ERR_NAME_NOT_RESOLVED) and can hang the render
+ * until the watchdog kills it. `.catch` continues the render with the system font
+ * rather than hanging forever if the local face ever fails to parse.
+ */
+const fontFamily = 'Syne';
+if (typeof document !== 'undefined') {
+  const handle = delayRender('load-syne-local');
+  new FontFace(fontFamily, `url(${staticFile('fonts/Syne-Variable.ttf')}) format('truetype')`, {
+    weight: '400 800',
+  })
+    .load()
+    .then((loaded) => {
+      document.fonts.add(loaded);
+      continueRender(handle);
+    })
+    .catch(() => continueRender(handle));
+}
 
 export { fontFamily, BRAND };
 
