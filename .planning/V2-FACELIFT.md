@@ -25,11 +25,22 @@ per-scene durations are unchanged.
 - `gate:layout` PASS (0 violations) on **all 7** lessons.
 - v2 stills reviewed for every used scene type — production-grade, on-brand.
 
-## Status / remaining
-- [ ] Full v2 MP4 render of 7 lessons → `out/v2/` (running).
-- [ ] gate:timing spot-check (durations provably unchanged) + visual MP4 spot-check.
-- [ ] Sizzle v2 render (16:9 + 9:16) → `out/v2/`.
-- [ ] Publish v2 to Drive (`npm run publish:drive -- <id> --v2`) — needs Drive mounted.
+## Status / remaining — COMPLETE (2026-06-20)
+- [x] Full v2 MP4 render of 7 lessons → `out/v2/` (7/7, 0 failures).
+- [x] Duration parity verified: every v1↔v2 MP4 duration identical to the µs
+      (audio stays in sync) — proves render-layer-only.
+- [x] Visual MP4 spot-checks — comparison-chats (windows+tether+chrome),
+      quote-card, etc. render the v2 look in the actual MP4s.
+- [x] Sizzle v2 render (16:9 + 9:16) → `out/v2/sizzle-16x9.mp4` / `sizzle-9x16.mp4`
+      (payoff rebuilt from a v2 lesson clip).
+- [x] Published to Drive: all 7 as `N.M Video v2.mp4` beside v1 in each Lesson
+      folder; both sizzle cuts in `00 — START HERE/` as `… Sizzle Reel v2[.../ (Vertical)].mp4`.
+
+## Follow-up polish (optional, non-blocking)
+- Sizzle "Content" beat reads a touch sparse mid-reveal (pre-existing shell timing,
+  now restyled) — could tighten the reveal choreography if desired.
+- 4 scene types restyled but unused by current lessons (demo-cue, dig-deeper,
+  preview-band, setup-checklist) — ready when a future lesson needs them.
 
 ## Notes
 - Scene types NOT used by any of the 7 lessons (restyled for future only):
