@@ -2,12 +2,20 @@ import React from 'react';
 import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { JourneyMapContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, Pop } from './shared';
+import { BRAND } from '../../brand/tokens';
+import { GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, Pop } from './shared';
 
 /**
- * `journey-map` — "you are here" within a multi-step path. A track line draws
- * across, stops pop in (staggered), the accent fill animates to the active
- * stop, and a "You are here" pill drops below it. Beats per scene-catalog.
+ * `journey-map` (v2) — "you are here" on a multi-step track.
+ *
+ * v2 deltas:
+ * - background track hairline uses `borderStrong` (was HAIRLINE raw)
+ * - stop dots: done = accent filled, active = accent filled + `accentSoft` 8px
+ *   glow ring (bigger dot), todo = bgCard + border
+ * - accent fill animates along the track to the active stop
+ * - "You are here" pill — accent bg, bgBase text — pops below the active stop
+ * - Labels in textMuted, active label in accent
+ * All motion settles within first ~7s then holds.
  */
 export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as JourneyMapContent;
@@ -17,9 +25,9 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
   const isDestination = c.variant === 'destination';
   const activeIndex = isDestination ? n - 1 : Math.max(0, c.stops.findIndex((s) => s.state === 'active'));
   const x0 = 1 / (2 * n); // center of first stop (fraction of width)
-  const xa = isDestination ? 1 - x0 : (activeIndex + 0.5) / n; // center of active stop or full path
+  const xa = isDestination ? 1 - x0 : (activeIndex + 0.5) / n;
 
-  // Track draws 1.5s in; accent fill follows at 2.0s.
+  // Track draws at 1.5s; accent fill follows at 2.0s — both settle well within 7s.
   const trackProgress = interpolate(frame, [45, 75], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -31,7 +39,7 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
     easing: Easing.bezier(...GLIDE),
   });
 
-  const trackTop = 70; // px from top of the map block to the dot centerline
+  const trackTop = 70; // px from top of map block to dot centerline
 
   return (
     <SceneFrame align="flex-start">
@@ -42,26 +50,26 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
       <SceneSub delay={26}>{c.sub}</SceneSub>
 
       <div style={{ position: 'relative', width: '100%', height: 320, marginTop: 40 }}>
-        {/* base track */}
+        {/* Base track — borderStrong hairline */}
         <div
           style={{
             position: 'absolute',
             top: trackTop,
             left: `${x0 * 100}%`,
             width: `${(1 - 2 * x0) * 100 * trackProgress}%`,
-            height: 4,
-            backgroundColor: HAIRLINE,
+            height: 2,
+            backgroundColor: BRAND.colors.borderStrong,
             borderRadius: BRAND.radius,
           }}
         />
-        {/* accent fill to active */}
+        {/* Accent fill animates to active stop */}
         <div
           style={{
             position: 'absolute',
             top: trackTop,
             left: `${x0 * 100}%`,
             width: `${(xa - x0) * 100 * fillProgress}%`,
-            height: 4,
+            height: 2,
             backgroundColor: BRAND.colors.accent,
             borderRadius: BRAND.radius,
           }}
@@ -82,29 +90,33 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                 <Dot state={stop.state} />
               </Pop>
               <Pop delay={50 + i * 4} style={{ marginTop: 24, textAlign: 'center', maxWidth: 280 }}>
+                {/* Label — textMuted unless active */}
                 <div
                   style={{
                     fontWeight: BRAND.font.weights.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                     letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: stop.state === 'todo' ? MUTED : BRAND.colors.accent,
+                    textTransform: 'uppercase' as const,
+                    color: stop.state === 'active' ? BRAND.colors.accent : BRAND.colors.textMuted,
                   }}
                 >
                   {stop.label}
                 </div>
+                {/* Stop title */}
                 <div
                   style={{
                     marginTop: 8,
                     fontWeight: BRAND.font.weights.semiBold,
-                    fontSize: 26,
+                    fontSize: 24,
                     lineHeight: 1.2,
-                    color: stop.state === 'todo' ? MUTED : BRAND.colors.text,
+                    color: stop.state === 'todo' ? BRAND.colors.textMuted : BRAND.colors.text,
                   }}
                 >
                   {stop.title}
                 </div>
               </Pop>
+
+              {/* "You are here" pill — accent bg, bgBase text — only for active non-destination */}
               {stop.state === 'active' && !isDestination && (
                 <Pop delay={90} style={{ marginTop: 18 }}>
                   <div
@@ -112,11 +124,11 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                       backgroundColor: BRAND.colors.accent,
                       color: BRAND.colors.bgBase,
                       fontWeight: BRAND.font.weights.bold,
-                      fontSize: 18,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      padding: '8px 16px',
-                      borderRadius: BRAND.radius,
+                      fontSize: 16,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase' as const,
+                      padding: '8px 18px',
+                      borderRadius: 999,
                     }}
                   >
                     You are here
@@ -131,10 +143,19 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
   );
 };
 
+/**
+ * Stop dot — v2 variants:
+ * - done:   accent filled, no ring
+ * - active: accent filled, larger, accentSoft 8px glow ring
+ * - todo:   bgCard fill, borderStrong border
+ */
 const Dot: React.FC<{ state: 'done' | 'active' | 'todo' }> = ({ state }) => {
   const size = state === 'active' ? 40 : 28;
-  const bg =
-    state === 'todo' ? BRAND.colors.bgBase : BRAND.colors.accent;
+
+  const bg = state === 'todo' ? BRAND.colors.bgCard : BRAND.colors.accent;
+  const border = state === 'todo' ? BRAND.colors.borderStrong : BRAND.colors.accent;
+  const ring = state === 'active' ? `0 0 0 8px ${BRAND.colors.accentSoft}` : 'none';
+
   return (
     <div
       style={{
@@ -142,8 +163,8 @@ const Dot: React.FC<{ state: 'done' | 'active' | 'todo' }> = ({ state }) => {
         height: size,
         borderRadius: '50%',
         backgroundColor: bg,
-        border: `4px solid ${state === 'todo' ? HAIRLINE : BRAND.colors.accent}`,
-        boxShadow: state === 'active' ? `0 0 0 8px rgba(139,38,53,0.14)` : 'none',
+        border: `2px solid ${border}`,
+        boxShadow: ring,
       }}
     />
   );

@@ -1,18 +1,19 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AuditQuadrantContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, SceneFrame, Eyebrow, SceneTitle, Glide } from './shared';
-
-const CARD_BG = '#F7F4EF';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { SceneFrame, Eyebrow, SceneTitle, Glide } from './shared';
 
 type QuadrantId = 'tl' | 'tr' | 'bl' | 'br';
 
 /**
- * `audit-quadrant` — the two-axis grid:
- * Y = axis A (high → low), X = axis B (low → high). Real tasks are
- * plotted into their quadrant as pills, each tagged with the AI capability it
- * maps to. Built because feature-grid cards cannot show the grid itself —
- * the outline specifies "real tasks mapped to the grid".
+ * `audit-quadrant` (v2) — two-axis 2×2 grid.
+ *
+ * v2 deltas (from old flat CARD_BG + HAIRLINE border):
+ * - Each quadrant zone is a floating tile: bgCard + 1px border + radiusWindow (14) + SHADOW.card
+ * - Axis labels are accent uppercase eyebrow style (was textMuted MUTED)
+ * - Quadrant titles bold; task items in textMuted
+ * - All entrance stagger resolves within first ~7s; layout held from there.
  */
 export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as AuditQuadrantContent;
@@ -25,26 +26,34 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
   };
   c.tasks.forEach((t) => byQuadrant[t.quadrant].push(t));
 
+  // Axis label style — accent uppercase eyebrow
   const axisLabel: React.CSSProperties = {
     position: 'absolute',
     fontWeight: BRAND.font.weights.bold,
     fontSize: 15,
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    color: MUTED,
+    color: BRAND.colors.accent,
     backgroundColor: BRAND.colors.bgBase,
     padding: '2px 12px',
   };
 
-  const zone = (q: QuadrantId): React.CSSProperties => ({
+  // Zone positioning for each quadrant's floating tile
+  const zoneStyle = (q: QuadrantId): React.CSSProperties => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'column',
-    gap: 14,
-    ...(q === 'tl' && { left: '5%', top: 44, alignItems: 'flex-start' }),
-    ...(q === 'tr' && { right: '5%', top: 44, alignItems: 'flex-end' }),
-    ...(q === 'bl' && { left: '5%', bottom: 44, alignItems: 'flex-start' }),
-    ...(q === 'br' && { right: '5%', bottom: 44, alignItems: 'flex-end' }),
+    gap: 10,
+    // Tile appearance — the v2 floating card look
+    background: BRAND.colors.bgCard,
+    border: `1px solid ${BRAND.colors.border}`,
+    borderRadius: BRAND.radiusWindow,
+    boxShadow: SHADOW.card,
+    padding: '20px 24px',
+    ...(q === 'tl' && { left: '3%', top: 10, right: '53%' }),
+    ...(q === 'tr' && { right: '3%', top: 10, left: '53%' }),
+    ...(q === 'bl' && { left: '3%', bottom: 10, right: '53%', top: '52%' }),
+    ...(q === 'br' && { right: '3%', bottom: 10, left: '53%', top: '52%' }),
   });
 
   let pillIndex = 0;
@@ -56,16 +65,16 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
         {c.title}
       </SceneTitle>
 
-      <div style={{ position: 'relative', width: '100%', height: 440, marginTop: 4 }}>
-        {/* axes */}
+      <div style={{ position: 'relative', width: '100%', height: 480, marginTop: 4 }}>
+        {/* Axes — borderStrong hairlines */}
         <div
           style={{
             position: 'absolute',
             left: '50%',
             top: 0,
             bottom: 0,
-            width: 2,
-            backgroundColor: HAIRLINE,
+            width: 1,
+            backgroundColor: BRAND.colors.borderStrong,
           }}
         />
         <div
@@ -74,16 +83,16 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
             top: '50%',
             left: 0,
             right: 0,
-            height: 2,
-            backgroundColor: HAIRLINE,
+            height: 1,
+            backgroundColor: BRAND.colors.borderStrong,
           }}
         />
 
-        {/* axis labels */}
-        <div style={{ ...axisLabel, left: '50%', top: -12, transform: 'translateX(-50%)' }}>
+        {/* Axis labels — accent eyebrow style */}
+        <div style={{ ...axisLabel, left: '50%', top: -14, transform: 'translateX(-50%)' }}>
           {c.yAxis.top}
         </div>
-        <div style={{ ...axisLabel, left: '50%', bottom: -12, transform: 'translateX(-50%)' }}>
+        <div style={{ ...axisLabel, left: '50%', bottom: -14, transform: 'translateX(-50%)' }}>
           {c.yAxis.bottom}
         </div>
         <div style={{ ...axisLabel, left: 0, top: '50%', transform: 'translateY(-50%)' }}>
@@ -93,37 +102,43 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
           {c.xAxis.right}
         </div>
 
-        {/* plotted tasks */}
+        {/* Quadrant floating tiles */}
         {(Object.keys(byQuadrant) as QuadrantId[]).map((q) => (
-          <div key={q} style={zone(q)}>
+          <div key={q} style={zoneStyle(q)}>
             {byQuadrant[q].map((t) => {
               const delay = 42 + pillIndex++ * 9;
               return (
-                <Glide key={t.id} delay={delay} fromY={22}>
+                <Glide key={t.id} delay={delay} fromY={16}>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 16,
-                      backgroundColor: CARD_BG,
-                      border: `1px solid ${HAIRLINE}`,
-                      borderRadius: BRAND.radius,
-                      padding: '14px 22px',
+                      gap: 12,
                     }}
                   >
-                    <span style={{ fontWeight: BRAND.font.weights.semiBold, fontSize: 25 }}>
+                    {/* Task label */}
+                    <span
+                      style={{
+                        fontWeight: BRAND.font.weights.semiBold,
+                        fontSize: 22,
+                        color: BRAND.colors.textMuted,
+                        flex: 1,
+                      }}
+                    >
                       {t.label}
                     </span>
+                    {/* Capability tag — accent accentSoft pill */}
                     <span
                       style={{
                         fontWeight: BRAND.font.weights.bold,
-                        fontSize: 13,
+                        fontSize: 12,
                         letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
+                        textTransform: 'uppercase' as const,
                         color: BRAND.colors.accent,
-                        backgroundColor: 'rgba(139,38,53,0.08)',
+                        backgroundColor: BRAND.colors.accentSoft,
                         borderRadius: BRAND.radius,
                         padding: '4px 10px',
+                        whiteSpace: 'nowrap' as const,
                       }}
                     >
                       {t.cap}

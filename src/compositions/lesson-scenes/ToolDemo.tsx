@@ -3,26 +3,18 @@ import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolDemoContent } from './content-types';
 import { ToolMark } from './ToolMark';
-import {
-  BRAND,
-  MUTED,
-  HAIRLINE,
-  SceneFrame,
-  Eyebrow,
-  renderAccented,
-  useGlideIn,
-  usePopIn,
-} from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, renderAccented, useGlideIn, usePopIn } from './shared';
+import { Pinwheel, Window } from './primitives';
 
-const CARD_BG = '#F7F4EF';
-const ACCENT_TINT = 'rgba(139,38,53,0.10)';
+const ACCENT_TINT = BRAND.colors.accentSoft;
 
 /**
- * `tool-demo` — an ANIMATED in-tool simulation (no footage). A single mock tool
- * window shows the user's prompt, a brief "generating" state, then 1–3 output
- * tiles reveal (image / file / slides / app), so a capability is *shown* being
- * produced rather than told on a slide. Outputs are clearly stylized
- * representations — never a fabricated real screenshot.
+ * `tool-demo` (v2) — an ANIMATED in-tool simulation (no footage). Uses the
+ * `Window` primitive (card-white, header with mark+title, SHADOW.window). A
+ * prompt types into the composer (`TypeOn`), then a `Pinwheel` "generating"
+ * beat, then output tiles reveal as `bgCard` + `SHADOW.card` tiles. All motion
+ * settles within the first ~7s then holds.
  */
 export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as ToolDemoContent;
@@ -32,10 +24,13 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
   const win = useGlideIn(30, 30);
   const caption = useGlideIn(150, 16);
 
-  // Phases (scene-relative seconds): prompt settles ~1s, "generating" 1.4–2.4s,
+  // Phases (scene-relative seconds): prompt types 0→1.4s, "generating" 1.4–2.4s,
   // outputs reveal from ~2.6s, all settled well before the ~5s still frame.
+  const promptTypeEnd = Math.round(1.4 * fps);
   const generating = frame > 1.4 * fps && frame < 2.4 * fps;
-  const outputsStart = 2.6 * fps;
+  const outputsStart = Math.round(2.6 * fps);
+
+  const mark = <ToolMark name={c.tool.name} size={26} />;
 
   return (
     <SceneFrame align="flex-start" paddingX={120}>
@@ -52,78 +47,30 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
         {renderAccented(c.title)}
       </h1>
 
-      {/* mock tool window */}
-      <div
-        style={{
-          ...win,
-          width: '100%',
-          backgroundColor: CARD_BG,
-          border: `2px solid ${HAIRLINE}`,
-          borderRadius: BRAND.radius,
-          overflow: 'hidden',
-        }}
+      {/* mock tool window using Window primitive */}
+      <Window
+        title={c.tool.name}
+        mark={mark}
+        composer={c.prompt}
+        composerTyped={[0, promptTypeEnd]}
+        style={{ ...win, width: '100%' }}
+        bodyStyle={{ gap: 18 }}
       >
-        {/* window header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-            padding: '18px 24px',
-            borderBottom: `1px solid ${HAIRLINE}`,
-          }}
-        >
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: BRAND.radius,
-              backgroundColor: BRAND.colors.accent,
-              color: BRAND.colors.bgBase,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: BRAND.font.weights.extraBold,
-              fontSize: 22,
-            }}
-          >
-            <ToolMark name={c.tool.name} size={24} />
+        {/* generating beat: Pinwheel + label */}
+        {generating && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: MUTED, fontSize: 20 }}>
+            <Pinwheel size={28} />
+            <span>Generating…</span>
           </div>
-          <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 24 }}>{c.tool.name}</div>
+        )}
+
+        {/* output tiles — reveal with pop-in stagger */}
+        <div style={{ display: 'flex', gap: 20, opacity: frame >= outputsStart ? 1 : 0 }}>
+          {c.outputs.map((o, i) => (
+            <OutputTile key={o.id} output={o} delay={outputsStart + i * 14} />
+          ))}
         </div>
-
-        {/* body */}
-        <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 22 }}>
-          {/* prompt bar */}
-          <div
-            style={{
-              alignSelf: 'flex-start',
-              maxWidth: '88%',
-              backgroundColor: BRAND.colors.accent,
-              color: BRAND.colors.bgBase,
-              borderRadius: BRAND.radius,
-              padding: '14px 18px',
-              fontSize: 22,
-              lineHeight: 1.4,
-            }}
-          >
-            {c.prompt}
-          </div>
-
-          {/* generating shimmer, then output tiles */}
-          {generating && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: MUTED, fontSize: 20 }}>
-              <Pulse /> Generating…
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: 20, opacity: frame > outputsStart ? 1 : 0 }}>
-            {c.outputs.map((o, i) => (
-              <OutputTile key={o.id} output={o} delay={outputsStart + i * 14} />
-            ))}
-          </div>
-        </div>
-      </div>
+      </Window>
 
       {c.caption && (
         <div
@@ -138,24 +85,6 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
         </div>
       )}
     </SceneFrame>
-  );
-};
-
-const Pulse: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const o = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin((frame / fps) * Math.PI * 3));
-  return (
-    <span
-      style={{
-        width: 14,
-        height: 14,
-        borderRadius: 999,
-        backgroundColor: BRAND.colors.accent,
-        opacity: o,
-        display: 'inline-block',
-      }}
-    />
   );
 };
 
@@ -185,14 +114,15 @@ const TileShell: React.FC<{ delay: number; children: React.ReactNode }> = ({ del
         ...pop,
         flex: 1,
         minWidth: 0,
-        backgroundColor: BRAND.colors.bgBase,
-        border: `1px solid ${HAIRLINE}`,
-        borderRadius: BRAND.radius,
+        backgroundColor: BRAND.colors.bgCard,
+        border: `1px solid ${BRAND.colors.border}`,
+        borderRadius: BRAND.radiusWindow,
         padding: 18,
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
         minHeight: 220,
+        boxShadow: SHADOW.card,
       }}
     >
       {children}
@@ -246,8 +176,8 @@ const OutputTile: React.FC<{
           style={{
             height: 110,
             borderRadius: BRAND.radius,
-            border: `1px solid ${HAIRLINE}`,
-            backgroundColor: CARD_BG,
+            border: `1px solid ${BRAND.colors.border}`,
+            backgroundColor: BRAND.colors.bgAlt,
             padding: 10,
             display: 'flex',
             flexDirection: 'column',
@@ -256,11 +186,11 @@ const OutputTile: React.FC<{
         >
           <div style={{ display: 'flex', gap: 5 }}>
             {[0, 1, 2].map((i) => (
-              <span key={i} style={{ width: 8, height: 8, borderRadius: 999, backgroundColor: HAIRLINE }} />
+              <span key={i} style={{ width: 8, height: 8, borderRadius: 999, backgroundColor: BRAND.colors.borderStrong }} />
             ))}
           </div>
-          <div style={{ height: 9, width: '70%', borderRadius: 4, backgroundColor: HAIRLINE }} />
-          <div style={{ height: 9, width: '90%', borderRadius: 4, backgroundColor: HAIRLINE }} />
+          <div style={{ height: 9, width: '70%', borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+          <div style={{ height: 9, width: '90%', borderRadius: 4, backgroundColor: BRAND.colors.border }} />
           <div
             style={{
               marginTop: 'auto',
@@ -288,7 +218,7 @@ const OutputTile: React.FC<{
             height: 80,
             borderRadius: BRAND.radius,
             backgroundColor: ACCENT_TINT,
-            border: `1px solid ${HAIRLINE}`,
+            border: `1px solid ${BRAND.colors.border}`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -301,9 +231,9 @@ const OutputTile: React.FC<{
           {glyph}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ height: 9, width: 120, borderRadius: 4, backgroundColor: HAIRLINE }} />
-          <div style={{ height: 9, width: 90, borderRadius: 4, backgroundColor: HAIRLINE }} />
-          <div style={{ height: 9, width: 110, borderRadius: 4, backgroundColor: HAIRLINE }} />
+          <div style={{ height: 9, width: 120, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+          <div style={{ height: 9, width: 90, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+          <div style={{ height: 9, width: 110, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
         </div>
       </div>
       <Caption label={label} sub={sub} badge={badge} />

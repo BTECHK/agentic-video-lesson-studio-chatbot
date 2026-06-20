@@ -1,11 +1,13 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AssignmentListContent } from './content-types';
-import { BRAND, MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn } from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn } from './shared';
 
 /**
- * `assignment-list` — pre-class homework. A checkbox + bold task + context per
- * row (staggered in), with an optional accent callout below.
+ * `assignment-list` — pre-class homework. Each task row: accent square
+ * checkbox (4px radius, accent border, accentSoft fill) + bold task + context
+ * in textMuted. Optional callout: bgCard + shadow + accent eyebrow.
  */
 export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as AssignmentListContent;
@@ -23,15 +25,16 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18, width: '100%', marginTop: 16 }}>
         {c.tasks.map((task, i) => (
           <Glide key={task.id} delay={48 + i * 10} fromY={20}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+              {/* Accent square checkbox: 4px radius, accent border, accentSoft fill */}
               <div
                 style={{
                   width: 36,
                   height: 36,
                   borderRadius: BRAND.radius,
-                  border: `3px solid ${BRAND.colors.accent}`,
+                  border: `2px solid ${BRAND.colors.accent}`,
+                  backgroundColor: BRAND.colors.accentSoft,
                   flexShrink: 0,
-                  alignSelf: 'center',
                 }}
               />
               <div style={{ fontSize: 32, lineHeight: 1.35 }}>
@@ -57,9 +60,10 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
             width: '100%',
             marginTop: 16,
             padding: '24px 32px',
-            borderRadius: BRAND.radius,
-            backgroundColor: 'rgba(139,38,53,0.08)',
-            borderLeft: `6px solid ${BRAND.colors.accent}`,
+            borderRadius: BRAND.radiusWindow,
+            backgroundColor: BRAND.colors.bgCard,
+            boxShadow: SHADOW.card,
+            border: `1px solid ${BRAND.colors.border}`,
             boxSizing: 'border-box',
           }}
         >

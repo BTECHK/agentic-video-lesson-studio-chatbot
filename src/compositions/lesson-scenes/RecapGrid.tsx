@@ -1,13 +1,14 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { RecapGridContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, SceneFrame, Eyebrow, SceneTitle, Glide, useGlideIn } from './shared';
-
-const CARD_BG = '#F7F4EF';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, Glide, useGlideIn } from './shared';
 
 /**
- * `recap-grid` — end-of-lesson summary: three numbered cards glide in, then an
- * optional "coming next" preview band slides up beneath them.
+ * `recap-grid` — end-of-lesson summary: three numbered cards glide in (card-
+ * white + shadow + radiusWindow, big crimson numeral), then an optional "Coming
+ * next" preview band slides up (bgCard + 4px accent left rule + accent eyebrow
+ * + bold title + accent arrow).
  */
 export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as RecapGridContent;
@@ -25,28 +26,31 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
           <Glide key={card.id} delay={36 + i * 10} fromY={30} style={{ flex: 1 }}>
             <div
               style={{
-                backgroundColor: CARD_BG,
-                border: `1px solid ${HAIRLINE}`,
-                borderRadius: BRAND.radius,
-                padding: 36,
+                backgroundColor: BRAND.colors.bgCard,
+                border: `1px solid ${BRAND.colors.border}`,
+                borderRadius: BRAND.radiusWindow,
+                padding: '44px 38px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 16,
                 height: '100%',
                 boxSizing: 'border-box',
+                boxShadow: SHADOW.card,
               }}
             >
               <div
                 style={{
-                  fontWeight: BRAND.font.weights.extraBold,
-                  fontSize: 40,
+                  fontWeight: BRAND.font.weights.semiBold,
+                  fontSize: 64,
                   color: BRAND.colors.accent,
                   lineHeight: 1,
+                  letterSpacing: '-0.015em',
+                  fontVariantNumeric: 'tabular-nums',
                 }}
               >
                 {card.n}
               </div>
-              <div style={{ fontWeight: BRAND.font.weights.extraBold, fontSize: 32, lineHeight: 1.1 }}>
+              <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 32, lineHeight: 1.1, marginTop: 6 }}>
                 {card.title}
               </div>
               <div
@@ -70,31 +74,36 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
             ...preview,
             display: 'flex',
             alignItems: 'center',
-            gap: 28,
+            gap: 24,
             width: '100%',
             marginTop: 12,
             padding: '28px 36px',
-            borderRadius: BRAND.radius,
-            backgroundColor: BRAND.colors.accent,
-            color: BRAND.colors.bgBase,
+            backgroundColor: BRAND.colors.bgCard,
+            borderLeft: `4px solid ${BRAND.colors.accent}`,
+            borderRadius: `0 ${BRAND.radius}px ${BRAND.radius}px 0`,
+            boxShadow: SHADOW.card,
             boxSizing: 'border-box',
           }}
         >
-          <div
-            style={{
-              fontWeight: BRAND.font.weights.bold,
-              fontSize: 18,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              opacity: 0.85,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {c.preview.eyebrow}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div
+              style={{
+                fontWeight: BRAND.font.weights.bold,
+                fontSize: 14,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: BRAND.colors.accent,
+              }}
+            >
+              {c.preview.eyebrow}
+            </div>
+            <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 32, lineHeight: 1.05, color: BRAND.colors.text, letterSpacing: '-0.015em' }}>
+              {c.preview.title}
+            </div>
           </div>
-          <div style={{ width: 2, height: 40, backgroundColor: 'rgba(237,232,227,0.4)' }} />
-          <div style={{ fontWeight: BRAND.font.weights.extraBold, fontSize: 38, lineHeight: 1.05 }}>
-            {c.preview.title}
+          <div style={{ flex: 1 }} />
+          <div style={{ fontSize: 32, color: BRAND.colors.accent, fontWeight: BRAND.font.weights.bold }}>
+            →
           </div>
         </div>
       )}

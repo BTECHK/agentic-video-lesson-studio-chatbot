@@ -2,21 +2,23 @@ import React from 'react';
 import { interpolate, useCurrentFrame } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { FeatureGridContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, SceneFrame, Eyebrow, SceneTitle, Glide, renderAccented } from './shared';
-
-const CARD_BG = '#F7F4EF';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, Glide, renderAccented } from './shared';
 
 /**
  * `feature-grid` — named feature categories with one-line descriptions, laid
- * out in a two-column grid. Each card glides in with a stagger.
+ * out in a two-column grid. Each card glides in with a stagger; then each
+ * card "focuses" in turn (accent border + lift + cardHover shadow, others dim
+ * to ~0.6 opacity), before all settle flat.
  */
 export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as FeatureGridContent;
   const frame = useCurrentFrame();
   const hasFocusPass = c.features.some((f) => f.focusAt > 0);
+  // Focus ramps up, holds ~1.3s (39 frames), then ramps back to 0.
   const focusFor = (focusAt: number): number =>
     hasFocusPass
-      ? interpolate(frame, [focusAt - 8, focusAt, focusAt + 22], [0, 1, 0], {
+      ? interpolate(frame, [focusAt - 8, focusAt, focusAt + 39, focusAt + 51], [0, 1, 1, 0], {
           extrapolateLeft: 'clamp',
           extrapolateRight: 'clamp',
         })
@@ -43,32 +45,34 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
           <Glide key={f.id} delay={36 + i * 9} fromY={30}>
             {(() => {
               const focus = focusFor(f.focusAt);
-              const dimmed = activeFocus > 0.1 && focus < 0.1;
+              const isActive = focus > 0.05;
+              const dimmed = activeFocus > 0.1 && !isActive;
               return (
                 <div
                   style={{
-                    backgroundColor: CARD_BG,
-                    border: `1px solid ${focus > 0.2 ? BRAND.colors.accent : HAIRLINE}`,
-                    borderRadius: BRAND.radius,
+                    backgroundColor: BRAND.colors.bgCard,
+                    border: `1px solid ${isActive ? BRAND.colors.accent : BRAND.colors.border}`,
+                    borderRadius: BRAND.radiusWindow,
                     padding: '28px 32px',
                     display: 'flex',
                     gap: 24,
                     alignItems: 'flex-start',
                     height: '100%',
                     boxSizing: 'border-box',
-                    opacity: dimmed ? 0.48 : 1,
-                    transform: `translateY(${-10 * focus}px) scale(${1 + 0.025 * focus})`,
-                    boxShadow: focus > 0.2 ? '0 18px 48px rgba(139,38,53,0.16)' : 'none',
+                    opacity: dimmed ? interpolate(focus, [0, 1], [0.6, 1]) : 1,
+                    transform: `translateY(${interpolate(focus, [0, 1], [0, -6])}px)`,
+                    boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
                   }}
                 >
                   {f.n ? (
                     <div
                       style={{
                         fontWeight: BRAND.font.weights.extraBold,
-                        fontSize: 48,
+                        fontSize: 64,
                         color: BRAND.colors.accent,
                         lineHeight: 1,
-                        minWidth: 70,
+                        minWidth: 80,
+                        fontVariantNumeric: 'tabular-nums',
                       }}
                     >
                       {f.n}
@@ -82,7 +86,7 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                           fontSize: 15,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
-                          color: MUTED,
+                          color: BRAND.colors.accent,
                         }}
                       >
                         {f.cat}

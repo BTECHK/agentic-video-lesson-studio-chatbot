@@ -1,30 +1,27 @@
 import React from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
+import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { VoiceDemoContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
+import { TypeOn, PulseRing } from './primitives';
 
-const CARD_BG = '#F7F4EF';
 const BAR_COUNT = 28;
 
 /**
- * `voice-demo` — a pulsing mic + live waveform + a transcript that types in,
- * illustrating voice/dictation features.
+ * `voice-demo` (v2) — a voice card (`bgCard`, radiusWindow, SHADOW.window)
+ * with a pulsing mic using `PulseRing`, an animated waveform (bars driven by
+ * frame), a mono timer (BRAND.font.mono), and the transcript typing in via
+ * `TypeOn`. All motion settles within the first ~7s then holds.
  */
 export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as VoiceDemoContent;
   const card = useGlideIn(45, 30);
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   // Transcript types between ~2.3s and ~4.5s (settled by the ~5s still).
-  const shown = Math.round(
-    interpolate(frame, [2.3 * fps, 4.5 * fps], [0, c.transcript.length], {
-      extrapolateLeft: 'clamp',
-      extrapolateRight: 'clamp',
-      easing: Easing.bezier(...GLIDE),
-    }),
-  );
+  const { fps } = useVideoConfig();
+  const transcriptStart = Math.round(2.3 * fps);
+  const transcriptDur = Math.round(2.2 * fps);
 
   return (
     <SceneFrame align="flex-start">
@@ -34,27 +31,32 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
       </SceneTitle>
       <SceneSub delay={26}>{c.sub}</SceneSub>
 
+      {/* Voice card — floating window depth */}
       <div
         style={{
           ...card,
           width: '100%',
           marginTop: 24,
           padding: 36,
-          backgroundColor: CARD_BG,
-          border: `2px solid ${HAIRLINE}`,
-          borderRadius: BRAND.radius,
+          backgroundColor: BRAND.colors.bgCard,
+          border: `1px solid ${BRAND.colors.border}`,
+          borderRadius: BRAND.radiusWindow,
+          boxShadow: SHADOW.window,
           boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
           gap: 28,
         }}
       >
+        {/* Mic + waveform + timer row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Mic />
+          <MicButton />
           <Waveform />
           <Timer />
         </div>
-        <div style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: 24 }}>
+
+        {/* Transcript section */}
+        <div style={{ borderTop: `1px solid ${BRAND.colors.border}`, paddingTop: 24 }}>
           <div
             style={{
               fontSize: 16,
@@ -68,7 +70,12 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
             {c.transcriptLabel}
           </div>
           <div style={{ fontSize: 28, lineHeight: 1.5, color: BRAND.colors.text, minHeight: 84 }}>
-            {c.transcript.slice(0, shown)}
+            <TypeOn
+              text={c.transcript}
+              startFrame={transcriptStart}
+              durFrames={transcriptDur}
+              caret={false}
+            />
           </div>
         </div>
       </div>
@@ -76,58 +83,52 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
   );
 };
 
-const Mic: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const pulse = 0.5 + 0.5 * Math.sin((frame / fps) * Math.PI * 2 * 1.4);
-  const ring = interpolate(pulse, [0, 1], [0, 0.35]);
-  return (
-    <div style={{ position: 'relative', width: 72, height: 72, flexShrink: 0 }}>
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          borderRadius: 999,
-          backgroundColor: BRAND.colors.accent,
-          opacity: ring,
-          transform: `scale(${interpolate(pulse, [0, 1], [1, 1.4])})`,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          borderRadius: 999,
-          backgroundColor: BRAND.colors.accent,
-          color: BRAND.colors.bgBase,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 32,
-        }}
-      >
-        ●
-      </div>
+/** Mic circle with three PulseRings expanding outward — the "listening" state. */
+const MicButton: React.FC = () => (
+  <div style={{ position: 'relative', width: 80, height: 80, flexShrink: 0 }}>
+    {/* PulseRing uses frame-driven animation, positioned absolutely to fill the container */}
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <PulseRing size={80} color={BRAND.colors.accent} rings={3} />
     </div>
-  );
-};
+    {/* Mic icon centered on top */}
+    <div
+      style={{
+        position: 'absolute',
+        inset: 18,
+        background: BRAND.colors.accent,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 8px 20px rgba(139,38,53,0.28)',
+      }}
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="9" y="3" width="6" height="12" rx="3" fill={BRAND.colors.bgCard} />
+        <path d="M5 11a7 7 0 0 0 14 0 M12 18v3" stroke={BRAND.colors.bgCard} strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    </div>
+  </div>
+);
 
+/** Animated bar waveform — bar heights driven by frame + index phase. */
 const Waveform: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
   return (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6, height: 72 }}>
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 5, height: 72 }}>
       {Array.from({ length: BAR_COUNT }).map((_, i) => {
-        const h = 0.2 + 0.8 * Math.abs(Math.sin(t * 3 + i * 0.5));
+        const h = 0.15 + 0.85 * Math.abs(Math.sin(t * 3 + i * 0.5));
+        const isActive = i < Math.floor(BAR_COUNT * 0.5);
         return (
           <div
             key={i}
             style={{
               flex: 1,
               height: `${h * 100}%`,
-              backgroundColor: BRAND.colors.accent,
-              opacity: 0.55,
+              backgroundColor: isActive ? BRAND.colors.accent : BRAND.colors.borderStrong,
+              opacity: isActive ? 0.7 : 0.45,
               borderRadius: BRAND.radius,
             }}
           />
@@ -137,6 +138,7 @@ const Waveform: React.FC = () => {
   );
 };
 
+/** Mono recording timer — counts up from frame 0. */
 const Timer: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -149,6 +151,7 @@ const Timer: React.FC = () => {
         fontSize: 30,
         fontWeight: BRAND.font.weights.bold,
         color: MUTED,
+        fontFamily: BRAND.font.mono,
         fontVariantNumeric: 'tabular-nums',
         flexShrink: 0,
       }}

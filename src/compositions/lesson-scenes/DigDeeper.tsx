@@ -1,14 +1,13 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
-import { BRAND, MUTED, HAIRLINE, SceneFrame, Eyebrow, SceneTitle, useGlideIn } from './shared';
-
-const CARD_BG = '#F7F4EF';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, useGlideIn } from './shared';
 
 /**
- * `dig-deeper` — optional background reading. Per the scene catalog this is
- * normally an inline "leave-behind" element rather than a full scene, and its
- * content schema is empty. This standalone fallback renders a branded
- * "optional context" card so the dispatcher has a component for every type.
+ * `dig-deeper` (v2) — optional background-context panel. A `bgCard` +
+ * `border` + `radiusWindow` card with an accent eyebrow/label and body in
+ * `textMuted` / `MUTED`. Card has `SHADOW.card` depth. Mostly static — just
+ * the card entrance glide, then holds.
  */
 export const DigDeeper: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as Record<string, unknown>;
@@ -26,22 +25,54 @@ export const DigDeeper: React.FC<SceneComponentProps> = ({ scene }) => {
       <SceneTitle delay={14} size={66}>
         {title}
       </SceneTitle>
-      <div
-        style={{
-          ...card,
-          width: '100%',
-          marginTop: 8,
-          padding: '32px 36px',
-          backgroundColor: CARD_BG,
-          border: `2px dashed ${HAIRLINE}`,
-          borderRadius: BRAND.radius,
-          boxSizing: 'border-box',
-          fontSize: 28,
-          lineHeight: 1.5,
-          color: MUTED,
-        }}
-      >
-        {body}
+
+      {/* Accent eyebrow label inside the card */}
+      <div style={{ ...card, width: '100%', marginTop: 8 }}>
+        <div
+          style={{
+            padding: '32px 36px',
+            backgroundColor: BRAND.colors.bgCard,
+            border: `1px solid ${BRAND.colors.border}`,
+            borderRadius: BRAND.radiusWindow,
+            boxShadow: SHADOW.card,
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: BRAND.font.weights.bold,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: BRAND.colors.accent,
+              marginBottom: 16,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                display: 'inline-block',
+                width: 28,
+                height: 3,
+                borderRadius: BRAND.radius,
+                backgroundColor: BRAND.colors.accent,
+              }}
+            />
+            Context
+          </div>
+          <div
+            style={{
+              fontSize: 28,
+              lineHeight: 1.55,
+              color: MUTED,
+              fontWeight: BRAND.font.weights.regular,
+            }}
+          >
+            {body}
+          </div>
+        </div>
       </div>
     </SceneFrame>
   );

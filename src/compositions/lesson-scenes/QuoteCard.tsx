@@ -2,7 +2,7 @@ import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { QuoteCardContent } from './content-types';
 import { BRAND, LEADING, space } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, useGlideIn, renderAccented } from './shared';
+import { SceneFrame, Eyebrow, useGlideIn, renderAccented } from './shared';
 
 /**
  * `quote-card` — one Instructor-voice quote that anchors a lesson.
@@ -32,7 +32,7 @@ export const quoteStyles = {
     marginTop: space(4),
     fontWeight: BRAND.font.weights.bold,
     fontSize: 26,
-    color: MUTED,
+    color: BRAND.colors.textMuted,
   } satisfies React.CSSProperties,
 } as const;
 

@@ -2,15 +2,14 @@ import React from 'react';
 import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolCardRevealContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { MUTED, GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
 import { ToolMark } from './ToolMark';
-
-const CARD_BG = '#F7F4EF';
 
 /**
  * `tool-card-reveal` — a landscape of tools, each a card with a monogram,
  * name, tag, and one-liner. Cards glide up in sequence and briefly highlight
- * (accent border + lift) as they enter.
+ * (accent border + lift) as they enter, then settle flat.
  */
 export const ToolCardReveal: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as ToolCardRevealContent;
@@ -38,6 +37,10 @@ export const ToolCardReveal: React.FC<SceneComponentProps> = ({ scene }) => {
   );
 };
 
+// Highlight window: enters at `delay`, peaks for ~1.3s (39 frames), then settles.
+const HIGHLIGHT_RISE = 10;
+const HIGHLIGHT_HOLD = 39; // ~1.3s at 30fps
+
 const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: number }> = ({
   name,
   tag,
@@ -46,32 +49,34 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
 }) => {
   const frame = useCurrentFrame();
   const glide = useGlideIn(delay, 36);
-  // Highlight ramps up as the card enters, then settles back to a hairline.
+
+  // 0 → 1 on entry, holds, then back to 0 once the card has settled.
   const highlight = interpolate(
     frame,
-    [delay, delay + 10, delay + 45],
-    [0, 1, 0],
+    [delay, delay + HIGHLIGHT_RISE, delay + HIGHLIGHT_RISE + HIGHLIGHT_HOLD, delay + HIGHLIGHT_RISE + HIGHLIGHT_HOLD + 12],
+    [0, 1, 1, 0],
     { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.bezier(...GLIDE) },
   );
+
+  const isActive = highlight > 0.05;
 
   return (
     <div
       style={{
         ...glide,
         flex: 1,
-        backgroundColor: CARD_BG,
-        border: `2px solid ${highlight > 0.05 ? BRAND.colors.accent : HAIRLINE}`,
-        borderRadius: BRAND.radius,
+        backgroundColor: BRAND.colors.bgCard,
+        border: `1px solid ${isActive ? BRAND.colors.accent : BRAND.colors.border}`,
+        borderRadius: BRAND.radiusWindow,
         padding: 32,
         display: 'flex',
         flexDirection: 'column',
         gap: 18,
+        boxSizing: 'border-box',
+        // Combine glide translateY with the highlight lift — compound transforms
+        // require a single `transform` string.
         transform: `${glide.transform} translateY(${interpolate(highlight, [0, 1], [0, -6])}px)`,
-        boxShadow: `0 ${interpolate(highlight, [0, 1], [4, 22])}px ${interpolate(
-          highlight,
-          [0, 1],
-          [12, 44],
-        )}px rgba(28,28,28,${interpolate(highlight, [0, 1], [0.05, 0.14])})`,
+        boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
       }}
     >
       <div
@@ -84,8 +89,6 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontWeight: BRAND.font.weights.extraBold,
-          fontSize: 34,
         }}
       >
         <ToolMark name={name} size={38} />

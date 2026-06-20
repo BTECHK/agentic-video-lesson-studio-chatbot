@@ -2,8 +2,8 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ScreenFlowContent } from './content-types';
+import { BRAND, SHADOW } from '../../brand/tokens';
 import {
-  BRAND,
   MUTED,
   HAIRLINE,
   SceneFrame,
@@ -13,8 +13,6 @@ import {
   usePopIn,
   sceneTitleStyle,
 } from './shared';
-
-const CARD_BG = '#F7F4EF';
 
 // Extra frames added per action type on top of `dwell * fps`.
 function actionExtra(action: string, typedText: string | undefined): number {
@@ -88,9 +86,10 @@ export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...win,
           width: '100%',
-          backgroundColor: CARD_BG,
-          border: `2px solid ${HAIRLINE}`,
-          borderRadius: BRAND.radius,
+          backgroundColor: BRAND.colors.bgCard,
+          border: `1px solid ${BRAND.colors.border}`,
+          borderRadius: BRAND.radiusWindow,
+          boxShadow: SHADOW.window,
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -145,7 +144,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
   stepDurations,
   durationInFrames,
 }) => {
-  const leftBg = c.fidelity === 'hybrid' ? 'rgba(28,28,28,0.05)' : CARD_BG;
+  const leftBg = c.fidelity === 'hybrid' ? 'rgba(28,28,28,0.05)' : BRAND.colors.bgCard;
 
   return (
     <div style={{ width: '100%' }}>
@@ -156,7 +155,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
           display: 'flex',
           alignItems: 'center',
           padding: '0 20px',
-          borderBottom: `1px solid ${HAIRLINE}`,
+          borderBottom: `1px solid ${BRAND.colors.border}`,
           gap: 16,
         }}
       >
@@ -204,7 +203,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
               style={{
                 flex: '0 0 44%',
                 backgroundColor: leftBg,
-                borderRight: `1px solid ${HAIRLINE}`,
+                borderRight: `1px solid ${BRAND.colors.border}`,
                 padding: 24,
                 display: 'flex',
                 flexDirection: 'column',
@@ -217,7 +216,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
             <div
               style={{
                 flex: 1,
-                backgroundColor: CARD_BG,
+                backgroundColor: BRAND.colors.bgCard,
                 padding: 24,
                 display: 'flex',
                 flexDirection: 'column',
@@ -297,12 +296,13 @@ const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartF
                 borderRadius: BRAND.radius,
                 border: isActive
                   ? `2px solid ${BRAND.colors.accent}`
-                  : `1px solid ${HAIRLINE}`,
+                  : `1px solid ${BRAND.colors.border}`,
                 padding: '10px 14px',
                 fontSize: 20,
                 minHeight: 44,
                 color: isPast || isActive ? BRAND.colors.text : MUTED,
                 backgroundColor: BRAND.colors.bgBase,
+                boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
               }}
             >
               {displayText || (!isActive && !isPast ? (
@@ -329,13 +329,16 @@ const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartF
                 padding: '10px 14px',
                 fontSize: 18,
                 backgroundColor: isActive
-                  ? 'rgba(139,38,53,0.10)'
+                  ? BRAND.colors.accentSoft
                   : isPast
                   ? 'rgba(28,28,28,0.04)'
                   : BRAND.colors.bgBase,
-                border: `1px solid ${HAIRLINE}`,
+                border: isActive
+                  ? `1px solid ${BRAND.colors.accent}`
+                  : `1px solid ${BRAND.colors.border}`,
                 color: isActive ? BRAND.colors.accent : BRAND.colors.text,
                 fontWeight: isActive ? BRAND.font.weights.bold : BRAND.font.weights.regular,
+                boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
               }}
             >
               {step.target}
@@ -421,13 +424,14 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
       style={{
         ...pop,
         borderRadius: BRAND.radius,
-        border: `1px solid ${HAIRLINE}`,
+        border: `1px solid ${BRAND.colors.border}`,
         borderLeft: `3px solid ${BRAND.colors.accent}`,
-        backgroundColor: BRAND.colors.bgBase,
+        backgroundColor: BRAND.colors.bgCard,
         padding: '16px 18px',
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
+        boxShadow: SHADOW.card,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -517,12 +521,16 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
             style={{
               opacity: isActive || isPast ? opacity : 0.35,
               borderRadius: BRAND.radius,
-              border: `1px solid ${HAIRLINE}`,
+              border: isActive
+                ? `1px solid ${BRAND.colors.accent}`
+                : `1px solid ${BRAND.colors.border}`,
               padding: '12px 16px',
-              backgroundColor: isActive ? 'rgba(139,38,53,0.10)' : CARD_BG,
+              backgroundColor: isActive ? BRAND.colors.accentSoft : BRAND.colors.bgCard,
               display: 'flex',
               flexDirection: 'column',
               gap: 4,
+              boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
+              transform: isActive ? 'translateY(-6px)' : 'none',
             }}
           >
             <div

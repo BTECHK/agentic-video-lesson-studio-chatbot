@@ -1,18 +1,21 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CapabilityTableContent } from './content-types';
-import { BRAND, MUTED, HAIRLINE, SceneFrame, Eyebrow, Glide, useGlideIn } from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { SceneFrame, Eyebrow, Glide, useGlideIn, renderAccented, MUTED } from './shared';
 
 type Cell = 'B' | 'Y' | 'L' | '-';
 
 /**
- * `capability-table` — capability × tool matrix. Header row of tools, then
- * rows fade+slide in (staggered). Cells: B (Best, accent), Y (Yes, neutral),
- * L (Limited, faint), - (none, dash).
+ * `capability-table` (v2) — capability × tool matrix wrapped in a floating
+ * bgCard container. Header row uses bgDark; rows slide+fade in staggered;
+ * dividers are border hairlines. Cells: B (Best, accent pill), Y (neutral ✓),
+ * L (textMuted "Limited"), - (textDim dash). Settle within first ~7s, hold.
  */
 export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as CapabilityTableContent;
   const title = useGlideIn(12, 22);
+  const tableIn = useGlideIn(28, 18);
   const footnote = useGlideIn(40, 14);
   const gridTemplate = `1.6fr repeat(${c.headers.length}, 1fr)`;
 
@@ -28,61 +31,82 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
           letterSpacing: '-0.02em',
         }}
       >
-        {c.title}
+        {renderAccented(c.title)}
       </h1>
 
-      <div style={{ width: '100%', marginTop: 16 }}>
-        {/* header row */}
-        <Glide delay={28} fromY={12}>
+      {/* Floating card container */}
+      <div
+        style={{
+          ...tableIn,
+          width: '100%',
+          background: BRAND.colors.bgCard,
+          border: `1px solid ${BRAND.colors.border}`,
+          borderRadius: BRAND.radiusWindow,
+          boxShadow: SHADOW.card,
+          overflow: 'hidden',
+          marginTop: 8,
+        }}
+      >
+        {/* Header row — bgDark, bold tool names */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: gridTemplate,
+            background: BRAND.colors.bgDark,
+          }}
+        >
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: gridTemplate,
-              alignItems: 'end',
-              paddingBottom: 14,
-              borderBottom: `2px solid ${HAIRLINE}`,
+              padding: '18px 22px',
+              fontWeight: BRAND.font.weights.bold,
+              fontSize: 18,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase' as const,
+              color: BRAND.colors.textMuted,
             }}
           >
-            <div />
-            {c.headers.map((h) => (
-              <div
-                key={h}
-                style={{
-                  textAlign: 'center',
-                  fontWeight: BRAND.font.weights.bold,
-                  fontSize: 24,
-                  color: BRAND.colors.text,
-                }}
-              >
-                {h}
-              </div>
-            ))}
+            Capability
           </div>
-        </Glide>
+          {c.headers.map((h) => (
+            <div
+              key={h}
+              style={{
+                padding: '18px 12px',
+                textAlign: 'center',
+                fontWeight: BRAND.font.weights.bold,
+                fontSize: 20,
+                color: BRAND.colors.text,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {h}
+            </div>
+          ))}
+        </div>
 
-        {/* rows */}
+        {/* Data rows — staggered slide+fade, border hairlines */}
         {c.rows.map((row, i) => (
-          <Glide key={row.id} delay={42 + i * 8} fromY={14}>
+          <Glide key={row.id} delay={42 + i * 8} fromY={12}>
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: gridTemplate,
                 alignItems: 'center',
-                padding: '14px 0',
-                borderBottom: `1px solid ${HAIRLINE}`,
+                borderTop: `1px solid ${BRAND.colors.border}`,
               }}
             >
               <div
                 style={{
+                  padding: '16px 22px',
                   fontWeight: BRAND.font.weights.semiBold,
-                  fontSize: 26,
+                  fontSize: 22,
                   color: BRAND.colors.text,
                 }}
               >
                 {row.label}
               </div>
               {row.cells.map((cell, j) => (
-                <div key={j} style={{ display: 'flex', justifyContent: 'center' }}>
+                <div key={j} style={{ padding: '12px 8px', display: 'flex', justifyContent: 'center' }}>
                   <CellMark value={cell as Cell} />
                 </div>
               ))}
@@ -111,32 +135,70 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
 
 const CellMark: React.FC<{ value: Cell }> = ({ value }) => {
   if (value === '-') {
-    return <span style={{ color: HAIRLINE, fontSize: 32, fontWeight: 700 }}>—</span>;
+    return (
+      <span style={{ color: BRAND.colors.textDim, fontSize: 28, fontWeight: 500 }}>—</span>
+    );
   }
-  const styles: Record<'B' | 'Y' | 'L', { bg: string; fg: string; border: string }> = {
-    B: { bg: BRAND.colors.accent, fg: BRAND.colors.bgBase, border: BRAND.colors.accent },
-    Y: { bg: 'transparent', fg: BRAND.colors.accent, border: BRAND.colors.accent },
-    L: { bg: 'transparent', fg: MUTED, border: HAIRLINE },
-  };
-  const s = styles[value];
+
+  if (value === 'B') {
+    // Best → accent pill (accentSoft fill, accent text, full-pill radius)
+    return (
+      <span
+        style={{
+          display: 'inline-block',
+          padding: '5px 16px',
+          borderRadius: 999,
+          background: BRAND.colors.accent,
+          color: BRAND.colors.bgCard,
+          fontWeight: BRAND.font.weights.bold,
+          fontSize: 15,
+          letterSpacing: '0.02em',
+          minWidth: 60,
+          textAlign: 'center',
+        }}
+      >
+        Best
+      </span>
+    );
+  }
+
+  if (value === 'Y') {
+    // Yes → neutral mark
+    return (
+      <span
+        style={{
+          display: 'inline-block',
+          padding: '5px 14px',
+          borderRadius: 999,
+          background: BRAND.colors.bgDark,
+          color: BRAND.colors.text,
+          fontWeight: BRAND.font.weights.semiBold,
+          fontSize: 15,
+          minWidth: 48,
+          textAlign: 'center',
+        }}
+      >
+        ✓
+      </span>
+    );
+  }
+
+  // L — Limited → textMuted
   return (
-    <div
+    <span
       style={{
-        minWidth: 44,
-        height: 44,
-        padding: '0 14px',
+        display: 'inline-block',
+        padding: '5px 10px',
         borderRadius: 999,
-        backgroundColor: s.bg,
-        color: s.fg,
-        border: `2px solid ${s.border}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: BRAND.font.weights.bold,
-        fontSize: 20,
+        background: 'rgba(28,28,28,0.06)',
+        color: BRAND.colors.textMuted,
+        fontWeight: BRAND.font.weights.semiBold,
+        fontSize: 14,
+        minWidth: 64,
+        textAlign: 'center',
       }}
     >
-      {value === 'L' ? 'Limited' : value === 'B' ? 'Best' : '✓'}
-    </div>
+      Limited
+    </span>
   );
 };

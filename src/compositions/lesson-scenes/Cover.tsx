@@ -2,7 +2,8 @@ import React from 'react';
 import { interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CoverContent } from './content-types';
-import { BRAND, MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented } from './shared';
+import { BRAND, LEADING } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented } from './shared';
 
 /**
  * `cover` — opening hero of every lesson. Eyebrow kicker, multi-line hero
@@ -54,12 +55,20 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
           style={{
             ...statsContainer,
             display: 'flex',
-            gap: 48,
             marginTop: 24,
+            borderTop: `1px solid ${BRAND.colors.borderStrong}`,
+            borderBottom: `1px solid ${BRAND.colors.borderStrong}`,
           }}
         >
           {c.stats.map((stat, i) => (
-            <Stat key={stat.id} value={stat.value} suffix={stat.suffix} label={stat.label} delay={78 + i * 6} />
+            <Stat
+              key={stat.id}
+              value={stat.value}
+              suffix={stat.suffix}
+              label={stat.label}
+              delay={78 + i * 6}
+              showDivider={i < c.stats!.length - 1}
+            />
           ))}
         </div>
       )}
@@ -67,36 +76,53 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
   );
 };
 
-const Stat: React.FC<{ value: number; suffix?: string; label: string; delay: number }> = ({
-  value,
-  suffix,
-  label,
-  delay,
-}) => {
+const Stat: React.FC<{
+  value: number;
+  suffix?: string;
+  label: string;
+  delay: number;
+  showDivider?: boolean;
+}> = ({ value, suffix, label, delay, showDivider }) => {
   const pop = usePopIn(delay);
   // Count-up over ~30 frames once the stat has popped in.
   const counted = Math.round(
     interpolate(pop.opacity, [0, 1], [0, value], { extrapolateRight: 'clamp' }),
   );
   return (
-    <div style={{ ...pop, display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <div
+      style={{
+        ...pop,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        padding: '36px 32px',
+        borderRight: showDivider ? `1px solid ${BRAND.colors.border}` : 'none',
+      }}
+    >
       <div
         style={{
           fontWeight: BRAND.font.weights.extraBold,
           fontSize: 64,
           color: BRAND.colors.accent,
-          lineHeight: 1,
+          lineHeight: LEADING.caps,
+          fontVariantNumeric: 'tabular-nums',
         }}
       >
         {counted}
-        {suffix ? <span style={{ fontSize: 36 }}>{suffix}</span> : null}
+        {suffix ? (
+          <span style={{ fontSize: 30, fontWeight: BRAND.font.weights.regular, color: BRAND.colors.textMuted, marginLeft: 4 }}>
+            {suffix}
+          </span>
+        ) : null}
       </div>
       <div
         style={{
           fontWeight: BRAND.font.weights.semiBold,
-          fontSize: 22,
-          color: MUTED,
-          letterSpacing: '0.02em',
+          fontSize: 14,
+          color: BRAND.colors.textMuted,
+          letterSpacing: '0.10em',
+          textTransform: 'uppercase',
+          marginTop: 18,
         }}
       >
         {label}
