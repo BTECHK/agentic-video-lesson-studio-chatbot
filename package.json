@@ -20,6 +20,7 @@
     "gate:review": "tsx scripts/gate-review.ts",
     "gate:status": "tsx scripts/gate-status.ts",
     "gate:timing": "tsx scripts/gate-timing.ts",
+    "gate:media": "tsx scripts/gate-media.ts",
     "compile:course-map": "tsx scripts/compile-course-map.ts",
     "test": "vitest run",
     "test:watch": "vitest",

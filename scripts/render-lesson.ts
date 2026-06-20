@@ -51,6 +51,10 @@ async function renderOne(serveUrl: string, lessonsDir: string, lessonId: string)
       composition,
       serveUrl,
       codec: 'h264',
+      // Tag + encode BT.709 (HD sRGB). Default produces a BT.601/bt470bg tag that
+      // players desaturate — the "faded, no pop" defect. BT.709 is the standard
+      // HD pipeline every player renders correctly.
+      colorSpace: 'bt709',
       outputLocation: out,
       inputProps: { lesson },
       cancelSignal,
