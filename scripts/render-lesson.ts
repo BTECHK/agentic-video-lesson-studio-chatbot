@@ -15,6 +15,8 @@
  *   npx tsx scripts/render-lesson.ts all                                  # every topic-* lesson
  * Env:
  *   RENDER_TIMEOUT_MIN  per-lesson watchdog in minutes (default 40)
+ *   RENDER_OUT_DIR      output dir relative to cwd (default 'out'); e.g. 'out/v2'
+ *                       for the v2 facelift render, so originals aren't overwritten.
  */
 import { bundle } from '@remotion/bundler';
 import { renderMedia, selectComposition, makeCancelSignal } from '@remotion/renderer';
@@ -23,6 +25,7 @@ import fs from 'fs';
 import { loadLesson } from '../src/lib/content-loader';
 
 const TIMEOUT_MS = Number(process.env.RENDER_TIMEOUT_MIN ?? 40) * 60_000;
+const OUT_DIR = process.env.RENDER_OUT_DIR ?? 'out';
 
 /** One grep-able JSON line per event. */
 function log(event: string, fields: Record<string, unknown> = {}): void {
@@ -30,7 +33,7 @@ function log(event: string, fields: Record<string, unknown> = {}): void {
 }
 
 async function renderOne(serveUrl: string, lessonsDir: string, lessonId: string): Promise<boolean> {
-  const out = path.join(process.cwd(), 'out', `${lessonId}.mp4`);
+  const out = path.join(process.cwd(), OUT_DIR, `${lessonId}.mp4`);
   const { cancelSignal, cancel } = makeCancelSignal();
   let timedOut = false;
   const watchdog = setTimeout(() => {
@@ -81,7 +84,7 @@ async function main() {
       ? fs.readdirSync(lessonsDir).filter((d) => /^topic-\d+-lesson-\d+$/.test(d)).sort()
       : args;
 
-  fs.mkdirSync(path.join(process.cwd(), 'out'), { recursive: true });
+  fs.mkdirSync(path.join(process.cwd(), OUT_DIR), { recursive: true });
   log('batch.start', { count: ids.length, timeoutMin: TIMEOUT_MS / 60_000 });
   const serveUrl = await bundle({ entryPoint: path.join(process.cwd(), 'src/index.ts') });
 

@@ -1,25 +1,23 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
-import { loadFont } from '@remotion/google-fonts/Syne';
-import { BRAND } from '../../brand/tokens';
-
-const { fontFamily } = loadFont('normal', {
-  weights: ['400', '600', '700', '800'],
-  subsets: ['latin'],
-});
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { fontFamily, MUTED } from '../lesson-scenes/shared';
 
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
 const BASE = BRAND.colors.bgBase;
-const CARD_BG = '#FFFFFF';
-const BORDER = 'rgba(28, 28, 28, 0.12)';
-const MUTED = 'rgba(28, 28, 28, 0.5)';
-const ALT_BG = '#F8F6F3';
-const HIGHLIGHT_BG = `${ACCENT}08`;
+const CARD = BRAND.colors.bgCard;
+const DARK = BRAND.colors.bgDark;
+const BORDER = BRAND.colors.border;
+const ACCENT_SOFT = BRAND.colors.accentSoft;
 
 const ALL_CHIPS = [
-  { name: 'ChatGPT' }, { name: 'Claude' }, { name: 'Gemini' },
-  { name: 'Perplexity' }, { name: 'DeepSeek' }, { name: 'Grok' },
+  { name: 'ChatGPT' },
+  { name: 'Claude' },
+  { name: 'Gemini' },
+  { name: 'Perplexity' },
+  { name: 'DeepSeek' },
+  { name: 'Grok' },
 ];
 
 const METRICS = [
@@ -36,6 +34,18 @@ const EDITORIAL = [
   { category: 'Best for Speed', winner: 'Gemini', reason: 'Fastest token generation at lowest cost' },
   { category: 'Best for Writing', winner: 'ChatGPT', reason: 'Most versatile creative output' },
 ];
+
+const tabStyle = (active: boolean): React.CSSProperties => ({
+  padding: '0 18px',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  fontFamily,
+  fontSize: 16,
+  fontWeight: 600,
+  color: active ? ACCENT : TEXT,
+  borderBottom: active ? `2px solid ${ACCENT}` : '2px solid transparent',
+});
 
 export const ComparisonView: React.FC = () => {
   const local = useCurrentFrame();
@@ -63,7 +73,7 @@ export const ComparisonView: React.FC = () => {
     : 1;
 
   const selectedTools = (() => {
-    const tools: { name: string; key: keyof typeof METRICS[0]; opacity: number }[] = [];
+    const tools: { name: string; key: keyof (typeof METRICS)[0]; opacity: number }[] = [];
     if (!removeChatGPT) tools.push({ name: 'ChatGPT', key: 'chatgpt', opacity: chatgptColFade });
     tools.push({ name: 'Claude', key: 'claude', opacity: 1 });
     tools.push({ name: 'Gemini', key: 'gemini', opacity: 1 });
@@ -78,57 +88,90 @@ export const ComparisonView: React.FC = () => {
     return false;
   };
 
-  // Chip click pulse
-  const perplexityPulse = local >= 130 && local < 145
-    ? interpolate(local, [130, 137, 145], [1, 1.1, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : 1;
-  const chatgptPulse = local >= 305 && local < 320
-    ? interpolate(local, [305, 312, 320], [1, 0.92, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : 1;
-
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: '0 18px', height: '100%', display: 'flex', alignItems: 'center',
-    fontFamily, fontSize: 16, fontWeight: 600,
-    color: active ? ACCENT : TEXT,
-    borderBottom: active ? `2px solid ${ACCENT}` : '2px solid transparent',
-  });
+  const perplexityPulse =
+    local >= 130 && local < 145
+      ? interpolate(local, [130, 137, 145], [1, 1.1, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 1;
+  const chatgptPulse =
+    local >= 305 && local < 320
+      ? interpolate(local, [305, 312, 320], [1, 0.92, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 1;
 
   const chipStyle = (name: string): React.CSSProperties => {
     const sel = chipIsSelected(name);
     const pulse = name === 'Perplexity' ? perplexityPulse : name === 'ChatGPT' ? chatgptPulse : 1;
     return {
-      padding: '5px 12px', fontSize: 12, fontFamily, fontWeight: 600,
+      padding: '5px 12px',
+      fontSize: 12,
+      fontFamily,
+      fontWeight: 600,
       borderRadius: BRAND.radius,
-      border: `1px solid ${sel ? ACCENT : BORDER}`,
-      backgroundColor: sel ? ACCENT : CARD_BG,
+      backgroundColor: sel ? ACCENT : DARK,
       color: sel ? '#FFFFFF' : TEXT,
       transform: `scale(${pulse})`,
     };
   };
 
   const cellBase: React.CSSProperties = {
-    padding: '8px 12px', fontSize: 12, fontFamily,
-    borderBottom: `1px solid ${BORDER}`, textAlign: 'center',
+    padding: '8px 12px',
+    fontSize: 12,
+    fontFamily,
+    borderBottom: `1px solid ${BORDER}`,
+    textAlign: 'center',
   };
 
   // Cursor for interactions
   const showCursor = (local >= 110 && local < 150) || (local >= 290 && local < 325);
-  const cursorX = local < 150
-    ? interpolate(local, [110, 130], [300, 340], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : interpolate(local, [290, 310], [340, 85], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const cursorY = local < 150
-    ? interpolate(local, [110, 130], [200, 95], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : interpolate(local, [290, 310], [95, 95], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const cursorX =
+    local < 150
+      ? interpolate(local, [110, 130], [300, 340], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : interpolate(local, [290, 310], [340, 85], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const cursorY =
+    local < 150
+      ? interpolate(local, [110, 130], [200, 95], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : interpolate(local, [290, 310], [95, 95], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   return (
-    <div style={{ width: '100%', height: '100%', backgroundColor: BASE, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 60px', position: 'relative' }}>
-      <div style={{
-        width: 1000, borderRadius: BRAND.radius, overflow: 'hidden',
-        border: `1px solid ${BORDER}`, boxShadow: '0 8px 40px rgba(28, 28, 28, 0.1)',
-        opacity: navProgress, transform: `translateY(${interpolate(navProgress, [0, 1], [30, 0])}px)`,
-        display: 'flex', flexDirection: 'column', height: 620, backgroundColor: CARD_BG,
-      }}>
-        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 48, padding: '0 16px', backgroundColor: CARD_BG, borderBottom: `1px solid ${BORDER}` }}>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: BASE,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '40px 60px',
+        position: 'relative',
+        fontFamily,
+      }}
+    >
+      {/* Floating window */}
+      <div
+        style={{
+          width: 1000,
+          borderRadius: BRAND.radiusWindow,
+          overflow: 'hidden',
+          border: `1px solid ${BORDER}`,
+          boxShadow: SHADOW.window,
+          opacity: navProgress,
+          transform: `translateY(${interpolate(navProgress, [0, 1], [30, 0])}px)`,
+          display: 'flex',
+          flexDirection: 'column',
+          height: 620,
+          backgroundColor: CARD,
+        }}
+      >
+        <nav
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: 48,
+            padding: '0 16px',
+            backgroundColor: CARD,
+            borderBottom: `1px solid ${BORDER}`,
+          }}
+        >
           <div style={{ display: 'flex', height: '100%', gap: 8 }}>
             <div style={tabStyle(false)}>Chat</div>
             <div style={tabStyle(false)}>Content</div>
@@ -138,47 +181,131 @@ export const ComparisonView: React.FC = () => {
         </nav>
 
         <div style={{ flex: 1, padding: '20px 24px', overflowY: 'hidden', backgroundColor: BASE }}>
-          <div style={{ opacity: headerProgress, transform: `translateY(${interpolate(headerProgress, [0, 1], [15, 0])}px)`, marginBottom: 12 }}>
-            <div style={{ fontFamily, fontWeight: 800, fontSize: 24, color: TEXT, marginBottom: 4 }}>Compare AI Tools</div>
+          <div
+            style={{
+              opacity: headerProgress,
+              transform: `translateY(${interpolate(headerProgress, [0, 1], [15, 0])}px)`,
+              marginBottom: 12,
+            }}
+          >
+            <div style={{ fontFamily, fontWeight: 800, fontSize: 24, color: TEXT, marginBottom: 4 }}>
+              Compare AI Tools
+            </div>
             <div style={{ fontFamily, fontSize: 13, color: MUTED }}>Select tools to compare side-by-side</div>
           </div>
 
-          <div style={{ opacity: chipsProgress, transform: `translateY(${interpolate(chipsProgress, [0, 1], [10, 0])}px)`, display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
-            {ALL_CHIPS.map(c => <div key={c.name} style={chipStyle(c.name)}>{c.name}</div>)}
+          {/* Chip row */}
+          <div
+            style={{
+              opacity: chipsProgress,
+              transform: `translateY(${interpolate(chipsProgress, [0, 1], [10, 0])}px)`,
+              display: 'flex',
+              gap: 6,
+              marginBottom: 16,
+              flexWrap: 'wrap',
+            }}
+          >
+            {ALL_CHIPS.map((c) => (
+              <div key={c.name} style={chipStyle(c.name)}>
+                {c.name}
+              </div>
+            ))}
           </div>
 
-          {/* Table */}
-          <div style={{ border: `1px solid ${BORDER}`, borderRadius: BRAND.radius, backgroundColor: CARD_BG, overflow: 'hidden', marginBottom: showEditorial ? 12 : 0 }}>
+          {/* Table — card-white float on linen */}
+          <div
+            style={{
+              border: `1px solid ${BORDER}`,
+              borderRadius: BRAND.radiusWindow,
+              backgroundColor: CARD,
+              boxShadow: SHADOW.card,
+              overflow: 'hidden',
+              marginBottom: showEditorial ? 12 : 0,
+            }}
+          >
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ ...cellBase, textAlign: 'left', fontWeight: 700, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.03em', color: MUTED, backgroundColor: ALT_BG, minWidth: 120 }}>Metric</th>
-                  {selectedTools.map(t => (
-                    <th key={t.name} style={{ ...cellBase, fontWeight: 700, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.03em', color: MUTED, backgroundColor: ALT_BG, opacity: t.opacity }}>{t.name}</th>
+                  <th
+                    style={{
+                      ...cellBase,
+                      textAlign: 'left',
+                      fontWeight: 700,
+                      fontSize: 11,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.03em',
+                      color: MUTED,
+                      backgroundColor: DARK,
+                      minWidth: 120,
+                    }}
+                  >
+                    Metric
+                  </th>
+                  {selectedTools.map((t) => (
+                    <th
+                      key={t.name}
+                      style={{
+                        ...cellBase,
+                        fontWeight: 700,
+                        fontSize: 11,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.03em',
+                        color: MUTED,
+                        backgroundColor: DARK,
+                        opacity: t.opacity,
+                      }}
+                    >
+                      {t.name}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {METRICS.map((row, rowIdx) => {
-                  const rowProgress = spring({ frame: local - 30 - rowIdx * 6, fps, config: { damping: 16, mass: 0.4 } });
+                  const rowProgress = spring({
+                    frame: local - 30 - rowIdx * 6,
+                    fps,
+                    config: { damping: 16, mass: 0.4 },
+                  });
                   const isHighlighted = highlightRow && row.metric === 'Quality Index';
 
                   return (
-                    <tr key={row.metric} style={{ opacity: rowProgress, backgroundColor: isHighlighted ? HIGHLIGHT_BG : undefined }}>
-                      <td style={{ ...cellBase, textAlign: 'left', fontWeight: 700, color: TEXT, backgroundColor: isHighlighted ? HIGHLIGHT_BG : ALT_BG }}>
+                    <tr
+                      key={row.metric}
+                      style={{
+                        opacity: rowProgress,
+                        backgroundColor: isHighlighted ? ACCENT_SOFT : undefined,
+                      }}
+                    >
+                      <td
+                        style={{
+                          ...cellBase,
+                          textAlign: 'left',
+                          fontWeight: 700,
+                          color: TEXT,
+                          backgroundColor: isHighlighted ? ACCENT_SOFT : DARK,
+                        }}
+                      >
                         {row.metric}
                       </td>
-                      {selectedTools.map(t => {
+                      {selectedTools.map((t) => {
                         const val = row[t.key as keyof typeof row] as string;
                         const isBest = isHighlighted && t.key === 'claude';
                         return (
-                          <td key={t.name} style={{
-                            ...cellBase, color: TEXT, opacity: t.opacity,
-                            fontWeight: isBest ? 800 : 400,
-                            backgroundColor: isBest ? `${ACCENT}15` : isHighlighted ? HIGHLIGHT_BG : undefined,
-                          }}>
+                          <td
+                            key={t.name}
+                            style={{
+                              ...cellBase,
+                              color: isBest ? ACCENT : TEXT,
+                              opacity: t.opacity,
+                              fontWeight: isBest ? 800 : 400,
+                              backgroundColor: isBest ? ACCENT_SOFT : isHighlighted ? ACCENT_SOFT : undefined,
+                            }}
+                          >
                             {val}
-                            {isBest && <span style={{ color: ACCENT, marginLeft: 4, fontSize: 10 }}>★</span>}
+                            {isBest && (
+                              <span style={{ color: ACCENT, marginLeft: 4, fontSize: 10 }}>★</span>
+                            )}
                           </td>
                         );
                       })}
@@ -189,28 +316,62 @@ export const ComparisonView: React.FC = () => {
             </table>
           </div>
 
-          {/* Editorial picks */}
+          {/* Editorial picks — card-white tiles with window shadow on focus */}
           {showEditorial && (
             <div>
-              <div style={{ fontFamily, fontWeight: 700, fontSize: 15, color: TEXT, marginBottom: 8, opacity: spring({ frame: local - 370, fps, config: sCfg }) }}>
-                Best For...
+              <div
+                style={{
+                  fontFamily,
+                  fontWeight: 700,
+                  fontSize: 15,
+                  color: TEXT,
+                  marginBottom: 8,
+                  opacity: spring({ frame: local - 370, fps, config: sCfg }),
+                }}
+              >
+                Best For…
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                 {EDITORIAL.map((pick, i) => {
-                  const pickProgress = spring({ frame: local - 380 - i * 10, fps, config: { damping: 16, mass: 0.5 } });
+                  const pickProgress = spring({
+                    frame: local - 380 - i * 10,
+                    fps,
+                    config: { damping: 16, mass: 0.5 },
+                  });
                   const isResearchPick = pick.category === 'Best for Research';
-                  const glowProgress = isResearchPick ? spring({ frame: local - 430, fps, config: { damping: 12, mass: 0.6 } }) : 0;
+                  const glowProgress = isResearchPick
+                    ? spring({ frame: local - 430, fps, config: { damping: 12, mass: 0.6 } })
+                    : 0;
+                  const focused = isResearchPick && glowProgress > 0.5;
 
                   return (
-                    <div key={pick.category} style={{
-                      opacity: pickProgress,
-                      transform: `translateY(${interpolate(pickProgress, [0, 1], [20, 0])}px) scale(${isResearchPick ? interpolate(glowProgress, [0, 1], [1, 1.03]) : 1})`,
-                      padding: '12px 14px', backgroundColor: CARD_BG,
-                      border: `1px solid ${isResearchPick && glowProgress > 0.5 ? ACCENT : BORDER}`,
-                      borderRadius: BRAND.radius,
-                      boxShadow: isResearchPick && glowProgress > 0.5 ? `0 2px 16px rgba(139, 38, 53, 0.12)` : 'none',
-                    }}>
-                      <div style={{ fontFamily, fontWeight: 700, fontSize: 13, color: ACCENT, marginBottom: 4 }}>{pick.category}</div>
+                    <div
+                      key={pick.category}
+                      style={{
+                        opacity: pickProgress,
+                        transform: `translateY(${interpolate(pickProgress, [0, 1], [20, 0])}px) scale(${
+                          isResearchPick
+                            ? interpolate(glowProgress, [0, 1], [1, 1.03])
+                            : 1
+                        })`,
+                        padding: '12px 14px',
+                        backgroundColor: CARD,
+                        border: `1px solid ${focused ? ACCENT : BORDER}`,
+                        borderRadius: BRAND.radiusWindow,
+                        boxShadow: focused ? SHADOW.cardHover : SHADOW.card,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontFamily,
+                          fontWeight: 700,
+                          fontSize: 13,
+                          color: ACCENT,
+                          marginBottom: 4,
+                        }}
+                      >
+                        {pick.category}
+                      </div>
                       <div style={{ fontFamily, fontSize: 12, color: TEXT }}>
                         <span style={{ fontWeight: 700 }}>{pick.winner}</span>
                         <span style={{ color: MUTED }}> — {pick.reason}</span>
@@ -226,11 +387,20 @@ export const ComparisonView: React.FC = () => {
 
       {/* Cursor */}
       {showCursor && (
-        <div style={{
-          position: 'absolute', left: 460 + cursorX, top: 200 + cursorY,
-          width: 16, height: 16, borderRadius: '50%', backgroundColor: ACCENT,
-          opacity: 0.7, boxShadow: `0 0 12px ${ACCENT}60`, pointerEvents: 'none',
-        }} />
+        <div
+          style={{
+            position: 'absolute',
+            left: 460 + cursorX,
+            top: 200 + cursorY,
+            width: 16,
+            height: 16,
+            borderRadius: '50%',
+            backgroundColor: ACCENT,
+            opacity: 0.7,
+            boxShadow: `0 0 12px ${ACCENT}60`,
+            pointerEvents: 'none',
+          }}
+        />
       )}
     </div>
   );

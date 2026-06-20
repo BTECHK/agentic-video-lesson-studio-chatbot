@@ -1,12 +1,7 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
-import { loadFont } from '@remotion/google-fonts/Syne';
-import { BRAND } from '../../brand/tokens';
-
-const { fontFamily } = loadFont('normal', {
-  weights: ['400', '600', '800'],
-  subsets: ['latin'],
-});
+import { BRAND, LEADING } from '../../brand/tokens';
+import { fontFamily, renderAccented } from '../lesson-scenes/shared';
 
 export const TitleCard: React.FC = () => {
   const local = useCurrentFrame();
@@ -42,6 +37,7 @@ export const TitleCard: React.FC = () => {
         width: '100%',
         height: '100%',
         backgroundColor: BRAND.colors.bgBase,
+        fontFamily,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -49,7 +45,7 @@ export const TitleCard: React.FC = () => {
         gap: 24,
       }}
     >
-      {/* Accent bar */}
+      {/* Growing crimson accent bar */}
       <div
         style={{
           width: interpolate(logoProgress, [0, 1], [0, 80]),
@@ -59,7 +55,7 @@ export const TitleCard: React.FC = () => {
         }}
       />
 
-      {/* Academy name */}
+      {/* Academy name — "Sample" accented */}
       <div
         style={{
           opacity: logoProgress,
@@ -73,10 +69,11 @@ export const TitleCard: React.FC = () => {
             fontSize: 96,
             color: BRAND.colors.text,
             textAlign: 'center',
-            lineHeight: 1,
+            lineHeight: LEADING.display,
+            letterSpacing: '-0.025em',
           }}
         >
-          Sample Academy
+          {renderAccented('*Sample* Academy')}
         </div>
       </div>
 
@@ -94,18 +91,19 @@ export const TitleCard: React.FC = () => {
             fontSize: 32,
             color: BRAND.colors.accent,
             textAlign: 'center',
+            letterSpacing: '-0.01em',
           }}
         >
           AI Education Platform
         </div>
       </div>
 
-      {/* Subtitle */}
+      {/* Sub-copy */}
       <div
         style={{
           opacity: subtitleProgress,
           transform: `translateY(${interpolate(subtitleProgress, [0, 1], [20, 0])}px)`,
-          maxWidth: 700,
+          maxWidth: 720,
           padding: '0 40px',
         }}
       >
@@ -116,8 +114,8 @@ export const TitleCard: React.FC = () => {
             fontSize: 22,
             color: BRAND.colors.text,
             textAlign: 'center',
-            lineHeight: 1.5,
-            opacity: 0.7,
+            lineHeight: LEADING.body,
+            opacity: 0.62,
           }}
         >
           Powered by curated content, intelligent tutoring, and real-time comparisons
@@ -139,7 +137,7 @@ export const TitleCard: React.FC = () => {
             fontSize: 16,
             color: BRAND.colors.accent,
             textAlign: 'center',
-            letterSpacing: '0.05em',
+            letterSpacing: '0.10em',
             textTransform: 'uppercase',
           }}
         >
