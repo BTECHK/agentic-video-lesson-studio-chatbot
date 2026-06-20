@@ -2,6 +2,23 @@
 
 **Branch:** `feat/v2-claude-design-facelift` · started 2026-06-20
 
+## v2.1 corrections (2026-06-20, after user review) — DONE
+The first pass shipped two defects because gates checked `renderStill` PNGs, never
+the encoded MP4. Both fixed and verified on the real MP4s:
+- **Color "no pop":** MP4s were tagged `bt470bg`/yuvj420p (players desaturate).
+  Fixed via `colorSpace:'bt709'` in `render-lesson.ts` (+ `--color-space=bt709` CLI).
+  All 7 lessons re-rendered bt709 (7/7, durations unchanged) and re-published.
+  NOT a palette gap — palette is identical to Claude Design.
+- **Sizzle wrong + silent:** the first v2 sizzle was the #74 montage (`SizzleReel`)
+  with a near-silent placeholder. Replaced by `SizzleManifesto.tsx` — a faithful
+  rebuild of the hand-crafted "Sample Promo" 6-beat manifesto, reusing the
+  original ElevenLabs VO (`public/sizzle/original-sizzle-audio.m4a`). Both formats
+  rendered bt709 + audible, re-published to `00 — START HERE`.
+- **New Gate M** (`npm run gate:media -- <mp4>`): audio-present+audible + bt709 on
+  the real MP4. **9/9 PASS** (7 lessons + 2 sizzle cuts). Closes the gap.
+- Skill docs (`06`, `09`) now carry the BT.709 contract; absorbed Claude Design
+  export `08b-reference-video-to-spec.md`.
+
 **Goal:** import the Claude Design HTML export's polish (`from claude design
 SampleAcademy-handoff.zip`, extracted to `_claude-design-import/`) into the Remotion
 pipeline and ship a **v2** of all 7 gate-green lessons + the sizzle, beside the
