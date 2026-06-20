@@ -16,6 +16,7 @@ import { registerLessonScenes } from './lesson-scenes/register';
 import { fontFamily } from './lesson-scenes/shared';
 import { LessonCaptions } from './lesson-scenes/LessonCaptions';
 import { LayoutProbe } from './lesson-scenes/LayoutProbe';
+import { LessonChrome } from './lesson-scenes/LessonChrome';
 
 registerLessonScenes();
 
@@ -60,6 +61,10 @@ export const LessonVideo: React.FC<LessonVideoProps> = ({ lesson, layoutProbe })
           );
         })}
       </Series>
+      <LessonChrome
+        scenes={lesson.scenes.map((s) => ({ start: s.start, duration: s.duration, label: s.label }))}
+        fallbackLabel={lesson.lesson.brandLabel ?? lesson.lesson.module}
+      />
       {layoutProbe === true ? <LayoutProbe /> : null}
     </AbsoluteFill>
   );

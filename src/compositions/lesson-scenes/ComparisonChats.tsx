@@ -1,30 +1,43 @@
 import React from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
+import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ComparisonChatsContent } from './content-types';
 import { ToolMark } from './ToolMark';
-import {
-  BRAND,
-  MUTED,
-  HAIRLINE,
-  GLIDE,
-  SceneFrame,
-  Eyebrow,
-  renderAccented,
-  useGlideIn,
-} from './shared';
+import { BRAND, SHADOW } from '../../brand/tokens';
+import { SceneFrame, Eyebrow, renderAccented, useGlideIn, MUTED } from './shared';
+import { TypeOn, Pinwheel, Tether } from './primitives';
 
-const CARD_BG = '#F7F4EF';
+const ROW_W = 1680; // 1920 − 2×120 paddingX
+const WIN_H = 600;
+const GAP = 28;
+
+/** Smooth wavy path connecting the bottom of each window — the tether. */
+function tetherPath(n: number): string {
+  const w = (ROW_W - (n - 1) * GAP) / n;
+  const cx = (i: number) => i * (w + GAP) + w / 2;
+  const y = WIN_H - 6;
+  let d = `M ${cx(0)} ${y}`;
+  for (let i = 1; i < n; i++) {
+    const midX = (cx(i - 1) + cx(i)) / 2;
+    d += ` Q ${midX} ${y + 46} ${cx(i)} ${y}`;
+  }
+  return d;
+}
 
 /**
- * `comparison-chats` — the signature Topic-1 scene. 2–4 chat windows glide in
- * side by side, each showing the SAME prompt and that tool's response. The
- * response types out over ~3s so it has settled by the ~5s still frame.
+ * `comparison-chats` (v2) — the signature Topic-1 scene. 2–4 card-white chat
+ * windows float in side by side (deep window shadow = the "alive" depth), each
+ * showing the SAME prompt centered, a thinking pinwheel, then that tool's
+ * response typing in. A crimson tether draws across the composers to make the
+ * "same prompt → different voices" point physical. All motion settles in the
+ * first ~7s; the scene then holds (narration runs long).
  */
 export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as ComparisonChatsContent;
   const title = useGlideIn(10, 22);
-  const caption = useGlideIn(120, 16);
+  const caption = useGlideIn(150, 16);
+  const n = c.tools.length;
+  const tetherStart = Math.min(165, Math.floor(scene.duration * 0.6));
 
   return (
     <SceneFrame align="flex-start" paddingX={120}>
@@ -34,35 +47,39 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
           ...title,
           margin: 0,
           fontWeight: BRAND.font.weights.extraBold,
-          fontSize: 62,
-          letterSpacing: '-0.02em',
+          fontSize: 64,
+          letterSpacing: '-0.025em',
         }}
       >
         {renderAccented(c.title)}
       </h1>
 
-      <div style={{ display: 'flex', gap: 28, width: '100%', marginTop: 24 }}>
-        {c.tools.map((tool, i) => (
-          <ChatWindow
-            key={tool.id}
-            name={tool.name}
-            prompt={c.prompt}
-            response={tool.response}
-            delay={36 + i * 8}
+      <div style={{ position: 'relative', width: ROW_W, height: WIN_H, marginTop: 8 }}>
+        <div style={{ display: 'flex', gap: GAP, width: '100%', height: '100%' }}>
+          {c.tools.map((tool, i) => (
+            <ChatWindow
+              key={tool.id}
+              name={tool.name}
+              prompt={c.prompt}
+              response={tool.response}
+              delay={12 + i * 8}
+            />
+          ))}
+        </div>
+        {c.tether !== false && n > 1 && (
+          <Tether
+            d={tetherPath(n)}
+            startFrame={tetherStart}
+            drawFrames={42}
+            strokeWidth={3}
+            width={ROW_W}
+            height={WIN_H + 60}
           />
-        ))}
+        )}
       </div>
 
       {c.caption && (
-        <div
-          style={{
-            ...caption,
-            marginTop: 8,
-            fontSize: 26,
-            fontStyle: 'italic',
-            color: MUTED,
-          }}
-        >
+        <div style={{ ...caption, marginTop: 4, fontSize: 26, fontStyle: 'italic', color: MUTED }}>
           {renderAccented(c.caption)}
         </div>
       )}
@@ -78,135 +95,92 @@ const ChatWindow: React.FC<{
 }> = ({ name, prompt, response, delay }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const glide = useGlideIn(delay, 36);
+  const glide = useGlideIn(delay, 40);
 
-  // Response types out between ~2s and ~4.3s scene-relative, so it has fully
-  // settled by the ~5s still frame used for visual verification.
-  const typeStart = 2 * fps;
-  const typeEnd = 4.3 * fps;
-  const shown = Math.round(
-    interpolate(frame, [typeStart, typeEnd], [0, response.length], {
-      extrapolateLeft: 'clamp',
-      extrapolateRight: 'clamp',
-      easing: Easing.bezier(...GLIDE),
-    }),
-  );
-  const typed = response.slice(0, shown);
-  const thinking = frame < typeStart && frame > delay + 18;
+  const typeStart = Math.round(2 * fps);
+  const typeEnd = Math.round(5 * fps);
+  const thinking = frame > delay + 24 && frame < typeStart;
 
   return (
     <div
       style={{
         ...glide,
         flex: 1,
-        backgroundColor: CARD_BG,
-        border: `2px solid ${HAIRLINE}`,
-        borderRadius: BRAND.radius,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        minHeight: 420,
+        background: BRAND.colors.bgCard,
+        border: `1px solid ${BRAND.colors.border}`,
+        borderRadius: BRAND.radiusWindow,
+        boxShadow: SHADOW.window,
       }}
     >
-      {/* window header */}
+      {/* header: mark + name + dots */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 14,
-          padding: '20px 24px',
-          borderBottom: `1px solid ${HAIRLINE}`,
+          gap: 12,
+          padding: '18px 22px',
+          borderBottom: `1px solid ${BRAND.colors.border}`,
         }}
       >
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: BRAND.radius,
-            backgroundColor: BRAND.colors.accent,
-            color: BRAND.colors.bgBase,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: BRAND.font.weights.extraBold,
-            fontSize: 22,
-          }}
-        >
-          <ToolMark name={name} size={24} />
+        <ToolMark name={name} size={26} />
+        <div style={{ flex: 1, fontWeight: BRAND.font.weights.bold, fontSize: 24, letterSpacing: '-0.01em' }}>
+          {name}
         </div>
-        <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 26 }}>{name}</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[0, 1, 2].map((i) => (
+            <span key={i} style={{ width: 8, height: 8, borderRadius: 4, background: BRAND.colors.borderStrong }} />
+          ))}
+        </div>
       </div>
 
       {/* body */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 16,
-          padding: 24,
-          flex: 1,
-        }}
-      >
-        {/* user prompt bubble (right-aligned) */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 18, padding: '22px 24px' }}>
+        {/* prompt, as a centered neutral pill */}
         <div
           style={{
-            alignSelf: 'flex-end',
-            maxWidth: '85%',
-            backgroundColor: BRAND.colors.accent,
-            color: BRAND.colors.bgBase,
-            borderRadius: BRAND.radius,
-            padding: '12px 16px',
-            fontSize: 19,
+            alignSelf: 'center',
+            maxWidth: '92%',
+            background: BRAND.colors.bgDark,
+            color: BRAND.colors.text,
+            borderRadius: BRAND.radiusWindow,
+            padding: '12px 18px',
+            fontSize: 18,
             lineHeight: 1.4,
+            textAlign: 'center',
+            fontWeight: 500,
           }}
         >
           {prompt}
         </div>
 
-        {/* assistant response (left-aligned, typed) */}
+        {/* response: pinwheel while thinking, then typed text */}
+        <div style={{ minHeight: 30, fontSize: 20, lineHeight: 1.5, color: BRAND.colors.text }}>
+          {thinking ? (
+            <Pinwheel size={40} />
+          ) : (
+            <TypeOn text={response} startFrame={typeStart} durFrames={typeEnd - typeStart} caret={false} />
+          )}
+        </div>
+      </div>
+
+      {/* composer */}
+      <div style={{ padding: '16px 22px 20px', borderTop: `1px solid ${BRAND.colors.border}` }}>
         <div
           style={{
-            alignSelf: 'flex-start',
-            maxWidth: '92%',
-            backgroundColor: BRAND.colors.bgBase,
-            border: `1px solid ${HAIRLINE}`,
-            borderRadius: BRAND.radius,
             padding: '14px 18px',
-            fontSize: 20,
-            lineHeight: 1.45,
-            color: BRAND.colors.text,
-            minHeight: 28,
+            background: BRAND.colors.bgBase,
+            borderRadius: BRAND.radiusWindow,
+            fontSize: 17,
+            color: BRAND.colors.textDim,
+            fontWeight: 500,
           }}
         >
-          {thinking ? <ThinkingDots /> : typed}
+          Ask anything…
         </div>
       </div>
     </div>
-  );
-};
-
-const ThinkingDots: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  return (
-    <span style={{ display: 'inline-flex', gap: 6 }}>
-      {[0, 1, 2].map((i) => {
-        const t = (frame / fps) * 2 + i * 0.3;
-        const opacity = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * Math.PI * 2));
-        return (
-          <span
-            key={i}
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: 999,
-              backgroundColor: MUTED,
-              opacity,
-              display: 'inline-block',
-            }}
-          />
-        );
-      })}
-    </span>
   );
 };

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BRAND, LEADING, SAFE_AREA, SPACE_BASE, space } from '../src/brand/tokens';
+import { BRAND, LEADING, SAFE_AREA, SPACE_BASE, space, SHADOW } from '../src/brand/tokens';
 import { sceneTitleStyle, sceneSubStyle, eyebrowStyle } from '../src/compositions/lesson-scenes/shared';
 import { quoteStyles, QUOTE_MARKS } from '../src/compositions/lesson-scenes/QuoteCard';
 
@@ -32,6 +32,24 @@ describe('safe area', () => {
     expect(SAFE_AREA.y).toBeGreaterThan(0);
     expect(SAFE_AREA.x * 2).toBeLessThan(BRAND.video.width);
     expect(SAFE_AREA.y * 2).toBeLessThan(BRAND.video.height);
+  });
+});
+
+describe('v2 surface + shadow system', () => {
+  it('keeps card-white brighter than the linen base for depth contrast', () => {
+    // #FDFBF9 (card) must be lighter than #EDE8E3 (base) or windows won't pop.
+    const lum = (hex: string) => parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) + parseInt(hex.slice(5, 7), 16);
+    expect(lum(BRAND.colors.bgCard)).toBeGreaterThan(lum(BRAND.colors.bgBase));
+    expect(lum(BRAND.colors.bgDark)).toBeLessThan(lum(BRAND.colors.bgBase));
+  });
+  it('only radius values are 4 and 14 — no slop values', () => {
+    expect(BRAND.radius).toBe(4);
+    expect(BRAND.radiusWindow).toBe(14);
+  });
+  it('exposes three charcoal-only shadow levels (no glow, no color)', () => {
+    expect(SHADOW.window).toContain('rgba(28,28,28');
+    expect(SHADOW.window).not.toMatch(/139,\s*38,\s*53/); // never accent-tinted
+    expect(Object.keys(SHADOW)).toEqual(['card', 'cardHover', 'window']);
   });
 });
 

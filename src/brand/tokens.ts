@@ -1,11 +1,27 @@
 export const BRAND = {
   colors: {
-    bgBase: '#EDE8E3',
-    text: '#1C1C1C',
+    // Surfaces — warm linen family. The v2 facelift leans on the *contrast*
+    // between these (card-white floating on linen) for depth, not new hues.
+    bgBase: '#EDE8E3', // default scene background (Soft Linen)
+    bgAlt: '#F7F4F0', // alternating scenes (journey map, tools landscape)
+    bgCard: '#FDFBF9', // chat windows, tool cards, table bg (Card White)
+    bgDark: '#E3DED9', // table header rows, recap/dark surfaces (Deeper Linen)
+    // Ink
+    text: '#1C1C1C', // primary text (Charcoal)
+    textMuted: 'rgba(28,28,28,0.60)', // sub-copy, helper text
+    textDim: 'rgba(28,28,28,0.33)', // placeholder text in composers
+    // Accent — crimson, the only chromatic color in the system.
     accent: '#8B2635',
+    accentSoft: 'rgba(139,38,53,0.10)', // glow around active dots, soft fills
+    // Lines
+    border: 'rgba(28,28,28,0.08)', // card borders, table row dividers
+    borderStrong: 'rgba(28,28,28,0.15)', // header dividers, inactive dots
   },
   font: {
     family: 'Syne',
+    // Mono is used only for chrome captions (scrubber, scene counter, timers).
+    // System mono stack — no bundled face needed at this tiny size.
+    mono: '"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace',
     weights: {
       regular: '400',
       semiBold: '600',
@@ -14,6 +30,9 @@ export const BRAND = {
     } as const,
   },
   radius: 4,
+  // Window/chat/voice cards soften to 14px; everything else stays 4px. No
+  // in-between values (6/8/12) — those read "designer-ish but not designed".
+  radiusWindow: 14,
   video: {
     width: 1920,
     height: 1080,
@@ -23,6 +42,18 @@ export const BRAND = {
 
 export type BrandColors = typeof BRAND.colors;
 export type BrandFontWeights = typeof BRAND.font.weights;
+
+/**
+ * Three-level shadow system — the depth that makes the v2 look "alive" vs the
+ * flat 2D earlier pass. Charcoal at low opacity only; never glow, never a
+ * saturated-color shadow. `window` is the floating-card depth used on chat
+ * windows and desktop frames.
+ */
+export const SHADOW = {
+  card: '0 4px 12px rgba(28,28,28,0.04)',
+  cardHover: '0 12px 28px rgba(28,28,28,0.08)',
+  window: '0 30px 60px -20px rgba(28,28,28,0.20), 0 8px 24px -8px rgba(28,28,28,0.08)',
+} as const;
 
 /**
  * Leading (line-height) scale. Syne's tall display face collides below ~1.1
