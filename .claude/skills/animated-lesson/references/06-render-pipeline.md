@@ -182,6 +182,16 @@ The whole reason for this code-driven approach is that fact changes don't requir
 
 ---
 
+## Color encoding (REQUIRED — see 09-v2-remotion-realization.md)
+
+The h264 export MUST be tagged **BT.709**, or players desaturate it (the "faded /
+no pop" defect). The default Remotion/ffmpeg output is `bt470bg` + `yuvj420p` full
+range, which is wrong for HD sRGB. Render with `colorSpace: 'bt709'` (renderMedia)
+or `--color-space=bt709` (CLI). For a raw ffmpeg pass add
+`-colorspace bt709 -color_primaries bt709 -color_trc bt709 -pix_fmt yuv420p`.
+Verify with `npm run gate:media -- <file.mp4>` — it fails non-bt709 output and
+silent audio. NEVER judge color from a `renderStill` PNG; judge the encoded MP4.
+
 ## Open questions / known limitations
 
 - **Web font loading.** Syne is loaded from Google Fonts CDN. In headless Chromium, ensure the page waits for `document.fonts.ready` before the first frame is captured. The current render script doesn't do this — add `await page.evaluate(() => document.fonts.ready)` after page.goto.

@@ -40,3 +40,40 @@ through. Everything is frame-driven; motion settles in the first ~7s then holds
 - Render v2 to a side dir without clobbering v1: `RENDER_OUT_DIR=out/v2 npx tsx
   scripts/render-lesson.ts <ids>`. Publish beside v1: `npm run publish:drive --
   <id> --v2`.
+
+## Color encoding — MUST be BT.709 (the "no pop" defect)
+
+The palette is correct sRGB, but the **encode** is what makes colors pop or look
+faded. Remotion's default h264 export tags `color_space=bt470bg` (BT.601/PAL) with
+`yuvj420p` full-range and unknown primaries/transfer — players desaturate that, so
+the video looks dull/low-contrast even though the source PNGs are vibrant. This bit
+the first v2 pass: every visual check used `renderStill` PNGs (true color), never
+the actual MP4.
+
+- `scripts/render-lesson.ts` passes `colorSpace: 'bt709'` to `renderMedia`; for the
+  CLI use `--color-space=bt709`. Correct output is `color_space=bt709`,
+  `color_primaries=bt709`, `color_transfer=bt709`, `pix_fmt=yuv420p`, range `tv`.
+- **Always verify the encoded MP4, not a still.**
+
+## Gate M — media integrity (`npm run gate:media -- <file.mp4>`)
+
+Probes the real MP4 and fails on: no audio stream, effectively-silent audio
+(peak < −30 dBFS), or `color_space != bt709`. This is the gate that would have
+caught both first-pass defects (silent sizzle + bt470bg color). Run it on every
+delivered MP4 (lessons AND sizzle) before publishing.
+
+## Audio
+
+- **Lessons:** Gemini TTS per-scene narration (`content/lessons/<id>/audio/`),
+  muxed by the `<Audio>` in `LessonVideo`. Already audible (~−5 dB peaks).
+- **Sizzle:** ElevenLabs (the narrator voice) VO + music. The reusable track lives at
+  `public/sizzle/original-sizzle-audio.m4a` (not included in this copy);
+  `SizzleManifesto` plays it via `<Audio>`.
+
+## The sizzle is `SizzleManifesto`, not `SizzleReel`
+
+The canonical sizzle is `src/compositions/SizzleManifesto.tsx` — a faithful
+Remotion rebuild of the hand-crafted "Sample Promo" manifesto (a sequence of
+beats ending in a call to action), reusing the original VO. `SizzleReel.tsx` (the #74 montage) is superseded —
+do not ship it as the sizzle. Render:
+`npx remotion render src/index.ts SizzleManifesto out/v2/sizzle-16x9.mp4 --color-space=bt709`.

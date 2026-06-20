@@ -12,11 +12,13 @@ animated-lesson-skill/
 ├── references/
 │   ├── 01-brand-system.md          Color, type, spacing, easing tokens (not in this copy; see src/brand/tokens.ts)
 │   ├── 02-motion-contract.md       The 5 motion rules
-│   ├── 03-scene-catalog.md         All 11 scene types with content schemas
+│   ├── 03-scene-catalog.md         All 15 scene types with content schemas
 │   ├── 04-component-api.md         API reference for all primitives
 │   ├── 05-content-schema.md        JSON shape for lesson scripts
 │   ├── 06-render-pipeline.md       How to render to MP4
-│   └── 07-industry-research.md     How studios do this professionally
+│   ├── 07-industry-research.md     How studios do this professionally
+│   ├── 08-simulated-screen-contract.md  Mock-screen fidelity tiers + honesty rules
+│   └── 08b-reference-video-to-spec.md  Turn a reference video into a style spec
 ├── templates/
 │   ├── animations.jsx              Timeline engine (Stage, Sprite, Easing)
 │   ├── lesson-ui.jsx               Brand primitives (TypeOn, Pinwheel, Tether, etc)
