@@ -2,7 +2,11 @@
  * Publish a gate-green lesson's learning artifacts to the exec-facing Google
  * Drive Curriculum tree (Module N / Lesson N.M / {Video, Script, Lesson Plan}).
  *
- *   npm run publish:drive -- <lessonId> [--source out/<id>.mp4] [--force]
+ *   npm run publish:drive -- <lessonId> [--source out/<id>.mp4] [--force] [--v2]
+ *
+ * --v2: publish the facelift render as "N.M Video v2.mp4" BESIDE the original
+ *   (defaults --source to out/v2/<id>.mp4; skips plan/script since those are
+ *   unchanged from v1). Lets the v2 video sit next to v1 in the same Lesson folder.
  *
  * Drive root is a per-machine VARIABLE (DRIVE_CURRICULUM_DIR env or drive.local.json) —
  * Windows (Tech Lead) and macOS (Instructor) mount Google Drive at different paths.
@@ -58,13 +62,16 @@ runMain('publish:drive', async (log) => {
   const args = process.argv.slice(2);
   const lessonId = args.find((a) => !a.startsWith('--'));
   const force = args.includes('--force');
+  const v2 = args.includes('--v2');
   if (!lessonId) {
-    log.error('usage: npm run publish:drive -- <lessonId> [--source out/<id>.mp4] [--force]');
+    log.error('usage: npm run publish:drive -- <lessonId> [--source out/<id>.mp4] [--force] [--v2]');
     return 1;
   }
   const srcFlag = args.indexOf('--source');
   const sourcePath =
-    srcFlag !== -1 && args[srcFlag + 1] ? args[srcFlag + 1] : path.join('out', `${lessonId}.mp4`);
+    srcFlag !== -1 && args[srcFlag + 1]
+      ? args[srcFlag + 1]
+      : path.join(v2 ? 'out/v2' : 'out', `${lessonId}.mp4`);
 
   // 1. Resolve the per-machine Drive root.
   const res = resolveCurriculumDir({ env: process.env.DRIVE_CURRICULUM_DIR, configFile: readConfigFile() });
@@ -131,32 +138,40 @@ runMain('publish:drive', async (log) => {
   try {
     fs.mkdirSync(destDir, { recursive: true });
 
-    // Video (the artifact too big for git).
-    copyAtomic(absSource, path.join(destDir, target.artifacts.video));
+    // Video (the artifact too big for git). In --v2 mode the file is suffixed
+    // " v2" so it sits BESIDE the v1 video in the same Lesson folder.
+    const videoName = v2
+      ? target.artifacts.video.replace(/(\.[^.]+)$/, ' v2$1')
+      : target.artifacts.video;
+    copyAtomic(absSource, path.join(destDir, videoName));
 
-    // Lesson plan (markdown — learning material; PDF conversion is a future step).
-    const planSrc = path.join(lessonDir, 'lesson-plan.md');
-    if (fs.existsSync(planSrc)) {
-      copyAtomic(planSrc, path.join(destDir, `${target.artifacts.plan}.md`));
-    } else {
-      log.warn('no lesson-plan.md to copy', { lessonId });
-    }
-
-    // Script (the spoken narration). Prefer a review-bundle script-reference.md if one exists;
-    // otherwise derive it from the lesson's own script.json so EVERY lesson ships a Script
-    // alongside its Video + Lesson Plan (architectural consistency — see Drive delivery contract).
-    const scriptDest = path.join(destDir, `${target.artifacts.script}.md`);
-    const bundledScript = path.join(process.cwd(), 'publish', lessonId, 'script-reference.md');
-    if (fs.existsSync(bundledScript)) {
-      copyAtomic(bundledScript, scriptDest);
-    } else {
-      const derived = buildScriptReference(lessonDir);
-      if (derived) {
-        const tmp = `${scriptDest}.part`;
-        fs.writeFileSync(tmp, derived, 'utf-8');
-        fs.renameSync(tmp, scriptDest);
+    // Plan + Script are unchanged by the facelift — skip them in --v2 mode so we
+    // don't churn the existing artifacts; the v2 video simply joins them.
+    if (!v2) {
+      // Lesson plan (markdown — learning material; PDF conversion is a future step).
+      const planSrc = path.join(lessonDir, 'lesson-plan.md');
+      if (fs.existsSync(planSrc)) {
+        copyAtomic(planSrc, path.join(destDir, `${target.artifacts.plan}.md`));
       } else {
-        log.warn('no script.json to derive a Script from', { lessonId });
+        log.warn('no lesson-plan.md to copy', { lessonId });
+      }
+
+      // Script (the spoken narration). Prefer a review-bundle script-reference.md if one exists;
+      // otherwise derive it from the lesson's own script.json so EVERY lesson ships a Script
+      // alongside its Video + Lesson Plan (architectural consistency — see Drive delivery contract).
+      const scriptDest = path.join(destDir, `${target.artifacts.script}.md`);
+      const bundledScript = path.join(process.cwd(), 'publish', lessonId, 'script-reference.md');
+      if (fs.existsSync(bundledScript)) {
+        copyAtomic(bundledScript, scriptDest);
+      } else {
+        const derived = buildScriptReference(lessonDir);
+        if (derived) {
+          const tmp = `${scriptDest}.part`;
+          fs.writeFileSync(tmp, derived, 'utf-8');
+          fs.renameSync(tmp, scriptDest);
+        } else {
+          log.warn('no script.json to derive a Script from', { lessonId });
+        }
       }
     }
   } catch (err) {
@@ -172,6 +187,7 @@ runMain('publish:drive', async (log) => {
     lessonId,
     module: moduleFolder,
     lesson: lessonFolder,
+    v2,
     forced: force && !decision.ok,
   });
   return 0;
