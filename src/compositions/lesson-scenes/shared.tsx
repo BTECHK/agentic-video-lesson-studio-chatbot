@@ -113,6 +113,37 @@ export function renderAccented(text: string): React.ReactNode[] {
   });
 }
 
+/**
+ * Drifting, breathing warm light behind every scene — the continuous ambient life
+ * that keeps a narration-long teaching scene from reading as a frozen still during
+ * its hold. Transform/opacity only, frame-driven; sits BEHIND content (moves no
+ * text, so the layout gate is unaffected). A faster ripple is mixed into the breath
+ * so it never flatlines. This is what `gate:motion` checks for.
+ */
+export const SceneAmbient: React.FC<{ dark?: boolean }> = ({ dark }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+  const tint = dark ? '231,166,174' : '139,38,53';
+  const a1 = dark ? 0.12 : 0.07;
+  const a2 = dark ? 0.08 : 0.05;
+  const o1 = 0.45 + (Math.sin(t * 0.6) * 0.5 + 0.5) * 0.4 + Math.sin(t * 3.1) * 0.08;
+  const o2 = 0.45 + (Math.sin(t * 0.5 + 2) * 0.5 + 0.5) * 0.4 + Math.sin(t * 2.5 + 1) * 0.08;
+  const layer = (dx: number, dy: number, pos: string, alpha: number, sz: number, op: number): React.CSSProperties => ({
+    position: 'absolute',
+    inset: -200,
+    opacity: op,
+    transform: `translate(${dx}px, ${dy}px)`,
+    background: `radial-gradient(${sz}% ${sz}% at ${pos}, rgba(${tint},${alpha}), transparent 70%)`,
+  });
+  return (
+    <AbsoluteFill style={{ overflow: 'hidden', pointerEvents: 'none' }}>
+      <div style={layer(Math.sin(t * 0.4) * 70, Math.cos(t * 0.33) * 48, '82% 22%', a1, 46, o1)} />
+      <div style={layer(Math.cos(t * 0.3) * 84, Math.sin(t * 0.38) * 56, '14% 86%', a2, 40, o2)} />
+    </AbsoluteFill>
+  );
+};
+
 /** Full-bleed warm-linen stage. Every lesson scene sits inside this. */
 export const SceneFrame: React.FC<{
   children: React.ReactNode;
@@ -132,6 +163,7 @@ export const SceneFrame: React.FC<{
       gap: 40,
     }}
   >
+    <SceneAmbient />
     {children}
   </AbsoluteFill>
 );

@@ -26,6 +26,8 @@ All planning docs live in `.planning/`. Start with `.planning/ROADMAP.md` for th
 - **Brand compliance.** Syne font, warm linen palette, 4px radius — no exceptions.
 - **Official sources only.** AI tool claims must reference vendor docs, not training data.
 - **Teachable constraints.** Output is MP4 video (1080p, 30fps, <2GB). No HTML embeds.
+- **Renders own the machine.** A full lesson re-render is ~2–3h of 1080p video (lessons are a few minutes / thousands of frames each) — rendering is the bottleneck, not a hang. NEVER run tests, gates (`gate:*` spawn ffmpeg+sharp), or other heavy compute while a render is live: concurrent load triples render time and OOM-crashes the batch. **Gate AFTER, never during.** On a loaded/low-RAM box set `RENDER_CONCURRENCY` and `RENDER_FRAME_TIMEOUT_MS` on `scripts/render-lesson.ts`. Key long-job completion to the job's own done-signal (`batch.done` / process exit), never a wall-clock timer. (Incident: ERROR-LOG #8.)
+- **Liveliness gate.** Every delivered MP4 (sizzle + lessons) must pass `npm run gate:motion` (not a slideshow: `activePct ≥ 0.6`, no still > 2.5s) AND `gate:media` (audible + BT.709). Continuous motion comes from `SceneAmbient`/`AmbientGlows` — don't ship settle-and-freeze scenes. Contract: `.planning/MOTION-CONTRACT.md`.
 
 ## Lesson Production Model — Animation-First (footage = future upgrade)
 
@@ -64,10 +66,36 @@ Finalized, gate-green lesson artifacts are delivered to the shared Google Drive 
   and fails loudly with guidance if Drive is unmounted, the path moved, or the mount is read-only.
   **Run this as the final step of every full lesson build.**
 
+## Dual-Model Verification — Claude + Codex (proof, not agreement)
+
+Claude Code is the lead implementer/orchestrator; **Codex** (a different model family)
+is the independent reviewer/verifier. The point isn't two models agreeing — it's
+**falsifiable proof**: agreement is weaker than an artifact. Full manual:
+`agent-ops/AGENT_PLAYBOOK.md`; Codex-facing contract: `AGENTS.md`.
+
+- **Never claim "complete" by assertion.** Every completion satisfies the Completion
+  Contract in `docs/ACCEPTANCE.md`: exact files changed, tests run + output, each
+  acceptance criterion met with evidence, an artifact path under `artifacts/verification/`
+  for any visual/UI work, remaining risks, and one adversarial Codex review (PASS/BLOCK).
+  No artifact = not done.
+- **Flow:** `/spec <feature>` (Claude drafts the plan + `docs/ACCEPTANCE.md` → Codex
+  adversarially attacks it → lock) → implement the locked spec (ponytail) → `/verify`
+  (Claude-side checks + real artifacts, THEN an independent `codex exec` review). Done
+  only if the contract holds AND Codex returns PASS — a Codex BLOCK is never overridden
+  by Claude's own "looks done." Quick cross-check of current work: `/verify`, or
+  `/codex:review` (fast Codex-only) / `/codex:adversarial-review` (skeptical, takes focus text).
+- **UI proof is externalized:** Playwright screenshots (before/after, route + viewport,
+  element assertions) under `artifacts/verification/<task-id>/`. A code-level review (either
+  model) can't see a rendered page — the screenshot/trace is the ground truth.
+- **Models: nothing pinned.** Claude runs on its selected model; Codex picks its current
+  best default per task and delegates basic passes to cheaper models natively — don't lock
+  versions. Keep Codex at gates/milestones (budget guard in `agent-ops/STATE.json`); never
+  enable the plugin's auto review-gate for unattended runs.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (5451 symbols, 8631 relationships, 257 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (8021 symbols, 11919 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

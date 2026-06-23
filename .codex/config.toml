@@ -1,0 +1,9 @@
+# Project-local Codex config (lives at repo root as .codex/config.toml).
+# codex-plugin-cc and `codex exec` read this for THIS repo. `model` and
+# `model_reasoning_effort` are honored project-local; profiles/providers must
+# live in ~/.codex/config.toml.
+
+# No model pinned — Codex uses its current best default per task (this is how you track
+# the newest model). Only reasoning effort + personality are set; model stays dynamic.
+model_reasoning_effort = "high"   # use "xhigh" for the deepest reviews (more tokens)
+personality = "pragmatic"

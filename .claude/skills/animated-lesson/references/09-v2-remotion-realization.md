@@ -28,8 +28,12 @@ Card-white `#FDFBF9` surfaces float on linen `#EDE8E3` via the three-level
 used boldly on key words (`*word*` → `renderAccented`), big numerals, uppercase
 tags, "Best" pills, and the hand-drawn `Tether`. Loading is semantic
 (`Pinwheel`/`PulseRing`/`TypeOn`), and simulations show a `MockCursor` clicking
-through. Everything is frame-driven; motion settles in the first ~7s then holds
-(scenes are narration-long; the layout gate samples at 80%).
+through. Everything is frame-driven; per-element entrance motion settles in the
+first ~7s then holds (scenes are narration-long; the layout gate samples at 80%) —
+**but the frame is never frozen**: `SceneFrame` renders a `SceneAmbient` layer
+(drifting + breathing warm light, behind the content) so every scene stays alive
+through its hold. That ambient layer moves no text, so the layout gate is
+unaffected. See `.planning/MOTION-CONTRACT.md`.
 
 ## Hard constraints (enforced by gates)
 
@@ -61,6 +65,15 @@ Probes the real MP4 and fails on: no audio stream, effectively-silent audio
 (peak < −30 dBFS), or `color_space != bt709`. This is the gate that would have
 caught both first-pass defects (silent sizzle + bt470bg color). Run it on every
 delivered MP4 (lessons AND sizzle) before publishing.
+
+## Gate Mo — motion / liveliness (`npm run gate:motion -- <file.mp4>`)
+
+The "not a slideshow" gate. Samples the encoded MP4 and fails if fewer than 60% of
+frames show any change (`activePct`) or any still is held longer than 2.5s. This is
+the gate that catches the v2 sizzle's original defect (fade in, then freeze) and the
+lessons' "settle then hold" flatness. `publish-to-drive.ts` runs **both** Gate M and
+Gate Mo on the source video and refuses to publish a silent/faded/static render
+(override with `--force`). Full rationale + calibration: `.planning/MOTION-CONTRACT.md`.
 
 ## Audio
 

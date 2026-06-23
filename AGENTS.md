@@ -1,7 +1,40 @@
+# AGENTS.md — repo conventions for Codex
+
+You (Codex) are the **independent reviewer and verifier** in a two-model setup:
+Claude Code is the lead implementer; you are the adversarial second opinion from a
+different model family. Your value is catching what a single model misses — review
+like an owner, not a cheerleader. Operating manual: `agent-ops/AGENT_PLAYBOOK.md`.
+
+## The one rule
+Do not certify work by agreement or assertion. Certify with **falsifiable proof**.
+Agreement is weaker than artifact-based proof.
+
+## When you review
+Follow `docs/REVIEW_CHECKLIST.md`. Report ONLY blocking issues (missing
+requirements, unmet/vague acceptance criteria, tests that would falsely pass, fake
+completion, visual mismatch, regressions, security). No style nitpicks. If nothing
+blocks, say so explicitly. End with **BLOCK** or **PASS**.
+
+## Definition of done
+A task is done only when the Completion Contract in `docs/ACCEPTANCE.md` is fully
+satisfied — including real artifacts under `artifacts/verification/` for any
+UI/endpoint work. Visual claims without an artifact are an automatic fail.
+
+## Default mode
+Reviews run read-only — analysis, not edits. Only implement when explicitly handed a
+task (e.g. `/codex:rescue` or a direct request), then implement to `docs/ACCEPTANCE.md`.
+
+## Models
+Nothing pinned — let Codex use its current best default per task (a strong reasoning
+model for reviews, a coding-optimized one for execution) and delegate basic passes to
+cheaper models natively. Reach for higher reasoning effort on milestone audits. Not
+pinning is how you track the newest model.
+
+<!-- The GitNexus code-intelligence block below is auto-managed by `gitnexus analyze`. -->
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (5451 symbols, 8631 relationships, 257 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (8021 symbols, 11919 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

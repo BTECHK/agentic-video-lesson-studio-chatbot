@@ -26,6 +26,12 @@ import { loadLesson } from '../src/lib/content-loader';
 
 const TIMEOUT_MS = Number(process.env.RENDER_TIMEOUT_MIN ?? 40) * 60_000;
 const OUT_DIR = process.env.RENDER_OUT_DIR ?? 'out';
+// Cap Remotion's parallel-frame concurrency. Default (CPU count) can OOM a loaded
+// machine (many browser tabs open) and wedge the render; set e.g. RENDER_CONCURRENCY=4.
+const CONCURRENCY = process.env.RENDER_CONCURRENCY ? Number(process.env.RENDER_CONCURRENCY) : undefined;
+// Per-frame delayRender timeout. Remotion's 30s default fails under memory pressure
+// (a starved headless browser can't advance a frame in time); raise it for loaded boxes.
+const FRAME_TIMEOUT_MS = Number(process.env.RENDER_FRAME_TIMEOUT_MS ?? 120_000);
 
 /** One grep-able JSON line per event. */
 function log(event: string, fields: Record<string, unknown> = {}): void {
@@ -58,6 +64,8 @@ async function renderOne(serveUrl: string, lessonsDir: string, lessonId: string)
       outputLocation: out,
       inputProps: { lesson },
       cancelSignal,
+      timeoutInMilliseconds: FRAME_TIMEOUT_MS,
+      ...(CONCURRENCY ? { concurrency: CONCURRENCY } : {}),
       onProgress: ({ progress }) => {
         const pct = Math.floor(progress * 100);
         if (pct >= lastPct + 20) {

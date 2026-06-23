@@ -22,6 +22,9 @@ import path from 'node:path';
 import { runMain } from '../src/lib/logger';
 import { resolveCurriculumDir, lessonDriveTarget, pickFolder } from '../src/lib/drive-publish';
 import { summarizeGates, canPublish } from '../src/lib/gate-status';
+import { evaluateMedia } from '../src/lib/gate-media';
+import { evaluateMotion } from '../src/lib/gate-motion';
+import { probeMedia, probeMotion } from '../src/lib/media-probe';
 import type { CourseMap } from '../src/lib/course-map';
 
 function readConfigFile(): { curriculumDir?: string } | null {
@@ -127,6 +130,22 @@ runMain('publish:drive', async (log) => {
   if (!fs.existsSync(absSource)) {
     log.error(`source video not found: ${absSource} — render the lesson first.`);
     return 1;
+  }
+
+  // 5b. Probe the ACTUAL encoded MP4 — audible + BT.709 (Gate M) and alive, not a
+  // slideshow (Gate Mo). The artifact gates above never look at the video itself,
+  // which is exactly how a silent/faded/static render shipped in the first v2 pass.
+  const media = evaluateMedia(probeMedia(absSource));
+  const motion = evaluateMotion(await probeMotion(absSource));
+  if (media.verdict === 'FAIL' || motion.verdict === 'FAIL') {
+    for (const r of [...media.reasons, ...motion.reasons]) log.warn(r);
+    if (!force) {
+      log.error(`Refusing to publish ${lessonId} — video failed media/motion gate. Re-render or --force.`);
+      return 1;
+    }
+    log.warn(`--force: publishing ${lessonId} despite media/motion gate failure.`);
+  } else {
+    log.info('media + motion gates green on source video', { lessonId });
   }
 
   // 6. Resolve/create Module + Lesson folders (match existing by prefix; tolerate title drift).
