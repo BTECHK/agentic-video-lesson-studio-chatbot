@@ -21,6 +21,7 @@ When this file exceeds ~300 lines or the wiki passes ~150 pages, shard into `wik
 - [[architecture-decisions]] — running ADR log + ELI5: why each tool/architecture was chosen (Claude-as-engine, the 3 gates, Remotion video, Playwright capture, course-map, engine-agnostic verification). Stakeholder-defensible.
 - [[layout-integrity-gate]] — Gate L: DOM-measured no-clip/safe-area/overlap; the 4th gate (DoD now A·B·C·L).
 - [[standalone-bot]] — student-facing Tutor bot (bot/): Telegram-first, Gemini-free, Cloud Run webhook; channel-adapter seam + citation guard.
+- [[design-fidelity-html-vs-mp4]] — why the Remotion MP4 reads softer/duller than the Claude Design HTML: resolution/DPI → codec → implementation/motion (color is byte-identical); the renderStill-vs-MP4 diagnostic seam + the 2× SSAA fix.
 
 ## Synthesis
 
