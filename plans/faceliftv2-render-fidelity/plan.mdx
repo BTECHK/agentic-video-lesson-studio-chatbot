@@ -1,0 +1,225 @@
+---
+title: "Facelift V2 — closing the Design↔Remotion render-fidelity gap"
+brief: "Why the MP4 read softer/duller/'not my design', and the surgical fixes that close it: SSAA render, fail-loud fonts, literal lesson parity (800→700, 14→4px, flat cards), eased motion, and a three-face sizzle identity + CTA. Verified by check:fast (523 tests) and an independent Codex BLOCK→PASS gate."
+kind: recap
+localOnly: true
+---
+
+<RichText id="narrative">
+
+### What changed and why
+
+The rendered videos read softer, duller, and "not my design" against the Claude Design HTML — but the palette was already identical (ΔE ≈ 0). The gap was three things: a **flat 1080p raster** (no supersampling), a pipeline that **re-derived every token one notch heavier/rounder/softer** (800 vs 700, 14px vs 4px, a resting shadow on every card, springs instead of eased tweens), and a **silent serif fallback** in the sizzle (beats had no font set → browser-default Times).
+
+This branch fixes all three across six phases, then locks them so they can't silently drift back. Two intended identities are now correct: **lessons = Syne 700**, **marketing/sizzle = Playfair headlines · Syne chrome · mono captions**.
+
+</RichText>
+
+<Diagram
+  id="diagnosis"
+  data={{
+    html: '<div class="diagram-panel" data-rough style="display:flex;flex-direction:column;gap:14px;padding:16px"><div style="display:flex;gap:12px"><div class="diagram-node" style="flex:1">Soft / blurry<br/><span class="diagram-muted">flat 1080p raster</span></div><div class="diagram-node" style="flex:1">Duller / heavier<br/><span class="diagram-muted">re-derived tokens</span></div><div class="diagram-node" style="flex:1">Not Syne<br/><span class="diagram-muted">silent serif fallback</span></div></div><div class="diagram-muted" style="text-align:center">↓ fixed by ↓</div><div style="display:flex;gap:10px;flex-wrap:wrap"><div class="diagram-pill">FV2-0 scale=2 SSAA</div><div class="diagram-pill">FV2-2 800→700 · 14→4px · flat</div><div class="diagram-pill">FV2-1 fonts fail-loud</div><div class="diagram-pill">FV2-3 spring→easeOutCubic</div><div class="diagram-pill">FV2-4 Playfair/Syne/mono + CTA</div><div class="diagram-pill">FV2-5 parity lint</div></div></div>',
+    css: '.diagram-panel{border:1.4px solid var(--wf-line);border-radius:var(--wf-radius)} .diagram-node{border:1.4px solid var(--wf-line);border-radius:var(--wf-radius);padding:10px 12px;text-align:center} .diagram-pill{border:1.4px solid var(--wf-line);border-radius:999px;padding:4px 12px;font-size:13px} .diagram-muted{color:var(--wf-muted);font-size:13px}',
+    caption: 'Diagnosis → the six phases that fix it.'
+  }}
+/>
+
+<RichText id="ui-lesson-heading">
+
+### Lesson parity — flat, graphic, 700 (Before / After)
+
+</RichText>
+
+<Columns id="cmp-lesson">
+<Column id="cmp-lesson-before" label="Before">
+
+<WireframeBlock id="wf-lesson-before">
+  <Screen surface="browser" caption="Heavy 800 title, cards float on a resting shadow with 14px rounded corners." html='<div style="display:flex;flex-direction:column;gap:14px;padding:18px;height:100%;box-sizing:border-box"><div style="font-size:34px;font-weight:800;letter-spacing:-0.01em;line-height:1.12">By the end of this lesson</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="border:1.4px solid var(--wf-line);border-radius:14px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,0.14)"><div style="color:var(--wf-accent);font-weight:800;font-size:22px">01</div><strong>First card title</strong><div class="wf-muted">One-line description.</div></div><div style="border:1.4px solid var(--wf-line);border-radius:14px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,0.14)"><div style="color:var(--wf-accent);font-weight:800;font-size:22px">02</div><strong>Second card title</strong><div class="wf-muted">One-line description.</div></div></div></div>' />
+</WireframeBlock>
+
+</Column>
+<Column id="cmp-lesson-after" label="After">
+
+<WireframeBlock id="wf-lesson-after">
+  <Screen surface="browser" caption="Title 700, cards flat on linen with a 1px border + 4px corners (lift only on focus)." html='<div style="display:flex;flex-direction:column;gap:14px;padding:18px;height:100%;box-sizing:border-box"><div style="font-size:34px;font-weight:700;letter-spacing:-0.025em;line-height:1.02">By the end of this lesson</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="border:1.4px solid var(--wf-line);border-radius:4px;padding:14px"><div style="color:var(--wf-accent);font-weight:700;font-size:22px">01</div><strong>First card title</strong><div class="wf-muted">One-line description.</div></div><div style="border:1.4px solid var(--wf-line);border-radius:4px;padding:14px"><div style="color:var(--wf-accent);font-weight:700;font-size:22px">02</div><strong>Second card title</strong><div class="wf-muted">One-line description.</div></div></div></div>' />
+</WireframeBlock>
+
+</Column>
+</Columns>
+
+<RichText id="ui-sizzle-heading">
+
+### Sizzle identity — three faces + a real CTA (Before / After)
+
+</RichText>
+
+<Columns id="cmp-sizzle">
+<Column id="cmp-sizzle-before" label="Before">
+
+<WireframeBlock id="wf-sizzle-before">
+  <Screen surface="browser" caption="Beats had no fontFamily → browser-default serif body; the close ended on a tagline with no call to action." html='<div style="display:flex;flex-direction:column;gap:16px;padding:20px;height:100%;box-sizing:border-box;align-items:center;justify-content:center;text-align:center"><div style="font-weight:700">Sample Academy</div><div style="font-family:Georgia,serif;font-size:30px">From outline to finished video.</div><div class="wf-muted" style="letter-spacing:0.2em">SAMPLE PIPELINE · DEMO BUILD</div></div>' />
+</WireframeBlock>
+
+</Column>
+<Column id="cmp-sizzle-after" label="After">
+
+<WireframeBlock id="wf-sizzle-after">
+  <Screen surface="browser" caption="Playfair headline · Syne wordmark/chrome · mono label, plus a real CTA line." html='<div style="display:flex;flex-direction:column;gap:14px;padding:20px;height:100%;box-sizing:border-box;align-items:center;justify-content:center;text-align:center"><div style="font-weight:800">Sample <span style="font-weight:700">Academy</span></div><div style="font-family:Georgia,serif;font-size:30px">From outline to <span style="color:var(--wf-accent)">finished video.</span></div><div class="wf-muted" style="letter-spacing:0.2em">SAMPLE PIPELINE · DEMO BUILD</div><span class="wf-pill accent">Demo build · sample content only</span></div>' />
+</WireframeBlock>
+
+</Column>
+</Columns>
+
+<RichText id="parity-table-heading">
+
+### Parity value swaps (literal, from the punch list)
+
+</RichText>
+
+<Table
+  id="parity-table"
+  columns={["Element", "Before (drift)", "After (design)"]}
+  rows={[
+    ["Scene title weight", "800 extraBold", "700 bold"],
+    ["Title leading / tracking", "1.12 / -0.02em", "1.02 / -0.025em"],
+    ["Card radius (non-window)", "14px", "4px"],
+    ["Card shadow at rest", "always-on SHADOW.card", "none (lift on focus)"],
+    ["Sub-copy", "400 / larger", "500 / smaller"],
+    ["Cover stats", "flex, bunched left", "grid 1fr, 76/600"],
+    ["'You are here' pill", "999px lozenge", "2px crimson tag"],
+    ["Entrance motion", "spring() (drifts)", "easeOutCubic (lands)"],
+    ["Sizzle body font", "browser serif (Times)", "Syne (Playfair headlines)"],
+    ["Render scale", "1× (1080p flat)", "2× (SSAA → 2160p)"],
+  ]}
+/>
+
+<Callout id="codex-gate" tone="success">
+
+**Two-model gate (independent Codex review):** plan review BLOCK (5 findings) → reconciled → PASS; verify review BLOCK (3 real findings — 6 titles still 800, FeatureGrid sub, a guardrail hole that let direct title styles slip) → fixed → **PASS** (Codex ran the parity test itself, 5/5). The lint now fails on a title reverting to 800, including the subtle ToolDemo case, via an exact-count allowlist.
+
+</Callout>
+
+<FileTree
+  id="files"
+  title="Files changed (fe7ced6..HEAD)"
+  entries={[
+    { path: "scripts/render-sizzle.ts", change: "modified", note: "scale=2 + x264 slow + crf" },
+    { path: "scripts/render-lesson.ts", change: "modified", note: "scale=2 + crf18 + x264 slow" },
+    { path: "src/compositions/lesson-scenes/shared.tsx", change: "modified", note: "fail-loud fonts + Playfair + spring→easeOutCubic + style builders" },
+    { path: "src/brand/tokens.ts", change: "modified", note: "LEADING.title 1.02 + weights.medium 500" },
+    { path: "src/compositions/SizzleManifesto.tsx", change: "modified", note: "Syne default + Playfair headlines + mono label + CTA + hero emphasis" },
+    { path: "src/compositions/sizzle.storyboard.ts", change: "modified", note: "data-driven CTA string" },
+    { path: "src/compositions/lesson-scenes/Cover.tsx", change: "modified", note: "700 title, grid stats 76/600, sub 500" },
+    { path: "src/compositions/lesson-scenes/FeatureGrid.tsx", change: "modified", note: "4px flat cards, 700, sub 500/17, harder dim" },
+    { path: "src/compositions/lesson-scenes/JourneyMap.tsx", change: "modified", note: "2px tag, uniform dots" },
+    { path: "src/compositions/lesson-scenes/CapabilityTable.tsx", change: "modified", note: "title 700, 4px flat" },
+    { path: "src/compositions/lesson-scenes/ToolDemo.tsx", change: "modified", note: "title 700, output tiles 4px flat" },
+    { path: "public/fonts/PlayfairDisplay-Variable.ttf", change: "added", note: "bundled marketing headline face" },
+    { path: "test/parity.test.ts", change: "added", note: "anti-drift lint (exact-count extraBold allowlist)" },
+    { path: "test/font-loader.test.ts", change: "added", note: "fail-loud font test" },
+    { path: "test/motion-easing.test.ts", change: "added", note: "hard-arrival easing test" },
+    { path: "CLAUDE.md", change: "modified", note: "'match values, don't re-derive' rules" },
+  ]}
+/>
+
+<RichText id="key-changes-heading">
+
+### Key changes
+
+</RichText>
+
+<TabsBlock
+  id="key-changes"
+  tabs={[
+    {
+      id: "tab-render",
+      label: "render-sizzle.ts",
+      blocks: [
+        {
+          id: "diff-render",
+          type: "diff",
+          data: {
+            filename: "scripts/render-sizzle.ts",
+            language: "ts",
+            mode: "split",
+            summary: "Supersample at 2× and harden the encode — the #1 crispness lever, no design code touched.",
+            before: "      codec: 'h264',\n      colorSpace: 'bt709',\n      crf: CRF,\n      pixelFormat: PIXEL_FORMAT,\n",
+            after: "      codec: 'h264',\n      colorSpace: 'bt709',\n      crf: CRF,\n      x264Preset: 'slow',\n      scale: RENDER_SCALE, // default 2 (SSAA → 3840×2160), env override ops-only\n      pixelFormat: PIXEL_FORMAT,\n",
+            annotations: [
+              { side: "after", lines: "5", label: "SSAA", note: "Renders at 2× then downsamples — 4× AA samples per output pixel. The dominant fix for 'less crisp'." }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      id: "tab-motion",
+      label: "shared.tsx (motion)",
+      blocks: [
+        {
+          id: "diff-motion",
+          type: "diff",
+          data: {
+            filename: "src/compositions/lesson-scenes/shared.tsx",
+            language: "ts",
+            mode: "split",
+            summary: "Replace asymptotic spring() entrances with an explicit-duration cubic-out tween that lands hard at a known frame.",
+            before: "const progress = spring({\n  frame: frame - delay,\n  fps,\n  config: { damping: 22, mass: 0.5 },\n});\n// never reaches 1.0 by a known frame — the floaty tail\n",
+            after: "export function glideProgress(frame, delay = 0, dur = 18) {\n  return interpolate(frame, [delay, delay + dur], [0, 1], {\n    easing: Easing.out(Easing.cubic),\n    extrapolateLeft: 'clamp',\n    extrapolateRight: 'clamp',\n  });\n}\n// reaches exactly 1.0 at delay+dur — a crisp landing\n",
+            annotations: [
+              { side: "after", lines: "2-6", label: "Lands hard", note: "Unit-tested in test/motion-easing.test.ts: 0 at frame=delay, ≥0.999 at delay+dur (a spring would fail this)." }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      id: "tab-sizzle",
+      label: "SizzleManifesto.tsx",
+      blocks: [
+        {
+          id: "diff-sizzle",
+          type: "diff",
+          data: {
+            filename: "src/compositions/SizzleManifesto.tsx",
+            language: "tsx",
+            mode: "split",
+            summary: "Set Syne as the inherited default for all beats — they had no fontFamily and were rendering browser-default serif. Playfair stays on headlines, mono on the chrome label.",
+            before: "const Stage: React.FC = () => (\n  <AbsoluteFill>\n",
+            after: "const Stage: React.FC = () => (\n  // Syne default for ALL beat text; Playfair overrides only on the big\n  // headlines, mono on the chrome label. Beats were falling back to serif.\n  <AbsoluteFill style={{ fontFamily }}>\n",
+            annotations: [
+              { side: "after", lines: "4", label: "Three-face identity", note: "Caught while vetting scale-2 stills: the shipped sizzle body was Times, not Syne. One line fixes the whole reel." }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      id: "tab-guardrail",
+      label: "parity.test.ts",
+      blocks: [
+        {
+          id: "ac-guardrail",
+          type: "annotated-code",
+          data: {
+            filename: "test/parity.test.ts",
+            language: "ts",
+            code: "const DECORATIVE = {\n  'LessonChrome.tsx': { count: 1, why: 'the \"Sample\" wordmark glyph' },\n  'ToolMark.tsx': { count: 1, why: 'tool-mark monogram glyph' },\n  'ToolDemo.tsx': { count: 1, why: 'file-type badge glyph — NOT the title' },\n};\nconst count = (src) => (src.match(/weights\\.extraBold/g) ?? []).length;\nfor (const f of sceneFiles) {\n  const allowed = DECORATIVE[f]?.count ?? 0;\n  expect(count(readScene(f))).toBe(allowed);\n}",
+            annotations: [
+              { lines: "1-5", label: "Exact-count allowlist", note: "A file may keep only its known decorative 800s. ToolDemo is allowed exactly 1 (the badge)." },
+              { lines: "7-9", label: "Closes the hole Codex found", note: "A title reverting to 800 makes ToolDemo's count 2 ≠ 1 → fails. The old file-level allowlist let that slip." }
+            ]
+          }
+        }
+      ]
+    }
+  ]}
+/>
+
+<RichText id="verify">
+
+### Verification
+
+`npm run check:fast` → exit 0, **523 tests** (49 files). Sizzle **16:9** 3840×2160 · bt709 · faststart · 65.64s · AAC, `gate:motion` PASS (0.84), `gate:media` PASS; **9:16** 2160×3840, PASS/PASS. RenderStills vetted under `artifacts/verification/`; MP4s in `out/v2/`. Both sizzle formats gate-green; lesson parity proven via Cover + FeatureGrid stills and the lint. Deferred (backlog): scene-contract deterministic rebuild, golden frames, full re-render, real CTA date/URL.
+
+</RichText>
