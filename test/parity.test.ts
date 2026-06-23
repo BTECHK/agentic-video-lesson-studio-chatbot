@@ -27,19 +27,24 @@ describe('FV2 parity guardrails', () => {
   // source — any `weights.extraBold` is allowed ONLY in a DECORATIVE file
   // (wordmark / tool-mark glyph / file-type glyph). A scene heading reverting
   // to 800 fails here because its file is not on the allowlist.
-  it('extraBold appears only in decorative (non-title) components', () => {
-    // file -> what the decorative 800 is (justification)
-    const DECORATIVE: Record<string, string> = {
-      'LessonChrome.tsx': 'the "Sample" wordmark glyph',
-      'ToolMark.tsx': 'tool-mark monogram glyph',
-      'ToolDemo.tsx': 'DOC/PPT/TXT file-type glyph in a document icon',
+  it('extraBold appears only as decorative glyphs, by EXACT count per file', () => {
+    // file -> { count, why }: the EXACT number of decorative `weights.extraBold`
+    // uses allowed. A scene title reverting to 800 adds an extra use and fails —
+    // even in ToolDemo, which legitimately has ONE decorative 800 (its file-type
+    // badge) AND a title that must stay bold. A bare file-level allowlist would
+    // let the ToolDemo title silently revert; the exact count closes that hole.
+    const DECORATIVE: Record<string, { count: number; why: string }> = {
+      'LessonChrome.tsx': { count: 1, why: 'the "Sample" wordmark glyph' },
+      'ToolMark.tsx': { count: 1, why: 'tool-mark monogram glyph' },
+      'ToolDemo.tsx': { count: 1, why: 'DOC/PPT/TXT file-type badge glyph — NOT the title (title is bold)' },
     };
-    const offenders = fs
-      .readdirSync(scenesDir)
-      .filter((f) => f.endsWith('.tsx'))
-      .filter((f) => readScene(path.basename(f, '.tsx')).includes('weights.extraBold'))
-      .filter((f) => !(f in DECORATIVE));
-    expect(offenders, `extraBold (800) found in non-allowlisted file(s): ${offenders.join(', ')}`).toEqual([]);
+    const count = (src: string): number => (src.match(/weights\.extraBold/g) ?? []).length;
+    for (const f of fs.readdirSync(scenesDir).filter((x) => x.endsWith('.tsx'))) {
+      const n = count(readScene(path.basename(f, '.tsx')));
+      const allowed = DECORATIVE[f]?.count ?? 0;
+      const why = DECORATIVE[f] ? ` (${DECORATIVE[f].why})` : ' (no scene title may be extraBold)';
+      expect(n, `${f}: expected exactly ${allowed} decorative extraBold${why}, found ${n}`).toBe(allowed);
+    }
   });
 
   // FV2-2 / AC2.3 — punch-list "14px vs 4px". The 14px window radius belongs
