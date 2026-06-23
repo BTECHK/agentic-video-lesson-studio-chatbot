@@ -54,12 +54,12 @@ describe('v2 surface + shadow system', () => {
 });
 
 describe('shared primitives consume the scales', () => {
-  it('SceneTitle uses the display leading, not a hardcoded value', () => {
-    expect(sceneTitleStyle(84).lineHeight).toBe(LEADING.display);
+  it('SceneTitle uses the title leading, not a hardcoded value', () => {
+    expect(sceneTitleStyle(84).lineHeight).toBe(LEADING.title);
     expect(sceneTitleStyle(66).fontSize).toBe(66);
   });
-  it('SceneSub uses the body leading', () => {
-    expect(sceneSubStyle().lineHeight).toBe(LEADING.body);
+  it('SceneSub uses the FV2 subtitle leading', () => {
+    expect(sceneSubStyle().lineHeight).toBe(1.5);
   });
   it('Eyebrow uses the caps leading', () => {
     expect(eyebrowStyle().lineHeight).toBe(LEADING.caps);

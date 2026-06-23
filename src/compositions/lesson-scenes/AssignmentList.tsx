@@ -1,13 +1,13 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AssignmentListContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn } from './shared';
 
 /**
  * `assignment-list` — pre-class homework. Each task row: accent square
  * checkbox (4px radius, accent border, accentSoft fill) + bold task + context
- * in textMuted. Optional callout: bgCard + shadow + accent eyebrow.
+ * in textMuted. Optional callout: bgCard + 1px border + 4px radius (flat) + accent eyebrow.
  */
 export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as AssignmentListContent;
@@ -60,9 +60,9 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
             width: '100%',
             marginTop: 16,
             padding: '24px 32px',
-            borderRadius: BRAND.radiusWindow,
+            borderRadius: BRAND.radius,
             backgroundColor: BRAND.colors.bgCard,
-            boxShadow: SHADOW.card,
+            boxShadow: 'none',
             border: `1px solid ${BRAND.colors.border}`,
             boxSizing: 'border-box',
           }}

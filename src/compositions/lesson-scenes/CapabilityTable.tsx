@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CapabilityTableContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { SceneFrame, Eyebrow, Glide, useGlideIn, renderAccented, MUTED } from './shared';
 
 type Cell = 'B' | 'Y' | 'L' | '-';
@@ -41,8 +41,8 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
           width: '100%',
           background: BRAND.colors.bgCard,
           border: `1px solid ${BRAND.colors.border}`,
-          borderRadius: BRAND.radiusWindow,
-          boxShadow: SHADOW.card,
+          borderRadius: BRAND.radius,
+          boxShadow: 'none',
           overflow: 'hidden',
           marginTop: 8,
         }}

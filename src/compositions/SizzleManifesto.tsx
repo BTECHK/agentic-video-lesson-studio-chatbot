@@ -11,7 +11,7 @@ import {
   type CalculateMetadataFunction,
 } from 'remotion';
 import { BRAND } from '../brand/tokens';
-import { fontFamily, renderAccented, Glide, Pop, usePopIn } from './lesson-scenes/shared';
+import { fontFamily, playfairFamily, renderAccented, Glide, Pop, usePopIn } from './lesson-scenes/shared';
 import { TypeOn } from './lesson-scenes/primitives';
 import { SIZZLE, type SizzleStoryboard } from './sizzle.storyboard';
 import { ColoredToolMark, CHIP_W, CHIP_GAP, ICON_SIZE, CHIP_ROW_LEFT, CHIP_ROW_TOP } from './ColoredToolMark';
@@ -253,7 +253,7 @@ export const Promise: React.FC = () => (
     <Glide delay={16} fromY={16} style={{ marginTop: 26, fontSize: 20, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: BRAND.colors.accent, textAlign: 'center' }}>
       What the pipeline does
     </Glide>
-    <Glide delay={26} fromY={20} style={{ marginTop: 30, maxWidth: 1280, textAlign: 'center', fontSize: 52, fontWeight: 700, lineHeight: 1.18, letterSpacing: '-0.02em', color: BRAND.colors.text }}>
+    <Glide delay={26} fromY={20} style={{ marginTop: 30, maxWidth: 1280, textAlign: 'center', fontFamily: playfairFamily, fontSize: 52, fontWeight: 600, lineHeight: 1.18, letterSpacing: '-0.01em', color: BRAND.colors.text }}>
       {renderAccented("Write the *outline*. The pipeline turns it into a *finished video lesson*.")}
     </Glide>
     <DrawLine delay={44} length={300} thickness={3} style={{ marginTop: 34 }} />
@@ -273,11 +273,25 @@ export const Different: React.FC<{ sb?: SizzleStoryboard }> = ({ sb = SIZZLE }) 
         <div style={{ flex: 1, position: 'relative', paddingLeft: 32 }}>
           <DrawLine delay={8} vertical length={172} thickness={3} color={BRAND.colors.accent} style={{ position: 'absolute', left: 0, top: 0 }} />
           <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: BRAND.colors.accent, marginBottom: 24 }}>What it does</div>
-          {doItems.map((t, i) => (
-            <Glide key={i} delay={12 + i * 6} fromY={16} style={{ fontSize: 30, fontWeight: 600, color: BRAND.colors.text, marginBottom: 16, letterSpacing: '-0.01em' }}>
-              {renderAccented(t)}
-            </Glide>
-          ))}
+          {doItems.map((t, i) => {
+            // The "Built by practitioners, for learners" line (last do-item, spoken in
+            // this beat's VO) gets hero emphasis: larger + accented, not a buried bullet.
+            const hero = i === doItems.length - 1;
+            return (
+              <Glide
+                key={i}
+                delay={12 + i * 6}
+                fromY={16}
+                style={
+                  hero
+                    ? { fontSize: 40, fontWeight: 700, color: BRAND.colors.accent, marginTop: 8, marginBottom: 16, letterSpacing: '-0.015em', lineHeight: 1.12 }
+                    : { fontSize: 30, fontWeight: 600, color: BRAND.colors.text, marginBottom: 16, letterSpacing: '-0.01em' }
+                }
+              >
+                {renderAccented(t)}
+              </Glide>
+            );
+          })}
         </div>
         {/* What it replaces — each item lands, then a strikethrough draws across it. */}
         <div style={{ flex: 1, position: 'relative', paddingLeft: 32 }}>
@@ -372,7 +386,7 @@ const TransformCol: React.FC<{ from: string; to: string; label: string; delay: n
         ↓
       </Glide>
       {/* The payoff word pops in (easeOutBack-feel) after the old state is struck. */}
-      <div style={{ ...pop, fontSize: 80, fontWeight: 800, color: ROSE, letterSpacing: '-0.03em', lineHeight: 1, transformOrigin: 'left' }}>
+      <div style={{ ...pop, fontFamily: playfairFamily, fontSize: 80, fontWeight: 600, color: ROSE, letterSpacing: '-0.01em', lineHeight: 1, transformOrigin: 'left' }}>
         {to}
       </div>
       <Glide delay={delay + 22} fromY={12} style={{ fontSize: 20, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(242,237,232,0.5)', marginTop: 22 }}>
@@ -410,19 +424,23 @@ export const Transform: React.FC<{ sb?: SizzleStoryboard }> = ({ sb = SIZZLE }) 
   );
 };
 
-const CTA: React.FC = () => (
+const CTA: React.FC<{ sb?: SizzleStoryboard }> = ({ sb = SIZZLE }) => (
   <AbsoluteFill style={{ background: BRAND.colors.bgBase, alignItems: 'center', justifyContent: 'center' }}>
     <AmbientGlows />
     <Pop delay={2}>
       <Wordmark size={150} />
     </Pop>
-    <Glide delay={12} fromY={18} style={{ marginTop: 30, fontSize: 56, fontWeight: 700, letterSpacing: '-0.02em', textAlign: 'center', color: BRAND.colors.text }}>
+    <Glide delay={12} fromY={18} style={{ marginTop: 30, fontFamily: playfairFamily, fontSize: 56, fontWeight: 600, letterSpacing: '-0.01em', textAlign: 'center', color: BRAND.colors.text }}>
       {renderAccented('From outline to *finished video.*')}
     </Glide>
     <Glide delay={20} fromY={14} style={{ marginTop: 28, fontSize: 22, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: BRAND.colors.textMuted }}>
       Sample pipeline · Demo build
     </Glide>
     <DrawLine delay={26} length={320} thickness={3} style={{ marginTop: 26 }} />
+    {/* Call-to-action line — accent, Syne, drawn from the storyboard (data-driven). */}
+    <Glide delay={32} fromY={12} style={{ marginTop: 26, fontSize: 26, fontWeight: 600, letterSpacing: '0.02em', color: BRAND.colors.accent, textDecoration: 'underline', textDecorationThickness: 2, textUnderlineOffset: 6 }}>
+      {(sb.cta ?? SIZZLE.cta)!.apply}
+    </Glide>
   </AbsoluteFill>
 );
 
@@ -452,7 +470,7 @@ const Chrome: React.FC = () => {
         <span style={{ color: accent, fontWeight: 800 }}>Sample</span>
         <span style={{ color: muted, fontWeight: 400, fontSize: 22 }}>Academy</span>
       </div>
-      <div style={{ position: 'absolute', right: MARGIN, top: 62, fontSize: 16, fontWeight: 600, letterSpacing: '0.16em', color: muted }}>{SIZZLE_LABEL}</div>
+      <div style={{ position: 'absolute', right: MARGIN, top: 62, fontFamily: BRAND.font.mono, fontSize: 16, fontWeight: 600, letterSpacing: '0.16em', color: muted }}>{SIZZLE_LABEL}</div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 56, display: 'flex', justifyContent: 'center', gap: 8 }}>
         {MANIFESTO_BEATS.map((_, i) => (
           <div

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AuditQuadrantContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { SceneFrame, Eyebrow, SceneTitle, Glide } from './shared';
 
 type QuadrantId = 'tl' | 'tr' | 'bl' | 'br';
@@ -10,7 +10,7 @@ type QuadrantId = 'tl' | 'tr' | 'bl' | 'br';
  * `audit-quadrant` (v2) — two-axis 2×2 grid.
  *
  * v2 deltas (from old flat CARD_BG + HAIRLINE border):
- * - Each quadrant zone is a floating tile: bgCard + 1px border + radiusWindow (14) + SHADOW.card
+ * - Each quadrant zone is a tile: bgCard + 1px border + 4px radius, flat on linen (no resting shadow)
  * - Axis labels are accent uppercase eyebrow style (was textMuted MUTED)
  * - Quadrant titles bold; task items in textMuted
  * - All entrance stagger resolves within first ~7s; layout held from there.
@@ -47,8 +47,8 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
     // Tile appearance — the v2 floating card look
     background: BRAND.colors.bgCard,
     border: `1px solid ${BRAND.colors.border}`,
-    borderRadius: BRAND.radiusWindow,
-    boxShadow: SHADOW.card,
+    borderRadius: BRAND.radius,
+    boxShadow: 'none',
     padding: '20px 24px',
     ...(q === 'tl' && { left: '3%', top: 10, right: '53%' }),
     ...(q === 'tr' && { right: '3%', top: 10, left: '53%' }),

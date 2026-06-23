@@ -214,3 +214,20 @@ Phase 5 (guardrails: lint + golden frames + CLAUDE.md rules)
 dominant "soft/blurry" gap, changes zero design code, and is reversible in one line.
 **Single highest-leverage *character* move:** title weight 800 → 700 — it's most of the
 "heavier / not my design" read across every scene.
+
+---
+
+## 6. Spec reconciliation — Codex adversarial plan-review (2026-06-23)
+
+Codex returned BLOCK with 5 findings; all accepted and folded into `docs/ACCEPTANCE.md`:
+1. **Golden frames** (Phase 5) are **deferred to backlog** (need a per-scene render pass);
+   the **values-lint test** is this run's anti-drift artifact — no unmet golden-frame promise.
+2. **Sizzle lean route ≠ determinism.** FV2-4 claims identity + concrete content beats +
+   liveliness only; frame-exact `scene-contract.json` reproducibility is the deferred
+   **FV2-4-full**, not asserted here.
+3. **Motion gate on fresh output.** FV2-3's `gate:motion` runs on the freshly rendered
+   sizzle (which uses the changed `shared.tsx` helpers), never a stale MP4.
+4. **Encode proven, not just diffed.** FV2-0 is not `done` until a real MP4 from the
+   modified script is ffprobed (bt709 / yuv420p / faststart / plays) — AC0.5.
+5. **Scale is unambiguously 2.** The "1.5 fallback" is removed from the contract; the
+   committed default is a `RENDER_SCALE` constant = `2` (env-overridable for ops only).

@@ -26,6 +26,11 @@ import { loadLesson } from '../src/lib/content-loader';
 
 const TIMEOUT_MS = Number(process.env.RENDER_TIMEOUT_MIN ?? 40) * 60_000;
 const OUT_DIR = process.env.RENDER_OUT_DIR ?? 'out';
+// Supersample (SSAA): render at 2× backing resolution for crisp downscaled delivery.
+// Committed default is 2; env override exists for ops only.
+const RENDER_SCALE = Number(process.env.RENDER_SCALE ?? 2);
+// x264 CRF for lessons (Remotion's default is ~18+). 18 = visually lossless-ish, ≤18.
+const RENDER_CRF = Number(process.env.RENDER_CRF ?? 18);
 // Cap Remotion's parallel-frame concurrency. Default (CPU count) can OOM a loaded
 // machine (many browser tabs open) and wedge the render; set e.g. RENDER_CONCURRENCY=4.
 const CONCURRENCY = process.env.RENDER_CONCURRENCY ? Number(process.env.RENDER_CONCURRENCY) : undefined;
@@ -61,6 +66,9 @@ async function renderOne(serveUrl: string, lessonsDir: string, lessonId: string)
       // players desaturate — the "faded, no pop" defect. BT.709 is the standard
       // HD pipeline every player renders correctly.
       colorSpace: 'bt709',
+      crf: RENDER_CRF,
+      x264Preset: 'slow',
+      scale: RENDER_SCALE,
       outputLocation: out,
       inputProps: { lesson },
       cancelSignal,

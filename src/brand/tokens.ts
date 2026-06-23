@@ -24,6 +24,7 @@ export const BRAND = {
     mono: '"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace',
     weights: {
       regular: '400',
+      medium: '500',
       semiBold: '600',
       bold: '700',
       extraBold: '800',
@@ -61,6 +62,7 @@ export const SHADOW = {
  * so `display` is the floor for any multi-line title.
  */
 export const LEADING = {
+  title: 1.02,
   display: 1.12,
   heading: 1.2,
   quote: 1.3,

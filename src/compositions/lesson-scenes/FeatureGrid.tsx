@@ -52,22 +52,23 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                   style={{
                     backgroundColor: BRAND.colors.bgCard,
                     border: `1px solid ${isActive ? BRAND.colors.accent : BRAND.colors.border}`,
-                    borderRadius: BRAND.radiusWindow,
+                    borderRadius: BRAND.radius,
                     padding: '28px 32px',
                     display: 'flex',
                     gap: 24,
                     alignItems: 'flex-start',
                     height: '100%',
                     boxSizing: 'border-box',
-                    opacity: dimmed ? interpolate(focus, [0, 1], [0.6, 1]) : 1,
+                    opacity: dimmed ? interpolate(focus, [0, 1], [0.4, 1]) : 1,
+                    filter: dimmed ? 'grayscale(0.6)' : 'none',
                     transform: `translateY(${interpolate(focus, [0, 1], [0, -6])}px)`,
-                    boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
+                    boxShadow: isActive ? SHADOW.cardHover : 'none',
                   }}
                 >
                   {f.n ? (
                     <div
                       style={{
-                        fontWeight: BRAND.font.weights.extraBold,
+                        fontWeight: BRAND.font.weights.bold,
                         fontSize: 64,
                         color: BRAND.colors.accent,
                         lineHeight: 1,
@@ -92,7 +93,7 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                         {f.cat}
                       </div>
                     ) : null}
-                    <div style={{ fontWeight: BRAND.font.weights.extraBold, fontSize: 34, lineHeight: 1.1 }}>
+                    <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 34, lineHeight: 1.1 }}>
                       {f.title}
                     </div>
                     {f.sub ? (

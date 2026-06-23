@@ -21,11 +21,11 @@ Missing any item → status is `in_progress`/`blocked`, never `done`.
 
 ## FV2-0 — Render & encode foundation
 **Expected:** both render scripts render at 2× backing resolution (SSAA) and encode with the parity contract; zero design code touched.
-- **AC0.1** `scripts/render-sizzle.ts` and `scripts/render-lesson.ts` pass `scale: 2` to `renderMedia` (grep shows the literal). — proof: diff + grep.
+- **AC0.1** Both render scripts render at scale 2. The committed default is the literal `2` (a named `RENDER_SCALE` constant defaulting to `2`, env-overridable only for ops; grep shows the default is `2`, not `1.5`). No `scale: 1.5` path in the committed code. — proof: diff + grep. *(Reconciles Codex finding #5: scale is unambiguously 2; the earlier "1.5 fallback" is removed from the contract.)*
 - **AC0.2** Encode flags present: `crf` ≤ 18, `preset: 'slow'` (or x264 equiv), `colorSpace: 'bt709'` retained, `yuv420p`, faststart. Sizzle keeps its existing strong CRF (≤18). — proof: diff.
-- **AC0.3** A `renderStill` at `scale: 2` of one LessonVideo frame emits a **3840×2160** PNG (2× of 1920×1080), proving SSAA is wired. — proof: `file`/sharp dims of the PNG under `artifacts/verification/FV2-0/`.
+- **AC0.3** A `renderStill` at `scale: 2` of one LessonVideo frame emits a **3840×2160** PNG (2× of 1920×1080), proving SSAA is wired. — proof: sharp dims of the PNG under `artifacts/verification/FV2-0/`.
 - **AC0.4** `npm run check:fast` green (no type/lint/test regression from the script edits). — proof: command output.
-- **Note:** full MP4 + `gate:media` BT.709 confirmation happens in the render batch (AC carried to FV2-4 / lesson regression), not inline (renders own the machine).
+- **AC0.5 (encode proof — blocks `done`)** A real MP4 emitted by the **modified** `render-sizzle.ts` is `ffprobe`d and shows `color_space=bt709`, `pix_fmt=yuv420p`, the `moov` atom at the front (faststart), output dimensions consistent with scale 2 (2160 backing → delivered res), and plays. FV2-0 stays `in_progress` until this is captured (satisfied by the FV2-4 sizzle render batch, which is produced by this exact script). Diff-only proof is NOT sufficient to mark FV2-0 `done`. — proof: ffprobe stdout under `artifacts/verification/FV2-0/`. *(Reconciles Codex finding #4.)*
 
 ## FV2-1 — Font integrity
 **Expected:** a missing/failed font throws instead of silently substituting; Playfair available for the sizzle.
@@ -49,18 +49,23 @@ Missing any item → status is `in_progress`/`blocked`, never `done`.
 - **AC3.1** `useGlideIn`/`usePopIn` (or their replacements) use `interpolate(frame,[d,d+Δ],[0,1],{easing: Easing.out(Easing.cubic)})` over explicit durations — no `spring()` on entrance helpers. Springs/`outBack` only on genuine pop atoms. — proof: diff.
 - **AC3.2** A unit test asserts the glide progress is **0 at frame d** and **≥0.999 at frame d+Δ** (hard arrival), and would FAIL for an asymptotic spring (never reaches 1.0 by d+Δ). — proof: `vitest run` output.
 - **AC3.3** Travel distances updated (hero ↑, small copy ↓) per the contract; line-draw easing `easeInOutCubic`. — proof: diff.
-- **AC3.4** `gate:motion` still PASS on an existing rendered MP4 (or the sizzle render batch); `npm run check:fast` green. — proof: command output (gate after render).
+- **AC3.4** `gate:motion` PASS on a **freshly rendered** MP4 that exercises the changed easing helpers — i.e. the FV2-4 sizzle render (the sizzle uses `shared.tsx`'s motion via `Glide`/`Pop`/`usePopIn`), NOT a stale pre-change artifact. `npm run check:fast` green. — proof: gate stdout naming the fresh render + its timestamp (gate after render). *(Reconciles Codex finding #3: the gate must run on output that actually contains the new easing.)*
 
 ## FV2-5 — Guardrails
-**Expected:** the drift cannot silently return.
-- **AC5.1** `test/parity.test.ts` asserts: title style weight === 700; no `radiusWindow` outside the window allowlist (string-scan the lesson-scenes sources); no unconditional `SHADOW.card` on a known grid-card set; no `borderRadius: 999` above ~12px. The test FAILS if reverted to the pre-FV2 values (prove by description of which line each rule guards). — proof: `vitest run` output + a demonstration the test is red against old values.
+**Scope (reconciles Codex finding #1):** the anti-drift artifact for this run is the **values-lint test** (`test/parity.test.ts`). **Committed golden-frame regression is DEFERRED** (it needs a per-scene render pass — out of this run's render budget) and is recorded in `left_in_backlog`, so there is no unmet golden-frame promise in the acceptance.
+**Expected:** the literal drifts cannot silently return.
+- **AC5.1** `test/parity.test.ts` asserts: title style weight === 700; no `radiusWindow` outside the window allowlist (string-scan the lesson-scenes sources); no unconditional `SHADOW.card` on a known grid-card set; no `borderRadius: 999` above ~12px. The test FAILS if reverted to the pre-FV2 values (demonstrated by temporarily reverting one value and showing the test red, then restoring). — proof: `vitest run` output + the red-against-old-values demonstration.
 - **AC5.2** Repo `CLAUDE.md` gains a "match values, don't re-derive" section (grafted from sizzle-v3-handoff/CLAUDE.md hard rules). — proof: diff.
 - **AC5.3** `npm run check:fast` green including the new test. — proof: output.
 
 ## FV2-4 — Sizzle (lean)
+**Scope (explicit, reconciles Codex finding #2):** this is the **lean** route — it delivers the **Playfair/Syne/mono identity + the missing content beats + gate-green motion/media**. It does **NOT** claim scene-contract determinism, frame-exact parity to `scene-contract.json`, or golden-frame reproducibility — those belong to the deferred **FV2-4-full** (backlog). AC4 therefore does not assert reproducibility; it asserts identity + concrete content + liveliness.
 **Expected:** the sizzle adopts the Playfair/Syne/mono identity and gains the missing content beats, staying gate-green.
 - **AC4.1** Headline text in the sizzle beats renders in **Playfair Display**; wordmark/kickers/labels stay **Syne**; captions/timecodes **mono**. — proof: diff (fontFamily per element) + renderStill.
-- **AC4.2** Content beats added/strengthened: hook has a real **payoff** line; a **"Built by practitioners, for learners"** hero beat (dark ground + rose) exists; the close carries a **CTA** line (placeholder URL ok). Copy lives in `sizzle.storyboard.ts` (data-driven), not hardcoded in components — grep the new strings = 0 in the component. — proof: grep + diff + renderStill of each new beat under `artifacts/verification/FV2-4/`.
+- **AC4.2 (VO-locked reality)** The sizzle is driven by the existing 65.6s voiceover (`original-sizzle-audio.m4a`); beats are pinned to VO timestamps and `MANIFESTO_BEATS`/`SIZZLE_DURATION`/`<Audio>` must NOT change (prior AC8). So the content work is what's possible WITHOUT desyncing the VO; narrative restructure (a separate "hero beat", a new hook→payoff turn that needs spoken lines) is explicitly **deferred to FV2-4-full** (needs new audio) and is NOT claimed here. This run delivers, all copy data-driven in `sizzle.storyboard.ts` (grep new strings = **0** hardcoded in `SizzleManifesto.tsx`), each shown in a renderStill under `artifacts/verification/FV2-4/`:
+  - **CTA** added to the close beat — a call-to-action line carrying `sample content only` (placeholder URL, flagged for the real value). Visual-only addition to the existing `cta` beat; does not change duration/audio.
+  - **"Built by practitioners, for learners"** given **hero-level visual emphasis within its existing beat** (it is already spoken in the `different` beat) — larger/accented, not a small buried bullet.
+  — proof: grep (CTA string present in storyboard, 0 in component) + diff + renderStills of the close beat (with CTA) and the emphasized hero line.
 - **AC4.3** Inherits FV2-2/3 (no resting card shadow on chips beyond design, eased entrances). — proof: visual + diff.
 - **AC4.4** Both formats render; `gate:motion` PASS (activePct ≥ 0.6, no still > 2.5s) and `gate:media` PASS (audible + bt709). Duration/audio unchanged (ffprobe ≈ existing). — proof: gate stdout + ffprobe (render batch, alone).
 - **AC4.5** `npm run check:fast` green. — proof: output.

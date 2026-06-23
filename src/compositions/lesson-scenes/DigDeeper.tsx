@@ -1,13 +1,13 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, SceneTitle, useGlideIn } from './shared';
 
 /**
  * `dig-deeper` (v2) — optional background-context panel. A `bgCard` +
- * `border` + `radiusWindow` card with an accent eyebrow/label and body in
- * `textMuted` / `MUTED`. Card has `SHADOW.card` depth. Mostly static — just
- * the card entrance glide, then holds.
+ * `border` + 4px `radius` card with an accent eyebrow/label and body in
+ * `textMuted` / `MUTED`. Card sits flat on linen (no resting shadow). Mostly
+ * static — just the card entrance glide, then holds.
  */
 export const DigDeeper: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as Record<string, unknown>;
@@ -33,8 +33,8 @@ export const DigDeeper: React.FC<SceneComponentProps> = ({ scene }) => {
             padding: '32px 36px',
             backgroundColor: BRAND.colors.bgCard,
             border: `1px solid ${BRAND.colors.border}`,
-            borderRadius: BRAND.radiusWindow,
-            boxShadow: SHADOW.card,
+            borderRadius: BRAND.radius,
+            boxShadow: 'none',
             boxSizing: 'border-box',
           }}
         >

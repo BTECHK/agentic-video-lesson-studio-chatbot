@@ -24,6 +24,9 @@ import path from 'node:path';
 import fs from 'node:fs';
 
 const CRF = Number(process.env.SIZZLE_CRF ?? 10);
+// Supersample (SSAA): render at 2× backing resolution for crisp downscaled delivery.
+// Committed default is 2; env override exists for ops only.
+const RENDER_SCALE = Number(process.env.RENDER_SCALE ?? 2);
 const PIXEL_FORMAT = (process.env.SIZZLE_PIXEL_FORMAT ?? 'yuv420p') as 'yuv420p' | 'yuv444p';
 const OUT_DIR = process.env.SIZZLE_OUT_DIR ?? 'out/v2';
 const CONCURRENCY = process.env.RENDER_CONCURRENCY ? Number(process.env.RENDER_CONCURRENCY) : undefined;
@@ -56,6 +59,8 @@ async function main() {
       codec: 'h264',
       colorSpace: 'bt709',
       crf: CRF,
+      x264Preset: 'slow',
+      scale: RENDER_SCALE,
       pixelFormat: PIXEL_FORMAT,
       outputLocation: out,
       inputProps: { format },

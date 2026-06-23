@@ -3,7 +3,7 @@ import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolDemoContent } from './content-types';
 import { ToolMark } from './ToolMark';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, renderAccented, useGlideIn, usePopIn } from './shared';
 import { Pinwheel, Window } from './primitives';
 
@@ -13,7 +13,7 @@ const ACCENT_TINT = BRAND.colors.accentSoft;
  * `tool-demo` (v2) — an ANIMATED in-tool simulation (no footage). Uses the
  * `Window` primitive (card-white, header with mark+title, SHADOW.window). A
  * prompt types into the composer (`TypeOn`), then a `Pinwheel` "generating"
- * beat, then output tiles reveal as `bgCard` + `SHADOW.card` tiles. All motion
+ * beat, then output tiles reveal as flat `bgCard` + 4px-radius tiles. All motion
  * settles within the first ~7s then holds.
  */
 export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
@@ -116,13 +116,13 @@ const TileShell: React.FC<{ delay: number; children: React.ReactNode }> = ({ del
         minWidth: 0,
         backgroundColor: BRAND.colors.bgCard,
         border: `1px solid ${BRAND.colors.border}`,
-        borderRadius: BRAND.radiusWindow,
+        borderRadius: BRAND.radius,
         padding: 18,
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
         minHeight: 220,
-        boxShadow: SHADOW.card,
+        boxShadow: 'none',
       }}
     >
       {children}

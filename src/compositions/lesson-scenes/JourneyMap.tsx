@@ -122,13 +122,13 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                   <div
                     style={{
                       backgroundColor: BRAND.colors.accent,
-                      color: BRAND.colors.bgBase,
+                      color: BRAND.colors.bgCard,
                       fontWeight: BRAND.font.weights.bold,
-                      fontSize: 16,
-                      letterSpacing: '0.08em',
+                      fontSize: 11,
+                      letterSpacing: '0.16em',
                       textTransform: 'uppercase' as const,
-                      padding: '8px 18px',
-                      borderRadius: 999,
+                      padding: '5px 10px',
+                      borderRadius: 2,
                     }}
                   >
                     You are here
@@ -146,13 +146,13 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
 /**
  * Stop dot — v2 variants:
  * - done:   accent filled, no ring
- * - active: accent filled, larger, accentSoft 8px glow ring
- * - todo:   bgCard fill, borderStrong border
+ * - active: accent filled, accentSoft 8px glow ring (same size as the rest)
+ * - todo:   bgBase fill, borderStrong border
  */
 const Dot: React.FC<{ state: 'done' | 'active' | 'todo' }> = ({ state }) => {
-  const size = state === 'active' ? 40 : 28;
+  const size = 30;
 
-  const bg = state === 'todo' ? BRAND.colors.bgCard : BRAND.colors.accent;
+  const bg = state === 'todo' ? BRAND.colors.bgBase : BRAND.colors.accent;
   const border = state === 'todo' ? BRAND.colors.borderStrong : BRAND.colors.accent;
   const ring = state === 'active' ? `0 0 0 8px ${BRAND.colors.accentSoft}` : 'none';
 

@@ -67,7 +67,7 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
         flex: 1,
         backgroundColor: BRAND.colors.bgCard,
         border: `1px solid ${isActive ? BRAND.colors.accent : BRAND.colors.border}`,
-        borderRadius: BRAND.radiusWindow,
+        borderRadius: BRAND.radius,
         padding: 32,
         display: 'flex',
         flexDirection: 'column',
@@ -76,7 +76,7 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
         // Combine glide translateY with the highlight lift — compound transforms
         // require a single `transform` string.
         transform: `${glide.transform} translateY(${interpolate(highlight, [0, 1], [0, -6])}px)`,
-        boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
+        boxShadow: isActive ? SHADOW.cardHover : 'none',
       }}
     >
       <div

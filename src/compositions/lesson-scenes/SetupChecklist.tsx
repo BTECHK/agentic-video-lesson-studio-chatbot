@@ -117,12 +117,7 @@ const ChecklistRow: React.FC<{ name: string; why: string; activateAt: number }> 
       ? BRAND.colors.accent
       : BRAND.colors.border;
 
-  const shadowVal =
-    state === 'active'
-      ? SHADOW.cardHover
-      : state === 'done'
-      ? SHADOW.card
-      : 'none';
+  const shadowVal = state === 'active' ? SHADOW.cardHover : 'none';
 
   const bgColor =
     state === 'done'
@@ -139,7 +134,7 @@ const ChecklistRow: React.FC<{ name: string; why: string; activateAt: number }> 
         backgroundColor: BRAND.colors.bgCard,
         background: bgColor !== BRAND.colors.bgCard ? bgColor : BRAND.colors.bgCard,
         border: `1px solid ${borderColor}`,
-        borderRadius: BRAND.radiusWindow,
+        borderRadius: BRAND.radius,
         boxShadow: shadowVal,
         opacity: hasEntered ? interpolate(enterProgress, [0, 1], [0.45, 1]) : 0.45,
         transform: hasEntered

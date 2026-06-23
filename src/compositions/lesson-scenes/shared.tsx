@@ -3,33 +3,62 @@ import {
   AbsoluteFill,
   useCurrentFrame,
   useVideoConfig,
-  spring,
   interpolate,
+  Easing,
   staticFile,
   delayRender,
   continueRender,
+  cancelRender,
 } from 'remotion';
-import { BRAND, LEADING, space } from '../../brand/tokens';
+import { BRAND, LEADING } from '../../brand/tokens';
 
 /**
- * Load Syne from the bundled local TTF instead of Google Fonts, so unattended
- * batch renders never depend on network reachability — a single gstatic DNS blip
- * otherwise fails the whole frame (ERR_NAME_NOT_RESOLVED) and can hang the render
- * until the watchdog kills it. `.catch` continues the render with the system font
- * rather than hanging forever if the local face ever fails to parse.
+ * Load the brand faces (Syne + Playfair Display) from bundled local TTFs instead
+ * of Google Fonts, so unattended batch renders never depend on network
+ * reachability — a single gstatic DNS blip otherwise fails the whole frame
+ * (ERR_NAME_NOT_RESOLVED) and can hang the render until the watchdog kills it.
+ * Playfair Display drives the sizzle's marketing headlines (variable, 400–900).
+ * JetBrains Mono is intentionally NOT bundled: captions/timecodes use the system
+ * mono stack per the token comment.
+ *
+ * Render-determinism contract: a font load FAILURE must FAIL LOUD. The old
+ * `.catch(continueRender)` silently substituted the system font, which is exactly
+ * how a wrong font ships unnoticed — so on failure we `cancelRender(err)` to abort
+ * with the error instead of masking it.
+ *
+ * `makeFaces` is injectable so the failure path is unit-testable (test/font-loader.test.ts).
  */
 const fontFamily = 'Syne';
+export const playfairFamily = 'Playfair Display';
+
+type FontFaceLike = { load: () => Promise<FontFace> };
+
+export function loadBrandFonts(
+  makeFaces: () => FontFaceLike[] = () => [
+    new FontFace(fontFamily, `url(${staticFile('fonts/Syne-Variable.ttf')}) format('truetype')`, {
+      weight: '400 800',
+    }),
+    new FontFace(
+      playfairFamily,
+      `url(${staticFile('fonts/PlayfairDisplay-Variable.ttf')}) format('truetype')`,
+      { weight: '400 900' },
+    ),
+  ],
+): void {
+  const handle = delayRender('load-brand-fonts-local');
+  Promise.all(
+    makeFaces().map((face) =>
+      face.load().then((loaded) => {
+        document.fonts.add(loaded as FontFace);
+      }),
+    ),
+  )
+    .then(() => continueRender(handle))
+    .catch((err) => cancelRender(err));
+}
+
 if (typeof document !== 'undefined') {
-  const handle = delayRender('load-syne-local');
-  new FontFace(fontFamily, `url(${staticFile('fonts/Syne-Variable.ttf')}) format('truetype')`, {
-    weight: '400 800',
-  })
-    .load()
-    .then((loaded) => {
-      document.fonts.add(loaded);
-      continueRender(handle);
-    })
-    .catch(() => continueRender(handle));
+  loadBrandFonts();
 }
 
 export { fontFamily, BRAND };
@@ -42,36 +71,48 @@ export const MUTED = 'rgba(28,28,28,0.62)';
 export const HAIRLINE = 'rgba(28,28,28,0.12)';
 
 /**
- * Spring-driven glide-in: fade + upward translate. Scene-relative `delay` in
- * frames staggers elements per the scene-catalog beats. Mirrors the spring
- * feel of TitleCard / useSpringFadeIn but with a configurable travel distance.
+ * Eased glide progress (0..1) — explicit-duration cubic-out tween. Pure so the
+ * hard-arrival contract is unit-testable (test/motion-easing.test.ts): unlike a
+ * spring it reaches exactly 1.0 at `delay + dur` rather than asymptoting.
  */
-export function useGlideIn(delay = 0, fromY = 24): { opacity: number; transform: string } {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 22, mass: 0.5 },
+export function glideProgress(frame: number, delay = 0, dur = 18): number {
+  return interpolate(frame, [delay, delay + dur], [0, 1], {
+    easing: Easing.out(Easing.cubic),
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
+}
+
+/**
+ * Eased glide-in: fade + upward translate, lands hard (no spring tail). Scene-
+ * relative `delay` in frames staggers elements per the scene-catalog beats;
+ * `fromY` is the travel distance, `dur` the explicit tween length.
+ */
+export function useGlideIn(delay = 0, fromY = 24, dur = 18): { opacity: number; transform: string } {
+  const frame = useCurrentFrame();
+  const p = glideProgress(frame, delay, dur);
   return {
-    opacity: progress,
-    transform: `translateY(${interpolate(progress, [0, 1], [fromY, 0])}px)`,
+    opacity: p,
+    transform: `translateY(${interpolate(p, [0, 1], [fromY, 0])}px)`,
   };
 }
 
-/** Pop-in scale used for dots, pills, badges. */
+/**
+ * Pop-in scale used for dots, pills, badges — the genuine "pop" atom. Eased
+ * overshoot (back-out) that still LANDS at exactly scale 1.0 at `delay + DUR`,
+ * with no asymptotic spring tail.
+ */
 export function usePopIn(delay = 0): { opacity: number; transform: string } {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 14, stiffness: 120, mass: 0.6 },
+  const DUR = 16;
+  const p = interpolate(frame, [delay, delay + DUR], [0, 1], {
+    easing: Easing.out(Easing.back(1.6)),
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
   return {
-    opacity: interpolate(progress, [0, 0.4], [0, 1], { extrapolateRight: 'clamp' }),
-    transform: `scale(${interpolate(progress, [0, 1], [0.6, 1])})`,
+    opacity: interpolate(p, [0, 0.4], [0, 1], { extrapolateRight: 'clamp' }),
+    transform: `scale(${interpolate(p, [0, 1], [0.6, 1])})`,
   };
 }
 
@@ -177,10 +218,10 @@ export function eyebrowStyle(): React.CSSProperties {
     display: 'flex',
     alignItems: 'center',
     gap: 14,
-    fontWeight: BRAND.font.weights.bold,
-    fontSize: 22,
+    fontWeight: BRAND.font.weights.semiBold,
+    fontSize: 14,
     lineHeight: LEADING.caps,
-    letterSpacing: '0.16em',
+    letterSpacing: '0.14em',
     textTransform: 'uppercase',
     color: BRAND.colors.accent,
   };
@@ -189,10 +230,10 @@ export function eyebrowStyle(): React.CSSProperties {
 export function sceneTitleStyle(size: number): React.CSSProperties {
   return {
     margin: 0,
-    fontWeight: BRAND.font.weights.extraBold,
+    fontWeight: BRAND.font.weights.bold,
     fontSize: size,
-    lineHeight: LEADING.display,
-    letterSpacing: '-0.02em',
+    lineHeight: LEADING.title,
+    letterSpacing: '-0.025em',
     maxWidth: 1400,
   };
 }
@@ -200,9 +241,9 @@ export function sceneTitleStyle(size: number): React.CSSProperties {
 export function sceneSubStyle(): React.CSSProperties {
   return {
     margin: 0,
-    fontWeight: BRAND.font.weights.regular,
-    fontSize: 30,
-    lineHeight: LEADING.body,
+    fontWeight: BRAND.font.weights.medium,
+    fontSize: 26,
+    lineHeight: 1.5,
     color: MUTED,
     maxWidth: 1100,
   };
@@ -217,7 +258,7 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = 
   return (
     <div style={{ ...glide, ...eyebrowStyle() }}>
       <span
-        style={{ width: space(10), height: space(1), backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }}
+        style={{ width: 24, height: 2, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }}
       />
       {children}
     </div>
@@ -230,7 +271,7 @@ export const SceneTitle: React.FC<{
   delay?: number;
   size?: number;
 }> = ({ children, delay = 16, size = 84 }) => {
-  const glide = useGlideIn(delay, 22);
+  const glide = useGlideIn(delay, 30);
   return <h1 style={{ ...glide, ...sceneTitleStyle(size) }}>{children}</h1>;
 };
 
@@ -239,6 +280,6 @@ export const SceneSub: React.FC<{ children: React.ReactNode; delay?: number }> =
   children,
   delay = 28,
 }) => {
-  const glide = useGlideIn(delay, 18);
+  const glide = useGlideIn(delay, 14);
   return <p style={{ ...glide, ...sceneSubStyle() }}>{children}</p>;
 };

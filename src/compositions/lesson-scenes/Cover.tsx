@@ -2,7 +2,7 @@ import React from 'react';
 import { interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CoverContent } from './content-types';
-import { BRAND, LEADING } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented } from './shared';
 
 /**
@@ -22,7 +22,7 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
       <h1
         style={{
           margin: 0,
-          fontWeight: BRAND.font.weights.extraBold,
+          fontWeight: BRAND.font.weights.bold,
           fontSize: 112,
           lineHeight: 1.02,
           letterSpacing: '-0.025em',
@@ -40,9 +40,9 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...sub,
           margin: 0,
-          fontWeight: BRAND.font.weights.regular,
-          fontSize: 30,
-          lineHeight: 1.45,
+          fontWeight: BRAND.font.weights.medium,
+          fontSize: 26,
+          lineHeight: 1.5,
           color: MUTED,
           maxWidth: 1120,
         }}
@@ -54,7 +54,9 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
         <div
           style={{
             ...statsContainer,
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: `repeat(${c.stats.length}, 1fr)`,
+            width: '100%',
             marginTop: 24,
             borderTop: `1px solid ${BRAND.colors.borderStrong}`,
             borderBottom: `1px solid ${BRAND.colors.borderStrong}`,
@@ -101,10 +103,11 @@ const Stat: React.FC<{
     >
       <div
         style={{
-          fontWeight: BRAND.font.weights.extraBold,
-          fontSize: 64,
+          fontWeight: BRAND.font.weights.semiBold,
+          fontSize: 76,
           color: BRAND.colors.accent,
-          lineHeight: LEADING.caps,
+          lineHeight: 1,
+          letterSpacing: '-0.015em',
           fontVariantNumeric: 'tabular-nums',
         }}
       >

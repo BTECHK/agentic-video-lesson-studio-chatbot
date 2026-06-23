@@ -1,12 +1,12 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { RecapGridContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, SceneTitle, Glide, useGlideIn } from './shared';
 
 /**
  * `recap-grid` — end-of-lesson summary: three numbered cards glide in (card-
- * white + shadow + radiusWindow, big crimson numeral), then an optional "Coming
+ * white + 1px border + 4px radius, flat on linen, big crimson numeral), then an optional "Coming
  * next" preview band slides up (bgCard + 4px accent left rule + accent eyebrow
  * + bold title + accent arrow).
  */
@@ -28,14 +28,14 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
               style={{
                 backgroundColor: BRAND.colors.bgCard,
                 border: `1px solid ${BRAND.colors.border}`,
-                borderRadius: BRAND.radiusWindow,
+                borderRadius: BRAND.radius,
                 padding: '44px 38px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 16,
                 height: '100%',
                 boxSizing: 'border-box',
-                boxShadow: SHADOW.card,
+                boxShadow: 'none',
               }}
             >
               <div
@@ -81,7 +81,7 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
             backgroundColor: BRAND.colors.bgCard,
             borderLeft: `4px solid ${BRAND.colors.accent}`,
             borderRadius: `0 ${BRAND.radius}px ${BRAND.radius}px 0`,
-            boxShadow: SHADOW.card,
+            boxShadow: 'none',
             boxSizing: 'border-box',
           }}
         >
