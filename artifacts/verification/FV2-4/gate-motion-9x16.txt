@@ -1,0 +1,2 @@
+[36mINFO [0m [2m[gate:motion][0m motion facts [2mmp4=out/v2/sizzle-9x16.mp4 samples=131 activePct=0.95 meanMotion=0.0051 longestFrozenRunSec=1[0m
+[36mINFO [0m [2m[gate:motion][0m Gate Mo PASS — video stays alive throughout (not a slideshow) [2mmp4=out/v2/sizzle-9x16.mp4[0m
