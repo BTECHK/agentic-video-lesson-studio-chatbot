@@ -135,3 +135,14 @@ This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+
+## Match Values, Don't Re-derive (design parity)
+
+Grafted from the sizzle-v3 handoff hard rules — these are why the v2 port couldn't be
+reproduced and kept drifting heavier/rounder/softer. See `.planning/FACELIFT-V2.md`;
+enforced by `test/parity.test.ts`.
+
+- **Match the COMPUTED values from the design reference — don't re-derive a "tasteful" interpretation.** Port the literal style (weight, radius, shadow, leading), not your best guess. The v2 drift was exactly this: 800 vs 700, 14px vs 4px, resting shadows, full-pill (999) radii. When in doubt, copy the number; don't round it "nicer".
+- **Fonts fail loud, never silent-fallback.** `delayRender()` until the exact face loads; on failure `cancelRender(err)` / rethrow. Never `.catch(continueRender)` — that silent substitution is how a serif ships where Syne was intended.
+- **Easing for entrances, springs only for genuine pops.** Entrances use `interpolate(...{easing: Easing.out(Easing.cubic)})` over an explicit duration so they LAND on a known frame; reserve `spring()`/back-out for deliberate overshoot atoms (dots, pills, badges).
+- **Tokens/values are read-only inside components — change the token, not the renderer.** No inline hex, px, weight, or timing constant in a `.tsx` that belongs in `src/brand/tokens.ts` (or a contract). To tweak the look, edit the token; the component just reads it.
