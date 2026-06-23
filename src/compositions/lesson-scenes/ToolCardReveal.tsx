@@ -104,7 +104,7 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
       >
         {tag}
       </div>
-      <div style={{ fontWeight: BRAND.font.weights.extraBold, fontSize: 34, lineHeight: 1.05 }}>
+      <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 34, lineHeight: 1.05 }}>
         {name}
       </div>
       <div style={{ fontWeight: BRAND.font.weights.regular, fontSize: 21, lineHeight: 1.4, color: MUTED }}>

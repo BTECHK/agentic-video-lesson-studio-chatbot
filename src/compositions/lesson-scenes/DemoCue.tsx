@@ -42,7 +42,7 @@ export const DemoCue: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...title,
           margin: 0,
-          fontWeight: BRAND.font.weights.extraBold,
+          fontWeight: BRAND.font.weights.bold,
           fontSize: 92,
           lineHeight: LEADING.display,
           letterSpacing: '-0.02em',

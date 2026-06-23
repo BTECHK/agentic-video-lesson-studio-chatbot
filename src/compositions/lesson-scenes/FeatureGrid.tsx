@@ -99,9 +99,9 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                     {f.sub ? (
                       <div
                         style={{
-                          fontWeight: BRAND.font.weights.regular,
-                          fontSize: 22,
-                          lineHeight: 1.4,
+                          fontWeight: BRAND.font.weights.medium,
+                          fontSize: 17,
+                          lineHeight: 1.55,
                           color: MUTED,
                         }}
                       >

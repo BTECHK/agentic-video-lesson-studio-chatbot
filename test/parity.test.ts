@@ -22,6 +22,26 @@ describe('FV2 parity guardrails', () => {
     expect(weight).not.toBe(BRAND.font.weights.extraBold);
   });
 
+  // FV2-2 / AC2.1 — punch-list "800 vs 700". sceneTitleStyle alone was a hole:
+  // component titles set fontWeight inline and bypassed it. Scan every scene
+  // source — any `weights.extraBold` is allowed ONLY in a DECORATIVE file
+  // (wordmark / tool-mark glyph / file-type glyph). A scene heading reverting
+  // to 800 fails here because its file is not on the allowlist.
+  it('extraBold appears only in decorative (non-title) components', () => {
+    // file -> what the decorative 800 is (justification)
+    const DECORATIVE: Record<string, string> = {
+      'LessonChrome.tsx': 'the "Sample" wordmark glyph',
+      'ToolMark.tsx': 'tool-mark monogram glyph',
+      'ToolDemo.tsx': 'DOC/PPT/TXT file-type glyph in a document icon',
+    };
+    const offenders = fs
+      .readdirSync(scenesDir)
+      .filter((f) => f.endsWith('.tsx'))
+      .filter((f) => readScene(path.basename(f, '.tsx')).includes('weights.extraBold'))
+      .filter((f) => !(f in DECORATIVE));
+    expect(offenders, `extraBold (800) found in non-allowlisted file(s): ${offenders.join(', ')}`).toEqual([]);
+  });
+
   // FV2-2 / AC2.3 — punch-list "14px vs 4px". The 14px window radius belongs
   // ONLY to genuine chat/voice/browser window chrome. Any grid/feature/recap
   // card reaching for radiusWindow is the rounded-corner drift returning.

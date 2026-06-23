@@ -46,7 +46,7 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...title,
           margin: 0,
-          fontWeight: BRAND.font.weights.extraBold,
+          fontWeight: BRAND.font.weights.bold,
           fontSize: 64,
           letterSpacing: '-0.025em',
         }}

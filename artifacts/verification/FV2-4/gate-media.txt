@@ -1,0 +1,4 @@
+
+
+[36mINFO [0m [2m[gate:media][0m media facts [2mmp4=out/v2/sizzle-16x9.mp4 hasAudioStream=true maxDb=-9.8 colorSpace=bt709[0m
+[36mINFO [0m [2m[gate:media][0m Gate M PASS — audible audio + BT.709 color [2mmp4=out/v2/sizzle-16x9.mp4[0m

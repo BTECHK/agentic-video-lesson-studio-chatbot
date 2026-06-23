@@ -58,7 +58,7 @@ export const PreviewBand: React.FC<SceneComponentProps> = ({ scene }) => {
             style={{
               ...titleIn,
               margin: 0,
-              fontWeight: BRAND.font.weights.extraBold,
+              fontWeight: BRAND.font.weights.bold,
               fontSize: 64,
               lineHeight: 1.1,
               letterSpacing: '-0.02em',

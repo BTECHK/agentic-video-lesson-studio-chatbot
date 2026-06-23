@@ -26,7 +26,7 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...title,
           margin: 0,
-          fontWeight: BRAND.font.weights.extraBold,
+          fontWeight: BRAND.font.weights.bold,
           fontSize: 60,
           letterSpacing: '-0.02em',
         }}
