@@ -86,3 +86,6 @@ content/lessons/*.wav
 
 # per-machine Drive path for publish:drive
 drive.local.json
+
+# zip-extraction artifact (dup of claude-design-delta/upload/)
+claude-design-delta/claude-design-delta-upload/
