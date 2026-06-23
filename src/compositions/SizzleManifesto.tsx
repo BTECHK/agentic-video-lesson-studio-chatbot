@@ -496,7 +496,10 @@ const FadeIn: React.FC<{ children: React.ReactNode; frames?: number }> = ({ chil
 };
 
 const Stage: React.FC = () => (
-  <AbsoluteFill>
+  // Syne is the inherited default for ALL beat text (labels, body, chips). Playfair
+  // overrides only on the big marketing headlines; mono on the chrome label. Without
+  // this, beats fell back to the browser default serif (Times) — the "not Syne" drift.
+  <AbsoluteFill style={{ fontFamily }}>
     {MANIFESTO_BEATS.map((b, i) => {
       const Comp = BEAT_COMPONENT[b.id];
       // Overlap each beat 14f into the next for a cross-dissolve.
