@@ -1,0 +1,41 @@
+{
+  "$schema": "../../contracts/scene-contract.schema.json",
+  "_intent": "Machine-readable single source of truth for ONE lesson. Claude Code renders from this. Edit copy/timing HERE, never in component code. All durations are integer frames at 30fps (sec*30). sceneType must be one of the 17 in scene-type-catalog.md.",
+  "id": "topic-{N}-lesson-{M}",
+  "lesson": { "title": "{Lesson Title}", "topic": "{Topic title}", "module": "Topic {N}", "durationTargetMin": 0 },
+  "buildStatus": "designed-from-outline",
+  "outlineSource": "course-outline.txt Lesson {N}.{M}",
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "cover",
+      "sceneType": "cover",
+      "start": 0,
+      "duration": 240,
+      "delivery": "talking-head",
+      "layout": "title + eyebrow + stats",
+      "copy": { "eyebrow": "Topic {N} · Lesson {N}.{M}", "title": ["{line 1}", "{line 2}"], "sub": "{one line}" },
+      "narration": { "gist": "{what Instructor says here}" },
+      "motion": [{ "el": "title", "in": [8, 30], "ease": "outCubic" }],
+      "interactionNotes": ""
+    },
+    {
+      "id": "demo-example",
+      "sceneType": "screen-flow",
+      "start": 240,
+      "duration": 420,
+      "delivery": "demo",
+      "layout": "browser frame, single tool",
+      "copy": { "label": "{what tool / task}" },
+      "narration": { "gist": "{what Instructor narrates over the click-through}" },
+      "motion": [
+        { "el": "cursor", "beat": "glide to 'New' button", "frames": [0, 24] },
+        { "el": "click", "beat": "open panel", "frames": [24, 36] },
+        { "el": "type", "beat": "type the prompt", "frames": [40, 110] },
+        { "el": "response", "beat": "stream the output", "frames": [120, 240] }
+      ],
+      "interactionNotes": "The whole point: animate the click-through, not a static screenshot."
+    }
+  ],
+  "openQuestions": []
+}

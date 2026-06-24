@@ -1,0 +1,120 @@
+{
+  "$schema": "../../../contracts/scene-contract.schema.json",
+  "_intent": "Machine-readable single source of truth for sample lesson Topic 1.1 — How This Course Works (synthetic sample content). Designed from the sample outline rows T1.1.r1-T1.1.r3. Durations are integer frames @30fps and start is cumulative; they are design estimates — narration length is authoritative at build. outlineRow and narration.targetWords carry the plan's fidelity + word-budget columns.",
+  "id": "topic-1-lesson-1",
+  "lesson": { "title": "How This Course Works", "topic": "Getting Started with AI Assistants", "module": "Topic 1", "durationTargetMin": 3 },
+  "buildStatus": "designed-from-outline",
+  "outlineSource": ".planning/curriculum/source-materials-extracted/course-outline.txt Lesson 1.1 (course-map rows T1.1.r1-T1.1.r3)",
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "cover",
+      "sceneType": "cover",
+      "outlineRow": "T1.1.r1",
+      "start": 0,
+      "duration": 600,
+      "delivery": "talking-head",
+      "layout": "title + eyebrow + sub + 3 stats",
+      "copy": { "eyebrow": "Topic 1 · Lesson 1.1", "title": ["How this", "course works."], "sub": "Short lessons, one skill each, practiced in a real assistant.", "stats": ["5 Short lessons", "27 min Topic total", "3 Steps per lesson"] },
+      "narration": { "gist": "Welcome to Topic 1. Before we touch a tool, here's how the next five lessons work and what you'll do in each one.", "targetWords": 50 },
+      "motion": [
+        { "el": "title", "in": [8, 30], "ease": "outCubic" },
+        { "el": "stats", "beat": "stagger pop", "frames": [30, 60], "step": 6, "ease": "outBack" }
+      ],
+      "interactionNotes": ""
+    },
+    {
+      "id": "one-skill-at-a-time",
+      "sceneType": "quote-card",
+      "outlineRow": "T1.1.r1",
+      "start": 600,
+      "duration": 1200,
+      "delivery": "talking-head",
+      "layout": "pull quote + attribution",
+      "copy": { "eyebrow": "How the course is paced", "quote": "One skill per lesson. You see it in a real assistant, then you try it on your own work.", "attribution": "Course Instructor, Sample Academy" },
+      "narration": { "gist": "Lessons are short on purpose: one skill each. Every skill is shown in a real assistant first, then you use it on something from your own week. Watching alone won't build the skill; the practice step does.", "targetWords": 100 },
+      "motion": [
+        { "el": "quote", "in": [6, 27], "ease": "outCubic" },
+        { "el": "rule", "beat": "accent underline draw", "frames": [20, 38], "ease": "inOutCubic" },
+        { "el": "quote", "beat": "idle float hold", "frames": [60, 1200], "ease": "linear" }
+      ],
+      "interactionNotes": ""
+    },
+    {
+      "id": "topic-1-map",
+      "sceneType": "journey-map",
+      "outlineRow": "T1.1.r2",
+      "start": 1800,
+      "duration": 900,
+      "delivery": "slide",
+      "layout": "5-stop Topic 1 lesson map, 1.1 active (variant: standard)",
+      "copy": { "eyebrow": "Topic 1 at a glance", "title": "You're right here", "sub": "Five short lessons. Each one adds a skill the next one uses.", "stops": ["1.1 How This Course Works (active)", "1.2 Picking the Right Assistant", "1.3 Writing Clear Prompts", "1.4 Checking the Output", "1.5 Making the Assistant Yours"] },
+      "narration": { "gist": "Here's the whole topic. You're at the start. Next you'll pick an assistant for a task, write a clear prompt, check what comes back, and make the assistant yours. Automating work comes later, in Topic 3.", "targetWords": 75 },
+      "motion": [
+        { "el": "path", "beat": "connect stops", "frames": [8, 40], "ease": "inOutCubic" },
+        { "el": "activeStop", "beat": "pulse", "frames": [40, 70], "ease": "outBack" }
+      ],
+      "interactionNotes": ""
+    },
+    {
+      "id": "lesson-rhythm",
+      "sceneType": "recap-grid",
+      "outlineRow": "T1.1.r2",
+      "start": 2700,
+      "duration": 900,
+      "delivery": "slide",
+      "layout": "3 numbered cards — the lesson rhythm",
+      "copy": { "eyebrow": "Every lesson, same rhythm", "title": "Three steps, every time", "cards": ["01 · See the idea — one short concept, one clear example", "02 · Watch it in a tool — the skill shown step by step in an assistant", "03 · Try it on your own task — the practice step that makes it stick"] },
+      "narration": { "gist": "Every lesson in this topic runs the same three steps: see the idea, watch it in a tool, try it on your own task. Same rhythm every time, so you always know what's coming.", "targetWords": 70 },
+      "motion": [{ "el": "cards", "beat": "stagger in", "frames": [0, 42], "step": 6, "ease": "outCubic" }],
+      "interactionNotes": ""
+    },
+    {
+      "id": "practice-setup",
+      "sceneType": "setup-checklist",
+      "outlineRow": "T1.1.r3",
+      "start": 3600,
+      "duration": 1260,
+      "delivery": "demo",
+      "layout": "4-item checklist + gliding cursor",
+      "copy": {
+        "eyebrow": "Before Lesson 1.2",
+        "title": "Get ready to practice",
+        "sub": "Four quick things. Tick them off as you go.",
+        "items": [
+          { "id": "open-assistant", "name": "Open an assistant you can already use", "why": "Any assistant from the course tool list works for Topic 1.", "activateAt": 90 },
+          { "id": "fresh-chat", "name": "Start a fresh chat for practice", "why": "Keeps course practice separate from your other conversations.", "activateAt": 360 },
+          { "id": "practice-log", "name": "Start a one-line practice log", "why": "Note what you tried and what came back, every lesson.", "activateAt": 630 },
+          { "id": "real-task", "name": "Pick one real task from your week", "why": "You'll reuse it in every Topic 1 lesson.", "activateAt": 900 }
+        ],
+        "cursor": true
+      },
+      "narration": { "gist": "Walk through the four setup items as they tick off. On the last one, pause: pick one real task from your week, something you'd happily hand off, and write it in your log. Hold onto it.", "targetWords": 115 },
+      "motion": [
+        { "el": "items", "beat": "rows land unchecked", "frames": [0, 48], "step": 6, "ease": "outCubic" },
+        { "el": "cursor", "beat": "glide to item 1 checkbox, click, check pops, row tints accentSoft, why-line fades up", "frames": [72, 110], "ease": "outCubic" },
+        { "el": "cursor", "beat": "same sequence for item 2", "frames": [342, 380], "ease": "outCubic" },
+        { "el": "cursor", "beat": "same sequence for item 3", "frames": [612, 650], "ease": "outCubic" },
+        { "el": "cursor", "beat": "glide to item 4 and park beside the open checkbox (engagement pause)", "frames": [882, 918], "ease": "outCubic" },
+        { "el": "check", "beat": "item 4 ticks after the pause", "frames": [1080, 1098], "ease": "outBack" }
+      ],
+      "interactionNotes": "The one interactive scene: animate the ticking, not a finished list. cursor → item 1 → click → check → item 2 → … → park on item 4 for the 'pick a real task' pause → tick. SceneAmbient keeps drifting through the pause."
+    },
+    {
+      "id": "up-next",
+      "sceneType": "preview-band",
+      "outlineRow": "T1.1.r3",
+      "start": 4860,
+      "duration": 540,
+      "delivery": "talking-head",
+      "layout": "coming-next band",
+      "copy": { "eyebrow": "Up next · Lesson 1.2", "title": "Picking the Right Assistant" },
+      "narration": { "gist": "Hold onto that task. In the next lesson we'll pick the right assistant for it.", "targetWords": 45 },
+      "motion": [{ "el": "band", "in": [6, 27], "ease": "outCubic" }],
+      "interactionNotes": ""
+    }
+  ],
+  "openQuestions": [
+    "Non-blocking: preview-band has no sub line in the render schema. Keep the 'bring your task' reminder narration-only, or file a small component request to show it on screen in up-next."
+  ]
+}
