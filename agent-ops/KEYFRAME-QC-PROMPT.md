@@ -1,10 +1,22 @@
 # Keyframe QC Review — prompt for Claude Design (self-contained)
 
-You are doing a **fast visual QC pass** on rendered Sample Academy lesson videos. You are given a
-`keyframes-review/` folder containing, per lesson, one **settled keyframe PNG per scene** (the exact
-pixels from the final 1920×1080 MP4, grabbed after each scene finished animating in). Your job is to
-catch **layout, spacing, typography, and brand defects** that slipped through — the kind a still-frame
-gate misses. You are NOT reviewing teaching content or narration; only what the eye sees.
+You are doing a **fast visual QC pass** on rendered Sample Academy lesson videos. Per lesson you are given
+one **settled keyframe PNG per scene** (the exact pixels from the final 1920×1080 MP4, grabbed after each
+scene finished animating in) plus a self-contained **`review.html`** contact sheet that lays out every
+keyframe next to its scene type, timing, and narration. Your job is to catch **layout, spacing,
+typography, and brand defects** that slipped through — the kind a still-frame gate misses. You are NOT
+reviewing teaching content or narration quality; only what the eye sees. **Review and write feedback only
+— do NOT re-render, regenerate, or modify any video, MP4, or lesson file. Feedback is written notes.**
+
+## Inputs & locations (you are connected to BOTH the repo and the Drive)
+- **OPEN THIS per lesson:** the contact sheet `review.html` — renders in a browser, shows the whole lesson.
+  - Repo: `artifacts/keyframes-review/<topic>/<id>/review.html` (e.g. `…/topic-3/topic-3-lesson-1/review.html`)
+  - Drive: `keyframes-review/Module N — …/<id>/review.html`
+- Individual keyframes: the `NN-<type>-<id>.png` files in the same folder (full-res, for close inspection).
+- Lesson design source (if you want to trace an issue to its data): `content/lessons/<id>/lesson.json`
+  (scene `type` + strict `content` + `narration`). The scene components live in
+  `src/compositions/lesson-scenes/` — name the component when an issue is a shared-component bug.
+- This contract: `00-KEYFRAME-QC-PROMPT.md` (this file), in the Drive `keyframes-review/` root.
 
 ## The brand + layout contract (what "correct" looks like)
 - **Palette:** warm linen background `#EDE8E3` (cards `#FDFBF9`), crimson accent `#8B2635`, charcoal ink
