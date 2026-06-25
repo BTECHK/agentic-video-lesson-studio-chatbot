@@ -34,4 +34,22 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
+  {
+    // Plain Node scripts (validate.mjs, handoff/build-prompts.mjs, etc.) run under
+    // Node — declare its globals so no-undef doesn't flag console/process/URL.
+    files: ['**/*.{mjs,js,cjs}'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+      },
+    },
+  },
 );

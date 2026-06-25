@@ -37,6 +37,7 @@ describe('FV2 parity guardrails', () => {
       'LessonChrome.tsx': { count: 1, why: 'the "Sample" wordmark glyph' },
       'ToolMark.tsx': { count: 1, why: 'tool-mark monogram glyph' },
       'ToolDemo.tsx': { count: 1, why: 'DOC/PPT/TXT file-type badge glyph — NOT the title (title is bold)' },
+      'ProgressionCurve.tsx': { count: 1, why: 'the marker "?" glyph (decorative; matches the locked reference weight 800) — NOT the title (title is bold)' },
     };
     const count = (src: string): number => (src.match(/weights\.extraBold/g) ?? []).length;
     for (const f of fs.readdirSync(scenesDir).filter((x) => x.endsWith('.tsx'))) {

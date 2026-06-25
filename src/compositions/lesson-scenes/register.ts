@@ -17,9 +17,10 @@ import { DigDeeper } from './DigDeeper';
 import { ToolDemo } from './ToolDemo';
 import { AuditQuadrant } from './AuditQuadrant';
 import { ScreenFlow } from './ScreenFlow';
+import { ProgressionCurve } from './ProgressionCurve';
 
 /**
- * Register every lesson scene component with the dispatcher (all 14 scene
+ * Register every lesson scene component with the dispatcher (all 18 scene
  * types). Idempotent — safe to call on HMR re-import and from tests (skips
  * types already registered rather than throwing on the duplicate).
  */
@@ -42,6 +43,7 @@ export function registerLessonScenes(): void {
     'tool-demo': ToolDemo,
     'audit-quadrant': AuditQuadrant,
     'screen-flow': ScreenFlow,
+    'progression-curve': ProgressionCurve,
   };
   for (const [type, component] of Object.entries(components)) {
     if (getSceneComponent(type) === null) {

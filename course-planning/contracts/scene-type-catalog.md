@@ -1,4 +1,4 @@
-# Scene-Type Catalog — the 17 building blocks
+# Scene-Type Catalog — the 18 building blocks
 
 > **Why this exists:** a lesson video is assembled from a fixed set of pre-built, brand-locked
 > scene components (Remotion). Planning a lesson = choosing a sequence of these types and filling
@@ -33,6 +33,7 @@
 | `assignment-list` | A bulleted task list with emphasis | "Your assignment", action items |
 | `audit-quadrant` | A 2×2 scatter (e.g. Effort × Impact) | "Prioritization", quadrant frameworks |
 | `journey-map` | The course progress map (stops, active highlight) | "Course journey map", "you are here" |
+| `progression-curve` | Labelled stage chips on a smooth rising path (optional dip), with an optional self-locating marker | "levels", "maturity model", any low→high progression |
 
 ## Title / narrative (framing — not the body of a lesson)
 | sceneType | Renders | Use when… |

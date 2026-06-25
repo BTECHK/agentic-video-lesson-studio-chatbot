@@ -31,7 +31,7 @@
             "enum": ["cover", "quote-card", "preview-band", "journey-map", "tool-card-reveal",
               "capability-table", "feature-grid", "recap-grid", "assignment-list", "comparison-chats",
               "setup-checklist", "voice-demo", "demo-cue", "dig-deeper", "tool-demo", "audit-quadrant",
-              "screen-flow"]
+              "screen-flow", "progression-curve"]
           },
           "start": { "type": "integer", "minimum": 0 },
           "duration": { "type": "integer", "minimum": 1 },

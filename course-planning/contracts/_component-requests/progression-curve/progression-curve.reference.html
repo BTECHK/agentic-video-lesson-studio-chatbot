@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>progression-curve — design reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDE8E3; --bgAlt:#F7F4F0; --card:#FDFBF9;
+    --ink:#1C1C1C; --muted:rgba(28,28,28,.60); --dim:rgba(28,28,28,.33);
+    --accent:#8B2635; --accentSoft:rgba(139,38,53,.10); --line:rgba(28,28,28,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;background:#d9d4ce;overflow:hidden}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#cfc9c2}
+  #stage{
+    width:1920px;height:1080px;flex:0 0 auto;background:var(--bg);position:relative;overflow:hidden;
+    transform-origin:center center;font-family:'Syne',sans-serif;color:var(--ink);
+    box-shadow:0 30px 80px -20px rgba(28,28,28,.35);
+  }
+  #stage::before{content:"";position:absolute;inset:-20%;pointer-events:none;
+    background:radial-gradient(60% 50% at 22% 18%, rgba(255,255,255,.55), transparent 60%),
+               radial-gradient(55% 55% at 88% 86%, rgba(139,38,53,.05), transparent 60%);
+    animation:drift 26s ease-in-out infinite alternate;}
+  @keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-26px,-18px,0)}}
+  .safe{position:absolute;left:110px;top:64px;right:110px;bottom:60px}
+  .eyebrow{font-weight:600;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .title{font-weight:700;font-size:66px;line-height:1.02;letter-spacing:-0.025em;margin-top:14px;max-width:1100px}
+  .title .q{color:var(--accent)}
+  svg{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none}
+  .axis{stroke:var(--dim);stroke-width:1.5;stroke-dasharray:1 9;stroke-linecap:round;opacity:.5}
+  .curve{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round}
+  .leader{stroke:var(--dim);stroke-width:1.5}
+  .node{fill:var(--card);stroke:var(--accent);stroke-width:4}
+  .node.lit{fill:var(--accent)}
+  .chip{position:absolute;transform:translate(-50%,-50%);background:var(--card);
+    border:1px solid var(--line);border-radius:4px;padding:11px 15px;min-width:96px;
+    box-shadow:0 4px 12px rgba(28,28,28,.05);white-space:nowrap}
+  .chip .tier{font-weight:700;font-size:14px;color:var(--accent);letter-spacing:.06em}
+  .chip .lab{font-weight:600;font-size:21px;color:var(--ink);margin-top:1px}
+  .dest{position:absolute;transform:translate(-50%,-50%);font-weight:700;font-size:22px;color:var(--accent);
+    background:var(--accentSoft);border:1px solid rgba(139,38,53,.22);border-radius:4px;padding:8px 14px;white-space:nowrap}
+  .marker{position:absolute;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;
+    border:2px dashed var(--accent);display:flex;align-items:center;justify-content:center;
+    background:rgba(253,251,249,.6)}
+  .marker .qm{font-weight:800;font-size:30px;color:var(--accent)}
+  .marker::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid var(--accent);
+    opacity:0;animation:pulse 2.6s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(.7);opacity:.5}70%{opacity:0}100%{transform:scale(1.5);opacity:0}}
+  .marker-tag{position:absolute;transform:translate(-50%,-50%);font-weight:700;font-size:18px;color:var(--accent);white-space:nowrap}
+  .drop{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:2 7;opacity:.65}
+  .ask{position:absolute;left:0;right:0;bottom:54px;text-align:center;font-weight:600;font-size:30px;color:var(--ink)}
+  .ask b{color:var(--accent);font-weight:700}
+  .ask .sub{display:block;font-size:19px;color:var(--muted);font-weight:500;margin-top:8px}
+  .credit{position:absolute;left:0;bottom:20px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:600}
+  @media (prefers-reduced-motion: no-preference){
+    .ask{animation:askdrift 6s ease-in-out infinite alternate}
+    @keyframes askdrift{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+  }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="safe">
+      <div class="eyebrow">Progression curve</div>
+      <div class="title">Sample <span class="q">title</span> line</div>
+    </div>
+    <svg viewBox="0 0 1920 1080" id="svg" aria-hidden="true"></svg>
+    <div id="chips"></div>
+    <div class="ask">
+      Sample engagement prompt <b>goes here.</b>
+      <span class="sub">Sample supporting line.</span>
+    </div>
+    <div class="credit">Design reference · progression-curve</div>
+  </div>
+</div>
+<script>
+  const NODES = [
+    { tier:"01", label:"Stage one", x:175,  y:770, chip:"below", lit:true  },
+    { tier:"02", label:"Stage two", x:430,  y:430, chip:"above", lit:true  },
+    { tier:"03", label:"Stage three", x:640,  y:625, chip:"below", lit:true  },
+    { tier:"04", label:"Stage four", x:900,  y:560, chip:"below", lit:false },
+    { tier:"05", label:"Stage five", x:1165, y:470, chip:"above", lit:false },
+    { tier:"06", label:"Stage six", x:1435, y:360, chip:"above", lit:false },
+    { tier:"07", label:"Stage seven", x:1730, y:250, chip:"below", lit:false }
+  ];
+  const svg = document.getElementById('svg');
+  const NS = "http://www.w3.org/2000/svg";
+  function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+  svg.appendChild(el('line',{class:'axis',x1:150,y1:885,x2:1790,y2:885}));
+  svg.appendChild(el('line',{class:'axis',x1:150,y1:240,x2:150,y2:885}));
+  let d = `M ${NODES[0].x} ${NODES[0].y}`;
+  for(let i=0;i<NODES.length-1;i++){
+    const p=NODES[i], q=NODES[i+1], dx=(q.x-p.x)*0.42;
+    d += ` C ${p.x+dx} ${p.y}, ${q.x-dx} ${q.y}, ${q.x} ${q.y}`;
+  }
+  svg.appendChild(el('path',{class:'curve',d}));
+  const chipBox = document.getElementById('chips');
+  NODES.forEach(n=>{
+    const cy = n.chip==='above' ? n.y-92 : n.y+92;
+    svg.appendChild(el('line',{class:'leader',x1:n.x,y1:n.y,x2:n.x,y2:cy + (n.chip==='above'?34:-34)}));
+    svg.appendChild(el('circle',{class:'node'+(n.lit?' lit':''),cx:n.x,cy:n.y,r:9}));
+    const chip=document.createElement('div');
+    chip.className='chip';
+    chip.style.left=n.x+'px'; chip.style.top=cy+'px';
+    chip.innerHTML=`<div class="tier">${n.tier}</div><div class="lab">${n.label}</div>`;
+    chipBox.appendChild(chip);
+  });
+  const last=NODES[NODES.length-1];
+  const dest=document.createElement('div');
+  dest.className='dest'; dest.style.left=(last.x-6)+'px'; dest.style.top=(last.y-120)+'px';
+  dest.textContent='→ and beyond';
+  chipBox.appendChild(dest);
+  const mx=520, my=720;
+  svg.appendChild(el('line',{class:'drop',x1:mx,y1:my+40,x2:mx,y2:885}));
+  const marker=document.createElement('div');
+  marker.className='marker'; marker.style.left=mx+'px'; marker.style.top=my+'px';
+  marker.innerHTML='<span class="qm">?</span>';
+  chipBox.appendChild(marker);
+  const tag=document.createElement('div');
+  tag.className='marker-tag'; tag.style.left=mx+'px'; tag.style.top=(my-58)+'px';
+  tag.textContent='you?';
+  chipBox.appendChild(tag);
+  function fit(){
+    const s=Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    document.getElementById('stage').style.transform='scale('+s+')';
+  }
+  window.addEventListener('resize',fit); fit();
+</script>
+</body>
+</html>

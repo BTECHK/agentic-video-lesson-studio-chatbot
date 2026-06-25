@@ -1,0 +1,341 @@
+{
+  "schemaVersion": "1.0",
+  "id": "topic-3-lesson-1",
+  "lesson": {
+    "title": "Mapping a Repetitive Task",
+    "topic": "Automating Everyday Work",
+    "module": "Topic 3",
+    "duration": 10958
+  },
+  "scenes": [
+    {
+      "id": "cover",
+      "type": "cover",
+      "start": 0,
+      "duration": 1122,
+      "label": "find",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": [
+          "Mapping a",
+          "*repetitive* task"
+        ],
+        "sub": "Automating Everyday Work"
+      },
+      "narration": {
+        "text": "Welcome to Topic 3, Automating Everyday Work. Up to now, you've used an assistant one request at a time. You ask, it answers, you check. That works. But some of your work looks exactly the same every single week, and that's where the real time goes. In this lesson, you'll take one of those repetitive tasks and map it out on a single page. No code, no new tools. Just a clear picture of the task, so that later you can hand the right parts of it to an assistant with confidence."
+      }
+    },
+    {
+      "id": "worth-it",
+      "type": "audit-quadrant",
+      "start": 1122,
+      "duration": 1578,
+      "label": "find",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "Which task is *worth* mapping?",
+        "yAxis": {
+          "top": "Needs judgement",
+          "bottom": "Predictable steps"
+        },
+        "xAxis": {
+          "left": "Happens rarely",
+          "right": "Happens often"
+        },
+        "tasks": [
+          {
+            "id": "annual-review",
+            "label": "Annual team review",
+            "cap": "Judgement",
+            "quadrant": "tl"
+          },
+          {
+            "id": "client-reply",
+            "label": "Reply to an unhappy client",
+            "cap": "Judgement",
+            "quadrant": "tr"
+          },
+          {
+            "id": "expense-summary",
+            "label": "Quarterly expense summary",
+            "cap": "Numbers",
+            "quadrant": "bl"
+          },
+          {
+            "id": "weekly-report",
+            "label": "Weekly status report",
+            "cap": "Writing",
+            "quadrant": "br"
+          },
+          {
+            "id": "meeting-actions",
+            "label": "Meeting notes to action list",
+            "cap": "Writing",
+            "quadrant": "br"
+          }
+        ]
+      },
+      "narration": {
+        "text": "First, which task is worth mapping? Here's a simple grid. Left to right: how often the task happens. Top to bottom: how much judgement it needs. Let's place a few sample tasks. An annual team review happens rarely and needs a lot of judgement, so it goes top left. Replying to an unhappy client happens often, but every reply needs care, so top right. A quarterly expense summary is predictable, but it only comes around four times a year. Now look at the bottom right: a weekly status report, and turning meeting notes into an action list. They happen often, and the steps barely change. That corner is where you start. And notice what's missing from it: anything where a wrong answer would embarrass you in front of a client."
+      }
+    },
+    {
+      "id": "three-tests",
+      "type": "feature-grid",
+      "start": 2700,
+      "duration": 1518,
+      "label": "find",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "Three tests for a *first* candidate",
+        "features": [
+          {
+            "id": "frequent",
+            "n": "01",
+            "cat": "Frequent",
+            "title": "It happens every week",
+            "sub": "Small savings add up when the task repeats.",
+            "focusAt": 0
+          },
+          {
+            "id": "predictable",
+            "n": "02",
+            "cat": "Predictable",
+            "title": "The steps rarely change",
+            "sub": "Same inputs, same order, same kind of output.",
+            "focusAt": 0
+          },
+          {
+            "id": "low-risk",
+            "n": "03",
+            "cat": "Low risk",
+            "title": "A mistake is easy to catch",
+            "sub": "You review the result before anyone relies on it.",
+            "focusAt": 0
+          }
+        ]
+      },
+      "narration": {
+        "text": "If you're not sure where a task belongs, run three quick tests. One: is it frequent? A task you do every week gives you fifty chances a year to save time. Two: is it predictable? The same inputs, the same order of steps, and the same kind of output each time. Three: is it low risk? If something goes wrong, you'll catch it before anyone relies on the result. Take the meeting action list. It happens after every team meeting, the steps are always the same, and you read the list before you send it. Three passes. A task that passes all three is a great first candidate. A task that fails one of them isn't off limits forever. It's just not where you begin."
+      }
+    },
+    {
+      "id": "map-steps",
+      "type": "screen-flow",
+      "start": 4218,
+      "duration": 1542,
+      "label": "map",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "Map it in *one note*",
+        "caption": "Clearly stylized, not a real screenshot.",
+        "windowTitle": "Notes · Weekly status report",
+        "fidelity": "cartoon",
+        "layout": "split",
+        "steps": [
+          {
+            "id": "s1",
+            "action": "click",
+            "target": "New note",
+            "label": "Start a new note",
+            "uiState": "Blank note titled 'Weekly status report'",
+            "dwell": 1
+          },
+          {
+            "id": "s2",
+            "action": "type",
+            "target": "Inputs",
+            "label": "List the inputs",
+            "typedText": "Inputs: project tracker export, last week's report",
+            "uiState": "Inputs line filled in",
+            "dwell": 1.2
+          },
+          {
+            "id": "s3",
+            "action": "type",
+            "target": "Steps",
+            "label": "Number the steps",
+            "typedText": "1 Pull updates, 2 Group by project, 3 Draft summary, 4 Flag risks",
+            "uiState": "Four numbered steps listed",
+            "dwell": 1.5
+          },
+          {
+            "id": "s4",
+            "action": "type",
+            "target": "Output",
+            "label": "Name the output",
+            "typedText": "Output: one-page summary for the team lead",
+            "uiState": "Output line filled in",
+            "dwell": 1.2
+          },
+          {
+            "id": "s5",
+            "action": "reveal",
+            "target": "Map",
+            "label": "The finished map",
+            "uiState": "Map complete: inputs, four steps, one output",
+            "dwell": 1.5
+          }
+        ],
+        "targetPositions": {
+          "New note": {
+            "x": 12,
+            "y": 10
+          },
+          "Inputs": {
+            "x": 40,
+            "y": 30
+          },
+          "Steps": {
+            "x": 40,
+            "y": 50
+          },
+          "Output": {
+            "x": 40,
+            "y": 70
+          },
+          "Map": {
+            "x": 70,
+            "y": 50
+          }
+        }
+      },
+      "narration": {
+        "text": "Now let's map one. We'll use the weekly status report. Open a blank note and give it the task's name. Then write three things. First, the inputs: everything you gather before you start. Here, that's the project tracker export and last week's report. Second, the steps, as a short numbered list. Pull the updates. Group them by project. Draft the summary. Flag the risks. Keep each step to one action you could explain to a new colleague. Third, the output: one page, for your team lead. Don't try to make it perfect. A rough map you finish beats a detailed one you abandon. That's the whole map. Inputs, steps, output. If you can't write a step down in one line, it's probably two steps hiding as one."
+      }
+    },
+    {
+      "id": "draft-step",
+      "type": "tool-demo",
+      "start": 5760,
+      "duration": 1615,
+      "label": "map",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "Hand over *one* step",
+        "caption": "Illustrative example with invented projects.",
+        "tool": {
+          "name": "Claude",
+          "logo": "claude"
+        },
+        "prompt": "Here are this week's project updates. Group them by project and draft a short status summary for my team lead. Flag anything at risk.",
+        "outputs": [
+          {
+            "id": "summary",
+            "kind": "text",
+            "label": "Draft status summary",
+            "sub": "Grouped by project",
+            "badge": "Draft",
+            "lines": [
+              "Project Alpha: on track, review booked for Friday.",
+              "Project Beta: waiting on a supplier quote.",
+              "At risk: Beta may slip by one week."
+            ]
+          }
+        ]
+      },
+      "narration": {
+        "text": "Once the steps are written down, it gets much easier to see which ones an assistant can help with. Take step three, drafting the summary. Writing is a core strength of assistants like Claude, so you can hand that step over with a clear prompt. Give it the updates, tell it to group them by project, and ask it to flag anything at risk. Notice the prompt. It names the input, the grouping, the audience, and the one thing to flag. That's the three-question check from Topic 1 at work: who it's for, what you need, and what done looks like. What comes back is a draft, not a finished report. The projects on screen are invented for this example. In real life, you'd check every line against the tracker before sending it."
+      }
+    },
+    {
+      "id": "stays-human",
+      "type": "quote-card",
+      "start": 7375,
+      "duration": 1506,
+      "label": "human",
+      "content": {
+        "eyebrow": "Decide what stays human",
+        "quote": "Automate the steps. Keep the judgement.",
+        "attribution": "Course Instructor, Sample Academy"
+      },
+      "narration": {
+        "text": "Which brings us to the most important part of the map: deciding what stays human. Go back to your numbered steps and mark every step that needs your judgement. In the status report, flagging risks is one of them. The assistant can suggest what looks risky, but only you know the context: which delay really matters, which stakeholder is already worried, and what you've promised. So that step stays with you. Other judgement steps are easy to spot once you look for them: anything that decides who gets told what, anything with money attached, and anything you'd sign your name to. Here's the rule to remember. Automate the steps. Keep the judgement. The map makes that line visible, instead of leaving it to chance."
+      }
+    },
+    {
+      "id": "recap",
+      "type": "recap-grid",
+      "start": 8881,
+      "duration": 1122,
+      "label": "human",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "What you *mapped*",
+        "cards": [
+          {
+            "id": "pick",
+            "n": "01",
+            "title": "Pick",
+            "body": "A frequent, predictable, low-risk task."
+          },
+          {
+            "id": "map",
+            "n": "02",
+            "title": "Map",
+            "body": "Inputs, numbered steps, one output."
+          },
+          {
+            "id": "mark",
+            "n": "03",
+            "title": "Mark",
+            "body": "The steps that stay with you."
+          }
+        ]
+      },
+      "narration": {
+        "text": "Let's recap. You picked a task that is frequent, predictable, and low risk. You mapped it on one page: the inputs, a short list of numbered steps, and a single output. And you marked the steps that need your judgement, so you know exactly what stays with you. You also saw how one clearly written step, like drafting the summary, can go to an assistant with a clear prompt. That map is the foundation for everything else in this topic. A task you can describe clearly is a task you can improve."
+      }
+    },
+    {
+      "id": "practice",
+      "type": "assignment-list",
+      "start": 10003,
+      "duration": 955,
+      "label": "human",
+      "content": {
+        "eyebrow": "Topic 3 · Lesson 3.1",
+        "title": "Your *practice*",
+        "sub": "One task, one note, fifteen minutes.",
+        "tasks": [
+          {
+            "id": "list",
+            "bold": "List five weekly tasks",
+            "context": "the ones you do without thinking."
+          },
+          {
+            "id": "score",
+            "bold": "Score each one",
+            "context": "frequent, predictable, low risk."
+          },
+          {
+            "id": "map",
+            "bold": "Map the winner",
+            "context": "inputs, numbered steps, one output."
+          },
+          {
+            "id": "mark",
+            "bold": "Mark the human steps",
+            "context": "and keep those for yourself."
+          }
+        ],
+        "callout": {
+          "label": "Remember",
+          "body": "Automate the steps. Keep the judgement."
+        }
+      },
+      "narration": {
+        "text": "Here's your practice, and it takes about fifteen minutes. List five tasks you do every week, the ones you could do half asleep. Score each one against the three tests: frequent, predictable, low risk. Pick the winner and map it in a single note, with inputs, numbered steps, and one output. Then mark the steps that stay human. Keep that note somewhere you can find it again, because you'll build on it. Automate the steps. Keep the judgement."
+      }
+    }
+  ],
+  "meta": {
+    "createdAt": "2026-09-30",
+    "lastUpdated": "2026-09-30",
+    "authors": [
+      "Sample Academy (synthetic sample content)"
+    ],
+    "factCheckedAt": null
+  }
+}

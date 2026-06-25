@@ -14,6 +14,7 @@ import {
   JourneyMapContentSchema,
   LessonSchema,
   ScreenFlowContentSchema,
+  ProgressionCurveContentSchema,
 } from '../content/schemas';
 
 // --- Helper factories ---
@@ -185,8 +186,8 @@ describe('SourceFileSchema', () => {
 });
 
 describe('SceneTypes', () => {
-  it('has exactly 17 scene type entries', () => {
-    expect(SCENE_TYPES).toHaveLength(17);
+  it('has exactly 18 scene type entries', () => {
+    expect(SCENE_TYPES).toHaveLength(18);
   });
 
   it('accepts valid scene types', () => {
@@ -308,6 +309,41 @@ describe('SceneTypes', () => {
       steps: [{ id: 's1', action: 'click', target: 'Btn', uiState: 'done', dwell: 0.3 }],
     };
     expect(ScreenFlowContentSchema.safeParse(data).success).toBe(false);
+  });
+
+  it('accepts a valid ProgressionCurveContentSchema (dunning-kruger + marker)', () => {
+    const data = {
+      eyebrow: 'Progression',
+      title: 'Where do you stand?',
+      stages: [
+        { tier: '01', label: 'Stage A' },
+        { tier: '02', label: 'Stage B' },
+        { tier: '03', label: 'Stage C' },
+        { tier: '04', label: 'Stage D' },
+      ],
+      curve: 'dunning-kruger',
+      destination: '→ next',
+      marker: 'here',
+    };
+    expect(ProgressionCurveContentSchema.safeParse(data).success).toBe(true);
+  });
+
+  it('rejects ProgressionCurveContentSchema with fewer than 3 stages', () => {
+    const data = {
+      eyebrow: 'E',
+      title: 'T',
+      stages: [{ label: 'One' }, { label: 'Two' }],
+    };
+    expect(ProgressionCurveContentSchema.safeParse(data).success).toBe(false);
+  });
+
+  it('rejects ProgressionCurveContentSchema with a stage missing its label', () => {
+    const data = {
+      eyebrow: 'E',
+      title: 'T',
+      stages: [{ label: 'One' }, { tier: '02' }, { label: 'Three' }],
+    };
+    expect(ProgressionCurveContentSchema.safeParse(data).success).toBe(false);
   });
 });
 

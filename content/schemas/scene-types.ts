@@ -18,6 +18,7 @@ export const SCENE_TYPES = [
   'tool-demo',
   'audit-quadrant',
   'screen-flow',
+  'progression-curve',
 ] as const;
 
 export const SceneTypeSchema = z.enum(SCENE_TYPES);
@@ -279,6 +280,23 @@ export const ScreenFlowContentSchema = z
     });
   });
 
+export const ProgressionCurveContentSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  stages: z
+    .array(
+      z.object({
+        tier: z.string().optional(),
+        label: z.string(),
+      }),
+    )
+    .min(3)
+    .max(8),
+  curve: z.enum(['steady', 'dunning-kruger']).optional(),
+  destination: z.string().optional(),
+  marker: z.string().optional(),
+});
+
 /** Map scene type string to its content schema */
 export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'cover': CoverContentSchema,
@@ -298,6 +316,7 @@ export const SCENE_CONTENT_SCHEMAS: Record<SceneType, z.ZodType> = {
   'tool-demo': ToolDemoContentSchema,
   'audit-quadrant': AuditQuadrantContentSchema,
   'screen-flow': ScreenFlowContentSchema,
+  'progression-curve': ProgressionCurveContentSchema,
 };
 
 export function getContentSchema(type: SceneType): z.ZodType {
