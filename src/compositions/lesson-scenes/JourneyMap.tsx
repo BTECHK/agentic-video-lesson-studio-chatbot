@@ -89,7 +89,11 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
               <Pop delay={48 + i * 4}>
                 <Dot state={stop.state} />
               </Pop>
-              <Pop delay={50 + i * 4} style={{ marginTop: 24, textAlign: 'center', maxWidth: 280 }}>
+              {/* Label stack — clear breathing room under the node row, capped to
+                  the column width (~200px < the 7-up column share) and centered so
+                  multi-line titles wrap WITHIN their column and never crowd a
+                  neighbour. */}
+              <Pop delay={50 + i * 4} style={{ marginTop: 44, textAlign: 'center', maxWidth: 200 }}>
                 {/* Label — textMuted unless active */}
                 <div
                   style={{
@@ -107,8 +111,8 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                   style={{
                     marginTop: 8,
                     fontWeight: BRAND.font.weights.semiBold,
-                    fontSize: 24,
-                    lineHeight: 1.2,
+                    fontSize: 23,
+                    lineHeight: 1.25,
                     color: stop.state === 'todo' ? BRAND.colors.textMuted : BRAND.colors.text,
                   }}
                 >
@@ -118,7 +122,7 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
 
               {/* "You are here" pill — accent bg, bgBase text — only for active non-destination */}
               {stop.state === 'active' && !isDestination && (
-                <Pop delay={90} style={{ marginTop: 18 }}>
+                <Pop delay={90} style={{ marginTop: 26 }}>
                   <div
                     style={{
                       backgroundColor: BRAND.colors.accent,

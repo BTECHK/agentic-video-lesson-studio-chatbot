@@ -147,8 +147,10 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
 
   return (
     <SceneFrame align="flex-start">
-      {/* Header pinned to the safe-area top-left — over the full-canvas plot. */}
-      <div style={{ position: 'absolute', left: 110, top: 64, maxWidth: 1100 }}>
+      {/* Header inset below the lesson chrome row (the "Sample Academy" watermark
+          sits at top:64) so the eyebrow/title never collide with it — matches
+          how the clean scenes start their header at SceneFrame's 120px top pad. */}
+      <div style={{ position: 'absolute', left: 110, top: 120, maxWidth: 1100 }}>
         <div style={{ ...eyebrowGlide, ...eyebrowStyle() }}>
           <span
             style={{ width: 24, height: 2, backgroundColor: BRAND.colors.accent, borderRadius: BRAND.radius }}
@@ -359,6 +361,9 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
                 ?
               </span>
             </div>
+            {/* "you?" tag — the short self-locating label that sits with the ring
+                (the reference's marker-tag). The full prompt sentence lives in the
+                wrapped block below the baseline so nothing crosses a chip/node. */}
             <div
               style={{
                 position: 'absolute',
@@ -370,6 +375,26 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
                 fontSize: 18,
                 color: BRAND.colors.accent,
                 whiteSpace: 'nowrap',
+              }}
+            >
+              you?
+            </div>
+            {/* Prompt copy — anchored in the clear low-left zone UNDER the curve
+                baseline (y=885), in a narrow left column (right edge ~x:360) that
+                stays clear of BOTH the stage chips/nodes above and the centered
+                caption band (left edge x:370). The long line can never run through
+                another element. */}
+            <div
+              style={{
+                position: 'absolute',
+                left: 110,
+                top: 905,
+                maxWidth: 250,
+                opacity: markerIn,
+                fontWeight: BRAND.font.weights.semiBold,
+                fontSize: 20,
+                lineHeight: 1.4,
+                color: BRAND.colors.accent,
               }}
             >
               {c.marker}
