@@ -89,3 +89,6 @@ drive.local.json
 
 # zip-extraction artifact (dup of claude-design-delta/upload/)
 claude-design-delta/claude-design-delta-upload/
+
+# Keyframe-review PNGs (regenerable via scripts/keyframes-review.ts; reviewed on Drive)
+artifacts/keyframes-review/
