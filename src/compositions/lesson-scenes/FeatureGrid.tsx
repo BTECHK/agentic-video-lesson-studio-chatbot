@@ -2,7 +2,7 @@ import React from 'react';
 import { interpolate, useCurrentFrame } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { FeatureGridContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND, SHADOW, LEADING } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, SceneTitle, Glide, renderAccented } from './shared';
 
 /**
@@ -25,8 +25,13 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
       : 0;
   const activeFocus = hasFocusPass ? Math.max(...c.features.map((f) => focusFor(f.focusAt))) : 0;
 
+  // Count-aware columns: 3 -> single 3-up row, 4 -> 2x2, 1/2 -> one row.
+  const n = c.features.length;
+  const small = n <= 2;
+  const gridTemplateColumns = n === 3 ? 'repeat(3,1fr)' : n >= 4 ? '1fr 1fr' : `repeat(${n},1fr)`;
+
   return (
-    <SceneFrame align="flex-start">
+    <SceneFrame align={small ? 'center' : 'flex-start'}>
       <Eyebrow delay={6}>{c.eyebrow}</Eyebrow>
       <SceneTitle delay={14} size={68}>
         {renderAccented(c.title)}
@@ -35,10 +40,10 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns,
           gap: 28,
           width: '100%',
-          marginTop: 24,
+          marginTop: small ? 0 : 24,
         }}
       >
         {c.features.map((f, i) => (
@@ -93,7 +98,7 @@ export const FeatureGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                         {f.cat}
                       </div>
                     ) : null}
-                    <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 34, lineHeight: 1.1 }}>
+                    <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 34, lineHeight: LEADING.heading }}>
                       {f.title}
                     </div>
                     {f.sub ? (

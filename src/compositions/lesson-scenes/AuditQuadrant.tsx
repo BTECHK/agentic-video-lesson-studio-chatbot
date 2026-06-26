@@ -53,7 +53,15 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
     ...(q === 'tl' && { left: '3%', top: 10, right: '53%' }),
     ...(q === 'tr' && { right: '3%', top: 10, left: '53%' }),
     ...(q === 'bl' && { left: '3%', bottom: 10, right: '53%', top: '52%' }),
-    ...(q === 'br' && { right: '3%', bottom: 10, left: '53%', top: '52%' }),
+    ...(q === 'br' && {
+      right: '3%',
+      bottom: 10,
+      left: '53%',
+      top: '52%',
+      // Brand-legal emphasis for the featured quadrant (storyboard's "br
+      // glows crimson") — a flat 2px accent top-border, never a glow.
+      borderTop: `2px solid ${BRAND.colors.accent}`,
+    }),
   });
 
   let pillIndex = 0;
@@ -65,7 +73,7 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
         {c.title}
       </SceneTitle>
 
-      <div style={{ position: 'relative', width: '100%', height: 480, marginTop: 4 }}>
+      <div style={{ position: 'relative', width: '100%', height: 430, marginTop: 4 }}>
         {/* Axes — borderStrong hairlines */}
         <div
           style={{
@@ -95,10 +103,10 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
         <div style={{ ...axisLabel, left: '50%', bottom: -14, transform: 'translateX(-50%)' }}>
           {c.yAxis.bottom}
         </div>
-        <div style={{ ...axisLabel, left: 0, top: '50%', transform: 'translateY(-50%)' }}>
+        <div style={{ ...axisLabel, left: 0, top: '50%', transform: 'translate(-100%, -50%)' }}>
           {c.xAxis.left}
         </div>
-        <div style={{ ...axisLabel, right: 0, top: '50%', transform: 'translateY(-50%)' }}>
+        <div style={{ ...axisLabel, right: 0, top: '50%', transform: 'translate(100%, -50%)' }}>
           {c.xAxis.right}
         </div>
 

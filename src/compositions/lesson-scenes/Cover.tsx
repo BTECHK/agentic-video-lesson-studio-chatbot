@@ -3,7 +3,7 @@ import { interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CoverContent } from './content-types';
 import { BRAND } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented } from './shared';
+import { MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented, sceneTitleStyle } from './shared';
 
 /**
  * `cover` — opening hero of every lesson. Eyebrow kicker, multi-line hero
@@ -19,16 +19,7 @@ export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
     <SceneFrame align="flex-start">
       <Eyebrow delay={9}>{c.eyebrow}</Eyebrow>
 
-      <h1
-        style={{
-          margin: 0,
-          fontWeight: BRAND.font.weights.bold,
-          fontSize: 112,
-          lineHeight: 1.02,
-          letterSpacing: '-0.025em',
-          maxWidth: 1500,
-        }}
-      >
+      <h1 style={sceneTitleStyle(112)}>
         {c.title.map((line, i) => (
           <Glide key={i} delay={16 + i * 12} fromY={28} style={{ display: 'block' }}>
             {renderAccented(line)}

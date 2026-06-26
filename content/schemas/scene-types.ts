@@ -71,6 +71,8 @@ export const ComparisonChatsContentSchema = z.object({
     }),
   ),
   tether: z.boolean().optional(),
+  // Optional override for the "Stylized simulation" honesty chip text.
+  disclaimer: z.string().optional(),
 });
 
 export const ToolCardRevealContentSchema = z.object({
@@ -106,14 +108,16 @@ export const SetupChecklistContentSchema = z.object({
   eyebrow: z.string(),
   title: z.string(),
   sub: z.string(),
-  items: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      why: z.string(),
-      activateAt: z.number(),
-    }),
-  ),
+  items: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        why: z.string(),
+        activateAt: z.number(),
+      }),
+    )
+    .max(5),
   cursor: z.boolean().optional(),
 });
 
@@ -218,6 +222,8 @@ export const ToolDemoContentSchema = z.object({
         label: z.string(),
         sub: z.string().optional(),
         badge: z.string().optional(),
+        // Optional preview body lines rendered inside a text/file output card.
+        lines: z.array(z.string()).optional(),
       }),
     )
     .min(1)
@@ -246,6 +252,8 @@ export const ScreenFlowStepSchema = z.object({
   id: z.string(),
   action: z.enum(['click', 'type', 'navigate', 'reveal']),
   target: z.string(),
+  // Optional human-readable label shown instead of the raw scaffolding `target` id.
+  label: z.string().optional(),
   typedText: z.string().optional(),
   uiState: z.string(),
   dwell: z.number().min(0.5),

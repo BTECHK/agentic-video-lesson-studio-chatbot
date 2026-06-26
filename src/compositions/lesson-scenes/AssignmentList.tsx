@@ -2,7 +2,7 @@ import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AssignmentListContent } from './content-types';
 import { BRAND } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn } from './shared';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn, eyebrowStyle } from './shared';
 
 /**
  * `assignment-list` — pre-class homework. Each task row: accent square
@@ -22,7 +22,7 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
       </SceneTitle>
       <SceneSub delay={26}>{c.sub}</SceneSub>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 18, width: '100%', marginTop: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', marginTop: 8 }}>
         {c.tasks.map((task, i) => (
           <Glide key={task.id} delay={48 + i * 10} fromY={20}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
@@ -37,10 +37,10 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
                   flexShrink: 0,
                 }}
               />
-              <div style={{ fontSize: 32, lineHeight: 1.35 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 32, lineHeight: 1.35 }}>
                 <span style={{ fontWeight: BRAND.font.weights.bold, color: BRAND.colors.text }}>
                   {task.bold}
-                </span>{' '}
+                </span>
                 <span style={{ fontWeight: BRAND.font.weights.regular, color: MUTED }}>
                   {task.context}
                 </span>
@@ -58,7 +58,7 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
             flexDirection: 'column',
             gap: 8,
             width: '100%',
-            marginTop: 16,
+            marginTop: 8,
             padding: '24px 32px',
             borderRadius: BRAND.radius,
             backgroundColor: BRAND.colors.bgCard,
@@ -67,17 +67,7 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
             boxSizing: 'border-box',
           }}
         >
-          <div
-            style={{
-              fontWeight: BRAND.font.weights.bold,
-              fontSize: 16,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: BRAND.colors.accent,
-            }}
-          >
-            {c.callout.label}
-          </div>
+          <div style={eyebrowStyle()}>{c.callout.label}</div>
           <div style={{ fontWeight: BRAND.font.weights.semiBold, fontSize: 28, lineHeight: 1.3 }}>
             {c.callout.body}
           </div>

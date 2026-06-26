@@ -2,7 +2,7 @@ import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { CapabilityTableContent } from './content-types';
 import { BRAND } from '../../brand/tokens';
-import { SceneFrame, Eyebrow, Glide, useGlideIn, renderAccented, MUTED } from './shared';
+import { SceneFrame, Eyebrow, Glide, useGlideIn, renderAccented, sceneTitleStyle, MUTED } from './shared';
 
 type Cell = 'B' | 'Y' | 'L' | '-';
 
@@ -22,17 +22,7 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
   return (
     <SceneFrame align="flex-start" paddingX={140}>
       <Eyebrow delay={6}>{c.eyebrow}</Eyebrow>
-      <h1
-        style={{
-          ...title,
-          margin: 0,
-          fontWeight: BRAND.font.weights.bold,
-          fontSize: 60,
-          letterSpacing: '-0.02em',
-        }}
-      >
-        {renderAccented(c.title)}
-      </h1>
+      <h1 style={{ ...title, ...sceneTitleStyle(60) }}>{renderAccented(c.title)}</h1>
 
       {/* Floating card container */}
       <div
@@ -147,7 +137,7 @@ const CellMark: React.FC<{ value: Cell }> = ({ value }) => {
         style={{
           display: 'inline-block',
           padding: '5px 16px',
-          borderRadius: 999,
+          borderRadius: BRAND.radius,
           background: BRAND.colors.accent,
           color: BRAND.colors.bgCard,
           fontWeight: BRAND.font.weights.bold,
@@ -169,7 +159,7 @@ const CellMark: React.FC<{ value: Cell }> = ({ value }) => {
         style={{
           display: 'inline-block',
           padding: '5px 14px',
-          borderRadius: 999,
+          borderRadius: BRAND.radius,
           background: BRAND.colors.bgDark,
           color: BRAND.colors.text,
           fontWeight: BRAND.font.weights.semiBold,
@@ -189,8 +179,8 @@ const CellMark: React.FC<{ value: Cell }> = ({ value }) => {
       style={{
         display: 'inline-block',
         padding: '5px 10px',
-        borderRadius: 999,
-        background: 'rgba(28,28,28,0.06)',
+        borderRadius: BRAND.radius,
+        background: BRAND.colors.limitedCellBg,
         color: BRAND.colors.textMuted,
         fontWeight: BRAND.font.weights.semiBold,
         fontSize: 14,

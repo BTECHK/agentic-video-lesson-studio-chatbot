@@ -362,8 +362,9 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
               </span>
             </div>
             {/* "you?" tag — the short self-locating label that sits with the ring
-                (the reference's marker-tag). The full prompt sentence lives in the
-                wrapped block below the baseline so nothing crosses a chip/node. */}
+                (the reference's marker-tag). The full prompt the `marker` field once
+                carried is already spoken in narration + shown in LessonCaptions, so
+                only this tag renders here — nothing wraps into the bottom chrome. */}
             <div
               style={{
                 position: 'absolute',
@@ -378,26 +379,6 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
               }}
             >
               you?
-            </div>
-            {/* Prompt copy — anchored in the clear low-left zone UNDER the curve
-                baseline (y=885), in a narrow left column (right edge ~x:360) that
-                stays clear of BOTH the stage chips/nodes above and the centered
-                caption band (left edge x:370). The long line can never run through
-                another element. */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 110,
-                top: 905,
-                maxWidth: 250,
-                opacity: markerIn,
-                fontWeight: BRAND.font.weights.semiBold,
-                fontSize: 20,
-                lineHeight: 1.4,
-                color: BRAND.colors.accent,
-              }}
-            >
-              {c.marker}
             </div>
           </>
         )}

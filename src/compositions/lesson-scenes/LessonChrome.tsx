@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { BRAND } from '../../brand/tokens';
 import { fontFamily } from './shared';
+import { CAPTION_BOTTOM } from './LessonCaptions';
 
 /**
  * Persistent lesson chrome — wordmark, scene label, progress dots, scene
@@ -13,6 +14,13 @@ import { fontFamily } from './shared';
 export type ChromeScene = { start: number; duration: number; label?: string };
 
 const INSET = 96;
+
+/**
+ * Bottom inset of the chrome footer row (progress dots + scene counter). Pinned
+ * a fixed clearance above the caption chip (CAPTION_BOTTOM, ~60px tall) so the
+ * two bottom overlays keep >=30px separation and can't collide on a wide caption.
+ */
+const CHROME_BOTTOM = CAPTION_BOTTOM + 90;
 
 export const LessonChrome: React.FC<{ scenes: ChromeScene[]; fallbackLabel?: string }> = ({
   scenes,
@@ -64,7 +72,7 @@ export const LessonChrome: React.FC<{ scenes: ChromeScene[]; fallbackLabel?: str
       )}
 
       {/* bottom-left progress dots */}
-      <div style={{ position: 'absolute', left: INSET, bottom: 64, display: 'flex', gap: 7, alignItems: 'center' }}>
+      <div style={{ position: 'absolute', left: INSET, bottom: CHROME_BOTTOM, display: 'flex', gap: 7, alignItems: 'center' }}>
         {scenes.map((_, i) => (
           <div
             key={i}
@@ -88,7 +96,7 @@ export const LessonChrome: React.FC<{ scenes: ChromeScene[]; fallbackLabel?: str
         style={{
           position: 'absolute',
           right: INSET,
-          bottom: 62,
+          bottom: CHROME_BOTTOM,
           fontFamily: BRAND.font.mono,
           fontSize: 16,
           letterSpacing: '0.08em',

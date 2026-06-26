@@ -3,7 +3,7 @@ import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { VoiceDemoContent } from './content-types';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, useGlideIn } from './shared';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, SimDisclaimer, useGlideIn } from './shared';
 import { TypeOn, PulseRing } from './primitives';
 
 const BAR_COUNT = 28;
@@ -53,6 +53,7 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
           <MicButton />
           <Waveform />
           <Timer />
+          <SimDisclaimer style={{ alignSelf: 'flex-start', flexShrink: 0 }} />
         </div>
 
         {/* Transcript section */}
@@ -61,7 +62,7 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
             style={{
               fontSize: 16,
               fontWeight: BRAND.font.weights.bold,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: BRAND.colors.accent,
               marginBottom: 12,
@@ -100,7 +101,7 @@ const MicButton: React.FC = () => (
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: '0 8px 20px rgba(139,38,53,0.28)',
+        boxShadow: SHADOW.button,
       }}
     >
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

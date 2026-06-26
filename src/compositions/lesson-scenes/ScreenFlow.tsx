@@ -12,6 +12,7 @@ import {
   useGlideIn,
   usePopIn,
   sceneTitleStyle,
+  SimDisclaimer,
 } from './shared';
 
 // Extra frames added per action type on top of `dwell * fps`.
@@ -185,6 +186,9 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
         >
           {c.windowTitle}
         </div>
+        {/* Honesty chip baked into the chrome — every screen-flow inherits it
+            regardless of whether the content sets `caption`. */}
+        <SimDisclaimer />
       </div>
 
       {/* Body */}
@@ -289,7 +293,7 @@ const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartF
                 color: MUTED,
               }}
             >
-              {step.target}
+              {step.label ?? step.target}
             </div>
             <div
               style={{
@@ -341,7 +345,7 @@ const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartF
                 boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
               }}
             >
-              {step.target}
+              {step.label ?? step.target}
             </div>
           );
         })}
@@ -542,7 +546,7 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
                 color: isActive ? BRAND.colors.accent : MUTED,
               }}
             >
-              {step.target}
+              {step.label ?? step.target}
             </div>
             <div style={{ fontSize: 19, color: BRAND.colors.text, lineHeight: 1.4 }}>
               {displayText}
@@ -681,7 +685,7 @@ const MockCursor: React.FC<MockCursorProps> = ({ c, frame, fps, activeStep, step
             pointerEvents: 'none',
           }}
         >
-          {currentStep.target}
+          {currentStep.label ?? currentStep.target}
         </div>
       )}
     </div>

@@ -41,7 +41,7 @@ export const DigDeeper: React.FC<SceneComponentProps> = ({ scene }) => {
           <div
             style={{
               fontSize: 14,
-              fontWeight: BRAND.font.weights.bold,
+              fontWeight: BRAND.font.weights.semiBold,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: BRAND.colors.accent,

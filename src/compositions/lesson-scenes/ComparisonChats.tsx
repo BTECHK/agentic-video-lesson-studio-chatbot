@@ -4,7 +4,7 @@ import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ComparisonChatsContent } from './content-types';
 import { ToolMark } from './ToolMark';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { SceneFrame, Eyebrow, renderAccented, useGlideIn, MUTED } from './shared';
+import { SceneFrame, Eyebrow, renderAccented, useGlideIn, MUTED, SimDisclaimer } from './shared';
 import { TypeOn, Pinwheel, Tether } from './primitives';
 
 const ROW_W = 1680; // 1920 − 2×120 paddingX
@@ -54,7 +54,14 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
         {renderAccented(c.title)}
       </h1>
 
+      {c.caption && (
+        <div style={{ ...caption, marginTop: 6, fontSize: 26, fontStyle: 'italic', color: MUTED }}>
+          {renderAccented(c.caption)}
+        </div>
+      )}
+
       <div style={{ position: 'relative', width: ROW_W, height: WIN_H, marginTop: 8 }}>
+        <SimDisclaimer text={c.disclaimer} style={{ position: 'absolute', top: -34, right: 0 }} />
         <div style={{ display: 'flex', gap: GAP, width: '100%', height: '100%' }}>
           {c.tools.map((tool, i) => (
             <ChatWindow
@@ -77,12 +84,6 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
           />
         )}
       </div>
-
-      {c.caption && (
-        <div style={{ ...caption, marginTop: 4, fontSize: 26, fontStyle: 'italic', color: MUTED }}>
-          {renderAccented(c.caption)}
-        </div>
-      )}
     </SceneFrame>
   );
 };
@@ -101,10 +102,16 @@ const ChatWindow: React.FC<{
   const typeEnd = Math.round(5 * fps);
   const thinking = frame > delay + 24 && frame < typeStart;
 
+  // Idle breathe so the cluster never reads frozen during the long hold —
+  // a sub-2px frame-driven sine, phase-staggered by the card's own delay,
+  // composed onto the glide transform (transform-only, no layout reflow).
+  const breatheY = Math.sin(frame * 0.04 + delay) * 1.5;
+
   return (
     <div
       style={{
         ...glide,
+        transform: `${glide.transform} translateY(${breatheY}px)`,
         flex: 1,
         display: 'flex',
         flexDirection: 'column',

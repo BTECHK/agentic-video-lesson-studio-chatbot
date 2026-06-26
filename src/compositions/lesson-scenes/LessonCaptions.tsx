@@ -5,6 +5,13 @@ import { narrationToPages } from '../../lib/captions';
 import { fontFamily, BRAND, MUTED } from './shared';
 
 /**
+ * Bottom inset of the caption chip. Shared with LessonChrome so the chrome
+ * footer row (dots/counter) can be pinned a fixed clearance above it and the
+ * two bottom overlays can never drift into each other.
+ */
+export const CAPTION_BOTTOM = 72;
+
+/**
  * Word-synced caption band for a lesson scene. Words are scene-relative (ms
  * from the scene's audio start), matching how each scene's <Audio> plays from
  * its own sequence start. Renders one TikTok-style page at a time with the
@@ -38,7 +45,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 72,
+        bottom: CAPTION_BOTTOM,
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',

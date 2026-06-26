@@ -1,22 +1,26 @@
 import React from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { SetupChecklistContent } from './content-types';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub } from './shared';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, glideProgress } from './shared';
 import { Pinwheel, MockCursor } from './primitives';
 import type { CursorKey } from './primitives';
 
 const DONE_AFTER = 1.6; // seconds after activateAt a row flips to "Done"
 
-// Layout constants — rows stack at fixed Y positions within the list container.
-// The list starts ~360px below the top of SceneFrame's inner area.
-// Each row is ~100px tall + 14px gap. First row top ≈ 360 in scene coords (for cursor Y).
-const ROW_HEIGHT = 100;
+// Layout constants — the MockCursor is rendered inside the position:relative
+// wrapper that also holds the rows, so its coordinates are WRAPPER-relative (origin
+// at the wrapper's top-left), not scene-absolute. Derive the cursor target from the
+// same layout the rows use so it lands on the toggle.
+const ROW_HEIGHT = 100; // approximate rendered row height (padding 22 + content + 22)
 const ROW_GAP = 14;
-// Toggle button is at right edge minus ~60px; list left edge ≈ 160px (SceneFrame default paddingX).
-const TOGGLE_X = 1740; // scene-absolute X for toggle column (near right)
-const ROW_Y_FIRST = 460; // scene-absolute Y for first row toggle
+const LIST_MARGIN_TOP = 16; // marginTop on the column that wraps the rows
+// The Toggle is the FIRST (left) flex child of each row: row padding-left 28 + the
+// 44px control's half-width ≈ 50px in from the wrapper's left edge.
+const TOGGLE_X = 50; // wrapper-relative X for the (left) toggle column
+// Toggle vertical centre of the first row, wrapper-relative.
+const ROW_Y_FIRST = LIST_MARGIN_TOP + ROW_HEIGHT / 2;
 
 /**
  * `setup-checklist` (v2) — sequential settings that each "light up" at
@@ -95,20 +99,14 @@ const ChecklistRow: React.FC<{ name: string; why: string; activateAt: number }> 
   const state: 'todo' | 'active' | 'done' =
     frame >= doneFrame ? 'done' : frame >= activateFrame ? 'active' : 'todo';
 
-  // Entrance: rows glide in from a slight upward offset when activated.
-  const enterProgress = spring({
-    frame: frame - (activateFrame - 10),
-    fps,
-    config: { damping: 22, mass: 0.5 },
-  });
-  const hasEntered = frame >= activateFrame - 10;
+  // Entrance: rows glide in from a slight upward offset when activated. House eased
+  // glide (lands hard on a known frame) instead of spring() per the motion contract.
+  const enterStart = activateFrame - 10;
+  const enterProgress = glideProgress(frame, enterStart, 18);
+  const hasEntered = frame >= enterStart;
 
   // Done transition: card gets accentSoft fill.
-  const doneProgress = spring({
-    frame: frame - doneFrame,
-    fps,
-    config: { damping: 20, mass: 0.5 },
-  });
+  const doneProgress = glideProgress(frame, doneFrame, 14);
 
   const borderColor =
     state === 'active'
@@ -243,7 +241,7 @@ const DonePill: React.FC = () => (
       alignItems: 'center',
       gap: 8,
       padding: '6px 16px',
-      borderRadius: 999,
+      borderRadius: BRAND.radius,
       backgroundColor: BRAND.colors.accentSoft,
       color: BRAND.colors.accent,
       fontWeight: BRAND.font.weights.bold,

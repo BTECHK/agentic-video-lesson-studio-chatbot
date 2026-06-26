@@ -46,10 +46,14 @@ describe('v2 surface + shadow system', () => {
     expect(BRAND.radius).toBe(4);
     expect(BRAND.radiusWindow).toBe(14);
   });
-  it('exposes three charcoal-only shadow levels (no glow, no color)', () => {
+  it('exposes charcoal-only shadow levels (no glow, no color)', () => {
     expect(SHADOW.window).toContain('rgba(28,28,28');
     expect(SHADOW.window).not.toMatch(/139,\s*38,\s*53/); // never accent-tinted
-    expect(Object.keys(SHADOW)).toEqual(['card', 'cardHover', 'window']);
+    // SHADOW.button: sanctioned charcoal shadow for buttons/mic/chips (design-QC 2026-06-26,
+    // replaces VoiceDemo's saturated-crimson MicButton glow). Held to the same no-color bar.
+    expect(SHADOW.button).toContain('rgba(28,28,28');
+    expect(SHADOW.button).not.toMatch(/139,\s*38,\s*53/);
+    expect(Object.keys(SHADOW)).toEqual(['card', 'cardHover', 'window', 'button']);
   });
 });
 
