@@ -1,0 +1,90 @@
+<svg viewBox="0 0 960 1330" xmlns="http://www.w3.org/2000/svg" font-family="'Syne', system-ui, sans-serif" role="img">
+  <title>Lesson-to-video pipeline — detailed</title>
+  <desc>Eight phase bands top to bottom: inputs, plan, build, audio, render (serial bottleneck), gate, QC/revamp loop, deliver; plus an orchestration bar and a glossary.</desc>
+  <style>
+    svg{--ink:#1C1C1C;--mut:#6B6B6B;--card:#FDFBF9;--band:#F2ECE5;--line:#C9C2B6;--cr:#8B2635;}
+    .bd{fill:var(--band);stroke:var(--line);stroke-width:1.5;}
+    .h{fill:var(--cr);font-weight:700;}
+    .bx{fill:var(--card);stroke:var(--line);stroke-width:1.2;}
+    .nm{fill:var(--ink);font-weight:700;}
+    .dt{fill:var(--mut);font-weight:500;}
+    .sp{stroke:var(--ink);stroke-width:2.5;fill:none;}
+    .in{stroke:var(--mut);stroke-width:1.4;fill:none;}
+    .lp{stroke:var(--cr);stroke-width:2.5;fill:none;stroke-dasharray:7 5;}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#1C1C1C"/></marker>
+    <marker id="am" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6B6B6B"/></marker>
+    <marker id="ac" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#8B2635"/></marker>
+  </defs>
+  <text x="455" y="30" text-anchor="middle" class="nm" font-size="22">Lesson → video pipeline · detailed workflow</text>
+  <text x="455" y="51" text-anchor="middle" class="dt" font-size="12">read top → bottom · → sequence · ⇢ parallel/loop · ▮ crimson = bottleneck · ▮ amber = check/safety</text>
+  <rect class="bd" x="40" y="66" width="830" height="96" rx="6"/>
+  <text x="56" y="88" class="h" font-size="14">1 · INPUTS — sources of truth</text>
+  <rect class="bx" x="56" y="98" width="252" height="52" rx="4"/><text x="68" y="118" class="nm" font-size="12">Course outline → course-map.json</text><text x="68" y="136" class="dt" font-size="11">= SCOPE (what to teach)</text>
+  <rect class="bx" x="320" y="98" width="252" height="52" rx="4"/><text x="332" y="118" class="nm" font-size="12">Content repo + Google Drive</text><text x="332" y="136" class="dt" font-size="11">= TASTE (frameworks, voice)</text>
+  <rect class="bx" x="584" y="98" width="270" height="52" rx="4"/><text x="596" y="118" class="nm" font-size="12">Brand contracts + tokens.ts</text><text x="596" y="136" class="dt" font-size="11">= DESIGN · 18 scene types</text>
+  <path class="sp" d="M455,162 L455,184" marker-end="url(#a)"/>
+  <rect class="bd" x="40" y="186" width="830" height="96" rx="6"/>
+  <text x="56" y="208" class="h" font-size="14">2 · PLAN — per lesson · ∥ parallel (AI agents)</text>
+  <rect class="bx" x="56" y="218" width="230" height="52" rx="4"/><text x="68" y="238" class="nm" font-size="12">lesson-plan</text><text x="68" y="256" class="dt" font-size="11">→ the lesson plan</text>
+  <rect class="bx" x="298" y="218" width="248" height="52" rx="4"/><text x="310" y="238" class="nm" font-size="12">scene-contract.json + storyboard</text><text x="310" y="256" class="dt" font-size="11">18 scene types</text>
+  <rect x="558" y="218" width="296" height="52" rx="4" fill="#FBF1DD" stroke="#C79A3A" stroke-width="1.2"/><text x="570" y="238" class="nm" font-size="12">Gate A · accuracy sweep</text><text x="570" y="256" class="dt" font-size="11">verify claims vs official tool docs</text>
+  <path class="in" d="M286,244 L298,244" marker-end="url(#am)"/><path class="in" d="M546,244 L558,244" marker-end="url(#am)"/>
+  <path class="sp" d="M455,282 L455,304" marker-end="url(#a)"/>
+  <rect class="bd" x="40" y="306" width="830" height="86" rx="6"/>
+  <text x="56" y="328" class="h" font-size="14">3 · BUILD / CONVERT</text>
+  <rect class="bx" x="56" y="338" width="380" height="44" rx="4"/><text x="68" y="357" class="nm" font-size="12">convert → lesson.json</text><text x="68" y="374" class="dt" font-size="11">render-strict (content/schemas/scene-types.ts)</text>
+  <rect class="bx" x="456" y="338" width="398" height="44" rx="4"/><text x="468" y="357" class="nm" font-size="12">author narration</text><text x="468" y="374" class="dt" font-size="11">2.96 words/sec · generate-script --check ≥ 75%</text>
+  <path class="in" d="M436,360 L456,360" marker-end="url(#am)"/>
+  <path class="sp" d="M455,392 L455,414" marker-end="url(#a)"/>
+  <rect class="bd" x="40" y="416" width="830" height="86" rx="6"/>
+  <text x="56" y="438" class="h" font-size="14">4 · AUDIO — per lesson · ∥ parallel</text>
+  <rect class="bx" x="56" y="448" width="300" height="44" rx="4"/><text x="68" y="467" class="nm" font-size="12">tts:lesson  (synthesize-lesson.ts)</text><text x="68" y="484" class="dt" font-size="11">ElevenLabs → Google → Kokoro</text>
+  <rect class="bx" x="376" y="448" width="220" height="44" rx="4"/><text x="388" y="467" class="nm" font-size="12">align:lesson</text><text x="388" y="484" class="dt" font-size="11">sync audio ↔ scenes</text>
+  <rect x="616" y="448" width="238" height="44" rx="4" fill="#FBF1DD" stroke="#C79A3A" stroke-width="1.2"/><text x="628" y="467" class="nm" font-size="12">edit-safety</text><text x="628" y="484" class="dt" font-size="11">regen→align→regen · volumedetect</text>
+  <path class="in" d="M356,470 L376,470" marker-end="url(#am)"/>
+  <path class="sp" d="M455,502 L455,524" marker-end="url(#a)"/>
+  <rect x="40" y="526" width="830" height="120" rx="6" fill="#F7E6E7" stroke="#8B2635" stroke-width="2"/>
+  <text x="56" y="548" font-size="14" font-weight="700" fill="#8B2635">5 · RENDER  ◀ bottleneck · SERIAL · ~30 min / lesson · hours for the full batch</text>
+  <rect class="bx" x="56" y="558" width="420" height="48" rx="4"/><text x="68" y="578" class="nm" font-size="12">render-lesson.ts → out/&lt;id&gt;.mp4</text><text x="68" y="596" class="dt" font-size="11">Remotion · SSAA 2× · CRF 18 · x264 slow · BT.709</text>
+  <rect class="bx" x="496" y="558" width="358" height="48" rx="4"/><text x="508" y="578" class="nm" font-size="12">Lesson 1 ▸ Lesson 2 ▸ Lesson 3 ▸ …</text><text x="508" y="596" class="dt" font-size="11">one fresh process per lesson · retry ≤ 3 then skip</text>
+  <rect x="56" y="612" width="798" height="26" rx="4" fill="#FBEDEE" stroke="#8B2635" stroke-width="1"/><text x="68" y="629" font-size="11" fill="#8B2635">✗ crash ceiling: ffmpeg 0xC0000142 (desktop-heap) after ~3–4 in one batch → fix = one lesson per fresh process / dedicated box</text>
+  <path class="in" d="M476,582 L496,582" marker-end="url(#am)"/>
+  <path class="sp" d="M455,646 L455,668" marker-end="url(#a)"/>
+  <rect class="bd" x="40" y="670" width="830" height="86" rx="6"/>
+  <text x="56" y="692" class="h" font-size="14">6 · GATE — runs AFTER each render (never during)</text>
+  <rect class="bx" x="56" y="702" width="232" height="44" rx="4"/><text x="68" y="721" class="nm" font-size="12">gate:status → A·B·C·L·T</text><text x="68" y="738" class="dt" font-size="11">the 5 definition-of-done checks</text>
+  <rect class="bx" x="300" y="702" width="170" height="44" rx="4"/><text x="312" y="721" class="nm" font-size="12">gate:motion</text><text x="312" y="738" class="dt" font-size="11">stays alive</text>
+  <rect class="bx" x="482" y="702" width="180" height="44" rx="4"/><text x="494" y="721" class="nm" font-size="12">gate:media</text><text x="494" y="738" class="dt" font-size="11">audible · BT.709</text>
+  <rect class="bx" x="674" y="702" width="180" height="44" rx="4"/><text x="686" y="721" class="nm" font-size="12">volumedetect</text><text x="686" y="738" class="dt" font-size="11">not silent</text>
+  <path class="sp" d="M455,756 L455,778" marker-end="url(#a)"/>
+  <rect class="bd" x="40" y="780" width="830" height="92" rx="6"/>
+  <text x="56" y="802" class="h" font-size="14">7 · QC + REVAMP — periodic design upgrade (the v3 loop)</text>
+  <rect class="bx" x="56" y="812" width="246" height="50" rx="4"/><text x="68" y="832" class="nm" font-size="12">keyframes-review</text><text x="68" y="850" class="dt" font-size="11">review.html + settled PNGs → Drive</text>
+  <rect class="bx" x="314" y="812" width="262" height="50" rx="4"/><text x="326" y="832" class="nm" font-size="12">Claude Design QC</text><text x="326" y="850" class="dt" font-size="11">∥ vision agents grade frames → report</text>
+  <rect class="bx" x="588" y="812" width="266" height="50" rx="4"/><text x="600" y="832" class="nm" font-size="12">fix → re-render v3</text><text x="600" y="850" class="dt" font-size="11">builders + npm run check + Codex</text>
+  <path class="in" d="M302,837 L314,837" marker-end="url(#am)"/><path class="in" d="M576,837 L588,837" marker-end="url(#am)"/>
+  <path class="sp" d="M455,872 L455,894" marker-end="url(#a)"/>
+  <rect x="40" y="896" width="830" height="74" rx="6" fill="#1C1C1C" stroke="#1C1C1C"/>
+  <text x="56" y="918" font-size="14" font-weight="700" fill="#FFFFFF">8 · DELIVER</text>
+  <rect x="56" y="928" width="380" height="34" rx="4" fill="#2C2C2A" stroke="#444441"/><text x="68" y="950" fill="#FFFFFF" font-size="12">publish:drive — only if gate:status == 0</text>
+  <rect x="456" y="928" width="398" height="34" rx="4" fill="#2C2C2A" stroke="#444441"/><text x="468" y="950" fill="#FFFFFF" font-size="12">→ Drive Module/Lesson: Video + Script + Lesson Plan (v3 alongside)</text>
+  <path class="in" d="M436,945 L456,945" marker-end="url(#am)" stroke="#888780"/>
+  <path class="lp" d="M870,837 L912,837 L912,594 L870,594" marker-end="url(#ac)"/>
+  <text transform="rotate(-90 930 716)" x="930" y="716" text-anchor="middle" font-size="11" fill="#8B2635" font-weight="600">⇢ re-render v3</text>
+  <rect x="40" y="986" width="830" height="48" rx="6" fill="#EDE8E3" stroke="#8B2635"/>
+  <text x="56" y="1006" class="nm" font-size="12">WHO RUNS IT — the /goal two-model loop, spanning every phase:</text>
+  <text x="56" y="1024" class="dt" font-size="11">🟦 Claude builds + checks  ·  🟥 Codex (different AI) independently verifies at the gates  ·  STATE.json ledger · hourly heartbeats · resumable · checkpoint commits on a branch (no push)</text>
+  <rect x="40" y="1050" width="830" height="250" rx="6" fill="#F2ECE5" stroke="#C9C2B6"/>
+  <text x="56" y="1074" class="h" font-size="13">KEY — plain English</text>
+  <text x="56" y="1100" class="dt" font-size="12"><tspan class="nm">Render</tspan> = a computer (Remotion) draws every video frame from the lesson's data + design pieces, then encodes an MP4.</text>
+  <text x="56" y="1122" class="dt" font-size="12"><tspan class="nm">lesson.json</tspan> = one file describing a lesson's scenes, on-screen text &amp; narration.    <tspan class="nm">TTS</tspan> = text-to-speech (AI voiceover).</text>
+  <text x="56" y="1144" class="dt" font-size="12"><tspan class="nm">A·B·C·L·T</tspan> (gate:status) = <tspan class="nm">A</tspan>ccuracy · <tspan class="nm">B</tspan> Teaching · <tspan class="nm">C</tspan> Watchability · <tspan class="nm">L</tspan>ayout · <tspan class="nm">T</tspan>iming.</text>
+  <text x="56" y="1166" class="dt" font-size="12"><tspan class="nm">∥ parallel</tspan> = many lessons at once (agents).    <tspan class="nm">serial</tspan> = one at a time — why RENDER is the bottleneck.</text>
+  <text x="56" y="1188" class="dt" font-size="12"><tspan class="nm">BT.709</tspan> = standard HD video color (not washed-out).    <tspan class="nm">SSAA 2×</tspan> = render at 2× then shrink, for crisp 1080p.</text>
+  <text x="56" y="1210" class="dt" font-size="12"><tspan fill="#8B2635" font-weight="700">✦ Codex</tspan> = a 2nd, different AI that re-checks the work before it ships.</text>
+  <text x="56" y="1232" class="dt" font-size="12"><tspan class="nm">v3</tspan> = this design-polish version (v1 = first cut · v2 = brand facelift · v3 = QC fixes).</text>
+  <text x="56" y="1254" class="dt" font-size="12"><tspan class="nm">scripts</tspan>: render-lesson.ts · gate:* · tts/align:lesson · publish:drive · keyframes-review.</text>
+  <text x="56" y="1276" class="dt" font-size="12"><tspan fill="#C79A3A" font-weight="700">▮ amber</tspan> = an accuracy or safety check that protects quality (fact-check, audio edit-safety).</text>
+</svg>
