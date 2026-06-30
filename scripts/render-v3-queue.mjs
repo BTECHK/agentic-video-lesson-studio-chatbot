@@ -24,7 +24,10 @@ const DRIVE = '<DRIVE_ROOT>/Content Development/Curriculum';
 const MAX_RETRIES = 3;
 const MIN_MB = 5;
 const SETTLE_MS = 8000;        // let desktop-heap recover between attempts/lessons
-const SPAWN_KILL_MS = 80 * 60 * 1000;
+// 140min spawn kill > 130min render watchdog (set in renderOnce env). Raised from
+// 80/70: under box load the heavier ~7-min T1/T2 lessons need >70min and the old
+// watchdog cancelled them mid-mux -> corrupt moov-less mp4 on a "failed" attempt.
+const SPAWN_KILL_MS = 140 * 60 * 1000;
 
 fs.mkdirSync(OUT_V3, { recursive: true });
 
@@ -55,7 +58,7 @@ function allLessons() {
 }
 
 function renderOnce(id) {
-  const env = { ...process.env, RENDER_OUT_DIR: 'out/v3', RENDER_CONCURRENCY: '2', RENDER_FRAME_TIMEOUT_MS: '180000', RENDER_TIMEOUT_MIN: '70' };
+  const env = { ...process.env, RENDER_OUT_DIR: 'out/v3', RENDER_CONCURRENCY: '1', RENDER_FRAME_TIMEOUT_MS: '180000', RENDER_TIMEOUT_MIN: '130' };
   const r = spawnSync('npx', ['tsx', 'scripts/render-lesson.ts', id], { cwd: ROOT, env, stdio: 'inherit', shell: true, timeout: SPAWN_KILL_MS });
   return r.status === 0 && sizeMB(path.join(OUT_V3, `${id}.mp4`)) >= MIN_MB;
 }
@@ -98,7 +101,10 @@ function publish(id) {
 }
 
 // ---- main serial loop ----
-const lessons = allLessons();
+// Explicit lesson ids via argv override keyframe discovery (e.g. lessons never
+// QC'd, so absent from artifacts/keyframes-review). No args = original behavior.
+const argLessons = process.argv.slice(2).filter(Boolean);
+const lessons = argLessons.length ? argLessons : allLessons();
 log('queue.start', { total: lessons.length, lessons });
 let done = 0, skipped = 0;
 for (const id of lessons) {
