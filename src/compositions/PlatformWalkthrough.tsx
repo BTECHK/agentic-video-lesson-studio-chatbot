@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, Sequence, useCurrentFrame, interpolate } from 'remotion';
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, interpolate } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Syne';
 import { BRAND } from '../brand/tokens';
 import { TitleCard } from './scenes/TitleCard';
@@ -33,6 +33,10 @@ export const PlatformWalkthrough: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: BRAND.colors.bgBase }}>
+      {/* Background music bed — same asset the sizzle ships (public/sizzle/music-bed.m4a),
+          boosted (source mean ~-52dB) to land in the -20..-35dB gate:media range. */}
+      <Audio src={staticFile('sizzle/music-bed.m4a')} volume={10} />
+
       {/* Scene 1: Title Card */}
       <Sequence from={0} durationInFrames={240}>
         <TitleCard />

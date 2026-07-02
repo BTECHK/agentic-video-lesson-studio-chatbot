@@ -16,6 +16,7 @@
     "check:all": "npm run check:fast && npm run check:content && npm --prefix chatbot run check:fast",
     "verify:render": "tsx scripts/verify-render.ts",
     "render:sizzle": "tsx scripts/render-sizzle.ts",
+    "render:walkthrough": "tsx scripts/render-walkthrough.ts",
     "gate:lesson": "tsx scripts/gate-lesson.ts",
     "gate:layout": "tsx scripts/gate-layout.ts",
     "gate:review": "tsx scripts/gate-review.ts",

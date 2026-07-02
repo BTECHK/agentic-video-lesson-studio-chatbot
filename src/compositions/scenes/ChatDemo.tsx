@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { fontFamily, MUTED } from '../lesson-scenes/shared';
+import { fontFamily, MUTED, SceneAmbient } from '../lesson-scenes/shared';
 import { Pinwheel, TypeOn } from '../lesson-scenes/primitives';
 
 const ACCENT = BRAND.colors.accent;
@@ -74,8 +74,10 @@ export const ChatDemo: React.FC = () => {
         alignItems: 'center',
         padding: '40px 60px',
         fontFamily,
+        position: 'relative',
       }}
     >
+      <SceneAmbient />
       {/* Floating window */}
       <div
         style={{

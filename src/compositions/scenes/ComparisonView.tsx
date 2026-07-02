@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { fontFamily, MUTED } from '../lesson-scenes/shared';
+import { fontFamily, MUTED, SceneAmbient } from '../lesson-scenes/shared';
 
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
@@ -145,6 +145,7 @@ export const ComparisonView: React.FC = () => {
         fontFamily,
       }}
     >
+      <SceneAmbient />
       {/* Floating window */}
       <div
         style={{

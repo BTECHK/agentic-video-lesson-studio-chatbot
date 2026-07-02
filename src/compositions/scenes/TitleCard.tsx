@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { BRAND, LEADING } from '../../brand/tokens';
-import { fontFamily, renderAccented } from '../lesson-scenes/shared';
+import { fontFamily, renderAccented, SceneAmbient } from '../lesson-scenes/shared';
 
 export const TitleCard: React.FC = () => {
   const local = useCurrentFrame();
@@ -43,8 +43,10 @@ export const TitleCard: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 24,
+        position: 'relative',
       }}
     >
+      <SceneAmbient />
       {/* Growing crimson accent bar */}
       <div
         style={{
