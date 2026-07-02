@@ -16,3 +16,4 @@ Operations:
 ## [2026-05-26] ingest | Codified Lesson Factory design spec → source [[codified-lesson-pipeline-design]], concepts [[codified-lesson-pipeline]] + [[timing-inversion]].
 ## [2026-05-26] ingest | Studio Generate design spec → source [[studio-generate-design]], concept [[studio-generate]].
 ## [2026-06-22] ingest | Claude Design ⇄ Remotion fidelity diagnosis → concept [[design-fidelity-html-vs-mp4]]; learnings.md updated (design-sync N/A, codex-sandbox -1073741502, drive-date quirk).
+## [2026-06-26] ingest | Video output-surface accounting → concept [[video-output-map]] (out/* lessons+sizzle vs output/video/* walkthrough+showcase; search BOTH); learnings.md updated. Trigger: platform-walkthrough reported "missing" 3× because it lives in output/video/, not out/.

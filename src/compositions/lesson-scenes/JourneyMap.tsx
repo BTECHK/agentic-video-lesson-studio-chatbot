@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { JourneyMapContent } from './content-types';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, LEADING } from '../../brand/tokens';
 import { GLIDE, SceneFrame, Eyebrow, SceneTitle, SceneSub, Pop } from './shared';
 
 /**
@@ -94,51 +94,85 @@ export const JourneyMap: React.FC<SceneComponentProps> = ({ scene }) => {
                   multi-line titles wrap WITHIN their column and never crowd a
                   neighbour. */}
               <Pop delay={50 + i * 4} style={{ marginTop: 44, textAlign: 'center', maxWidth: 200 }}>
-                {/* Label — textMuted unless active */}
+                {/* Eyebrow slot — fixed 2-line height so 1- and 2-line labels
+                    bottom-align and every stop.title shares one baseline. Type
+                    matches the canonical eyebrow token (600 / 14px / 0.14em). */}
                 <div
                   style={{
-                    fontWeight: BRAND.font.weights.bold,
-                    fontSize: 16,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase' as const,
-                    color: stop.state === 'active' ? BRAND.colors.accent : BRAND.colors.textMuted,
+                    minHeight: Math.round(14 * LEADING.caps * 2),
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'center',
                   }}
                 >
-                  {stop.label}
+                  <div
+                    style={{
+                      fontWeight: BRAND.font.weights.semiBold,
+                      fontSize: 14,
+                      lineHeight: LEADING.caps,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase' as const,
+                      color: stop.state === 'active' ? BRAND.colors.accent : BRAND.colors.textMuted,
+                    }}
+                  >
+                    {stop.label}
+                  </div>
                 </div>
-                {/* Stop title */}
+                {/* Stop-title slot — fixed 2-line height so a wrapping title
+                    never pushes the reserved pill row down; titles top-align so
+                    every node's pill row sits at one constant Y. */}
                 <div
                   style={{
                     marginTop: 8,
-                    fontWeight: BRAND.font.weights.semiBold,
-                    fontSize: 23,
-                    lineHeight: 1.25,
-                    color: stop.state === 'todo' ? BRAND.colors.textMuted : BRAND.colors.text,
+                    minHeight: Math.round(23 * 1.25 * 2),
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
                   }}
                 >
-                  {stop.title}
+                  <div
+                    style={{
+                      fontWeight: BRAND.font.weights.semiBold,
+                      fontSize: 23,
+                      lineHeight: 1.25,
+                      color: stop.state === 'todo' ? BRAND.colors.textMuted : BRAND.colors.text,
+                    }}
+                  >
+                    {stop.title}
+                  </div>
                 </div>
               </Pop>
 
-              {/* "You are here" pill — accent bg, bgBase text — only for active non-destination */}
-              {stop.state === 'active' && !isDestination && (
-                <Pop delay={90} style={{ marginTop: 26 }}>
-                  <div
-                    style={{
-                      backgroundColor: BRAND.colors.accent,
-                      color: BRAND.colors.bgCard,
-                      fontWeight: BRAND.font.weights.bold,
-                      fontSize: 11,
-                      letterSpacing: '0.16em',
-                      textTransform: 'uppercase' as const,
-                      padding: '5px 10px',
-                      borderRadius: 2,
-                    }}
-                  >
-                    You are here
-                  </div>
-                </Pop>
-              )}
+              {/* Reserved pill row — always present so every node column is the
+                  same height; the crimson "You are here" pill fills it only on
+                  the active non-destination stop. */}
+              <div
+                style={{
+                  marginTop: 26,
+                  height: 25,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                {stop.state === 'active' && !isDestination && (
+                  <Pop delay={90}>
+                    <div
+                      style={{
+                        backgroundColor: BRAND.colors.accent,
+                        color: BRAND.colors.bgCard,
+                        fontWeight: BRAND.font.weights.bold,
+                        fontSize: 11,
+                        letterSpacing: '0.16em',
+                        textTransform: 'uppercase' as const,
+                        padding: '5px 10px',
+                        borderRadius: BRAND.radius,
+                      }}
+                    >
+                      You are here
+                    </div>
+                  </Pop>
+                )}
+              </div>
             </div>
           ))}
         </div>

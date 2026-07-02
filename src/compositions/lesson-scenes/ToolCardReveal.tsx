@@ -27,6 +27,7 @@ export const ToolCardReveal: React.FC<SceneComponentProps> = ({ scene }) => {
           <ToolCard
             key={tool.id}
             name={tool.name}
+            logo={tool.logo}
             tag={tool.tag}
             oneliner={tool.oneliner}
             delay={48 + i * 16}
@@ -41,12 +42,13 @@ export const ToolCardReveal: React.FC<SceneComponentProps> = ({ scene }) => {
 const HIGHLIGHT_RISE = 10;
 const HIGHLIGHT_HOLD = 39; // ~1.3s at 30fps
 
-const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: number }> = ({
-  name,
-  tag,
-  oneliner,
-  delay,
-}) => {
+const ToolCard: React.FC<{
+  name: string;
+  logo?: string;
+  tag: string;
+  oneliner: string;
+  delay: number;
+}> = ({ name, logo, tag, oneliner, delay }) => {
   const frame = useCurrentFrame();
   const glide = useGlideIn(delay, 36);
 
@@ -91,7 +93,7 @@ const ToolCard: React.FC<{ name: string; tag: string; oneliner: string; delay: n
           justifyContent: 'center',
         }}
       >
-        <ToolMark name={name} size={38} />
+        <ToolMark name={name} logo={logo} size={38} />
       </div>
       <div
         style={{

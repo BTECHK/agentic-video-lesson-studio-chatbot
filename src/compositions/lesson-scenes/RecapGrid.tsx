@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { RecapGridContent } from './content-types';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, LEADING } from '../../brand/tokens';
 import { MUTED, SceneFrame, Eyebrow, SceneTitle, Glide, useGlideIn } from './shared';
 
 /**
@@ -32,6 +32,7 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
                 padding: '44px 38px',
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'center',
                 gap: 16,
                 height: '100%',
                 boxSizing: 'border-box',
@@ -40,7 +41,7 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
             >
               <div
                 style={{
-                  fontWeight: BRAND.font.weights.semiBold,
+                  fontWeight: BRAND.font.weights.bold,
                   fontSize: 64,
                   color: BRAND.colors.accent,
                   lineHeight: 1,
@@ -50,14 +51,24 @@ export const RecapGrid: React.FC<SceneComponentProps> = ({ scene }) => {
               >
                 {card.n}
               </div>
-              <div style={{ fontWeight: BRAND.font.weights.bold, fontSize: 32, lineHeight: 1.1, marginTop: 6 }}>
+              <div
+                style={{
+                  fontWeight: BRAND.font.weights.bold,
+                  fontSize: 32,
+                  lineHeight: LEADING.heading,
+                  marginTop: 6,
+                  // Reserve a 2-line floor so 1- and 2-line titles share one
+                  // baseline and the bodies line up across the row.
+                  minHeight: 70,
+                }}
+              >
                 {card.title}
               </div>
               <div
                 style={{
                   fontWeight: BRAND.font.weights.regular,
                   fontSize: 22,
-                  lineHeight: 1.4,
+                  lineHeight: LEADING.body,
                   color: MUTED,
                 }}
               >

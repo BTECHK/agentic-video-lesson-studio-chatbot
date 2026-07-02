@@ -70,15 +70,31 @@ function toolKey(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-function monogram(name: string): string {
-  const key = toolKey(name);
+function monogram(source: string): string {
+  const key = toolKey(source);
   if (MONOGRAMS[key]) return MONOGRAMS[key];
-  const cleaned = name.replace(/[^A-Za-z0-9]/g, '');
-  return (cleaned.slice(0, 2) || '?').replace(/^./, (c) => c.toUpperCase());
+  const cleaned = source.replace(/[^A-Za-z0-9]/g, '');
+  // A single-char source (e.g. logo "C") renders as one centered letter; otherwise
+  // fall back to a two-letter slice of the name.
+  const slice = cleaned.length === 1 ? cleaned : cleaned.slice(0, 2);
+  return (slice || '?').replace(/^./, (c) => c.toUpperCase());
 }
 
-export const ToolMark: React.FC<{ name: string; size?: number }> = ({ name, size = 36 }) => {
-  const glyph = KNOWN[toolKey(name)];
+// Optical inset inside the tile: single glyph sits larger, multi-char shrinks so a
+// 2–3-letter monogram keeps ~14% breathing room and never kisses the tile edge.
+function markScale(len: number): number {
+  if (len >= 3) return 0.62;
+  if (len === 2) return 0.62;
+  return 0.78;
+}
+
+export const ToolMark: React.FC<{ name: string; logo?: string; size?: number }> = ({
+  name,
+  logo,
+  size = 36,
+}) => {
+  const mark = logo ?? name;
+  const glyph = KNOWN[toolKey(mark)];
   if (glyph && size >= GLYPH_MIN_SIZE) {
     return (
       <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
@@ -86,14 +102,15 @@ export const ToolMark: React.FC<{ name: string; size?: number }> = ({ name, size
       </svg>
     );
   }
-  const mono = monogram(name);
+  const mono = monogram(mark);
   return (
     <span
       style={{
         fontWeight: BRAND.font.weights.extraBold,
-        fontSize: Math.round(size * (mono.length >= 3 ? 0.72 : 0.92)),
+        fontSize: Math.round(size * markScale(mono.length)),
         lineHeight: 1,
         letterSpacing: '-0.02em',
+        textAlign: 'center',
       }}
     >
       {mono}

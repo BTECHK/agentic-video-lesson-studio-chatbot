@@ -2,7 +2,7 @@ import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { PreviewBandContent } from './content-types';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { SceneFrame, useGlideIn, renderAccented } from './shared';
+import { SceneFrame, Eyebrow, useGlideIn, renderAccented } from './shared';
 
 /**
  * `preview-band` (v2) — "coming next" beat.
@@ -40,18 +40,7 @@ export const PreviewBand: React.FC<SceneComponentProps> = ({ scene }) => {
       >
         {/* Left content: eyebrow + title */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* Accent eyebrow */}
-          <div
-            style={{
-              fontWeight: BRAND.font.weights.bold,
-              fontSize: 16,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase' as const,
-              color: BRAND.colors.accent,
-            }}
-          >
-            {c.eyebrow}
-          </div>
+          <Eyebrow delay={14}>{c.eyebrow}</Eyebrow>
 
           {/* Big bold title */}
           <h2

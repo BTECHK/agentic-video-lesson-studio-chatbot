@@ -10,7 +10,7 @@ import {
   continueRender,
   cancelRender,
 } from 'remotion';
-import { BRAND, LEADING } from '../../brand/tokens';
+import { BRAND, LEADING, SHADOW } from '../../brand/tokens';
 
 /**
  * Load the brand faces (Syne + Playfair Display) from bundled local TTFs instead
@@ -264,6 +264,41 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = 
     </div>
   );
 };
+
+/**
+ * Canonical "Stylized simulation" honesty chip — the single label every tool-sim
+ * (ComparisonChats, ToolDemo, ScreenFlow, VoiceDemo) renders so a stylized mock is
+ * never mistaken for a real product screenshot. Crimson micro-caps on an accentSoft
+ * fill, 4px radius, hairline accent border, low charcoal lift (never a glow, never a
+ * full pill). Marked `data-decor` so the layout gate treats it as a non-text overlay
+ * leaf that may sit over chrome. Callers pass `style` to pin it (e.g. top-right of a
+ * window). Token-driven — to retune the look, edit the token, not this component.
+ */
+export const SimDisclaimer: React.FC<{
+  text?: string;
+  style?: React.CSSProperties;
+}> = ({ text = 'Stylized simulation', style }) => (
+  <div
+    data-decor
+    style={{
+      fontFamily,
+      fontWeight: BRAND.font.weights.semiBold,
+      fontSize: 12,
+      lineHeight: LEADING.caps,
+      letterSpacing: '0.08em',
+      color: BRAND.colors.accent,
+      background: BRAND.colors.accentSoft,
+      border: `1px solid ${BRAND.colors.accent}`,
+      borderRadius: BRAND.radius,
+      boxShadow: SHADOW.button,
+      padding: '5px 10px',
+      whiteSpace: 'nowrap',
+      ...style,
+    }}
+  >
+    {text}
+  </div>
+);
 
 /** Primary scene title. */
 export const SceneTitle: React.FC<{

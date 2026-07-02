@@ -16,6 +16,8 @@ export const BRAND = {
     // Lines
     border: 'rgba(28,28,28,0.08)', // card borders, table row dividers
     borderStrong: 'rgba(28,28,28,0.15)', // header dividers, inactive dots
+    // Neutral fill behind a muted "Limited" capability cell (charcoal, no hue).
+    limitedCellBg: 'rgba(28,28,28,0.06)',
   },
   font: {
     family: 'Syne',
@@ -54,6 +56,9 @@ export const SHADOW = {
   card: '0 4px 12px rgba(28,28,28,0.04)',
   cardHover: '0 12px 28px rgba(28,28,28,0.08)',
   window: '0 30px 60px -20px rgba(28,28,28,0.20), 0 8px 24px -8px rgba(28,28,28,0.08)',
+  // Slight lift for interactive atoms (buttons, the voice-demo mic). Charcoal at
+  // low opacity only — replaces the saturated-crimson glow that violated the rule.
+  button: '0 8px 20px rgba(28,28,28,0.10)',
 } as const;
 
 /**

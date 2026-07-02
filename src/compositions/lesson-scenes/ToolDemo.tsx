@@ -3,8 +3,8 @@ import { useCurrentFrame, useVideoConfig } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ToolDemoContent } from './content-types';
 import { ToolMark } from './ToolMark';
-import { BRAND } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, renderAccented, useGlideIn, usePopIn } from './shared';
+import { BRAND, LEADING } from '../../brand/tokens';
+import { MUTED, SceneFrame, Eyebrow, SimDisclaimer, renderAccented, sceneTitleStyle, useGlideIn, usePopIn } from './shared';
 import { Pinwheel, Window } from './primitives';
 
 const ACCENT_TINT = BRAND.colors.accentSoft;
@@ -35,17 +35,7 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
   return (
     <SceneFrame align="flex-start" paddingX={120}>
       <Eyebrow delay={4}>{c.eyebrow}</Eyebrow>
-      <h1
-        style={{
-          ...title,
-          margin: 0,
-          fontWeight: BRAND.font.weights.bold,
-          fontSize: 60,
-          letterSpacing: '-0.02em',
-        }}
-      >
-        {renderAccented(c.title)}
-      </h1>
+      <h1 style={{ ...title, ...sceneTitleStyle(60) }}>{renderAccented(c.title)}</h1>
 
       {/* mock tool window using Window primitive */}
       <Window
@@ -53,9 +43,11 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
         mark={mark}
         composer={c.prompt}
         composerTyped={[0, promptTypeEnd]}
-        style={{ ...win, width: '100%' }}
+        style={{ ...win, width: '100%', position: 'relative' }}
         bodyStyle={{ gap: 18 }}
       >
+        {/* persistent honesty chip — intrinsic, not author-supplied caption */}
+        <SimDisclaimer style={{ position: 'absolute', top: 22, right: 64 }} />
         {/* generating beat: Pinwheel + label */}
         {generating && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: MUTED, fontSize: 20 }}>
@@ -152,17 +144,34 @@ const OutputTile: React.FC<{
           style={{
             height: 110,
             borderRadius: BRAND.radius,
-            background: `linear-gradient(135deg, ${BRAND.colors.accent} 0%, rgba(139,38,53,0.45) 60%, ${ACCENT_TINT} 100%)`,
-            display: 'flex',
-            alignItems: 'flex-end',
+            border: `1px solid ${BRAND.colors.border}`,
+            backgroundColor: BRAND.colors.bgAlt,
             padding: 12,
-            color: BRAND.colors.bgBase,
-            fontSize: 14,
-            fontWeight: BRAND.font.weights.bold,
-            letterSpacing: '0.08em',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
           }}
         >
-          IMAGE
+          {/* abstracted, token-drawn chart glyph — not a captured render */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, flex: 1 }}>
+            {[40, 70, 52, 88].map((h, i) => (
+              <span
+                key={i}
+                style={{ width: 14, height: `${h}%`, borderRadius: BRAND.radius, backgroundColor: BRAND.colors.accent }}
+              />
+            ))}
+          </div>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: BRAND.font.weights.semiBold,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: MUTED,
+            }}
+          >
+            IMAGE
+          </span>
         </div>
         <Caption label={label} sub={sub} badge={badge} />
       </TileShell>
@@ -209,6 +218,7 @@ const OutputTile: React.FC<{
 
   // file / slides / doc / text → a document card
   const glyph = kind === 'slides' ? 'PPT' : kind === 'text' ? 'TXT' : 'DOC';
+  const lines = output.lines;
   return (
     <TileShell delay={delay}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, height: 110 }}>
@@ -230,11 +240,32 @@ const OutputTile: React.FC<{
         >
           {glyph}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ height: 9, width: 120, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
-          <div style={{ height: 9, width: 90, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
-          <div style={{ height: 9, width: 110, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
-        </div>
+        {lines && lines.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5, minWidth: 0 }}>
+            {lines.slice(0, 3).map((line, i) => (
+              <div
+                key={i}
+                style={{
+                  fontSize: 14,
+                  fontWeight: BRAND.font.weights.medium,
+                  lineHeight: LEADING.caps,
+                  color: MUTED,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ height: 9, width: 120, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+            <div style={{ height: 9, width: 90, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+            <div style={{ height: 9, width: 110, borderRadius: 4, backgroundColor: BRAND.colors.border }} />
+          </div>
+        )}
       </div>
       <Caption label={label} sub={sub} badge={badge} />
     </TileShell>

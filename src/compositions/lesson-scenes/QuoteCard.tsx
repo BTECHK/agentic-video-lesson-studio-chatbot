@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrentFrame } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { QuoteCardContent } from './content-types';
 import { BRAND, LEADING, space } from '../../brand/tokens';
@@ -23,7 +24,7 @@ export const quoteStyles = {
     fontSize: 56,
     lineHeight: LEADING.quote,
     letterSpacing: '-0.01em',
-    maxWidth: 1500,
+    maxWidth: 1180,
   } satisfies React.CSSProperties,
   attribution: {
     display: 'flex',
@@ -38,14 +39,46 @@ export const quoteStyles = {
 
 export const QuoteCard: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as QuoteCardContent;
+  const frame = useCurrentFrame();
   const quote = useGlideIn(18, 24);
   const attr = useGlideIn(34, 16);
+  // Idle float — the blockquote breathes on its own slow phase so the moment
+  // never settle-and-freezes through the long hold (motion-contract idle float).
+  const floatY = Math.sin((frame - 42) * 0.035) * 7;
 
   return (
     <SceneFrame align="flex-start" paddingX={180}>
+      {/* Oversized ghost open-quote behind the text — an accentSoft anchor that
+          occupies the void the inline marks can't fill. Zero collision: it sits
+          behind the blockquote and is decor-only. */}
+      <div
+        aria-hidden
+        data-decor
+        style={{
+          position: 'absolute',
+          left: 120,
+          top: 200,
+          fontSize: 360,
+          lineHeight: 1,
+          fontWeight: BRAND.font.weights.bold,
+          color: BRAND.colors.accentSoft,
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        {QUOTE_MARKS.open}
+      </div>
+
       <Eyebrow delay={6}>{c.eyebrow}</Eyebrow>
 
-      <blockquote style={{ ...quote, ...quoteStyles.quote }}>
+      <blockquote
+        style={{
+          ...quote,
+          ...quoteStyles.quote,
+          position: 'relative',
+          transform: `${quote.transform} translateY(${floatY}px)`,
+        }}
+      >
         <span style={{ color: BRAND.colors.accent }}>{QUOTE_MARKS.open}</span>
         {renderAccented(c.quote)}
         <span style={{ color: BRAND.colors.accent }}>{QUOTE_MARKS.close}</span>
