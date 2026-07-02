@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AuditQuadrantContent } from './content-types';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, SAFE_AREA } from '../../brand/tokens';
 import { SceneFrame, Eyebrow, SceneTitle, Glide } from './shared';
 
 type QuadrantId = 'tl' | 'tr' | 'bl' | 'br';
@@ -103,7 +103,13 @@ export const AuditQuadrant: React.FC<SceneComponentProps> = ({ scene }) => {
         <div style={{ ...axisLabel, left: '50%', bottom: -14, transform: 'translateX(-50%)' }}>
           {c.yAxis.bottom}
         </div>
-        <div style={{ ...axisLabel, left: 0, top: '50%', transform: 'translate(-100%, -50%)' }}>
+        {/* Left label was right-aligned flush against the quadrant edge
+            (frame x=160, SceneFrame's default paddingX), so long text grew
+            leftward past the frame edge with no safe-area inset (defect:
+            "LONG AXIS LABEL" clipped to "G AXIS LABEL"). Anchor its left edge
+            at SAFE_AREA.x instead and grow rightward, into the quadrant's
+            own clear margin. */}
+        <div style={{ ...axisLabel, left: SAFE_AREA.x - 160, top: '50%', transform: 'translateY(-50%)' }}>
           {c.xAxis.left}
         </div>
         <div style={{ ...axisLabel, right: 0, top: '50%', transform: 'translate(100%, -50%)' }}>

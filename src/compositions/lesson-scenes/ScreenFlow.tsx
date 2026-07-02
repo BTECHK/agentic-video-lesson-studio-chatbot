@@ -265,6 +265,47 @@ interface PanelProps {
 const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
   // Only show fields for 'type' steps
   const typeSteps = c.steps.filter((s) => s.action === 'type');
+  const hasClickStep = c.steps.some((s) => s.action === 'click');
+
+  // A split flow with neither 'type' nor 'click' steps (e.g. a code-editor
+  // scene that's all navigate/reveal) left this pane permanently blank — no
+  // rendering branch admitted those actions. Fall back to the same abstract
+  // row treatment used for click steps below, so the editor/file chrome
+  // still carries progressive content that tracks the reveal steps the
+  // right pane narrates.
+  if (typeSteps.length === 0 && !hasClickStep) {
+    return (
+      <>
+        {c.steps.map((step, stepIdx) => {
+          const isActive = activeStep === stepIdx;
+          const isPast = activeStep > stepIdx;
+          return (
+            <div
+              key={step.id}
+              style={{
+                borderRadius: BRAND.radius,
+                padding: '10px 14px',
+                fontSize: 18,
+                backgroundColor: isActive
+                  ? BRAND.colors.accentSoft
+                  : isPast
+                  ? 'rgba(28,28,28,0.04)'
+                  : BRAND.colors.bgBase,
+                border: isActive
+                  ? `1px solid ${BRAND.colors.accent}`
+                  : `1px solid ${BRAND.colors.border}`,
+                color: isActive ? BRAND.colors.accent : BRAND.colors.text,
+                fontWeight: isActive ? BRAND.font.weights.bold : BRAND.font.weights.regular,
+                boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
+              }}
+            >
+              {step.label ?? step.target}
+            </div>
+          );
+        })}
+      </>
+    );
+  }
 
   return (
     <>

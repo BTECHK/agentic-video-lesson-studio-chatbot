@@ -1,12 +1,10 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { DemoCueContent } from './content-types';
 import { BRAND, LEADING } from '../../brand/tokens';
-import { fontFamily, Glide, useGlideIn } from './shared';
+import { SceneFrame, Glide, useGlideIn } from './shared';
 import { PulseRing } from './primitives';
 
-const LINEN = BRAND.colors.bgBase;
 const INK = BRAND.colors.text;
 const INK_MUTED = BRAND.colors.textMuted;
 const HAIRLINE = BRAND.colors.border;
@@ -23,18 +21,7 @@ export const DemoCue: React.FC<SceneComponentProps> = ({ scene }) => {
   const sub = useGlideIn(28, 18);
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: LINEN,
-        fontFamily,
-        color: INK,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '120px 160px',
-        gap: 36,
-      }}
-    >
+    <SceneFrame>
       <LiveFlag />
       <div style={{ fontSize: 22, fontWeight: BRAND.font.weights.bold, letterSpacing: '0.14em', lineHeight: LEADING.caps, textTransform: 'uppercase', color: INK_MUTED }}>
         {c.eyebrow}
@@ -77,7 +64,7 @@ export const DemoCue: React.FC<SceneComponentProps> = ({ scene }) => {
           </Glide>
         ))}
       </div>
-    </AbsoluteFill>
+    </SceneFrame>
   );
 };
 
