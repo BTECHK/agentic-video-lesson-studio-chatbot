@@ -480,15 +480,25 @@ interface FullPanelProps {
   stepStartFrames: number[];
 }
 
+// 5+ steps in a `full` layout otherwise run the unbounded step list past the
+// frame bottom / under the pagination band (defect: bonus mock card
+// clipped at the frame edge or overlapped by the caption chip). Tightening
+// row/panel padding is whitespace-only — never smaller step text.
+const LONG_STEP_LIST = 5;
+
 const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
+  const long = c.steps.length >= LONG_STEP_LIST;
+  const panelPad = long ? 16 : 24;
+  const listGap = long ? 6 : 12;
+  const rowPad = long ? '8px 16px' : '12px 16px';
   return (
     <div
       style={{
         flex: 1,
-        padding: 24,
+        padding: panelPad,
         display: 'flex',
         flexDirection: 'column',
-        gap: 12,
+        gap: listGap,
       }}
     >
       {c.steps.map((step, i) => {
@@ -528,7 +538,7 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               border: isActive
                 ? `1px solid ${BRAND.colors.accent}`
                 : `1px solid ${BRAND.colors.border}`,
-              padding: '12px 16px',
+              padding: rowPad,
               backgroundColor: isActive ? BRAND.colors.accentSoft : BRAND.colors.bgCard,
               display: 'flex',
               flexDirection: 'column',

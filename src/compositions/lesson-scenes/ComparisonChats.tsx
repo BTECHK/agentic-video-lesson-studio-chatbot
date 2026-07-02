@@ -8,7 +8,12 @@ import { SceneFrame, Eyebrow, renderAccented, useGlideIn, MUTED, SimDisclaimer }
 import { TypeOn, Pinwheel, Tether } from './primitives';
 
 const ROW_W = 1680; // 1920 − 2×120 paddingX
-const WIN_H = 600;
+// 472 (was 600): with eyebrow+title+caption all present, the fixed-height card
+// row's bottom edge measured ~122px from the frame bottom at WIN_H=600 — inside
+// the LessonChrome dots/counter band (defect: composer "Ask anything…" row and
+// the crimson tether drawn through the pagination dots, 11 lessons). Shrunk so
+// the card bottom clears CONTENT_SAFE_BOTTOM in that worst case.
+const WIN_H = 472;
 const GAP = 28;
 
 /** Smooth wavy path connecting the bottom of each window — the tether. */

@@ -3,7 +3,7 @@ import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { SetupChecklistContent } from './content-types';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, glideProgress } from './shared';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, glideProgress, listGap } from './shared';
 import { Pinwheel, MockCursor } from './primitives';
 import type { CursorKey } from './primitives';
 
@@ -14,7 +14,6 @@ const DONE_AFTER = 1.6; // seconds after activateAt a row flips to "Done"
 // at the wrapper's top-left), not scene-absolute. Derive the cursor target from the
 // same layout the rows use so it lands on the toggle.
 const ROW_HEIGHT = 100; // approximate rendered row height (padding 22 + content + 22)
-const ROW_GAP = 14;
 const LIST_MARGIN_TOP = 16; // marginTop on the column that wraps the rows
 // The Toggle is the FIRST (left) flex child of each row: row padding-left 28 + the
 // 44px control's half-width ≈ 50px in from the wrapper's left edge.
@@ -28,10 +27,16 @@ const ROW_Y_FIRST = LIST_MARGIN_TOP + ROW_HEIGHT / 2;
  * flip to "Done" 1.6s later (checkmark + accentSoft pill). If `content.cursor`
  * is true a MockCursor walks down to each item's toggle just before it activates.
  * All motion settles within the first ~10s then holds.
+ *
+ * 4+ items tighten the row gap (`listGap`) — a long checklist otherwise runs
+ * its last row(s) past the frame bottom / under the pagination band (defect:
+ * 4-item checklists cut off at the frame edge). The cursor's Y math uses the
+ * same gap so it still lands on each row's toggle.
  */
 export const SetupChecklist: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as SetupChecklistContent;
   const { fps } = useVideoConfig();
+  const ROW_GAP = listGap(c.items.length, 14, 6);
 
   // Build cursor keyframes: glide to each row just before its activateAt, click at activateAt.
   const cursorKeys: CursorKey[] = [];

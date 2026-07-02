@@ -2,15 +2,22 @@ import React from 'react';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { AssignmentListContent } from './content-types';
 import { BRAND } from '../../brand/tokens';
-import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn, eyebrowStyle } from './shared';
+import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, Glide, useGlideIn, eyebrowStyle, listGap } from './shared';
 
 /**
  * `assignment-list` — pre-class homework. Each task row: accent square
  * checkbox (4px radius, accent border, accentSoft fill) + bold task + context
  * in textMuted. Optional callout: bgCard + 1px border + 4px radius (flat) + accent eyebrow.
+ *
+ * 4+ tasks tighten the row/callout gap (`listGap`) — a long list otherwise
+ * pushes the vertically-centered content block's top above the chrome
+ * watermark and its bottom under the pagination band (defects: eyebrow over
+ * "Sample Academy"; long callout flush against/under the dots).
  */
 export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as AssignmentListContent;
+  const gap = listGap(c.tasks.length, 12, 6);
+  const calloutMarginTop = listGap(c.tasks.length, 8, 4);
   const calloutDelay = 48 + c.tasks.length * 10 + 8;
   const callout = useGlideIn(calloutDelay, 22);
 
@@ -22,7 +29,7 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
       </SceneTitle>
       <SceneSub delay={26}>{c.sub}</SceneSub>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', marginTop: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap, width: '100%', marginTop: 8 }}>
         {c.tasks.map((task, i) => (
           <Glide key={task.id} delay={48 + i * 10} fromY={20}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
@@ -58,7 +65,7 @@ export const AssignmentList: React.FC<SceneComponentProps> = ({ scene }) => {
             flexDirection: 'column',
             gap: 8,
             width: '100%',
-            marginTop: 8,
+            marginTop: calloutMarginTop,
             padding: '24px 32px',
             borderRadius: BRAND.radius,
             backgroundColor: BRAND.colors.bgCard,

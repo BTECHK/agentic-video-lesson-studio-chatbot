@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { BRAND, LEADING, SAFE_AREA, SPACE_BASE, space, SHADOW } from '../src/brand/tokens';
-import { sceneTitleStyle, sceneSubStyle, eyebrowStyle } from '../src/compositions/lesson-scenes/shared';
+import { BRAND, LEADING, SAFE_AREA, CONTENT_SAFE_BOTTOM, SPACE_BASE, space, SHADOW } from '../src/brand/tokens';
+import { sceneTitleStyle, sceneSubStyle, eyebrowStyle, listGap } from '../src/compositions/lesson-scenes/shared';
 import { quoteStyles, QUOTE_MARKS } from '../src/compositions/lesson-scenes/QuoteCard';
+import { CAPTION_BOTTOM } from '../src/compositions/lesson-scenes/LessonCaptions';
 
 // #72 — systematic typography/spacing/safe-area contracts. These are the
 // design-system floors that prevented defects (title line collision, glyph
@@ -32,6 +33,33 @@ describe('safe area', () => {
     expect(SAFE_AREA.y).toBeGreaterThan(0);
     expect(SAFE_AREA.x * 2).toBeLessThan(BRAND.video.width);
     expect(SAFE_AREA.y * 2).toBeLessThan(BRAND.video.height);
+  });
+});
+
+// Shared-layout-collisions fix wave: scene content (card stacks, checklists,
+// transcripts) invading the bottom chrome band (pagination dots, scene
+// counter, caption chip) — 11+ lessons. Locks the clearance so it can't
+// silently drift back down to CHROME_BOTTOM (or below).
+describe('content-safe bottom clearance', () => {
+  it('clears the LessonChrome pagination/counter row with a real margin', () => {
+    const CHROME_BOTTOM = CAPTION_BOTTOM + 90; // mirrors LessonChrome.tsx
+    // Chrome row's own visual top edge (counter text, ~16px font, ~1.2 line-height).
+    const chromeRowTop = CHROME_BOTTOM + 16 * 1.2;
+    expect(CONTENT_SAFE_BOTTOM).toBeGreaterThan(chromeRowTop);
+  });
+  it('sits on the 4px spacing scale', () => {
+    expect(CONTENT_SAFE_BOTTOM % SPACE_BASE).toBe(0);
+  });
+});
+
+describe('listGap (tightens long lists so they respect the content-safe bottom)', () => {
+  it('uses the base gap under the length threshold', () => {
+    expect(listGap(2, 12, 6)).toBe(12);
+    expect(listGap(3, 12, 6)).toBe(12);
+  });
+  it('tightens at 4+ items', () => {
+    expect(listGap(4, 12, 6)).toBe(6);
+    expect(listGap(5, 12, 6)).toBe(6);
   });
 });
 

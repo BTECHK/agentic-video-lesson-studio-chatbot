@@ -85,3 +85,16 @@ export const space = (n: number): number => n * SPACE_BASE;
  * (e.g. the oversized quote glyph escaping its box). Enforced by gate:layout.
  */
 export const SAFE_AREA = { x: 96, y: 54 } as const;
+
+/**
+ * Content-safe bottom clearance (px, distance from the frame's bottom edge):
+ * the floor scene CONTENT (card stacks, checklists, transcripts) must stay
+ * above so it never invades the persistent bottom chrome band — pagination
+ * dots + scene counter (LessonChrome, `bottom: CAPTION_BOTTOM + 90 = 162`,
+ * row height ~19px) plus a breathing margin. Distinct from `SAFE_AREA.y`
+ * (a much smaller absolute-edge inset for stray text) — this is the taller
+ * floor for the chrome band specifically. Vision-QC defect family (11+
+ * lessons): comparison-chats composers, assignment-list callouts, and
+ * setup-checklist rows landing on/under the dots and counter.
+ */
+export const CONTENT_SAFE_BOTTOM = 188;

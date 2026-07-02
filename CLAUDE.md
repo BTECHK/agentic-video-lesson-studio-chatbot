@@ -95,7 +95,7 @@ is the independent reviewer/verifier. The point isn't two models agreeing — it
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (10817 symbols, 15023 relationships, 285 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (11153 symbols, 15299 relationships, 287 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

@@ -210,6 +210,18 @@ export const SceneFrame: React.FC<{
 );
 
 /**
+ * Row gap for a vertically-stacked list (task rows, checklist rows) inside a
+ * vertically-centered SceneFrame. A long list's total height can push its top
+ * above the chrome watermark (defect: AssignmentList eyebrow over the "Sample
+ * Academy" wordmark) or its bottom under the pagination/caption band (defect:
+ * long callouts flush against the dots). Tightening the gap
+ * for longer lists is safe whitespace compression — never font shrinking.
+ */
+export function listGap(itemCount: number, baseGap: number, tightGap: number): number {
+  return itemCount >= 4 ? tightGap : baseGap;
+}
+
+/**
  * Pure style builders — exported so the typography contract is unit-testable
  * (#72): leading comes from the LEADING scale, never hardcoded per component.
  */

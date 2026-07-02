@@ -50,14 +50,17 @@ export const QuoteCard: React.FC<SceneComponentProps> = ({ scene }) => {
     <SceneFrame align="flex-start" paddingX={180}>
       {/* Oversized ghost open-quote behind the text — an accentSoft anchor that
           occupies the void the inline marks can't fill. Zero collision: it sits
-          behind the blockquote and is decor-only. */}
+          behind the blockquote and is decor-only.
+          top:140 (was 200) — the glyph's descender "leg" was crowding the
+          Eyebrow row rendered just below it (defect: scenes 03+05). Shifted
+          up for breathing room; purely decorative, doesn't move any text. */}
       <div
         aria-hidden
         data-decor
         style={{
           position: 'absolute',
           left: 120,
-          top: 200,
+          top: 140,
           fontSize: 360,
           lineHeight: 1,
           fontWeight: BRAND.font.weights.bold,
