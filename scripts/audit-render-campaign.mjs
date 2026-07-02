@@ -35,15 +35,39 @@ if (process.env.SKIP_WALKTHROUGH !== '1') {
 }
 
 // ---- 2. audio preflight: every narrated scene needs audioSrc + words ----
-const ok = [];
-for (const id of LESSONS) {
+function audioMissing(id) {
   const lj = `content/lessons/${id}/lesson.json`;
-  if (!existsSync(lj)) { log(`PREFLIGHT EXCLUDE ${id}: no lesson.json`); continue; }
+  if (!existsSync(lj)) return 'no lesson.json';
   const lesson = JSON.parse(readFileSync(lj, 'utf8'));
   const bad = (lesson.scenes || []).filter((s) => s.narration?.text && (!s.narration.audioSrc || !(s.narration.words?.length > 0)));
-  if (bad.length) { log(`PREFLIGHT EXCLUDE ${id}: ${bad.length} narrated scene(s) missing audioSrc/words (${bad.map((s) => s.id).join(',')}) — run tts+align first`); continue; }
-  ok.push(id);
+  return bad.length ? `${bad.length} scene(s): ${bad.map((s) => s.id).join(',')}` : null;
 }
+function dockerUp() {
+  return spawnSync('docker', ['info', '--format', 'ok'], { shell: true, timeout: 20000 }).status === 0;
+}
+function ensureDocker() {
+  if (dockerUp()) return true;
+  log('docker down — starting Docker Desktop...');
+  spawnSync('powershell', ['-NoProfile', '-Command', "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'"], { timeout: 30000 });
+  for (let i = 0; i < 24; i++) {
+    execSync('powershell -NoProfile -Command "Start-Sleep -Seconds 15"');
+    if (dockerUp()) { log('docker ready'); return true; }
+  }
+  log('docker never came up (6min) — TTS recovery unavailable');
+  return false;
+}
+let excluded = LESSONS.filter((id) => audioMissing(id));
+// self-heal: synthesize+align missing audio via the sidecar (Codex BLOCK #3 recovery path)
+if (excluded.length && ensureDocker()) {
+  for (const id of excluded) {
+    log(`tts+align recovery: ${id} (${audioMissing(id)})`);
+    spawnSync('npx', ['tsx', 'scripts/synthesize-lesson.ts', id], { stdio: 'inherit', shell: true, timeout: 30 * 60 * 1000 });
+    spawnSync('npx', ['tsx', 'scripts/align-lesson.ts', `content/lessons/${id}/lesson.json`], { stdio: 'inherit', shell: true, timeout: 20 * 60 * 1000 });
+  }
+  excluded = LESSONS.filter((id) => audioMissing(id));
+}
+const ok = LESSONS.filter((id) => !audioMissing(id));
+for (const id of excluded) log(`PREFLIGHT EXCLUDE ${id}: ${audioMissing(id)} — tts+align did not recover it`);
 log(`preflight: ${ok.length}/${LESSONS.length} lessons render-safe`);
 if (ok.length === 0) { log('nothing render-safe; exiting'); process.exit(1); }
 
