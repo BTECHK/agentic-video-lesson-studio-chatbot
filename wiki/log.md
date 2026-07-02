@@ -17,3 +17,4 @@ Operations:
 ## [2026-05-26] ingest | Studio Generate design spec → source [[studio-generate-design]], concept [[studio-generate]].
 ## [2026-06-22] ingest | Claude Design ⇄ Remotion fidelity diagnosis → concept [[design-fidelity-html-vs-mp4]]; learnings.md updated (design-sync N/A, codex-sandbox -1073741502, drive-date quirk).
 ## [2026-06-26] ingest | Video output-surface accounting → concept [[video-output-map]] (out/* lessons+sizzle vs output/video/* walkthrough+showcase; search BOTH); learnings.md updated. Trigger: platform-walkthrough reported "missing" 3× because it lives in output/video/, not out/.
+## [2026-07-02] ingest | v3 render corpus accounting refresh → updated [[video-output-map]] with the `out/v3/` status, the Drive publish state and the in-progress `BUILD-walkthrough-v3` task (so the walkthrough path doesn't go missing a 4th time). Verified against the filesystem (`out/v3/*.mp4` timestamps) and git log, not asserted from the prompt alone.

@@ -4,7 +4,7 @@ title: "Video output map (out/* vs output/video/*)"
 tags: [video, renders, output-dirs, compositions, audit]
 sources: []
 created: 2026-06-26
-updated: 2026-06-26
+updated: 2026-07-02
 ---
 
 # Video output map
@@ -20,7 +20,7 @@ Default `RENDER_OUT_DIR` for the codified lesson pipeline. Holds:
 - **Legacy/early-slice:** `module-1.mp4`, `module-1-silent.mp4`, plus QC PNGs (`check-*.png`, `smoke-caption.png`) and helper subdirs (`qc/`, `slice/`, `lesson-stills/`, `verify/`, `_colortest/`).
 - **Render-version subdirs (never overwrite `out/*`):**
   - **`out/v2/`** — the v2 facelift pass: a subset of lessons + `sizzle-16x9/9x16.mp4`.
-  - **`out/v3/`** — the in-progress **design-QC pass**. As of 2026-06-26 it holds the first few re-renders; the remaining flagged lessons are queued (the render loop was blocked by a Windows ffmpeg `0xC0000142` desktop-heap crash on the loaded box).
+  - **`out/v3/`** — the design-QC re-render pass. Rendered 2026-06-26 → 2026-06-30 (resumable per-lesson queue) and published to Drive alongside the originals. **Caveat:** one lesson was a later full-SCALE=2 re-render whose Drive publish was pending because the Drive mount was offline; confirm it landed before relying on Drive as the source of truth for that lesson. The pre-UAT audit continues on branch `fable-e2e-audit`, ledger `agent-ops/STATE.json`.
 
 ### `output/video/` — platform walkthrough + brand showcase (a SEPARATE composition tree)
 A different output dir AND different Remotion compositions than the lessons. Two files:
@@ -28,6 +28,8 @@ A different output dir AND different Remotion compositions than the lessons. Two
 - **`brand-showcase.mp4`** — composition `BrandShowcase` (`durationInFrames=300` = 10s) in `src/compositions/BrandShowcase.tsx`, registered as id `"BrandShowcase"`. Dated May 13.
 
 **Standard-compliance:** both are pre-v2/v3 and **NOT up to standard** — `color_space=bt470bg` (not the BT.709 the liveliness/media gate requires) and a white background on the walkthrough. Both need a **BT.709 re-render** before they'd pass `gate:media`. This is a known follow-up, not a missing asset.
+
+**Status as of 2026-07-02: `platform-walkthrough.mp4` refresh is an active in-progress task** on branch `fable-e2e-audit` (task `BUILD-walkthrough-v3` in `agent-ops/STATE.json`) — bring `PlatformWalkthrough.tsx` up to the current v3 design system + BT.709, re-render, gate, publish. **Its path is `output/video/platform-walkthrough.mp4`, not `out/`** — recorded here explicitly because this exact miss ("video is missing") has already happened 3 times (see `learnings.md`). Check this page (or the STATE.json task) for the refreshed file before assuming it doesn't exist.
 
 Sibling artifacts under `output/` are unrelated to these MP4s: `output/verification/` (Playwright screenshots) and `output/validation/report.json`.
 
