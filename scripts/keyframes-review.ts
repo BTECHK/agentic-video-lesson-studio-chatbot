@@ -84,12 +84,12 @@ ${cards}
 }
 
 function build(id: string): { id: string; scenes: number } | null {
-  const mp4 = `out/${id}.mp4`;
+  const mp4 = `${process.env.KEYFRAMES_SRC_DIR ?? 'out'}/${id}.mp4`;
   const lj = `content/lessons/${id}/lesson.json`;
   if (!existsSync(mp4)) { console.error(`SKIP ${id}: no ${mp4}`); return null; }
   if (!existsSync(lj)) { console.error(`SKIP ${id}: no ${lj}`); return null; }
   const lesson = JSON.parse(readFileSync(lj, 'utf8'));
-  const outDir = join('artifacts', 'keyframes-review', topicDir(id), id);
+  const outDir = join(process.env.KEYFRAMES_OUT_ROOT ?? join('artifacts', 'keyframes-review'), topicDir(id), id);
   mkdirSync(outDir, { recursive: true });
   const pngFor = (s: Scene, i: number) => `${String(i + 1).padStart(2, '0')}-${s.type}-${s.id}.png`;
   const rows: string[] = [];
