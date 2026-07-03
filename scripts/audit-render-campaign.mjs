@@ -47,8 +47,11 @@ function dockerUp() {
 }
 function ensureDocker() {
   if (dockerUp()) return true;
-  log('docker down — starting Docker Desktop...');
-  spawnSync('powershell', ['-NoProfile', '-Command', "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'"], { timeout: 30000 });
+  log('docker down — clearing stale run sockets (dockerInference wedge, 2026-07-02) + starting Docker Desktop...');
+  // Known wedge: Docker Desktop crashes at start if %LOCALAPPDATA%\Docker\run holds
+  // stale AF_UNIX sockets it cannot remove. Quarantine the dir; Docker recreates it.
+  spawnSync('powershell', ['-NoProfile', '-Command',
+    "$r=\"$env:LOCALAPPDATA\\Docker\\run\"; if (Test-Path $r) { Move-Item $r \"$r-stale-$(Get-Date -Format MMddHHmmss)\" -Force -ErrorAction SilentlyContinue }; Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'"], { timeout: 60000 });
   for (let i = 0; i < 24; i++) {
     execSync('powershell -NoProfile -Command "Start-Sleep -Seconds 15"');
     if (dockerUp()) { log('docker ready'); return true; }
