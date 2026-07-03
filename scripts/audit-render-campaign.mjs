@@ -42,33 +42,17 @@ function audioMissing(id) {
   const bad = (lesson.scenes || []).filter((s) => s.narration?.text && (!s.narration.audioSrc || !(s.narration.words?.length > 0)));
   return bad.length ? `${bad.length} scene(s): ${bad.map((s) => s.id).join(',')}` : null;
 }
-function dockerUp() {
-  return spawnSync('docker', ['info', '--format', 'ok'], { shell: true, timeout: 20000 }).status === 0;
-}
-function ensureDocker() {
-  if (dockerUp()) return true;
-  log('docker down — clearing stale run sockets (dockerInference wedge, 2026-07-02) + starting Docker Desktop...');
-  // Known wedge: Docker Desktop crashes at start if %LOCALAPPDATA%\Docker\run holds
-  // stale AF_UNIX sockets it cannot remove. Quarantine the dir; Docker recreates it.
-  spawnSync('powershell', ['-NoProfile', '-Command',
-    "$r=\"$env:LOCALAPPDATA\\Docker\\run\"; if (Test-Path $r) { Move-Item $r \"$r-stale-$(Get-Date -Format MMddHHmmss)\" -Force -ErrorAction SilentlyContinue }; Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'"], { timeout: 60000 });
-  for (let i = 0; i < 24; i++) {
-    execSync('powershell -NoProfile -Command "Start-Sleep -Seconds 15"');
-    if (dockerUp()) { log('docker ready'); return true; }
-  }
-  log('docker never came up (6min) — TTS recovery unavailable');
-  return false;
-}
+// Native TTS lane (2026-07-02): Docker Desktop crash-loops on this box
+// (dockerInference socket bug), so the sidecar CLI runs on the host venv.
+const TTS_ENV = { ...process.env, TTS_NATIVE: '1', TTS_PYTHON: process.env.TTS_PYTHON ?? 'python3' };
 let excluded = LESSONS.filter((id) => audioMissing(id));
-// self-heal: synthesize+align missing audio via the sidecar (Codex BLOCK #3 recovery path)
-if (excluded.length && ensureDocker()) {
-  for (const id of excluded) {
-    log(`tts+align recovery: ${id} (${audioMissing(id)})`);
-    spawnSync('npx', ['tsx', 'scripts/synthesize-lesson.ts', id], { stdio: 'inherit', shell: true, timeout: 30 * 60 * 1000 });
-    spawnSync('npx', ['tsx', 'scripts/align-lesson.ts', `content/lessons/${id}/lesson.json`], { stdio: 'inherit', shell: true, timeout: 20 * 60 * 1000 });
-  }
-  excluded = LESSONS.filter((id) => audioMissing(id));
+// self-heal: synthesize+align missing audio natively (Codex BLOCK #3 recovery path)
+for (const id of excluded) {
+  log(`tts+align recovery (native): ${id} (${audioMissing(id)})`);
+  spawnSync('npx', ['tsx', 'scripts/synthesize-lesson.ts', id], { stdio: 'inherit', shell: true, timeout: 30 * 60 * 1000, env: TTS_ENV });
+  spawnSync('npx', ['tsx', 'scripts/align-lesson.ts', `content/lessons/${id}/lesson.json`], { stdio: 'inherit', shell: true, timeout: 20 * 60 * 1000, env: TTS_ENV });
 }
+excluded = LESSONS.filter((id) => audioMissing(id));
 const ok = LESSONS.filter((id) => !audioMissing(id));
 for (const id of excluded) log(`PREFLIGHT EXCLUDE ${id}: ${audioMissing(id)} — tts+align did not recover it`);
 log(`preflight: ${ok.length}/${LESSONS.length} lessons render-safe`);
