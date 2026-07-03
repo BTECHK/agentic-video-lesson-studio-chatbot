@@ -4,6 +4,7 @@ import { TelegramChannel } from './channels/telegram.js';
 import { startServer } from './server.js';
 import { SessionStore } from './session.js';
 import { RateLimiter, GlobalDailyCap } from './rate-limit.js';
+import { assertWebhookConfigSafe } from './webhook-config.js';
 
 /**
  * Entrypoint. Two channels share one brain:
@@ -23,6 +24,7 @@ async function main(): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const mode = process.env.TELEGRAM_MODE ?? 'longpoll';
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  assertWebhookConfigSafe(token, mode, webhookSecret);
 
   // One global daily cap shared across BOTH channels (quota/spend circuit breaker).
   const dailyCap = new GlobalDailyCap();

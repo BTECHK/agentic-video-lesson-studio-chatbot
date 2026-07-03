@@ -3,7 +3,7 @@
 // -> audio preflight (Codex BLOCK #3: a narration scene without audioSrc/words
 // must never enter the queue -> silent lesson) -> archive stale v3 mp4s ->
 // hand the survivors to the proven resumable queue (render-v3-queue.mjs).
-import { execSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, mkdirSync, renameSync, appendFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
