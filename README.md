@@ -215,7 +215,7 @@ npm run gate:status -- <lessonId>     # all five — exit 0 = publishable
 npm run publish:drive -- <lessonId>
 
 # Content ingestion
-npm run ingest -- --mode=poll --vendor=anthropic
+npm run ingest:poll
 
 # Tutor bot (local, no keys needed in mock mode)
 cd bot && npm install && npm test && npm start   # http://localhost:3100
