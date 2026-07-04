@@ -6,6 +6,7 @@ import { TitleCard } from './scenes/TitleCard';
 import { ChatDemo } from './scenes/ChatDemo';
 import { ContentViewer } from './scenes/ContentViewer';
 import { ComparisonView } from './scenes/ComparisonView';
+import { SceneAmbient } from './lesson-scenes/shared';
 
 const { fontFamily } = loadFont('normal', {
   weights: ['400', '600', '800'],
@@ -70,6 +71,7 @@ export const PlatformWalkthrough: React.FC = () => {
             gap: 16,
           }}
         >
+          <SceneAmbient />
           <div
             style={{
               width: 60,
