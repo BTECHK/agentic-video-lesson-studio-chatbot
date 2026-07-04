@@ -185,12 +185,23 @@ export const SceneAmbient: React.FC<{ dark?: boolean }> = ({ dark }) => {
   );
 };
 
-/** Full-bleed warm-linen stage. Every lesson scene sits inside this. */
+/**
+ * Full-bleed warm-linen stage. Every lesson scene sits inside this. `justify`
+ * defaults to the universal vertical centering every scene relies on; a
+ * variable-height scene (AssignmentList, 2-6 tasks + optional callout) can
+ * opt into `flex-start` so its top edge is a FIXED distance from the frame
+ * top regardless of content length — centering a tall content block instead
+ * only spends half of any height cut on moving the top down (the other half
+ * is "wasted" there), making the bottom-clearance floor (CONTENT_SAFE_BOTTOM)
+ * unreachable for long lists (defect: a 5-task lesson eyebrow-on-watermark
+ * + callout-in-caption-band, wave-3b).
+ */
 export const SceneFrame: React.FC<{
   children: React.ReactNode;
   align?: 'center' | 'flex-start';
   paddingX?: number;
-}> = ({ children, align = 'flex-start', paddingX = 160 }) => (
+  justify?: 'center' | 'flex-start';
+}> = ({ children, align = 'flex-start', paddingX = 160, justify = 'center' }) => (
   <AbsoluteFill
     style={{
       backgroundColor: BRAND.colors.bgBase,
@@ -198,7 +209,7 @@ export const SceneFrame: React.FC<{
       color: BRAND.colors.text,
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: justify,
       alignItems: align,
       padding: `120px ${paddingX}px`,
       gap: 40,
