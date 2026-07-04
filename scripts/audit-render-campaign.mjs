@@ -4,7 +4,7 @@
 // must never enter the queue -> silent lesson) -> archive stale v3 mp4s ->
 // hand the survivors to the proven resumable queue (render-v3-queue.mjs).
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, mkdirSync, renameSync, appendFileSync } from 'node:fs';
+import { existsSync, readFileSync, mkdirSync, renameSync, appendFileSync, statSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -58,12 +58,19 @@ for (const id of excluded) log(`PREFLIGHT EXCLUDE ${id}: ${audioMissing(id)} —
 log(`preflight: ${ok.length}/${LESSONS.length} lessons render-safe`);
 if (ok.length === 0) { log('nothing render-safe; exiting'); process.exit(1); }
 
-// ---- 3. archive stale v3 outputs so the resumable queue re-renders them ----
+// ---- 3. archive STALE v3 outputs so the resumable queue re-renders them ----
+// Stale = mp4 older than its lesson.json. Guard added 2026-07-04 after a relaunch
+// archived 20 FRESH renders and started re-rendering the whole set from scratch.
 const ARCH = 'out/v3/archive-pre-audit';
 mkdirSync(ARCH, { recursive: true });
 for (const id of ok) {
   const p = `out/v3/${id}.mp4`;
-  if (existsSync(p)) { renameSync(p, path.join(ARCH, `${id}.mp4`)); log(`archived stale ${p}`); }
+  if (!existsSync(p)) continue;
+  const ljPath = `content/lessons/${id}/lesson.json`;
+  const fresh = existsSync(ljPath) && statSync(p).mtimeMs > statSync(ljPath).mtimeMs;
+  if (fresh) { log(`keep fresh ${p} (newer than lesson.json — resumable skip will honor it)`); continue; }
+  renameSync(p, path.join(ARCH, `${id}.mp4`));
+  log(`archived stale ${p}`);
 }
 
 // ---- 4. hand off to the proven queue (render+gate+publish, resumable) ----
