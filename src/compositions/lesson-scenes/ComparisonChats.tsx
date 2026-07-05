@@ -37,7 +37,7 @@ function tetherPath(n: number): string {
  * "same prompt → different voices" point physical. All motion settles in the
  * first ~7s; the scene then holds (narration runs long).
  */
-export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
+export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as ComparisonChatsContent;
   const title = useGlideIn(10, 22);
   const caption = useGlideIn(150, 16);
@@ -66,7 +66,9 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
       )}
 
       <div style={{ position: 'relative', width: ROW_W, height: WIN_H, marginTop: 8 }}>
-        <SimDisclaimer text={c.disclaimer} style={{ position: 'absolute', top: -34, right: 0 }} />
+        {showSimDisclaimer !== false && (
+          <SimDisclaimer text={c.disclaimer} style={{ position: 'absolute', top: -34, right: 0 }} />
+        )}
         <div style={{ display: 'flex', gap: GAP, width: '100%', height: '100%' }}>
           {c.tools.map((tool, i) => (
             <ChatWindow

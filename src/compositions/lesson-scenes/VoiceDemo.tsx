@@ -20,7 +20,7 @@ const LONG_TRANSCRIPT = 400;
  * frame), a mono timer (BRAND.font.mono), and the transcript typing in via
  * `TypeOn`. All motion settles within the first ~7s then holds.
  */
-export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
+export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as VoiceDemoContent;
   const card = useGlideIn(45, 30);
   const long = c.transcript.length >= LONG_TRANSCRIPT;
@@ -64,7 +64,9 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
           <MicButton />
           <Waveform />
           <Timer />
-          <SimDisclaimer style={{ alignSelf: 'flex-start', flexShrink: 0 }} />
+          {showSimDisclaimer !== false && (
+            <SimDisclaimer style={{ alignSelf: 'flex-start', flexShrink: 0 }} />
+          )}
         </div>
 
         {/* Transcript section */}

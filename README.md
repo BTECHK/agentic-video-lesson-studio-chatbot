@@ -16,6 +16,8 @@ The system does the work; humans approve the diff.
 
 ---
 
+---
+
 ## How the platform works
 
 Three subsystems share one data layer:

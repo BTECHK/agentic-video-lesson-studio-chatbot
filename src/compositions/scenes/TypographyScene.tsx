@@ -1,7 +1,21 @@
 import React from 'react';
+import { spring, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Syne';
 import { BRAND } from '../../brand/tokens';
-import { useSpringFadeIn } from '../../lib/animations';
+
+function useSpringFadeIn(delay: number = 0) {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const progress = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 20, mass: 0.5 },
+  });
+  return {
+    opacity: progress,
+    transform: `translateY(${interpolate(progress, [0, 1], [20, 0])}px)`,
+  };
+}
 
 // Load font at module level -- render-blocking, ensures font available before frame capture
 const { fontFamily } = loadFont('normal', {

@@ -1,6 +1,20 @@
 import React from 'react';
+import { spring, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import { BRAND } from '../../brand/tokens';
-import { useSpringScale } from '../../lib/animations';
+
+function useSpringScale(delay: number = 0) {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const progress = spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 15, stiffness: 100 },
+  });
+  return {
+    transform: `scale(${interpolate(progress, [0, 1], [0.8, 1])})`,
+    opacity: progress,
+  };
+}
 
 interface CardProps {
   label: string;

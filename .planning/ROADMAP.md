@@ -1,5 +1,7 @@
 # Roadmap: Sample Academy AI Content System
 
+> **STALE (as of 2026-07-04):** this phase list is a historical planning snapshot; treat phase statuses as of that date.
+
 ## Overview
 
 This roadmap delivers Sample Academy's AI content system in eleven phases. Phases 1, 3, 4, 5 established the foundation: rendering pipeline, content repository, ingestion automation, and chatbot scaffold. Phase 2 (animation) remains deferred until Instructor provides final lesson scripts.

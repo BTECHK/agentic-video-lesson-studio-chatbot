@@ -60,7 +60,7 @@ async function main(): Promise<void> {
       if (!base || !webhookSecret) {
         console.error('[tutor-bot] webhook mode needs PUBLIC_URL + TELEGRAM_WEBHOOK_SECRET.');
       } else {
-        await telegram.setWebhook(`${base.replace(/\/$/, '')}/telegram/${webhookSecret}`, webhookSecret);
+        await telegram.setWebhook(`${base.replace(/\/$/, '')}/telegram/webhook`, webhookSecret);
         console.log('[tutor-bot] Telegram webhook registered.');
       }
     } else {

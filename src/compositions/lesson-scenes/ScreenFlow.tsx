@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ScreenFlowContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND, SHADOW, MOTION } from '../../brand/tokens';
 import {
   MUTED,
   HAIRLINE,
@@ -34,7 +34,7 @@ function actionExtra(action: string, typedText: string | undefined): number {
  * screenshot. The window chrome is generic cartoon chrome; no vendor logos,
  * colors, or proprietary UI elements are reproduced.
  */
-export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene }) => {
+export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as ScreenFlowContent;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -103,6 +103,7 @@ export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene }) => {
           stepStartFrames={stepStartFrames}
           stepDurations={stepDurations}
           durationInFrames={durationInFrames}
+          showSimDisclaimer={showSimDisclaimer}
         />
       </div>
 
@@ -134,6 +135,7 @@ interface MockBrowserWindowProps {
   stepStartFrames: number[];
   stepDurations: number[];
   durationInFrames: number;
+  showSimDisclaimer?: boolean;
 }
 
 const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
@@ -144,6 +146,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
   stepStartFrames,
   stepDurations,
   durationInFrames,
+  showSimDisclaimer,
 }) => {
   const leftBg = c.fidelity === 'hybrid' ? 'rgba(28,28,28,0.05)' : BRAND.colors.bgCard;
 
@@ -188,7 +191,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
         </div>
         {/* Honesty chip baked into the chrome — every screen-flow inherits it
             regardless of whether the content sets `caption`. */}
-        <SimDisclaimer />
+        {showSimDisclaimer !== false && <SimDisclaimer />}
       </div>
 
       {/* Body */}
@@ -636,7 +639,7 @@ const MockCursor: React.FC<MockCursorProps> = ({ c, frame, fps, activeStep, step
   const currPos = getPos(activeStep);
   const stepStart = stepStartFrames[activeStep] ?? 0;
 
-  // Spring glide from prev to curr position
+  // Spring glide from prev to curr position — single-use cursor-travel config.
   const glideProgress = spring({
     frame: frame - stepStart,
     fps,
@@ -652,16 +655,18 @@ const MockCursor: React.FC<MockCursorProps> = ({ c, frame, fps, activeStep, step
   const pulseStartFrame = stepStart + dwellFrames;
   const pulseFrame = frame - pulseStartFrame;
   const pulseProgress = pulseFrame >= 0
+    // Single-use click-ring pulse config (fast, springy overshoot).
     ? spring({ frame: pulseFrame, fps, config: { damping: 10, stiffness: 80, mass: 0.5 } })
     : 0;
   const showPulse = currentStep?.action === 'click' && pulseFrame >= 0 && pulseFrame < 20;
   const pulseOpacity = showPulse ? interpolate(pulseProgress, [0, 1], [1, 0], { extrapolateRight: 'clamp' }) : 0;
   const pulseScale = interpolate(pulseProgress, [0, 1], [0.5, 2.5], { extrapolateRight: 'clamp' });
 
-  // Tooltip pill: fades in at step start, fades out just before click pulse
-  const tooltipInProgress = spring({ frame: frame - stepStart, fps, config: { damping: 22, mass: 0.5 } });
+  // Tooltip pill: fades in at step start, fades out just before click pulse.
+  // Both fades share one preset (MOTION.cursorTooltip) — the only 2+-site config.
+  const tooltipInProgress = spring({ frame: frame - stepStart, fps, config: MOTION.cursorTooltip });
   const tooltipOutProgress = pulseFrame >= 0
-    ? spring({ frame: pulseFrame, fps, config: { damping: 22, mass: 0.5 } })
+    ? spring({ frame: pulseFrame, fps, config: MOTION.cursorTooltip })
     : 0;
   const tooltipOpacity = tooltipInProgress * (1 - tooltipOutProgress);
 

@@ -16,7 +16,7 @@ const ACCENT_TINT = BRAND.colors.accentSoft;
  * beat, then output tiles reveal as flat `bgCard` + 4px-radius tiles. All motion
  * settles within the first ~7s then holds.
  */
-export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
+export const ToolDemo: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as ToolDemoContent;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -47,7 +47,9 @@ export const ToolDemo: React.FC<SceneComponentProps> = ({ scene }) => {
         bodyStyle={{ gap: 18 }}
       >
         {/* persistent honesty chip — intrinsic, not author-supplied caption */}
-        <SimDisclaimer style={{ position: 'absolute', top: 22, right: 64 }} />
+        {showSimDisclaimer !== false && (
+          <SimDisclaimer style={{ position: 'absolute', top: 22, right: 64 }} />
+        )}
         {/* generating beat: Pinwheel + label */}
         {generating && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: MUTED, fontSize: 20 }}>

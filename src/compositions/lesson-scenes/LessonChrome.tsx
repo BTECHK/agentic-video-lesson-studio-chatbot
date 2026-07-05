@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, CHROME_INK } from '../../brand/tokens';
 import { fontFamily } from './shared';
 import { CAPTION_BOTTOM } from './LessonCaptions';
 
@@ -85,7 +85,7 @@ export const LessonChrome: React.FC<{ scenes: ChromeScene[]; fallbackLabel?: str
                   ? BRAND.colors.accent
                   : i < active
                     ? 'rgba(139,38,53,0.5)'
-                    : BRAND.colors.borderStrong,
+                    : CHROME_INK.dotInactive,
             }}
           />
         ))}
@@ -100,7 +100,7 @@ export const LessonChrome: React.FC<{ scenes: ChromeScene[]; fallbackLabel?: str
           fontFamily: BRAND.font.mono,
           fontSize: 16,
           letterSpacing: '0.08em',
-          color: BRAND.colors.textDim,
+          color: CHROME_INK.counter,
         }}
       >
         {String(active + 1).padStart(2, '0')} / {String(scenes.length).padStart(2, '0')}
