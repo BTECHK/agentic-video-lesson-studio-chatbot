@@ -211,7 +211,11 @@ export const SceneAmbient: React.FC<{ dark?: boolean }> = ({ dark }) => {
     background: `radial-gradient(${sz}% ${sz}% at ${pos}, rgba(${tint},${alpha}), transparent 70%)`,
   });
   return (
-    <AbsoluteFill style={{ overflow: 'hidden', pointerEvents: 'none' }}>
+    // data-decor: purely decorative ambient glow. Its inset:-200 layers overflow
+    // this overflow:hidden box by design, so Gate L's clip rule would otherwise
+    // flag it on every scene; the gate exempts decor ("watermarks may bleed").
+    // Probe-only attribute — changes no rendered pixels.
+    <AbsoluteFill data-decor style={{ overflow: 'hidden', pointerEvents: 'none' }}>
       <div style={layer(Math.sin(t * d1.x) * d1.xAmp, Math.cos(t * d1.y) * d1.yAmp, d1.pos, a1, d1.size, o1)} />
       <div style={layer(Math.cos(t * d2.x) * d2.xAmp, Math.sin(t * d2.y) * d2.yAmp, d2.pos, a2, d2.size, o2)} />
     </AbsoluteFill>
