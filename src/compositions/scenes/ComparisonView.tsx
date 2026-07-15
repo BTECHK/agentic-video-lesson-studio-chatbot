@@ -140,6 +140,7 @@ export const ComparisonView: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: '40px 60px',
         position: 'relative',
         fontFamily,
@@ -386,13 +387,14 @@ export const ComparisonView: React.FC = () => {
         </div>
       </div>
 
-      {/* Cursor */}
+      {/* Cursor — window is vertically centered (top 230, not 40); overlay base
+          shifts down by 190 to stay glued to the window. */}
       {showCursor && (
         <div
           style={{
             position: 'absolute',
             left: 460 + cursorX,
-            top: 200 + cursorY,
+            top: 390 + cursorY,
             width: 16,
             height: 16,
             borderRadius: '50%',

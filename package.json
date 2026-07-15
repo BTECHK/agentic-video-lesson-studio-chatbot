@@ -21,6 +21,8 @@
     "gate:layout": "tsx scripts/gate-layout.ts",
     "gate:review": "tsx scripts/gate-review.ts",
     "gate:status": "tsx scripts/gate-status.ts",
+    "corpus:ledger": "tsx scripts/corpus-ledger.ts",
+    "corpus:review": "tsx scripts/corpus-review-batch.ts",
     "gate:timing": "tsx scripts/gate-timing.ts",
     "gate:media": "tsx scripts/gate-media.ts",
     "gate:motion": "tsx scripts/gate-motion.ts",
