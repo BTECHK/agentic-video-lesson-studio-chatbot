@@ -34,7 +34,7 @@ pinning is how you track the newest model.
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (11289 symbols, 15367 relationships, 286 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (11523 symbols, 15681 relationships, 289 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
