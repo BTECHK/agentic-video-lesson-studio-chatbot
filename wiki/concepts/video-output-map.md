@@ -4,7 +4,7 @@ title: "Video output map (out/* vs output/video/*)"
 tags: [video, renders, output-dirs, compositions, audit]
 sources: []
 created: 2026-06-26
-updated: 2026-07-04
+updated: 2026-07-09
 ---
 
 # Video output map
@@ -20,7 +20,8 @@ Default `RENDER_OUT_DIR` for the codified lesson pipeline. Holds:
 - **Legacy/early-slice:** `module-1.mp4`, `module-1-silent.mp4`, plus QC PNGs (`check-*.png`, `smoke-caption.png`) and helper subdirs (`qc/`, `slice/`, `lesson-stills/`, `verify/`, `_colortest/`).
 - **Render-version subdirs (never overwrite `out/*`):**
   - **`out/v2/`** — the v2 facelift pass: a subset of lessons + `sizzle-16x9/9x16.mp4`.
-  - **`out/v3/`** — the design-QC re-render pass. Rendered 2026-06-26 → 2026-06-30 (resumable per-lesson queue) and published to Drive alongside the originals. **Caveat:** one lesson was a later full-SCALE=2 re-render whose Drive publish was pending because the Drive mount was offline; confirm it landed before relying on Drive as the source of truth for that lesson. The pre-UAT audit continues on branch `fable-e2e-audit`, ledger `agent-ops/STATE.json`.
+  - **`out/v3/`** — the design-QC re-render pass. The MP4s were rendered from a resumable per-lesson queue and published to Drive. **CORRECTION 2026-07-09 (hail-mary ship phase):** the earlier "all gate-green" claim was NOT verifiable and is now known false. A fresh `gate:status` sweep found that many lessons have no review bundle at all (no `review/*.md`, so `gate:status` cannot pass and the lesson is unpublishable). The "gate-green" lessons had **stale** `layout-gate.md` files from before the SceneAmbient/clip conflict; a fresh `gate:layout` FAILs them until the `data-decor` fix (see [[layout-integrity-gate]]). So `out/v3` has all its MP4s but only some lessons are actually gateable, and the corpus is NOT fully QC'd. (This was the stakeholder persona's "gate-checked is unverifiable" flag, now confirmed.)
+  - **Hail-mary v4 re-renders (2026-07-09):** a few lessons were re-rendered to `out/v3` with the v4 motion system (`motionProfile` seam, scene-exit glides, QuoteCard word-synced reveal; cover variants held back). Only one is published so far; the full ship is blocked on the missing review bundles plus a long corpus re-render. Resume state: `agent-ops/RESUME-hail-mary-ship.md`.
 
 ### `output/video/` — platform walkthrough + brand showcase (a SEPARATE composition tree)
 A different output dir AND different Remotion compositions than the lessons. Two files:
