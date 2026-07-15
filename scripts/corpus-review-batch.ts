@@ -25,7 +25,10 @@ import { corpusLessonIds } from '../src/lib/corpus-ledger';
 const CMD: Record<GateId, (id: string) => string[]> = {
   T: (id) => ['run', 'gate:timing', '--', id],
   L: (id) => ['run', 'gate:layout', '--', id],
-  C: (id) => ['run', 'gate:lesson', '--', id],
+  // --auto: drive the Claude judge to a VERDICT (bare gate:lesson is collect-only
+  // and leaves Gate C 'missing' forever — the round-2 no-op bug). The watch sensor
+  // auto-falls-back to frames-only when the Gemini free-tier quota (20/day) is spent.
+  C: (id) => ['run', 'gate:lesson', '--', id, '--auto'],
   A: (id) => ['run', 'gate:review', '--', id, 'A', '--auto'],
   B: (id) => ['run', 'gate:review', '--', id, 'B', '--auto'],
 };
@@ -59,6 +62,23 @@ runMain('corpus:review', async (log) => {
     }
   }
 
-  const ledger = spawnSync('npm', ['run', 'corpus:ledger'], { stdio: 'inherit', shell: true });
-  return ledger.status ?? 1;
+  spawnSync('npm', ['run', 'corpus:ledger'], { stdio: 'inherit', shell: true });
+
+  // Re-derive the verdict HERE (don't trust the shelled exit — on Windows the
+  // shell:true wrapper swallowed corpus:ledger's exit 1, letting round 2 report
+  // a false success at 13/38). The batch is green only when every corpus lesson
+  // reads green from the live artifacts right now.
+  const { corpus: allIds } = corpusLessonIds(fs.readdirSync(lessonsRoot));
+  const notGreen = allIds.filter((id) => {
+    const dir = path.join(lessonsRoot, id);
+    const s = summarizeGates(
+      id,
+      Object.fromEntries(
+        GATES.map((g) => [g.gate, fs.existsSync(path.join(dir, g.artifact)) ? fs.readFileSync(path.join(dir, g.artifact), 'utf-8') : null]),
+      ) as Parameters<typeof summarizeGates>[1],
+    );
+    return s.gates.some((x) => x.state !== 'pass');
+  });
+  if (notGreen.length > 0) log.warn(`NOT green (${notGreen.length}): ${notGreen.join(', ')}`);
+  return notGreen.length === 0 ? 0 : 1;
 });
