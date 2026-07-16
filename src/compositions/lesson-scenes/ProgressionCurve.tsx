@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ProgressionCurveContent } from './content-types';
-import { BRAND, MOTION } from '../../brand/tokens';
+import { BRAND, MOTION, SAFE_AREA } from '../../brand/tokens';
 import {
   SceneFrame,
   eyebrowStyle,
@@ -32,7 +32,10 @@ import {
 const CANVAS_W = 1920;
 const CANVAS_H = 1080;
 const X_FIRST = 175;
-const X_LAST = 1730;
+// Pulled in from SAFE_AREA.x so the last chip (widest labels, e.g. a long
+// stage label at ~192px wide) clears the right safe inset — the reference's
+// 1730 put its right edge at 1826, 2px past the 1824 boundary.
+const X_LAST = 1920 - SAFE_AREA.x - 96 - 8;
 const BASELINE = 885; // x-axis y
 const Y_TOP = 240; // top of the y-axis
 const PLOT_TOP = 250; // highest node y in the reference
