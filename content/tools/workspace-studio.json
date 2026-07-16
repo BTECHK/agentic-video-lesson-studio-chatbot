@@ -1,0 +1,274 @@
+{
+  "id": "workspace-studio",
+  "name": "Google Workspace Studio",
+  "vendor": "Google",
+  "productId": "workspace-studio",
+  "surface": "Google Workspace Studio (web)",
+  "isPrimarySurface": true,
+  "priority": "P1",
+  "description": "Google Workspace Studio is Google's no-code, AI-powered workflow builder for Google Workspace — connect Gmail, Chat, Drive, Docs, Sheets, and Calendar with triggers, actions, and Gemini-powered AI decision steps to automate real work. It shipped in alpha as \"Google Workspace Flows\" and is now generally available on Business and Enterprise Workspace plans.",
+  "url": "https://workspace.google.com/studio/",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Studio is a workflow builder, not a chat assistant, but Gemini-powered natural-language input helps describe and generate a flow's steps, and AI steps within a flow can draft chat-style replies (e.g. an email draft) as part of automation.",
+      "subFeatures": [
+        {
+          "name": "Describe-a-Flow Assist",
+          "description": "Describe the automation you want in plain language and Studio proposes the trigger/action steps to build it"
+        },
+        {
+          "name": "AI Draft Steps",
+          "description": "An AI step inside a flow can draft a reply or message as part of the automated sequence"
+        }
+      ],
+      "limitations": [
+        "Not a general-purpose conversational assistant — chat-style output only occurs as a step inside a workflow",
+        "Flow-generation assist is scoped to what Studio's step types support"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Describe-a-flow assist and AI draft steps included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "Renamed from 'Google Workspace Flows' (alpha) to Google Workspace Studio at general availability on Business and Enterprise Workspace plans" },
+        { "version": "Google Workspace Flows (alpha)", "date": "2025", "changes": "Announced in alpha as a no-code, Gemini-powered workflow builder connecting Gmail, Chat, Drive, and Docs" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": false,
+      "summary": "Studio automates workflows across Workspace apps; it does not perform open-web research or cite external sources.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Studio's AI steps reason over the data passed into the flow (e.g. an email's contents), not the open web"
+        }
+      ],
+      "limitations": [
+        "No built-in web search or citation feature",
+        "External data must come from a connected Workspace app or an added integration"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "No research/browsing capability included" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "AI steps in a Studio flow can read and reason over the content of an incoming email, a Doc, or a Sheet row to decide what happens next — e.g. categorizing an email or extracting a meeting's date and attendees.",
+      "subFeatures": [
+        {
+          "name": "AI Categorize Step",
+          "description": "Reads an incoming item (e.g. an email) and sorts it into categories to route the flow"
+        },
+        {
+          "name": "Field Extraction",
+          "description": "Pulls structured details (date, time, attendees) out of an email or document to feed a later step"
+        }
+      ],
+      "limitations": [
+        "Analysis is scoped to the data a given step is wired to receive",
+        "Not a general-purpose document Q&A tool outside a flow"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "AI categorize and extraction steps included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "AI file/content analysis steps available at general availability" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": true,
+      "summary": "A Studio flow can create and update content in Workspace apps as an action — for example logging a new row to a Sheet or creating a Calendar event — as part of an automated sequence.",
+      "subFeatures": [
+        {
+          "name": "Log-to-Sheet Action",
+          "description": "Appends a new row (e.g. date, sender, category, action taken) to a Google Sheet as a flow step"
+        },
+        {
+          "name": "Create-Calendar-Event Action",
+          "description": "Creates a Calendar event with extracted date, time, and attendees as a flow step"
+        }
+      ],
+      "limitations": [
+        "Document/record creation is limited to the action types Studio supports for each connected app",
+        "Not a standalone document editor — creation only happens as part of a running flow"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Sheet, Docs, and Calendar creation/update actions included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "Cross-app document/record creation actions available at general availability" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Studio automates workflows across Workspace apps and does not generate images.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "No image generation step type exists in Studio"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "No integration with an image generation model as a flow step"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "No image generation included" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": false,
+      "summary": "Studio builds no-code automation flows, not software prototypes — there is no code editor, execution sandbox, or app scaffolding.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Studio is for wiring existing Workspace apps together, not building new software"
+        }
+      ],
+      "limitations": [
+        "No code execution or app scaffolding",
+        "Not designed for software development workflows"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "No prototyping capability included" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": true,
+      "summary": "Each flow is built and owned by its creator (or shared within an org), with its own triggers, actions, and step-level instructions — so automation behavior is personalized per flow rather than via account-wide assistant settings.",
+      "subFeatures": [
+        {
+          "name": "Per-Flow Configuration",
+          "description": "Each flow's triggers, branches, and AI-step instructions are configured individually by its owner"
+        }
+      ],
+      "limitations": [
+        "No persona or account-wide assistant customization — personalization lives inside each flow's own setup",
+        "Sharing/editing permissions follow the organization's Workspace admin settings"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Per-flow configuration included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "Per-flow configuration available at general availability" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "A published flow keeps running on its trigger indefinitely, and each run is logged, so context and history persist across every execution without the user re-setting anything up.",
+      "subFeatures": [
+        {
+          "name": "Always-On Flows",
+          "description": "Once published, a flow keeps running on its trigger (e.g. every new email) until paused or edited"
+        },
+        {
+          "name": "Run History/Logs",
+          "description": "Each run's outcome (e.g. a logged Sheet row) provides a persistent record across executions"
+        }
+      ],
+      "limitations": [
+        "Persistence is scoped to a given flow's own run history, not a general cross-app memory",
+        "Editing a flow's logic applies going forward, not retroactively to past runs"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Always-on flows and run history included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "Always-on flow execution and run logging available at general availability" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Studio's defining capability is agentic workflow automation: AI steps make decisions on the user's behalf (e.g. categorizing an email and choosing which branch to run) with triggers, actions, and AI decisions all running unattended.",
+      "subFeatures": [
+        {
+          "name": "Trigger → Action Flows",
+          "description": "A flow starts from a trigger (e.g. a new Gmail message) and runs a chain of actions automatically"
+        },
+        {
+          "name": "AI Decision Branching",
+          "description": "An AI step evaluates the incoming item and picks which branch of the flow runs next, without a human in the loop"
+        }
+      ],
+      "limitations": [
+        "Agentic decisions are scoped to the categories/branches defined when the flow was built",
+        "Complex or ambiguous cases may still need a human-reviewed fallback branch"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Trigger/action flows and AI decision steps included with Studio access" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "Renamed from 'Google Workspace Flows' (alpha) to Google Workspace Studio at general availability; core agentic trigger/action/AI-decision model unchanged" },
+        { "version": "Google Workspace Flows (alpha)", "date": "2025", "changes": "Alpha release of the no-code AI workflow builder with trigger/action/AI-decision flows" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Studio's core value is connecting the Workspace apps people already use every day — Gmail, Calendar, Drive, Docs, Sheets, and Chat — as triggers and actions inside a single flow.",
+      "subFeatures": [
+        {
+          "name": "Gmail/Calendar/Drive/Docs/Sheets Triggers and Actions",
+          "description": "Native triggers (e.g. new email) and actions (e.g. create event, append row, update doc) across core Workspace apps"
+        },
+        {
+          "name": "Chat Integration",
+          "description": "Flows can post to or trigger from Google Chat as part of an automation"
+        }
+      ],
+      "limitations": [
+        "Connector set is limited to Workspace apps Studio supports, not arbitrary third-party APIs out of the box",
+        "Only available on Business and Enterprise Workspace plans — not Workspace Individual or Business Starter"
+      ],
+      "pricingTiers": [
+        { "tier": "Business/Enterprise Workspace plans", "details": "Gmail, Calendar, Drive, Docs, Sheets, and Chat connectors included" },
+        { "tier": "Workspace Individual / Business Starter", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "General availability on Business and Enterprise Workspace plans" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Studio is a web-based flow builder; it does not offer voice input or dictation.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Flows are built and configured through the web interface, not voice"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "No speech-to-text capability"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Google Workspace Studio GA", "date": "2026", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "workspace-studio-product-page"
+  ]
+}

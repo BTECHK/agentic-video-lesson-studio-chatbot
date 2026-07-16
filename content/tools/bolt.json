@@ -1,0 +1,287 @@
+{
+  "id": "bolt",
+  "name": "Bolt",
+  "vendor": "StackBlitz",
+  "productId": "bolt",
+  "surface": "bolt.new (web)",
+  "isPrimarySurface": true,
+  "priority": "P1",
+  "description": "Bolt (bolt.new) is StackBlitz's browser-based AI app builder. You describe an app or website in chat and Bolt generates, runs, and lets you edit a working full-stack prototype in the browser — no local setup — using WebContainers to run Node.js entirely client-side. Tagline: \"Create stunning apps & websites by chatting with AI.\"",
+  "url": "https://bolt.new",
+  "capabilities": {
+    "writing-chat": {
+      "category": "writing-chat",
+      "supported": true,
+      "summary": "Bolt's primary interface is a chat panel: you describe what you want built or changed in plain language, and Bolt responds by writing and running the code, with the live app updating beside the conversation.",
+      "subFeatures": [
+        {
+          "name": "Prompt-to-App Chat",
+          "description": "Describe an app or a change to it in a sentence or two; Bolt writes and wires up the underlying code"
+        },
+        {
+          "name": "Iterative Refinement",
+          "description": "Multi-turn conversation to adjust layout, copy, and behavior of the running prototype"
+        }
+      ],
+      "limitations": [
+        "Chat is scoped to building/editing the current project, not general-purpose conversation",
+        "Longer projects consume more of the plan's monthly token allowance per message"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Chat-based app building with a limited daily/monthly token allowance" },
+        { "tier": "Pro (from $20/mo)", "details": "Higher monthly token allowance for continued chat-driven building" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Public launch of the chat-to-app browser builder" }
+      ]
+    },
+    "research": {
+      "category": "research",
+      "supported": false,
+      "summary": "Bolt is a build tool, not a research assistant — it does not browse the web or cite sources on its own.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "Bolt focuses on generating and running code, not open-web research"
+        }
+      ],
+      "limitations": [
+        "No built-in web search or citation feature",
+        "Any external data must be wired in via an integration (e.g. an API) inside the generated app"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "No research/browsing capability included" }
+      ]
+    },
+    "file-analysis": {
+      "category": "file-analysis",
+      "supported": true,
+      "summary": "Bolt can take an uploaded image (e.g. a design screenshot or mockup) or an imported existing codebase as input and reason over it to scaffold or modify an app.",
+      "subFeatures": [
+        {
+          "name": "Screenshot/Design-to-Code",
+          "description": "Upload an image of a design or reference UI and Bolt scaffolds matching layout and components"
+        },
+        {
+          "name": "Import Existing Project",
+          "description": "Import a GitHub repo or existing StackBlitz project so Bolt can read and modify the current codebase"
+        }
+      ],
+      "limitations": [
+        "Analysis is scoped to what's uploaded or imported into the current project",
+        "Very large existing codebases may exceed practical context for a single change"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Image upload and project import within the free token allowance" },
+        { "tier": "Pro (from $20/mo)", "details": "Higher token allowance for larger imported projects" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Image-to-app and project import support" }
+      ]
+    },
+    "document-creation": {
+      "category": "document-creation",
+      "supported": false,
+      "summary": "Bolt generates application code and content within that app (copy, sample data), not standalone documents like PDFs or slide decks.",
+      "subFeatures": [
+        {
+          "name": "In-App Content Only",
+          "description": "Text/content Bolt writes lives inside the generated app's UI, not as an exportable document"
+        }
+      ],
+      "limitations": [
+        "No PDF, DOCX, or presentation generation",
+        "Not a general-purpose writing/document tool"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available as a standalone feature" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "No standalone document generation included" }
+      ]
+    },
+    "image-generation": {
+      "category": "image-generation",
+      "supported": false,
+      "summary": "Bolt does not generate images. It builds application code, and any imagery in a generated app is either uploaded by the user or placeholder content.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "No built-in image generation model or feature"
+        }
+      ],
+      "limitations": [
+        "No image generation capability",
+        "Real imagery must be supplied by the user or sourced from a connected asset/API"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "No image generation included" }
+      ]
+    },
+    "prototyping": {
+      "category": "prototyping",
+      "supported": true,
+      "summary": "Prototyping is Bolt's defining capability: it generates a full-stack app from a natural-language description, runs it live in the browser via WebContainers, and lets you keep iterating and deploying without any local setup. This is the core of \"vibe coding.\"",
+      "subFeatures": [
+        {
+          "name": "In-Browser Live Preview",
+          "description": "Generated apps run instantly in the browser (Node.js via WebContainers) — no local install or terminal required"
+        },
+        {
+          "name": "Full-Stack Scaffolding",
+          "description": "Generates frontend, backend, and database wiring (e.g. via a connected Supabase project) from a plain-language description"
+        },
+        {
+          "name": "One-Click Deploy",
+          "description": "Deploy the running prototype to the web (e.g. via Netlify) directly from the Bolt interface"
+        }
+      ],
+      "limitations": [
+        "In-browser execution has resource/runtime limits compared to a full local dev environment",
+        "Larger or highly custom apps may need manual code cleanup after generation",
+        "Deploy/export destinations are limited to Bolt's supported integrations"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Prompt-to-app building, live preview, and deploy with a limited daily/monthly token allowance" },
+        { "tier": "Pro (from $20/mo)", "details": "Higher token allowance for larger or longer-running builds" },
+        { "tier": "Teams", "details": "Shared token pool and collaboration for multiple builders" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Chat-to-full-stack-app builder with in-browser WebContainers execution launched publicly" }
+      ]
+    },
+    "personalization": {
+      "category": "personalization",
+      "supported": false,
+      "summary": "Bolt does not offer persona or instruction-file style personalization of the assistant itself — each project's behavior is shaped by the prompts and code within that project, not by account-level customization.",
+      "subFeatures": [
+        {
+          "name": "Per-Project Only",
+          "description": "Any \"customization\" lives in the generated project's own code and configuration, not in assistant-wide settings"
+        }
+      ],
+      "limitations": [
+        "No account-level custom instructions or persona settings",
+        "No cross-project preference memory"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "No account-level personalization included" }
+      ]
+    },
+    "persistent-context": {
+      "category": "persistent-context",
+      "supported": true,
+      "summary": "Each Bolt project keeps its own chat history and generated codebase, so you can leave a project and come back to continue iterating with the prior context intact.",
+      "subFeatures": [
+        {
+          "name": "Per-Project History",
+          "description": "Chat history and generated code for a project are saved and available on return"
+        },
+        {
+          "name": "Project Dashboard",
+          "description": "All of a user's projects are listed and reopenable from a personal dashboard"
+        }
+      ],
+      "limitations": [
+        "Context is scoped to a single project, not shared across projects",
+        "No cross-session memory outside a project's own history"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Saved per-project history and dashboard" },
+        { "tier": "Pro (from $20/mo)", "details": "Same persistence with a larger token allowance for continued work" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Per-project history and dashboard included from launch" }
+      ]
+    },
+    "agents": {
+      "category": "agents",
+      "supported": true,
+      "summary": "Bolt acts agentically within a project: it plans the changes needed, writes and runs the code, and automatically detects and fixes errors that appear in the live preview, iterating without the user hand-holding every step.",
+      "subFeatures": [
+        {
+          "name": "Autonomous Build Loop",
+          "description": "Plans multi-file changes, writes code, and runs it in the live preview from a single natural-language request"
+        },
+        {
+          "name": "Automatic Error Detection and Fixing",
+          "description": "Detects build/runtime errors in the live preview and attempts fixes without a separate prompt"
+        }
+      ],
+      "limitations": [
+        "Agentic loop operates within the current project's scope, not across unrelated projects",
+        "Complex bugs may still need a manually written follow-up prompt"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Agentic build-and-fix loop within the free token allowance" },
+        { "tier": "Pro (from $20/mo)", "details": "Higher token allowance for longer agentic sessions" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Agentic build-and-autofix loop included from launch" }
+      ]
+    },
+    "connectors": {
+      "category": "connectors",
+      "supported": true,
+      "summary": "Bolt connects generated projects to common developer services — a database/backend (Supabase), version control (GitHub), and hosting (Netlify) — plus importing designs from Figma.",
+      "subFeatures": [
+        {
+          "name": "Supabase Integration",
+          "description": "Wire a generated app to a Supabase project for database, auth, and backend functionality"
+        },
+        {
+          "name": "GitHub Import/Export",
+          "description": "Import an existing repo to work on, or push a generated project out to GitHub"
+        },
+        {
+          "name": "Figma Import",
+          "description": "Import a Figma design as the starting point for a generated app's UI"
+        }
+      ],
+      "limitations": [
+        "Connector set is limited to Bolt's supported integrations, not arbitrary third-party APIs out of the box",
+        "Each integration requires its own account/credentials to be connected"
+      ],
+      "pricingTiers": [
+        { "tier": "Free", "details": "Supabase, GitHub, and Figma integrations available within the free token allowance" },
+        { "tier": "Pro (from $20/mo)", "details": "Same integrations with a higher token allowance" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "Supabase, GitHub, and Figma integrations included from launch" }
+      ]
+    },
+    "dictation": {
+      "category": "dictation",
+      "supported": false,
+      "summary": "Bolt's interface is text-based chat; it does not offer voice input or dictation.",
+      "subFeatures": [
+        {
+          "name": "Not Available",
+          "description": "No voice input — prompts are typed into the chat panel"
+        }
+      ],
+      "limitations": [
+        "No voice input or dictation support",
+        "Browser-based interface is text-only"
+      ],
+      "pricingTiers": [
+        { "tier": "All tiers", "details": "Not available" }
+      ],
+      "versionHistory": [
+        { "version": "Bolt.new launch", "date": "2024-10", "changes": "No voice capabilities included" }
+      ]
+    }
+  },
+  "sourceRefs": [
+    "bolt-new-product-page"
+  ]
+}
