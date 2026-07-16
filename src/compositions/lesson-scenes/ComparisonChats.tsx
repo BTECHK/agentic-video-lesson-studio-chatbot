@@ -151,7 +151,17 @@ const ChatWindow: React.FC<{
       </div>
 
       {/* body */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 18, padding: '22px 24px' }}>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 18,
+          padding: '22px 24px',
+        }}
+      >
         {/* prompt, as a centered neutral pill */}
         <div
           style={{

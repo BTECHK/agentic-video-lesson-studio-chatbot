@@ -24,6 +24,13 @@ function actionExtra(action: string, typedText: string | undefined): number {
   return 0;
 }
 
+// 5+ steps otherwise stack past the frame bottom / under the caption band
+// (defect: a bonus scene reveal stack clipped + its last badge
+// card overlapping caption words). Tightening block/panel whitespace is
+// whitespace-only — never smaller step text. Shared by FullPanel (below) and
+// the split-layout PreviewPanel/RevealBlock.
+const LONG_STEP_LIST = 5;
+
 /**
  * `screen-flow` — an animated mock browser/desktop window that walks through a
  * sequence of UI interactions: clicks, typed input, navigation, and staged UI
@@ -149,6 +156,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
   showSimDisclaimer,
 }) => {
   const leftBg = c.fidelity === 'hybrid' ? 'rgba(28,28,28,0.05)' : BRAND.colors.bgCard;
+  const long = c.steps.length >= LONG_STEP_LIST;
 
   return (
     <div style={{ width: '100%' }}>
@@ -224,13 +232,13 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
               style={{
                 flex: 1,
                 backgroundColor: BRAND.colors.bgCard,
-                padding: 24,
+                padding: long ? 16 : 24,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 16,
+                gap: long ? 8 : 16,
               }}
             >
-              <PreviewPanel c={c} frame={frame} fps={fps} stepStartFrames={stepStartFrames} durationInFrames={durationInFrames} />
+              <PreviewPanel c={c} frame={frame} fps={fps} stepStartFrames={stepStartFrames} durationInFrames={durationInFrames} long={long} />
             </div>
           </>
         ) : (
@@ -407,9 +415,10 @@ interface PreviewPanelProps {
   fps: number;
   stepStartFrames: number[];
   durationInFrames: number;
+  long?: boolean;
 }
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames, long }) => {
   const revealSteps = c.steps
     .map((step, i) => ({ step, i }))
     .filter(({ step }) => step.action === 'reveal');
@@ -424,7 +433,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames }) => {
   return (
     <>
       {revealSteps.map(({ step, i }) => (
-        <RevealBlock key={step.id} step={step} delay={stepStartFrames[i] ?? 0} />
+        <RevealBlock key={step.id} step={step} delay={stepStartFrames[i] ?? 0} long={long} />
       ))}
     </>
   );
@@ -459,14 +468,19 @@ const AppliedState: React.FC = () => {
   );
 };
 
-const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: number }> = ({
+const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: number; long?: boolean }> = ({
   step,
   delay,
+  long,
 }) => {
   const pop = usePopIn(delay);
   // Styled as a finished generated output — accent rule + 'Generated' kicker +
   // the result text as readable content, then a couple of faint body lines — so
   // it reads as produced output, not a skeleton with a developer note under it.
+  // `long` (5+ reveal steps stacked in one preview pane) drops the two filler
+  // body lines and tightens padding/gap — whitespace-only, never smaller text
+  // — so the stack fits above the caption band instead of pushing its last
+  // block into it (see LONG_STEP_LIST).
   return (
     <div
       style={{
@@ -475,10 +489,10 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
         border: `1px solid ${BRAND.colors.border}`,
         borderLeft: `3px solid ${BRAND.colors.accent}`,
         backgroundColor: BRAND.colors.bgCard,
-        padding: '16px 18px',
+        padding: long ? '10px 12px' : '16px 18px',
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
+        gap: long ? 6 : 10,
         boxShadow: SHADOW.card,
       }}
     >
@@ -506,8 +520,8 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
       >
         {step.uiState}
       </div>
-      <div style={{ height: 9, width: '88%', borderRadius: 4, backgroundColor: HAIRLINE }} />
-      <div style={{ height: 9, width: '72%', borderRadius: 4, backgroundColor: HAIRLINE }} />
+      {!long && <div style={{ height: 9, width: '88%', borderRadius: 4, backgroundColor: HAIRLINE }} />}
+      {!long && <div style={{ height: 9, width: '72%', borderRadius: 4, backgroundColor: HAIRLINE }} />}
     </div>
   );
 };
@@ -523,12 +537,6 @@ interface FullPanelProps {
   activeStep: number;
   stepStartFrames: number[];
 }
-
-// 5+ steps in a `full` layout otherwise run the unbounded step list past the
-// frame bottom / under the pagination band (defect: bonus mock card
-// clipped at the frame edge or overlapped by the caption chip). Tightening
-// row/panel padding is whitespace-only — never smaller step text.
-const LONG_STEP_LIST = 5;
 
 const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
   const long = c.steps.length >= LONG_STEP_LIST;
