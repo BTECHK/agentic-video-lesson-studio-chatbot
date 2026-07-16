@@ -12,7 +12,10 @@ export function judgeViaClaudeCode(prompt: string, timeoutMs: number = DEFAULT_T
   return new Promise((resolve, reject) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
-    const child = spawn('claude', ['-p', '--output-format', 'json'], {
+    // --allowedTools: headless -p denies un-granted tools silently in non-interactive
+    // mode — without this, Gate A judges could never reach vendor docs and returned
+    // "couldn't verify" FIXes on accurate content (round-2 incident, 2026-07-15).
+    const child = spawn('claude', ['-p', '--output-format', 'json', '--allowedTools', 'WebFetch', 'WebSearch'], {
       stdio: ['pipe', 'pipe', 'pipe'],
       shell: true,
       windowsHide: true,
