@@ -11,6 +11,10 @@ describe('parseGateState', () => {
     expect(parseGateState(null)).toBe('missing');
     expect(parseGateState('a report with no machine verdict line')).toBe('fix');
   });
+  it('fails closed on a Verdict buried under judge preamble (Codex finding 2026-07-15)', () => {
+    expect(parseGateState('Write was blocked pending permission — verdict below:\n\nVerdict: PASS\nbody')).toBe('fix');
+    expect(parseGateState('\n\nVerdict: PASS\nbody')).toBe('pass'); // leading blank lines OK
+  });
 });
 
 describe('summarizeGates', () => {

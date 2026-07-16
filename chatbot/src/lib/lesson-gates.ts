@@ -34,10 +34,15 @@ const GATE_FILES: { gate: 'A' | 'B' | 'C' | 'L' | 'T'; label: string; file: stri
 
 const LESSONS_DIR = path.join(process.cwd(), '..', 'content', 'lessons');
 
-/** A present file with no PASS verdict is not-green; an absent file is "missing". */
+/**
+ * A present file with no PASS verdict is not-green; an absent file is "missing".
+ * Mirrors src/lib/gate-status.ts: verdict must be the FIRST non-empty line
+ * (fail-closed against judge preamble — Codex BLOCK finding 2026-07-15).
+ */
 export function parseGateState(md: string | null): GateState {
   if (md == null) return 'missing';
-  const m = md.match(/verdict\s*[:-]?\s*(pass|fix|fail)/i);
+  const first = md.split(/\r?\n/).find((l) => l.trim() !== '') ?? '';
+  const m = first.match(/^\s*verdict\s*[:-]?\s*(pass|fix|fail)/i);
   if (!m) return 'fix';
   return m[1].toLowerCase() === 'pass' ? 'pass' : 'fix';
 }

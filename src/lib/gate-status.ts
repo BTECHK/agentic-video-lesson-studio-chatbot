@@ -28,10 +28,16 @@ export const GATES: readonly GateDef[] = [
   { gate: 'T', name: 'Timing integrity', artifact: 'review/timing-gate.md' },
 ] as const;
 
-/** A present file with no PASS verdict counts as not-green; an absent file is "missing". */
+/**
+ * A present file with no PASS verdict counts as not-green; an absent file is "missing".
+ * Artifact contract (Codex BLOCK 2026-07-15): the verdict must be the FIRST non-empty
+ * line. A Verdict: buried under judge preamble no longer parses — fail-closed as 'fix'
+ * until the artifact is normalized (claude-judge stripJudgePreamble does this at write).
+ */
 export function parseGateState(md: string | null | undefined): GateState {
   if (md == null) return 'missing';
-  const m = md.match(/verdict\s*[:-]?\s*(pass|fix|fail)/i);
+  const first = md.split(/\r?\n/).find((l) => l.trim() !== '') ?? '';
+  const m = first.match(/^\s*verdict\s*[:-]?\s*(pass|fix|fail)/i);
   if (!m) return 'fix';
   return m[1].toLowerCase() === 'pass' ? 'pass' : 'fix';
 }
