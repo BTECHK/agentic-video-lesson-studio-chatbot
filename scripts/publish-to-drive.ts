@@ -74,7 +74,7 @@ runMain('publish:drive', async (log) => {
   const sourcePath =
     srcFlag !== -1 && args[srcFlag + 1]
       ? args[srcFlag + 1]
-      : path.join(v2 ? 'out/v2' : 'out', `${lessonId}.mp4`);
+      : path.join(v2 ? 'out/v2' : process.env.RENDER_OUT_DIR || 'out', `${lessonId}.mp4`);
 
   // 1. Resolve the per-machine Drive root.
   const res = resolveCurriculumDir({ env: process.env.DRIVE_CURRICULUM_DIR, configFile: readConfigFile() });
