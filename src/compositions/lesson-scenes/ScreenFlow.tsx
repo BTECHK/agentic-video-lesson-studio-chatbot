@@ -31,6 +31,15 @@ function actionExtra(action: string, typedText: string | undefined): number {
 // the split-layout PreviewPanel/RevealBlock.
 const LONG_STEP_LIST = 5;
 
+// 8+ steps in a `full`-layout FullPanel — where ALL steps stay mounted
+// simultaneously regardless of the current playback frame — still overflow
+// past the LONG_STEP_LIST compaction alone (defect: a full-layout scene, 8
+// steps, its last row overlapping the pagination scene-counter by 18x14px).
+// One tier deeper, FullPanel only: no PreviewPanel/RevealBlock scene in the
+// corpus reaches this count (max reveal-only stack is 5, already covered by
+// LONG_STEP_LIST).
+const VERY_LONG_STEP_LIST = 8;
+
 /**
  * `screen-flow` — an animated mock browser/desktop window that walks through a
  * sequence of UI interactions: clicks, typed input, navigation, and staged UI
@@ -540,9 +549,10 @@ interface FullPanelProps {
 
 const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
   const long = c.steps.length >= LONG_STEP_LIST;
-  const panelPad = long ? 16 : 24;
-  const listGap = long ? 6 : 12;
-  const rowPad = long ? '8px 16px' : '12px 16px';
+  const veryLong = c.steps.length >= VERY_LONG_STEP_LIST;
+  const panelPad = veryLong ? 12 : long ? 16 : 24;
+  const listGap = veryLong ? 4 : long ? 6 : 12;
+  const rowPad = veryLong ? '6px 16px' : long ? '8px 16px' : '12px 16px';
   return (
     <div
       style={{
