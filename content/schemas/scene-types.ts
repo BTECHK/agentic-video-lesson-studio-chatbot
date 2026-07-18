@@ -257,6 +257,13 @@ export const ScreenFlowStepSchema = z.object({
   typedText: z.string().optional(),
   uiState: z.string(),
   dwell: z.number().min(0.5),
+  // When true (FullPanel/`layout:"full"` only), the step's body text stays
+  // hidden until its own step becomes active/past — for answer-reveal rows in
+  // interactive beats, where FullPanel's default dimmed-preview-of
+  // -upcoming-rows behavior would leak the answer before the pause (Gate
+  // C fix). Optional + defaults falsy so every existing scene renders exactly
+  // as before.
+  hideUntilActive: z.boolean().optional(),
 });
 
 export const ScreenFlowContentSchema = z

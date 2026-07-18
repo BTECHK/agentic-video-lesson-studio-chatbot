@@ -591,6 +591,12 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
           displayText = (step.typedText ?? '').slice(0, charsVisible) || step.uiState;
         }
 
+        // Answer-reveal rows (`hideUntilActive`) stay blank until their own
+        // step is reached — FullPanel otherwise keeps every row's text
+        // mounted (just dimmed) regardless of playback frame, which leaks an
+        // interactive beat's answer before the pause (Gate C fix).
+        const hideBody = step.hideUntilActive && !isActive && !isPast;
+
         return (
           <div
             key={step.id}
@@ -621,7 +627,7 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               {step.label ?? step.target}
             </div>
             <div style={{ fontSize: 19, color: BRAND.colors.text, lineHeight: 1.4 }}>
-              {displayText}
+              {hideBody ? ' ' : displayText}
             </div>
           </div>
         );
