@@ -20,7 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { runMain } from '../src/lib/logger';
-import { resolveCurriculumDir, lessonDriveTarget, pickFolder } from '../src/lib/drive-publish';
+import { resolveCurriculumDir, lessonDriveTarget, pickFolder, folderExists } from '../src/lib/drive-publish';
 import { summarizeGates, canPublish } from '../src/lib/gate-status';
 import { evaluateMedia } from '../src/lib/gate-media';
 import { evaluateMotion } from '../src/lib/gate-motion';
@@ -149,7 +149,21 @@ runMain('publish:drive', async (log) => {
   }
 
   // 6. Resolve/create Module + Lesson folders (match existing by prefix; tolerate title drift).
-  const moduleFolder = pickFolder(safeList(curriculumDir), target.modulePrefix, target.moduleFolder);
+  // The Module folder must already exist on Drive — never mkdirSync a brand-new top-level
+  // tree from scratch (that's what hangs indefinitely against the Drive virtual filesystem;
+  // see artifacts/verification/goal-2026-08-01/drive-fix/ROOT-CAUSE-bonus-hang.md). Creating
+  // a single new Lesson-level leaf folder under an already-existing Module is fine and is the
+  // one case this script has always supported (first publish of a lesson).
+  const existingModules = safeList(curriculumDir);
+  if (!folderExists(existingModules, target.modulePrefix)) {
+    log.error(
+      `Drive Module folder not found for "${lessonId}" (looked for prefix "${target.modulePrefix}" under ${curriculumDir}). ` +
+        'Refusing to create a new top-level Module folder on Drive — verify the folder name/mount, ' +
+        'or create it manually first if this is a genuinely new module.',
+    );
+    return 1;
+  }
+  const moduleFolder = pickFolder(existingModules, target.modulePrefix, target.moduleFolder);
   const moduleDir = path.join(curriculumDir, moduleFolder);
   const lessonFolder = pickFolder(safeList(moduleDir), target.lessonPrefix, target.lessonFolder);
   const destDir = path.join(moduleDir, lessonFolder);
