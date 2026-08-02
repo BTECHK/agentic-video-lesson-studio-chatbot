@@ -264,6 +264,14 @@ export const ScreenFlowStepSchema = z.object({
   // C fix). Optional + defaults falsy so every existing scene renders exactly
   // as before.
   hideUntilActive: z.boolean().optional(),
+  // When set (FullPanel/`layout:"full"` only), the step renders a real
+  // ticking countdown atom (mm:ss, frame-driven) sweeping from this value
+  // down to 0 over the step's own dwell window, instead of its `uiState`
+  // text — a live work-timer, as promised by the lesson script
+  // (watch-gate fix: a static text row was not an actual countdown).
+  // Optional + defaults falsy so every existing scene renders exactly as
+  // before.
+  countdownSeconds: z.number().positive().optional(),
 });
 
 export const ScreenFlowContentSchema = z

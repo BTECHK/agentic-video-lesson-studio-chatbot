@@ -15,6 +15,44 @@ import {
   SimDisclaimer,
 } from './shared';
 
+/**
+ * Countdown atom's frame -> remaining-seconds mapping (watch-gate fix:
+ * "Implement a real countdown atom instead of the text
+ * description"). Frame-driven and deterministic — no wall clock, no React
+ * state timers. `countdownSeconds` is the phase length the step represents
+ * (e.g. 60 for a first pause, 30 for a faster second one); the
+ * sweep from that value to 0 is compressed into the step's own dwell window
+ * — a stylized accelerated tick, not 60 real seconds of video.
+ *
+ * Mirrors the `hideUntilActive` render gate (dbe7d75): returns `null` before
+ * the step is active so no ticking value leaks ahead of its own beat, and
+ * freezes at 0 once the step is past (never negative, never resumes).
+ */
+export function countdownSecondsRemaining(
+  frame: number,
+  stepStartFrame: number,
+  stepDurationFrames: number,
+  countdownSeconds: number,
+  isActive: boolean,
+  isPast: boolean,
+): number | null {
+  if (isPast) return 0;
+  if (!isActive) return null;
+  const progress = Math.min(
+    Math.max((frame - stepStartFrame) / Math.max(stepDurationFrames, 1), 0),
+    1,
+  );
+  return Math.max(0, Math.ceil(countdownSeconds * (1 - progress)));
+}
+
+/** mm:ss display — matches VoiceDemo's mono recording Timer. */
+export function formatCountdown(totalSeconds: number): string {
+  const s = Math.max(0, Math.round(totalSeconds));
+  const mm = String(Math.floor(s / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
 // Extra frames added per action type on top of `dwell * fps`.
 function actionExtra(action: string, typedText: string | undefined): number {
   if (action === 'click') return 12;
@@ -251,7 +289,14 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
             </div>
           </>
         ) : (
-          <FullPanel c={c} frame={frame} fps={fps} activeStep={activeStep} stepStartFrames={stepStartFrames} />
+          <FullPanel
+            c={c}
+            frame={frame}
+            fps={fps}
+            activeStep={activeStep}
+            stepStartFrames={stepStartFrames}
+            stepDurations={stepDurations}
+          />
         )}
 
         {/* Cursor overlay */}
@@ -545,9 +590,10 @@ interface FullPanelProps {
   fps: number;
   activeStep: number;
   stepStartFrames: number[];
+  stepDurations: number[];
 }
 
-const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
+const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames, stepDurations }) => {
   const long = c.steps.length >= LONG_STEP_LIST;
   const veryLong = c.steps.length >= VERY_LONG_STEP_LIST;
   const panelPad = veryLong ? 12 : long ? 16 : 24;
@@ -597,6 +643,22 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
         // interactive beat's answer before the pause (Gate C fix).
         const hideBody = step.hideUntilActive && !isActive && !isPast;
 
+        // Countdown rows render a live ticking mm:ss atom instead of the
+        // step's `uiState` prose (watch-gate fix). `countdownSecondsRemaining`
+        // already gates visibility to isActive/isPast, so no value is ever
+        // shown ahead of this step's own beat.
+        const countdownRemaining =
+          step.countdownSeconds !== undefined
+            ? countdownSecondsRemaining(
+                frame,
+                stepStartF,
+                stepDurations[i] ?? 1,
+                step.countdownSeconds,
+                isActive,
+                isPast,
+              )
+            : null;
+
         return (
           <div
             key={step.id}
@@ -627,7 +689,17 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               {step.label ?? step.target}
             </div>
             <div style={{ fontSize: 19, color: BRAND.colors.text, lineHeight: 1.4 }}>
-              {hideBody ? ' ' : displayText}
+              {step.countdownSeconds !== undefined ? (
+                countdownRemaining !== null ? (
+                  <CountdownAtom secondsRemaining={countdownRemaining} />
+                ) : (
+                  ' '
+                )
+              ) : hideBody ? (
+                ' '
+              ) : (
+                displayText
+              )}
             </div>
           </div>
         );
@@ -635,6 +707,21 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
     </div>
   );
 };
+
+/** Live mm:ss countdown digits -- mirrors VoiceDemo's mono recording Timer. */
+const CountdownAtom: React.FC<{ secondsRemaining: number }> = ({ secondsRemaining }) => (
+  <div
+    style={{
+      fontFamily: BRAND.font.mono,
+      fontSize: 30,
+      fontWeight: BRAND.font.weights.bold,
+      color: BRAND.colors.accent,
+      fontVariantNumeric: 'tabular-nums',
+    }}
+  >
+    {formatCountdown(secondsRemaining)}
+  </div>
+);
 
 // ---------------------------------------------------------------------------
 // MockCursor — spring-glide position, dwell, click pulse, tooltip pill
