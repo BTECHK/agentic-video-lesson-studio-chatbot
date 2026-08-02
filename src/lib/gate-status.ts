@@ -9,9 +9,16 @@
  * so it counts as not-green, matching FIX semantics for publish gating.
  */
 
-export type GateState = 'pass' | 'fix' | 'missing';
+export type GateState = 'pass' | 'fix' | 'missing' | 'stale';
 
 export type GateId = 'A' | 'B' | 'C' | 'L' | 'T';
+
+/**
+ * Gates that judge the RENDERED MP4 (vs A/B, which judge lesson content and don't
+ * go stale from a re-render). A watch-gate/layout-gate/timing-gate artifact older
+ * than the MP4 it's supposed to have judged was written against a different render.
+ */
+export const MP4_JUDGED_GATES: readonly GateId[] = ['C', 'L', 'T'];
 
 export interface GateDef {
   gate: GateId;
@@ -52,11 +59,36 @@ export interface LessonGateSummary {
   allGreen: boolean;
 }
 
+/**
+ * mtimes (ms since epoch) for the MP4-freshness check. `mp4: null` (absent MP4,
+ * or the arg omitted entirely) leaves current behavior unchanged — no staleness
+ * is applied. Per-gate mtimes are only consulted for MP4_JUDGED_GATES.
+ */
+export interface GateMtimes {
+  mp4: number | null;
+  A?: number | null;
+  B?: number | null;
+  C?: number | null;
+  L?: number | null;
+  T?: number | null;
+}
+
 export function summarizeGates(
   lessonId: string,
   contents: { A: string | null; B: string | null; C: string | null; L: string | null; T: string | null },
+  mtimes?: GateMtimes,
 ): LessonGateSummary {
-  const gates: GateStatus[] = GATES.map((g) => ({ ...g, state: parseGateState(contents[g.gate]) }));
+  const gates: GateStatus[] = GATES.map((g) => {
+    const state = parseGateState(contents[g.gate]);
+    const artifactMtime = mtimes?.[g.gate];
+    const isStale =
+      state !== 'missing' &&
+      mtimes?.mp4 != null &&
+      MP4_JUDGED_GATES.includes(g.gate) &&
+      artifactMtime != null &&
+      artifactMtime < mtimes.mp4;
+    return { ...g, state: isStale ? 'stale' : state };
+  });
   return { lessonId, gates, allGreen: gates.every((g) => g.state === 'pass') };
 }
 
@@ -68,8 +100,13 @@ export interface PublishGateDecision {
 /** Publish is allowed only when all five gates are green. */
 export function canPublish(summary: LessonGateSummary): PublishGateDecision {
   if (summary.allGreen) return { ok: true, reasons: [] };
+  const why: Record<Exclude<GateState, 'pass'>, string> = {
+    missing: 'not run',
+    stale: 'stale — artifact predates the rendered MP4',
+    fix: 'not passing',
+  };
   const reasons = summary.gates
     .filter((g) => g.state !== 'pass')
-    .map((g) => `Gate ${g.gate} (${g.name}): ${g.state === 'missing' ? 'not run' : 'not passing'} — ${g.artifact}`);
+    .map((g) => `Gate ${g.gate} (${g.name}): ${why[g.state as Exclude<GateState, 'pass'>]} — ${g.artifact}`);
   return { ok: false, reasons };
 }

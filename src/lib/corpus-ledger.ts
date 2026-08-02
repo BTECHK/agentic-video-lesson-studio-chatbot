@@ -33,7 +33,7 @@ function lessonOrder(a: string, b: string): number {
   return at - bt || (al ?? 0) - (bl ?? 0);
 }
 
-const MARK: Record<GateState, string> = { pass: '✓', fix: '✗', missing: '—' };
+const MARK: Record<GateState, string> = { pass: '✓', fix: '✗', missing: '—', stale: '~' };
 
 /** One fixed-width ledger row: `topic-1-lesson-2   A✓ B✓ C✓ L✓ T✓  GREEN` */
 export function ledgerRow(e: LedgerEntry): string {

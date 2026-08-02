@@ -58,6 +58,63 @@ describe('summarizeGates', () => {
   });
 });
 
+describe('summarizeGates — staleness (mp4-judging gates C/L/T only)', () => {
+  const contents = {
+    A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS', T: 'Verdict: PASS',
+  };
+
+  it('marks C/L/T stale when their artifact predates the rendered MP4', () => {
+    const s = summarizeGates('x', contents, { mp4: 200, A: 100, B: 100, C: 100, L: 100, T: 100 });
+    expect(s.gates.find((g) => g.gate === 'C')!.state).toBe('stale');
+    expect(s.gates.find((g) => g.gate === 'L')!.state).toBe('stale');
+    expect(s.gates.find((g) => g.gate === 'T')!.state).toBe('stale');
+    expect(s.allGreen).toBe(false);
+  });
+
+  it('does not stale-flag content gates A/B even when older than the MP4', () => {
+    const s = summarizeGates('x', contents, { mp4: 200, A: 100, B: 100, C: 300, L: 300, T: 300 });
+    expect(s.gates.find((g) => g.gate === 'A')!.state).toBe('pass');
+    expect(s.gates.find((g) => g.gate === 'B')!.state).toBe('pass');
+    expect(s.allGreen).toBe(true);
+  });
+
+  it('keeps a normal verdict when the artifact postdates the MP4', () => {
+    const s = summarizeGates('x', contents, { mp4: 100, A: 200, B: 200, C: 200, L: 200, T: 200 });
+    expect(s.gates.find((g) => g.gate === 'C')!.state).toBe('pass');
+    expect(s.gates.find((g) => g.gate === 'L')!.state).toBe('pass');
+    expect(s.gates.find((g) => g.gate === 'T')!.state).toBe('pass');
+    expect(s.allGreen).toBe(true);
+  });
+
+  it('leaves current behavior unchanged when the MP4 is missing (mtimes omitted)', () => {
+    const s = summarizeGates('x', contents);
+    expect(s.gates.every((g) => g.state === 'pass')).toBe(true);
+    expect(s.allGreen).toBe(true);
+  });
+
+  it('leaves current behavior unchanged when mp4 mtime is explicitly null (MP4 absent)', () => {
+    const s = summarizeGates('x', contents, { mp4: null, C: 1, L: 1, T: 1 });
+    expect(s.gates.every((g) => g.state === 'pass')).toBe(true);
+  });
+
+  it('never stale-flags an already-missing gate', () => {
+    const s = summarizeGates('x', { ...contents, C: null }, { mp4: 200, C: 100 });
+    expect(s.gates.find((g) => g.gate === 'C')!.state).toBe('missing');
+  });
+});
+
+describe('canPublish — staleness', () => {
+  it('blocks publish on a stale gate (does not count as green) and names it', () => {
+    const s = summarizeGates('x', {
+      A: 'Verdict: PASS', B: 'Verdict: PASS', C: 'Verdict: PASS', L: 'Verdict: PASS', T: 'Verdict: PASS',
+    }, { mp4: 200, C: 100, L: 300, T: 300 });
+    const d = canPublish(s);
+    expect(d.ok).toBe(false);
+    expect(d.reasons.join(' ')).toMatch(/Gate C/);
+    expect(d.reasons.join(' ')).toMatch(/stale/i);
+  });
+});
+
 describe('canPublish', () => {
   it('allows publish when all five gates are green', () => {
     const s = summarizeGates('x', {
