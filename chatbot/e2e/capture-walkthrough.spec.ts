@@ -27,6 +27,9 @@ const BEATS: { name: string; run: (page: Page) => Promise<void> }[] = [
     name: 'chat',
     run: async (page) => {
       await page.goto('/chat');
+      // /chat renders an AccessGate first (Try Demo / I'm a Student) — the composer
+      // textbox doesn't exist until a mode is picked, so clear it before filling.
+      await page.getByRole('button', { name: 'Try Demo' }).click();
       await page.getByRole('textbox').first().fill('Which AI tool is best for research?');
       await settle(page, 1500);
       const send = page.getByRole('button', { name: /send/i }).first();
