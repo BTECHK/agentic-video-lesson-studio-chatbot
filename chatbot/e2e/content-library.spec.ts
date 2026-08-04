@@ -65,6 +65,9 @@ test('content library: all 12 tool cards are rendered (card count)', async ({ pa
   // Each ToolCard renders an <h3> with the tool name inside a link to /content/<id>.
   // Count those links: every tool card produces one.
   const toolLinks = page.locator('a[href^="/content/"]');
+  // Card grid renders client-side after the heading — wait for the first card
+  // before counting, otherwise a slow compile/hydration can race the count to 0.
+  await expect(toolLinks.first()).toBeVisible({ timeout: 10_000 });
   const count = await toolLinks.count();
   expect(count).toBeGreaterThanOrEqual(12);
 });

@@ -204,26 +204,24 @@ export type BatchRunner = (args: BatchArgs) => Promise<void>;
 /**
  * Default batch runner: one `docker compose run` that synthesizes every scene
  * in the manifest in a single container (model loaded once).
+ *
+ * TTS_NATIVE=1 runs the same sidecar CLI (docker/tts/synthesize.py) with the
+ * host Python instead (TTS_PYTHON overrides the interpreter) — added 2026-07-02
+ * because Docker Desktop crash-loops on this box (dockerInference socket bug);
+ * the manifest paths are repo-relative so both lanes are byte-identical.
  */
 export const defaultBatchRunner: BatchRunner = ({ manifestPath, voice, impl }) =>
   new Promise((resolve, reject) => {
     if (impl === 'paid') {
       consumeVoiceRequest(process.env);
     }
+    const native = process.env.TTS_NATIVE === '1';
+    const [cmd, baseArgs] = native
+      ? [process.env.TTS_PYTHON ?? 'python', ['docker/tts/synthesize.py']]
+      : ['docker', ['compose', 'run', '--rm', 'tts']];
     const proc = spawn(
-      'docker',
-      [
-        'compose',
-        'run',
-        '--rm',
-        'tts',
-        '--impl',
-        impl,
-        '--voice',
-        voice,
-        '--manifest',
-        manifestPath,
-      ],
+      cmd,
+      [...baseArgs, '--impl', impl, '--voice', voice, '--manifest', manifestPath],
       { stdio: 'inherit' },
     );
     proc.on('error', reject);

@@ -257,6 +257,21 @@ export const ScreenFlowStepSchema = z.object({
   typedText: z.string().optional(),
   uiState: z.string(),
   dwell: z.number().min(0.5),
+  // When true (FullPanel/`layout:"full"` only), the step's body text stays
+  // hidden until its own step becomes active/past — for answer-reveal rows in
+  // interactive beats, where FullPanel's default dimmed-preview-of
+  // -upcoming-rows behavior would leak the answer before the pause (Gate
+  // C fix). Optional + defaults falsy so every existing scene renders exactly
+  // as before.
+  hideUntilActive: z.boolean().optional(),
+  // When set (FullPanel/`layout:"full"` only), the step renders a real
+  // ticking countdown atom (mm:ss, frame-driven) sweeping from this value
+  // down to 0 over the step's own dwell window, instead of its `uiState`
+  // text — a live work-timer, as promised by the lesson script
+  // (watch-gate fix: a static text row was not an actual countdown).
+  // Optional + defaults falsy so every existing scene renders exactly as
+  // before.
+  countdownSeconds: z.number().positive().optional(),
 });
 
 export const ScreenFlowContentSchema = z

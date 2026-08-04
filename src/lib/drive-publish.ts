@@ -59,6 +59,28 @@ export function lessonDriveTarget(map: CourseMap, lessonId: string): LessonDrive
     if (!lesson) continue;
     const n = topic.number;
     const num = lesson.number; // "1.3"
+
+    // The bonus topic ships under a human-created top-level "Bonus — ..." folder
+    // (not the generic "Module 5 — ..." every other topic uses) with lesson folders
+    // named "Bonus Intro — ...", "Bonus 1 — ...", etc.
+    if (topic.id === 'bonus') {
+      const suffix = num === 'B.0' ? 'Intro' : num.slice(2); // "Intro" | "1" | "2" | "3"
+      const lessonPrefix = `Bonus ${suffix}`;
+      return {
+        moduleNumber: n,
+        lessonNumber: num,
+        moduleFolder: `Bonus — Sample Extras`,
+        lessonFolder: num === 'B.0' ? lesson.title : `${lessonPrefix} — ${lesson.title}`,
+        modulePrefix: 'Bonus',
+        lessonPrefix,
+        artifacts: {
+          video: `${num} Video.mp4`,
+          script: `${num} Script`,
+          plan: `${num} Lesson Plan`,
+        },
+      };
+    }
+
     return {
       moduleNumber: n,
       lessonNumber: num,
@@ -76,6 +98,8 @@ export function lessonDriveTarget(map: CourseMap, lessonId: string): LessonDrive
   return null;
 }
 
+const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
+
 /**
  * Given the existing directory entries, pick the folder that matches a prefix
  * (so "Module 1 — Getting Started with AI Assistants" matches "Module 1 —"
@@ -83,8 +107,20 @@ export function lessonDriveTarget(map: CourseMap, lessonId: string): LessonDrive
  * canonical name when nothing matches (caller then creates it).
  */
 export function pickFolder(existing: string[], prefix: string, canonical: string): string {
-  const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
   const p = norm(prefix);
   const hit = existing.find((e) => norm(e).startsWith(p));
   return hit ?? canonical;
+}
+
+/**
+ * True when an existing folder already matches the prefix — i.e. the caller can
+ * safely descend/create a single new leaf under it. False means pickFolder would
+ * be falling back to a canonical name that doesn't exist yet on Drive; callers
+ * MUST NOT mkdirSync in that case (that's how a brand-new, wrong top-level tree
+ * gets created and hangs against the Google Drive virtual filesystem — see
+ * artifacts/verification/goal-2026-08-01/drive-fix/ROOT-CAUSE-bonus-hang.md).
+ */
+export function folderExists(existing: string[], prefix: string): boolean {
+  const p = norm(prefix);
+  return existing.some((e) => norm(e).startsWith(p));
 }

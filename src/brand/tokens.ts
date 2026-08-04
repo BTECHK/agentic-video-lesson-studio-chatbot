@@ -85,3 +85,78 @@ export const space = (n: number): number => n * SPACE_BASE;
  * (e.g. the oversized quote glyph escaping its box). Enforced by gate:layout.
  */
 export const SAFE_AREA = { x: 96, y: 54 } as const;
+
+/**
+ * Content-safe bottom clearance (px, distance from the frame's bottom edge):
+ * the floor scene CONTENT (card stacks, checklists, transcripts) must stay
+ * above so it never invades the persistent bottom chrome band — pagination
+ * dots + scene counter (LessonChrome, `bottom: CAPTION_BOTTOM + 90 = 162`,
+ * row height ~19px) plus a breathing margin. Distinct from `SAFE_AREA.y`
+ * (a much smaller absolute-edge inset for stray text) — this is the taller
+ * floor for the chrome band specifically. Vision-QC defect family (11+
+ * lessons): comparison-chats composers, assignment-list callouts, and
+ * setup-checklist rows landing on/under the dots and counter.
+ */
+export const CONTENT_SAFE_BOTTOM = 188;
+
+/**
+ * Motion durations (frames @ 30fps) — the v4 motion seam. `glide`/`pop` are
+ * the values ALREADY hardcoded in `lesson-scenes/shared.tsx` (useGlideIn
+ * dur=18/fromY=24, usePopIn DUR=16/back(1.6)) pulled up to tokens so v4 code
+ * reads the same numbers rather than re-deriving them. `exit` is new: the
+ * v4 scene-exit glide (SceneExitWrapper in LessonVideo.tsx) fades/lifts the
+ * outgoing scene over its last `exit.dur` frames. `cursorTooltip` is the one
+ * spring config shared by 2+ sites (ScreenFlow's MockCursor tooltip fade
+ * in/out) — pulled up so those ad-hoc `{damping,mass}` literals read one token.
+ */
+export const MOTION = {
+  glide: { dur: 18, fromY: 24 },
+  pop: { dur: 16, overshoot: 1.6 },
+  exit: { dur: 10, toY: -18 },
+  cursorTooltip: { damping: 22, mass: 0.5 },
+} as const;
+
+/**
+ * SceneAmbient's drifting/breathing warm-light constants, pulled up from the
+ * inline literals in `lesson-scenes/shared.tsx` so v4 can retune per-profile
+ * without touching the renderer. Values are byte-identical to the prior
+ * inline constants — this is a pure token extraction, not a redesign.
+ * Rates are rad/s (used as `Math.sin(t * rate)`) and MUST stay < 18.8 rad/s
+ * (3 Hz) per WCAG 2.3.1 (photosensitivity — no flashing content).
+ */
+export const AMBIENT = {
+  tint: { light: '139,38,53', dark: '231,166,174' },
+  alpha: { light: [0.07, 0.05], dark: [0.12, 0.08] },
+  breathRate: [0.6, 0.5],
+  rippleRate: [3.1, 2.5],
+  rippleAmp: 0.08,
+  drift: [
+    { x: 0.4, xAmp: 70, y: 0.33, yAmp: 48, pos: '82% 22%', size: 46 },
+    { x: 0.3, xAmp: 84, y: 0.38, yAmp: 56, pos: '14% 86%', size: 40 },
+  ],
+} as const;
+
+/**
+ * Chrome (persistent UI) contrast tokens — LessonChrome's scene counter and
+ * inactive pagination dots. Previous values failed WCAG: counter used
+ * `textDim` (0.33 alpha) → ~2.06:1 against the linen base (small text needs
+ * ≥4.5:1 with margin); inactive dots used `borderStrong` (0.15 alpha) →
+ * ~1.35:1 (non-text UI needs ≥3:1 with margin). Counter 0.70 → ~5.72:1 on the
+ * linen base; dots 0.52 → ~3.32:1 (≥3:1 with the required 0.2 margin).
+ */
+export const CHROME_INK = {
+  counter: 'rgba(28,28,28,0.70)',
+  dotInactive: 'rgba(28,28,28,0.52)',
+} as const;
+
+/**
+ * Caption (LessonCaptions) legibility tokens. Inactive words previously used
+ * `MUTED` (0.62 alpha charcoal) on a 0.55-alpha chip — read as washed-out to
+ * the point of being mistaken for clipped/broken text (hail-mary audit). Full
+ * charcoal ink + a stronger chip backing + a shorter entry fade fix this.
+ */
+export const CAPTION = {
+  ink: '#1C1C1C',
+  chipAlpha: 0.85,
+  fadeMs: 100,
+} as const;

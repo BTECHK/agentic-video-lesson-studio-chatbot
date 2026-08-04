@@ -2,6 +2,7 @@ import type { BrainDeps } from '../brain.js';
 import { respond } from '../brain.js';
 import { SessionStore } from '../session.js';
 import { RateLimiter, GlobalDailyCap } from '../rate-limit.js';
+import { emitEvent } from '../events.js';
 import type { Citation } from '../types.js';
 
 /** Minimal Telegram Update shape (only what we use). */
@@ -77,6 +78,7 @@ export class TelegramChannel {
       return busy;
     }
     console.log(JSON.stringify({ t: new Date().toISOString(), ch: 'telegram', chatId, msgLen: text.length, outcome: 'ok' }));
+    emitEvent('message_handled', chatId);
 
     const firstTurn = this.session.isFirstTurn(chatId);
     const history = this.session.append(chatId, { role: 'user', content: text });
@@ -84,6 +86,7 @@ export class TelegramChannel {
     const out = formatReply(reply.text, reply.citations);
     this.session.append(chatId, { role: 'assistant', content: reply.text });
     await this.send(chatId, out);
+    emitEvent('reply_sent', chatId);
     return out;
   }
 

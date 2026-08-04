@@ -10,7 +10,7 @@ import {
   continueRender,
   cancelRender,
 } from 'remotion';
-import { BRAND, LEADING, SHADOW } from '../../brand/tokens';
+import { BRAND, LEADING, SHADOW, MOTION, AMBIENT } from '../../brand/tokens';
 
 /**
  * Load the brand faces (Syne + Playfair Display) from bundled local TTFs instead
@@ -71,11 +71,23 @@ export const MUTED = 'rgba(28,28,28,0.62)';
 export const HAIRLINE = 'rgba(28,28,28,0.12)';
 
 /**
+ * Motion profile seam — 'v3' (default, unchanged renders) or 'v4' (scene-exit
+ * glides, word-synced reveals, per-topic cover variants). Read via
+ * `useMotionProfile()`; provided by `LessonVideo` from `lesson.lesson.motionProfile`.
+ */
+export const MotionProfileContext = React.createContext<'v3' | 'v4'>('v3');
+
+/** Current lesson's motion profile — defaults to 'v3' outside a provider. */
+export function useMotionProfile(): 'v3' | 'v4' {
+  return React.useContext(MotionProfileContext);
+}
+
+/**
  * Eased glide progress (0..1) — explicit-duration cubic-out tween. Pure so the
  * hard-arrival contract is unit-testable (test/motion-easing.test.ts): unlike a
  * spring it reaches exactly 1.0 at `delay + dur` rather than asymptoting.
  */
-export function glideProgress(frame: number, delay = 0, dur = 18): number {
+export function glideProgress(frame: number, delay = 0, dur: number = MOTION.glide.dur): number {
   return interpolate(frame, [delay, delay + dur], [0, 1], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: 'clamp',
@@ -88,7 +100,11 @@ export function glideProgress(frame: number, delay = 0, dur = 18): number {
  * relative `delay` in frames staggers elements per the scene-catalog beats;
  * `fromY` is the travel distance, `dur` the explicit tween length.
  */
-export function useGlideIn(delay = 0, fromY = 24, dur = 18): { opacity: number; transform: string } {
+export function useGlideIn(
+  delay = 0,
+  fromY: number = MOTION.glide.fromY,
+  dur: number = MOTION.glide.dur,
+): { opacity: number; transform: string } {
   const frame = useCurrentFrame();
   const p = glideProgress(frame, delay, dur);
   return {
@@ -104,9 +120,9 @@ export function useGlideIn(delay = 0, fromY = 24, dur = 18): { opacity: number; 
  */
 export function usePopIn(delay = 0): { opacity: number; transform: string } {
   const frame = useCurrentFrame();
-  const DUR = 16;
+  const DUR = MOTION.pop.dur;
   const p = interpolate(frame, [delay, delay + DUR], [0, 1], {
-    easing: Easing.out(Easing.back(1.6)),
+    easing: Easing.out(Easing.back(MOTION.pop.overshoot)),
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -114,6 +130,20 @@ export function usePopIn(delay = 0): { opacity: number; transform: string } {
     opacity: interpolate(p, [0, 0.4], [0, 1], { extrapolateRight: 'clamp' }),
     transform: `scale(${interpolate(p, [0, 1], [0.6, 1])})`,
   };
+}
+
+/**
+ * Eased scene-exit progress (1..0) — the v4 mirror of `glideProgress` for
+ * OUTGOING scenes. Explicit-duration cubic-IN (accelerating) tween that holds
+ * at 1.0 until the last `dur` frames of `duration`, then falls to exactly 0.0
+ * at `duration`. Pure so it's unit-testable alongside `glideProgress`.
+ */
+export function exitProgress(frame: number, duration: number, dur: number = MOTION.exit.dur): number {
+  return interpolate(frame, [duration - dur, duration], [1, 0], {
+    easing: Easing.in(Easing.cubic),
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
 }
 
 /** Wrapper that glides its children in — use inside `.map()` to stagger lists. */
@@ -165,11 +195,14 @@ export const SceneAmbient: React.FC<{ dark?: boolean }> = ({ dark }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
-  const tint = dark ? '231,166,174' : '139,38,53';
-  const a1 = dark ? 0.12 : 0.07;
-  const a2 = dark ? 0.08 : 0.05;
-  const o1 = 0.45 + (Math.sin(t * 0.6) * 0.5 + 0.5) * 0.4 + Math.sin(t * 3.1) * 0.08;
-  const o2 = 0.45 + (Math.sin(t * 0.5 + 2) * 0.5 + 0.5) * 0.4 + Math.sin(t * 2.5 + 1) * 0.08;
+  const tint = dark ? AMBIENT.tint.dark : AMBIENT.tint.light;
+  const [a1, a2] = dark ? AMBIENT.alpha.dark : AMBIENT.alpha.light;
+  const [breath1, breath2] = AMBIENT.breathRate;
+  const [ripple1, ripple2] = AMBIENT.rippleRate;
+  const rippleAmp = AMBIENT.rippleAmp;
+  const o1 = 0.45 + (Math.sin(t * breath1) * 0.5 + 0.5) * 0.4 + Math.sin(t * ripple1) * rippleAmp;
+  const o2 = 0.45 + (Math.sin(t * breath2 + 2) * 0.5 + 0.5) * 0.4 + Math.sin(t * ripple2 + 1) * rippleAmp;
+  const [d1, d2] = AMBIENT.drift;
   const layer = (dx: number, dy: number, pos: string, alpha: number, sz: number, op: number): React.CSSProperties => ({
     position: 'absolute',
     inset: -200,
@@ -178,19 +211,34 @@ export const SceneAmbient: React.FC<{ dark?: boolean }> = ({ dark }) => {
     background: `radial-gradient(${sz}% ${sz}% at ${pos}, rgba(${tint},${alpha}), transparent 70%)`,
   });
   return (
-    <AbsoluteFill style={{ overflow: 'hidden', pointerEvents: 'none' }}>
-      <div style={layer(Math.sin(t * 0.4) * 70, Math.cos(t * 0.33) * 48, '82% 22%', a1, 46, o1)} />
-      <div style={layer(Math.cos(t * 0.3) * 84, Math.sin(t * 0.38) * 56, '14% 86%', a2, 40, o2)} />
+    // data-decor: purely decorative ambient glow. Its inset:-200 layers overflow
+    // this overflow:hidden box by design, so Gate L's clip rule would otherwise
+    // flag it on every scene; the gate exempts decor ("watermarks may bleed").
+    // Probe-only attribute — changes no rendered pixels.
+    <AbsoluteFill data-decor style={{ overflow: 'hidden', pointerEvents: 'none' }}>
+      <div style={layer(Math.sin(t * d1.x) * d1.xAmp, Math.cos(t * d1.y) * d1.yAmp, d1.pos, a1, d1.size, o1)} />
+      <div style={layer(Math.cos(t * d2.x) * d2.xAmp, Math.sin(t * d2.y) * d2.yAmp, d2.pos, a2, d2.size, o2)} />
     </AbsoluteFill>
   );
 };
 
-/** Full-bleed warm-linen stage. Every lesson scene sits inside this. */
+/**
+ * Full-bleed warm-linen stage. Every lesson scene sits inside this. `justify`
+ * defaults to the universal vertical centering every scene relies on; a
+ * variable-height scene (AssignmentList, 2-6 tasks + optional callout) can
+ * opt into `flex-start` so its top edge is a FIXED distance from the frame
+ * top regardless of content length — centering a tall content block instead
+ * only spends half of any height cut on moving the top down (the other half
+ * is "wasted" there), making the bottom-clearance floor (CONTENT_SAFE_BOTTOM)
+ * unreachable for long lists (defect: a 5-task lesson eyebrow-on-watermark
+ * + callout-in-caption-band, wave-3b).
+ */
 export const SceneFrame: React.FC<{
   children: React.ReactNode;
   align?: 'center' | 'flex-start';
   paddingX?: number;
-}> = ({ children, align = 'flex-start', paddingX = 160 }) => (
+  justify?: 'center' | 'flex-start';
+}> = ({ children, align = 'flex-start', paddingX = 160, justify = 'center' }) => (
   <AbsoluteFill
     style={{
       backgroundColor: BRAND.colors.bgBase,
@@ -198,7 +246,7 @@ export const SceneFrame: React.FC<{
       color: BRAND.colors.text,
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: justify,
       alignItems: align,
       padding: `120px ${paddingX}px`,
       gap: 40,
@@ -208,6 +256,18 @@ export const SceneFrame: React.FC<{
     {children}
   </AbsoluteFill>
 );
+
+/**
+ * Row gap for a vertically-stacked list (task rows, checklist rows) inside a
+ * vertically-centered SceneFrame. A long list's total height can push its top
+ * above the chrome watermark (defect: AssignmentList eyebrow over the "Sample
+ * Academy" wordmark) or its bottom under the pagination/caption band (defect:
+ * long callouts flush against the dots). Tightening the gap
+ * for longer lists is safe whitespace compression — never font shrinking.
+ */
+export function listGap(itemCount: number, baseGap: number, tightGap: number): number {
+  return itemCount >= 4 ? tightGap : baseGap;
+}
 
 /**
  * Pure style builders — exported so the typography contract is unit-testable

@@ -22,7 +22,7 @@ export const Root: React.FC = () => {
       <Composition
         id="PlatformWalkthrough"
         component={PlatformWalkthrough}
-        durationInFrames={1800}
+        durationInFrames={2340}
         fps={BRAND.video.fps}
         width={BRAND.video.width}
         height={BRAND.video.height}

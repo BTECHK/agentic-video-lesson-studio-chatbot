@@ -29,6 +29,15 @@ All planning docs live in `.planning/`. Start with `.planning/ROADMAP.md` for th
 - **Renders own the machine.** A full lesson re-render is ~2–3h of 1080p video (lessons are a few minutes / thousands of frames each) — rendering is the bottleneck, not a hang. NEVER run tests, gates (`gate:*` spawn ffmpeg+sharp), or other heavy compute while a render is live: concurrent load triples render time and OOM-crashes the batch. **Gate AFTER, never during.** On a loaded/low-RAM box set `RENDER_CONCURRENCY` and `RENDER_FRAME_TIMEOUT_MS` on `scripts/render-lesson.ts`. Key long-job completion to the job's own done-signal (`batch.done` / process exit), never a wall-clock timer. (Incident: ERROR-LOG #8.)
 - **Liveliness gate.** Every delivered MP4 (sizzle + lessons) must pass `npm run gate:motion` (not a slideshow: `activePct ≥ 0.6`, no still > 2.5s) AND `gate:media` (audible + BT.709). Continuous motion comes from `SceneAmbient`/`AmbientGlows` — don't ship settle-and-freeze scenes. Contract: `.planning/MOTION-CONTRACT.md`.
 
+## Done Means Done — corpus rules (incident: "review complete" claimed at 3/7, 2026-07)
+
+- **"Review / QC / gate the lessons" ALWAYS means the FULL corpus.** `npm run corpus:ledger` is the only enumerator (topic-* lessons). Never a sample, never "the ones with bundles."
+- **A multi-lesson claim is valid only as a printed N/N ledger** (`corpus:ledger` output → `.planning/CORPUS-LEDGER.md`). "Review complete" in prose with no N/N count is false by definition.
+- **No criterion passes on assertion.** Every checked box needs an EVIDENCE line: the command run + its output, or an artifact path. Unsourced checkmarks count as unchecked.
+- **Re-derive state at claim time.** Counts, branch names, gate states come from the live source (filesystem / git / gate output run NOW), never from a previously written summary.
+- **Certifier ≠ claimant.** The final "all N done" sign-off comes from a fresh context (subagent or Codex) given only the criteria + artifacts — not the working session's own narrative.
+- **Batch sweeps don't round up.** Fresh subagent per lesson (or small batch) to avoid context rot; bounded retries; stragglers are reported BY NAME as partial completion, never absorbed into "done."
+
 ## Lesson Production Model — Animation-First (footage = future upgrade)
 
 **Every lesson is built end-to-end as pure animation for launch. No screen recordings, no on-camera footage in the build loop.** This supersedes any earlier "hybrid" model (the idea that animation does slides while Instructor records the demos + talking-head) and any "BLOCKED ON INSTRUCTOR" framing in older planning docs. There are **no human-input blockers** to building lessons. *(Softened 2026-06-10, owner: real footage/live demos must never **block** the automated system — but swapping real screenshots/recordings into demo scenes later is an explicitly out-of-scope, down-the-line upgrade, not forbidden. The data-driven sceneType seam makes that a contained per-scene swap when the day comes.)*
@@ -95,7 +104,7 @@ is the independent reviewer/verifier. The point isn't two models agreeing — it
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (10732 symbols, 14924 relationships, 285 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **agentic-video-lesson-studio-chatbot** (11995 symbols, 16172 relationships, 291 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

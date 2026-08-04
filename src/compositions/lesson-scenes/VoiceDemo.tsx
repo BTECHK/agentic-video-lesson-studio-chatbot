@@ -7,6 +7,12 @@ import { MUTED, SceneFrame, Eyebrow, SceneTitle, SceneSub, SimDisclaimer, useGli
 import { TypeOn, PulseRing } from './primitives';
 
 const BAR_COUNT = 28;
+// A long spoken transcript (400+ chars, ~5+ wrapped lines at fontSize 28) can
+// otherwise push the card's bottom edge into the pagination band (defect:
+// last transcript line crowding/under the dots+counter). Past this
+// length the card tightens its own padding/gaps — whitespace only, never a
+// smaller transcript font.
+const LONG_TRANSCRIPT = 400;
 
 /**
  * `voice-demo` (v2) — a voice card (`bgCard`, radiusWindow, SHADOW.window)
@@ -14,9 +20,14 @@ const BAR_COUNT = 28;
  * frame), a mono timer (BRAND.font.mono), and the transcript typing in via
  * `TypeOn`. All motion settles within the first ~7s then holds.
  */
-export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
+export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as VoiceDemoContent;
   const card = useGlideIn(45, 30);
+  const long = c.transcript.length >= LONG_TRANSCRIPT;
+  const cardPad = long ? 24 : 36;
+  const cardGap = long ? 16 : 28;
+  const cardMarginTop = long ? 12 : 24;
+  const transcriptPad = long ? 16 : 24;
 
   // Transcript types between ~2.3s and ~4.5s (settled by the ~5s still).
   const { fps } = useVideoConfig();
@@ -36,8 +47,8 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
         style={{
           ...card,
           width: '100%',
-          marginTop: 24,
-          padding: 36,
+          marginTop: cardMarginTop,
+          padding: cardPad,
           backgroundColor: BRAND.colors.bgCard,
           border: `1px solid ${BRAND.colors.border}`,
           borderRadius: BRAND.radiusWindow,
@@ -45,7 +56,7 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
           boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
-          gap: 28,
+          gap: cardGap,
         }}
       >
         {/* Mic + waveform + timer row */}
@@ -53,11 +64,13 @@ export const VoiceDemo: React.FC<SceneComponentProps> = ({ scene }) => {
           <MicButton />
           <Waveform />
           <Timer />
-          <SimDisclaimer style={{ alignSelf: 'flex-start', flexShrink: 0 }} />
+          {showSimDisclaimer !== false && (
+            <SimDisclaimer style={{ alignSelf: 'flex-start', flexShrink: 0 }} />
+          )}
         </div>
 
         {/* Transcript section */}
-        <div style={{ borderTop: `1px solid ${BRAND.colors.border}`, paddingTop: 24 }}>
+        <div style={{ borderTop: `1px solid ${BRAND.colors.border}`, paddingTop: transcriptPad }}>
           <div
             style={{
               fontSize: 16,

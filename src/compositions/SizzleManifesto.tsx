@@ -375,18 +375,60 @@ export const Master: React.FC = () => {
   );
 };
 
-const TransformCol: React.FC<{ from: string; to: string; label: string; delay: number }> = ({ from, to, label, delay }) => {
-  const pop = usePopIn(delay + 16);
+/** VO-keyed reveal schedule (frames into the beat): each column arrives as the
+ *  voiceover reads it — "Automated" ~44.5s, "Repeatable" ~46s, "Gated" ~47.5s. */
+const COL_STARTS = [14, 59, 104];
+/** After the last spotlight, all three columns settle to an equal shaded state
+ *  under the tagline. */
+const COLS_SETTLE = 210;
+
+const TransformCol: React.FC<{ from: string; to: string; label: string; delay: number; focus: number }> = ({ from, to, label, delay, focus }) => {
+  const frame = useCurrentFrame();
+  // The active glow breathes — spotlight replaces the old Float bob as this
+  // beat's continuous-motion layer.
+  const glow = focus * (0.8 + 0.2 * Math.sin((frame / FPS) * 3.1));
   return (
-    <Glide delay={delay} fromY={20} style={{ flex: 1 }}>
+    <Glide
+      delay={delay}
+      fromY={20}
+      style={{
+        flex: 1,
+        position: 'relative',
+        opacity: 0.35 + 0.65 * focus,
+        transform: `scale(${0.97 + 0.05 * focus})`,
+        transformOrigin: 'left center',
+      }}
+    >
+      {/* Rose halo — the "comes into focus" light behind the active column. */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: -60,
+          borderRadius: 24,
+          background: `radial-gradient(60% 55% at 35% 45%, rgba(231,166,174,${0.16 * glow}), transparent 70%)`,
+        }}
+      />
       <Strike delay={delay + 6} color={ROSE} style={{ fontSize: 32, fontWeight: 500, color: 'rgba(242,237,232,0.45)' }}>
         {from}
       </Strike>
       <Glide delay={delay + 12} fromY={10} style={{ fontSize: 30, color: ROSE, margin: '8px 0 6px' }}>
         ↓
       </Glide>
-      {/* The payoff word pops in (easeOutBack-feel) after the old state is struck. */}
-      <div style={{ ...pop, fontFamily: playfairFamily, fontSize: 80, fontWeight: 600, color: ROSE, letterSpacing: '-0.01em', lineHeight: 1, transformOrigin: 'left' }}>
+      {/* The payoff word pops in (easeOutBack-feel) after the old state is struck,
+          then GLOWS while its column holds the spotlight. */}
+      <div
+        style={{
+          ...usePopIn(delay + 16),
+          fontFamily: playfairFamily,
+          fontSize: 80,
+          fontWeight: 600,
+          color: ROSE,
+          letterSpacing: '-0.01em',
+          lineHeight: 1,
+          transformOrigin: 'left',
+          textShadow: `0 0 ${34 * glow}px rgba(231,166,174,${0.55 * glow})`,
+        }}
+      >
         {to}
       </div>
       <Glide delay={delay + 22} fromY={12} style={{ fontSize: 20, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(242,237,232,0.5)', marginTop: 22 }}>
@@ -398,6 +440,19 @@ const TransformCol: React.FC<{ from: string; to: string; label: string; delay: n
 
 export const Transform: React.FC<{ sb?: SizzleStoryboard }> = ({ sb = SIZZLE }) => {
   const { cols, tagline } = sb.transform;
+  const local = useCurrentFrame();
+  const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
+  // Sequential spotlight: column i comes into focus as its payoff lands, shades
+  // back when the next takes the foreground, and everyone equalizes at settle.
+  const focusOf = (i: number): number => {
+    const up = interpolate(local, [COL_STARTS[i] + 10, COL_STARTS[i] + 26], [0, 1], clamp);
+    const down =
+      i < COL_STARTS.length - 1
+        ? interpolate(local, [COL_STARTS[i + 1] + 10, COL_STARTS[i + 1] + 26], [1, 0.12], clamp)
+        : 1;
+    const equalize = interpolate(local, [COLS_SETTLE, COLS_SETTLE + 30], [0, 1], clamp);
+    return up * down * (1 - equalize) + 0.55 * up * equalize;
+  };
   return (
     <AbsoluteFill style={{ background: DARK, padding: `0 ${MARGIN}px`, justifyContent: 'center' }}>
       <AmbientGlows dark />
@@ -409,15 +464,14 @@ export const Transform: React.FC<{ sb?: SizzleStoryboard }> = ({ sb = SIZZLE }) 
         {/* 3 columns — gap tightened from 90 to fit the restored 3rd column. */}
         <div style={{ display: 'flex', gap: 56 }}>
           {cols.map((c, i) => (
-            <Float key={i} i={i * 2} amp={11} speed={0.85} style={{ flex: 1 }}>
-              <TransformCol from={c.from} to={c.to} label={c.label} delay={10 + i * 10} />
-            </Float>
+            <TransformCol key={i} from={c.from} to={c.to} label={c.label} delay={COL_STARTS[i]} focus={focusOf(i)} />
           ))}
         </div>
       </div>
       {/* Closing tagline — legible linen line under the columns, `*…*`
-          emphasis in ROSE (crimson would be too dark on charcoal). */}
-      <Glide delay={40} fromY={16} style={{ marginTop: 44, maxWidth: 1400, alignSelf: 'center', textAlign: 'center', fontSize: 28, fontWeight: 600, lineHeight: 1.35, letterSpacing: '-0.01em', color: '#F2EDE8' }}>
+          emphasis in ROSE (crimson would be too dark on charcoal). Lands as the
+          VO reaches it (~48.5s), after the three spotlights have played. */}
+      <Glide delay={150} fromY={16} style={{ marginTop: 44, maxWidth: 1400, alignSelf: 'center', textAlign: 'center', fontSize: 28, fontWeight: 600, lineHeight: 1.35, letterSpacing: '-0.01em', color: '#F2EDE8' }}>
         {renderRoseAccented(tagline)}
       </Glide>
     </AbsoluteFill>

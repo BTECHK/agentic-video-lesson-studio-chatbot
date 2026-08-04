@@ -16,8 +16,8 @@ const toolFiles = readdirSync(toolsDir).filter((f) => f.endsWith('.json'));
 const sourceFiles = readdirSync(sourcesDir).filter((f) => f.endsWith('.json'));
 
 describe('Tool file validation', () => {
-  it('should have exactly 12 tool files', () => {
-    expect(toolFiles).toHaveLength(12);
+  it('should have exactly 14 tool files', () => {
+    expect(toolFiles).toHaveLength(14);
   });
 
   for (const file of toolFiles) {

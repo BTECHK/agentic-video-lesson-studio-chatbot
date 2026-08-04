@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ScreenFlowContent } from './content-types';
-import { BRAND, SHADOW } from '../../brand/tokens';
+import { BRAND, SHADOW, MOTION } from '../../brand/tokens';
 import {
   MUTED,
   HAIRLINE,
@@ -15,6 +15,44 @@ import {
   SimDisclaimer,
 } from './shared';
 
+/**
+ * Countdown atom's frame -> remaining-seconds mapping (watch-gate fix:
+ * "Implement a real countdown atom instead of the text
+ * description"). Frame-driven and deterministic — no wall clock, no React
+ * state timers. `countdownSeconds` is the phase length the step represents
+ * (e.g. 60 for a first pause, 30 for a faster second one); the
+ * sweep from that value to 0 is compressed into the step's own dwell window
+ * — a stylized accelerated tick, not 60 real seconds of video.
+ *
+ * Mirrors the `hideUntilActive` render gate (dbe7d75): returns `null` before
+ * the step is active so no ticking value leaks ahead of its own beat, and
+ * freezes at 0 once the step is past (never negative, never resumes).
+ */
+export function countdownSecondsRemaining(
+  frame: number,
+  stepStartFrame: number,
+  stepDurationFrames: number,
+  countdownSeconds: number,
+  isActive: boolean,
+  isPast: boolean,
+): number | null {
+  if (isPast) return 0;
+  if (!isActive) return null;
+  const progress = Math.min(
+    Math.max((frame - stepStartFrame) / Math.max(stepDurationFrames, 1), 0),
+    1,
+  );
+  return Math.max(0, Math.ceil(countdownSeconds * (1 - progress)));
+}
+
+/** mm:ss display — matches VoiceDemo's mono recording Timer. */
+export function formatCountdown(totalSeconds: number): string {
+  const s = Math.max(0, Math.round(totalSeconds));
+  const mm = String(Math.floor(s / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
 // Extra frames added per action type on top of `dwell * fps`.
 function actionExtra(action: string, typedText: string | undefined): number {
   if (action === 'click') return 12;
@@ -23,6 +61,22 @@ function actionExtra(action: string, typedText: string | undefined): number {
   if (action === 'reveal') return 8;
   return 0;
 }
+
+// 5+ steps otherwise stack past the frame bottom / under the caption band
+// (defect: a bonus scene reveal stack clipped + its last badge
+// card overlapping caption words). Tightening block/panel whitespace is
+// whitespace-only — never smaller step text. Shared by FullPanel (below) and
+// the split-layout PreviewPanel/RevealBlock.
+const LONG_STEP_LIST = 5;
+
+// 8+ steps in a `full`-layout FullPanel — where ALL steps stay mounted
+// simultaneously regardless of the current playback frame — still overflow
+// past the LONG_STEP_LIST compaction alone (defect: a full-layout scene, 8
+// steps, its last row overlapping the pagination scene-counter by 18x14px).
+// One tier deeper, FullPanel only: no PreviewPanel/RevealBlock scene in the
+// corpus reaches this count (max reveal-only stack is 5, already covered by
+// LONG_STEP_LIST).
+const VERY_LONG_STEP_LIST = 8;
 
 /**
  * `screen-flow` — an animated mock browser/desktop window that walks through a
@@ -34,7 +88,7 @@ function actionExtra(action: string, typedText: string | undefined): number {
  * screenshot. The window chrome is generic cartoon chrome; no vendor logos,
  * colors, or proprietary UI elements are reproduced.
  */
-export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene }) => {
+export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as ScreenFlowContent;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -103,6 +157,7 @@ export const ScreenFlow: React.FC<SceneComponentProps> = ({ scene }) => {
           stepStartFrames={stepStartFrames}
           stepDurations={stepDurations}
           durationInFrames={durationInFrames}
+          showSimDisclaimer={showSimDisclaimer}
         />
       </div>
 
@@ -134,6 +189,7 @@ interface MockBrowserWindowProps {
   stepStartFrames: number[];
   stepDurations: number[];
   durationInFrames: number;
+  showSimDisclaimer?: boolean;
 }
 
 const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
@@ -144,8 +200,10 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
   stepStartFrames,
   stepDurations,
   durationInFrames,
+  showSimDisclaimer,
 }) => {
   const leftBg = c.fidelity === 'hybrid' ? 'rgba(28,28,28,0.05)' : BRAND.colors.bgCard;
+  const long = c.steps.length >= LONG_STEP_LIST;
 
   return (
     <div style={{ width: '100%' }}>
@@ -188,7 +246,7 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
         </div>
         {/* Honesty chip baked into the chrome — every screen-flow inherits it
             regardless of whether the content sets `caption`. */}
-        <SimDisclaimer />
+        {showSimDisclaimer !== false && <SimDisclaimer />}
       </div>
 
       {/* Body */}
@@ -221,17 +279,24 @@ const MockBrowserWindow: React.FC<MockBrowserWindowProps> = ({
               style={{
                 flex: 1,
                 backgroundColor: BRAND.colors.bgCard,
-                padding: 24,
+                padding: long ? 16 : 24,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 16,
+                gap: long ? 8 : 16,
               }}
             >
-              <PreviewPanel c={c} frame={frame} fps={fps} stepStartFrames={stepStartFrames} durationInFrames={durationInFrames} />
+              <PreviewPanel c={c} frame={frame} fps={fps} stepStartFrames={stepStartFrames} durationInFrames={durationInFrames} long={long} />
             </div>
           </>
         ) : (
-          <FullPanel c={c} frame={frame} fps={fps} activeStep={activeStep} stepStartFrames={stepStartFrames} />
+          <FullPanel
+            c={c}
+            frame={frame}
+            fps={fps}
+            activeStep={activeStep}
+            stepStartFrames={stepStartFrames}
+            stepDurations={stepDurations}
+          />
         )}
 
         {/* Cursor overlay */}
@@ -265,6 +330,47 @@ interface PanelProps {
 const FormPanel: React.FC<PanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
   // Only show fields for 'type' steps
   const typeSteps = c.steps.filter((s) => s.action === 'type');
+  const hasClickStep = c.steps.some((s) => s.action === 'click');
+
+  // A split flow with neither 'type' nor 'click' steps (e.g. a code-editor
+  // scene that's all navigate/reveal) left this pane permanently blank — no
+  // rendering branch admitted those actions. Fall back to the same abstract
+  // row treatment used for click steps below, so the editor/file chrome
+  // still carries progressive content that tracks the reveal steps the
+  // right pane narrates.
+  if (typeSteps.length === 0 && !hasClickStep) {
+    return (
+      <>
+        {c.steps.map((step, stepIdx) => {
+          const isActive = activeStep === stepIdx;
+          const isPast = activeStep > stepIdx;
+          return (
+            <div
+              key={step.id}
+              style={{
+                borderRadius: BRAND.radius,
+                padding: '10px 14px',
+                fontSize: 18,
+                backgroundColor: isActive
+                  ? BRAND.colors.accentSoft
+                  : isPast
+                  ? 'rgba(28,28,28,0.04)'
+                  : BRAND.colors.bgBase,
+                border: isActive
+                  ? `1px solid ${BRAND.colors.accent}`
+                  : `1px solid ${BRAND.colors.border}`,
+                color: isActive ? BRAND.colors.accent : BRAND.colors.text,
+                fontWeight: isActive ? BRAND.font.weights.bold : BRAND.font.weights.regular,
+                boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
+              }}
+            >
+              {step.label ?? step.target}
+            </div>
+          );
+        })}
+      </>
+    );
+  }
 
   return (
     <>
@@ -363,9 +469,10 @@ interface PreviewPanelProps {
   fps: number;
   stepStartFrames: number[];
   durationInFrames: number;
+  long?: boolean;
 }
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames, long }) => {
   const revealSteps = c.steps
     .map((step, i) => ({ step, i }))
     .filter(({ step }) => step.action === 'reveal');
@@ -380,7 +487,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ c, stepStartFrames }) => {
   return (
     <>
       {revealSteps.map(({ step, i }) => (
-        <RevealBlock key={step.id} step={step} delay={stepStartFrames[i] ?? 0} />
+        <RevealBlock key={step.id} step={step} delay={stepStartFrames[i] ?? 0} long={long} />
       ))}
     </>
   );
@@ -415,14 +522,19 @@ const AppliedState: React.FC = () => {
   );
 };
 
-const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: number }> = ({
+const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: number; long?: boolean }> = ({
   step,
   delay,
+  long,
 }) => {
   const pop = usePopIn(delay);
   // Styled as a finished generated output — accent rule + 'Generated' kicker +
   // the result text as readable content, then a couple of faint body lines — so
   // it reads as produced output, not a skeleton with a developer note under it.
+  // `long` (5+ reveal steps stacked in one preview pane) drops the two filler
+  // body lines and tightens padding/gap — whitespace-only, never smaller text
+  // — so the stack fits above the caption band instead of pushing its last
+  // block into it (see LONG_STEP_LIST).
   return (
     <div
       style={{
@@ -431,10 +543,10 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
         border: `1px solid ${BRAND.colors.border}`,
         borderLeft: `3px solid ${BRAND.colors.accent}`,
         backgroundColor: BRAND.colors.bgCard,
-        padding: '16px 18px',
+        padding: long ? '10px 12px' : '16px 18px',
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
+        gap: long ? 6 : 10,
         boxShadow: SHADOW.card,
       }}
     >
@@ -462,8 +574,8 @@ const RevealBlock: React.FC<{ step: ScreenFlowContent['steps'][number]; delay: n
       >
         {step.uiState}
       </div>
-      <div style={{ height: 9, width: '88%', borderRadius: 4, backgroundColor: HAIRLINE }} />
-      <div style={{ height: 9, width: '72%', borderRadius: 4, backgroundColor: HAIRLINE }} />
+      {!long && <div style={{ height: 9, width: '88%', borderRadius: 4, backgroundColor: HAIRLINE }} />}
+      {!long && <div style={{ height: 9, width: '72%', borderRadius: 4, backgroundColor: HAIRLINE }} />}
     </div>
   );
 };
@@ -478,17 +590,23 @@ interface FullPanelProps {
   fps: number;
   activeStep: number;
   stepStartFrames: number[];
+  stepDurations: number[];
 }
 
-const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames }) => {
+const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames, stepDurations }) => {
+  const long = c.steps.length >= LONG_STEP_LIST;
+  const veryLong = c.steps.length >= VERY_LONG_STEP_LIST;
+  const panelPad = veryLong ? 12 : long ? 16 : 24;
+  const listGap = veryLong ? 4 : long ? 6 : 12;
+  const rowPad = veryLong ? '6px 16px' : long ? '8px 16px' : '12px 16px';
   return (
     <div
       style={{
         flex: 1,
-        padding: 24,
+        padding: panelPad,
         display: 'flex',
         flexDirection: 'column',
-        gap: 12,
+        gap: listGap,
       }}
     >
       {c.steps.map((step, i) => {
@@ -519,6 +637,28 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
           displayText = (step.typedText ?? '').slice(0, charsVisible) || step.uiState;
         }
 
+        // Answer-reveal rows (`hideUntilActive`) stay blank until their own
+        // step is reached — FullPanel otherwise keeps every row's text
+        // mounted (just dimmed) regardless of playback frame, which leaks an
+        // interactive beat's answer before the pause (Gate C fix).
+        const hideBody = step.hideUntilActive && !isActive && !isPast;
+
+        // Countdown rows render a live ticking mm:ss atom instead of the
+        // step's `uiState` prose (watch-gate fix). `countdownSecondsRemaining`
+        // already gates visibility to isActive/isPast, so no value is ever
+        // shown ahead of this step's own beat.
+        const countdownRemaining =
+          step.countdownSeconds !== undefined
+            ? countdownSecondsRemaining(
+                frame,
+                stepStartF,
+                stepDurations[i] ?? 1,
+                step.countdownSeconds,
+                isActive,
+                isPast,
+              )
+            : null;
+
         return (
           <div
             key={step.id}
@@ -528,7 +668,7 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               border: isActive
                 ? `1px solid ${BRAND.colors.accent}`
                 : `1px solid ${BRAND.colors.border}`,
-              padding: '12px 16px',
+              padding: rowPad,
               backgroundColor: isActive ? BRAND.colors.accentSoft : BRAND.colors.bgCard,
               display: 'flex',
               flexDirection: 'column',
@@ -549,7 +689,17 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               {step.label ?? step.target}
             </div>
             <div style={{ fontSize: 19, color: BRAND.colors.text, lineHeight: 1.4 }}>
-              {displayText}
+              {step.countdownSeconds !== undefined ? (
+                countdownRemaining !== null ? (
+                  <CountdownAtom secondsRemaining={countdownRemaining} />
+                ) : (
+                  ' '
+                )
+              ) : hideBody ? (
+                ' '
+              ) : (
+                displayText
+              )}
             </div>
           </div>
         );
@@ -557,6 +707,21 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
     </div>
   );
 };
+
+/** Live mm:ss countdown digits -- mirrors VoiceDemo's mono recording Timer. */
+const CountdownAtom: React.FC<{ secondsRemaining: number }> = ({ secondsRemaining }) => (
+  <div
+    style={{
+      fontFamily: BRAND.font.mono,
+      fontSize: 30,
+      fontWeight: BRAND.font.weights.bold,
+      color: BRAND.colors.accent,
+      fontVariantNumeric: 'tabular-nums',
+    }}
+  >
+    {formatCountdown(secondsRemaining)}
+  </div>
+);
 
 // ---------------------------------------------------------------------------
 // MockCursor — spring-glide position, dwell, click pulse, tooltip pill
@@ -585,7 +750,7 @@ const MockCursor: React.FC<MockCursorProps> = ({ c, frame, fps, activeStep, step
   const currPos = getPos(activeStep);
   const stepStart = stepStartFrames[activeStep] ?? 0;
 
-  // Spring glide from prev to curr position
+  // Spring glide from prev to curr position — single-use cursor-travel config.
   const glideProgress = spring({
     frame: frame - stepStart,
     fps,
@@ -601,16 +766,18 @@ const MockCursor: React.FC<MockCursorProps> = ({ c, frame, fps, activeStep, step
   const pulseStartFrame = stepStart + dwellFrames;
   const pulseFrame = frame - pulseStartFrame;
   const pulseProgress = pulseFrame >= 0
+    // Single-use click-ring pulse config (fast, springy overshoot).
     ? spring({ frame: pulseFrame, fps, config: { damping: 10, stiffness: 80, mass: 0.5 } })
     : 0;
   const showPulse = currentStep?.action === 'click' && pulseFrame >= 0 && pulseFrame < 20;
   const pulseOpacity = showPulse ? interpolate(pulseProgress, [0, 1], [1, 0], { extrapolateRight: 'clamp' }) : 0;
   const pulseScale = interpolate(pulseProgress, [0, 1], [0.5, 2.5], { extrapolateRight: 'clamp' });
 
-  // Tooltip pill: fades in at step start, fades out just before click pulse
-  const tooltipInProgress = spring({ frame: frame - stepStart, fps, config: { damping: 22, mass: 0.5 } });
+  // Tooltip pill: fades in at step start, fades out just before click pulse.
+  // Both fades share one preset (MOTION.cursorTooltip) — the only 2+-site config.
+  const tooltipInProgress = spring({ frame: frame - stepStart, fps, config: MOTION.cursorTooltip });
   const tooltipOutProgress = pulseFrame >= 0
-    ? spring({ frame: pulseFrame, fps, config: { damping: 22, mass: 0.5 } })
+    ? spring({ frame: pulseFrame, fps, config: MOTION.cursorTooltip })
     : 0;
   const tooltipOpacity = tooltipInProgress * (1 - tooltipOutProgress);
 

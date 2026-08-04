@@ -2,7 +2,8 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import type { NarrationWord } from '../../../content/schemas/lesson';
 import { narrationToPages } from '../../lib/captions';
-import { fontFamily, BRAND, MUTED } from './shared';
+import { fontFamily, BRAND } from './shared';
+import { CAPTION } from '../../brand/tokens';
 
 /**
  * Bottom inset of the caption chip. Shared with LessonChrome so the chrome
@@ -17,6 +18,12 @@ export const CAPTION_BOTTOM = 72;
  * its own sequence start. Renders one TikTok-style page at a time with the
  * spoken word highlighted in the brand accent — restrained, on the warm linen
  * base, not a karaoke overlay.
+ *
+ * Legibility: inactive words previously used MUTED (0.62 charcoal) on a
+ * 0.55-alpha chip — ~4.5:1 and washed out to the point of reading as broken
+ * text (hail-mary audit). Full-charcoal CAPTION.ink on the stronger
+ * CAPTION.chipAlpha backing is now AAA-class (>=7:1); the active-word accent
+ * still clears 4.5:1 over the same chip.
  */
 export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: number }> = ({
   words,
@@ -34,7 +41,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
 
   // Gentle fade as each page enters.
   const intoPage = nowMs - page.startMs;
-  const opacity = interpolate(intoPage, [0, 140], [0, 1], {
+  const opacity = interpolate(intoPage, [0, CAPTION.fadeMs], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -58,7 +65,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
           padding: '8px 26px',
           // Borderless, soft frosted backing — reads as a clean subtitle, not a
           // boxed UI chip. Blur keeps it legible over content without a hard edge.
-          backgroundColor: 'rgba(237,232,227,0.55)',
+          backgroundColor: `rgba(237,232,227,${CAPTION.chipAlpha})`, // = BRAND.colors.bgBase
           borderRadius: BRAND.radius,
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
@@ -76,7 +83,7 @@ export const LessonCaptions: React.FC<{ words: NarrationWord[]; combineMs?: numb
             <span
               key={`${tok.fromMs}-${i}`}
               style={{
-                color: active ? BRAND.colors.accent : MUTED,
+                color: active ? BRAND.colors.accent : CAPTION.ink,
                 transition: 'color 80ms linear',
               }}
             >

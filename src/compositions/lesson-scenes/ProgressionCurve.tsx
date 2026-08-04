@@ -2,12 +2,13 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ProgressionCurveContent } from './content-types';
-import { BRAND } from '../../brand/tokens';
+import { BRAND, MOTION, SAFE_AREA } from '../../brand/tokens';
 import {
   SceneFrame,
   eyebrowStyle,
   sceneTitleStyle,
   useGlideIn,
+  glideProgress,
   renderAccented,
 } from './shared';
 
@@ -31,7 +32,10 @@ import {
 const CANVAS_W = 1920;
 const CANVAS_H = 1080;
 const X_FIRST = 175;
-const X_LAST = 1730;
+// Pulled in from SAFE_AREA.x so the last chip (widest labels, e.g. a long
+// stage label at ~192px wide) clears the right safe inset — the reference's
+// 1730 put its right edge at 1826, 2px past the 1824 boundary.
+const X_LAST = 1920 - SAFE_AREA.x - 96 - 8;
 const BASELINE = 885; // x-axis y
 const Y_TOP = 240; // top of the y-axis
 const PLOT_TOP = 250; // highest node y in the reference
@@ -130,11 +134,9 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
   });
 
   // 3. Marker: fades in after the chips, then HOLDS with a slow pulse + idle drift.
-  const markerIn = interpolate(frame, [78, 96], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-    easing: Easing.out(Easing.cubic),
-  });
+  // House eased glide-in (cubic-out, dur = MOTION.glide.dur) — same numbers as the
+  // former inline interpolate([78,96]), routed through the shared helper.
+  const markerIn = glideProgress(frame, 78);
   const mx = 520;
   const my = 720; // early/relatable zone — NOT pinned to a node
   const pulse = 1 + Math.sin(t * 2.4) * 0.06; // slow ring pulse
@@ -253,10 +255,11 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
         {/* Stage chips — stepping UP the curve in a stagger (outBack pop) */}
         {nodes.map((node, i) => {
           const cy = node.chip === 'above' ? node.y - CHIP_OFFSET : node.y + CHIP_OFFSET;
-          const p = interpolate(frame, [48 + i * 6, 48 + i * 6 + 16], [0, 1], {
+          // outBack pop — the house pop shape (MOTION.pop): same dur/overshoot as usePopIn.
+          const p = interpolate(frame, [48 + i * 6, 48 + i * 6 + MOTION.pop.dur], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
-            easing: Easing.out(Easing.back(1.6)),
+            easing: Easing.out(Easing.back(MOTION.pop.overshoot)),
           });
           return (
             <div
@@ -309,9 +312,9 @@ export const ProgressionCurve: React.FC<SceneComponentProps> = ({ scene }) => {
               top: last.y - 120,
               transform: `translate(-50%, -50%) scale(${interpolate(
                 frame,
-                [48 + nodes.length * 6, 48 + nodes.length * 6 + 16],
+                [48 + nodes.length * 6, 48 + nodes.length * 6 + MOTION.pop.dur],
                 [0.6, 1],
-                { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.6)) },
+                { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.back(MOTION.pop.overshoot)) },
               )})`,
               opacity: interpolate(frame, [48 + nodes.length * 6, 48 + nodes.length * 6 + 10], [0, 1], {
                 extrapolateLeft: 'clamp',

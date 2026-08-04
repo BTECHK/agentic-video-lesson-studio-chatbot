@@ -290,6 +290,15 @@ We use **webhook** mode (scale-to-zero would kill an idle long-poller). The serv
 (`PUBLIC_URL`) to register the webhook, but the URL only exists after the first deploy — so deploy once,
 read the URL, then update.
 
+> **Deploy posture.** Telegram's webhook caller cannot attach a Google OIDC identity token, so an
+> IAM-locked service (`--no-allow-unauthenticated`) would 403 Telegram's own POSTs — the bot could
+> never receive a message. The authorization boundary lives **in the app**, not in IAM:
+> `--allow-unauthenticated` (public invoker, so Telegram + browsers can reach it) **plus** the
+> timing-safe `X-Telegram-Bot-Api-Secret-Token` header check (403 on missing/mismatch; the secret
+> rides Telegram's registered header, never the URL) **plus** `TELEGRAM_ALLOWED_CHAT_IDS` set in prod
+> (only approved chats are answered) **plus** the per-IP and global daily rate caps. That is the
+> intended posture, not a gap.
+
 **8a. First deploy** (replace `PROJECT_ID`):
 
 ```powershell

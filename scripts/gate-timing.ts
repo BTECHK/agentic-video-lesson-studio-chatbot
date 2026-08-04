@@ -65,8 +65,8 @@ runMain('gate:timing', async (log) => {
     return 1;
   }
 
-  // Locate MP4
-  const mp4Path = path.join(process.cwd(), 'out', `${lessonId}.mp4`);
+  // Locate MP4 — honors RENDER_OUT_DIR like render-lesson.ts (renders live in out/v3)
+  const mp4Path = path.join(process.cwd(), process.env.RENDER_OUT_DIR ?? 'out', `${lessonId}.mp4`);
   if (!fs.existsSync(mp4Path)) {
     log.error(`MP4 not found: ${mp4Path}`);
     return 1;

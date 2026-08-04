@@ -14,6 +14,7 @@ export const LessonInfoSchema = z.object({
   module: z.string(),
   duration: z.number(),
   brandLabel: z.string().optional(),
+  motionProfile: z.enum(['v3', 'v4']).optional(),
 });
 
 export const NarrationWordSchema = z.object({

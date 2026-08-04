@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import { BRAND, SHADOW } from '../../brand/tokens';
-import { fontFamily, MUTED } from '../lesson-scenes/shared';
+import { fontFamily, MUTED, SceneAmbient } from '../lesson-scenes/shared';
 
 const ACCENT = BRAND.colors.accent;
 const TEXT = BRAND.colors.text;
@@ -64,22 +64,30 @@ export const ContentViewer: React.FC = () => {
   const showDetail = local >= 210;
   const detailTransition = spring({ frame: local - 210, fps, config: { damping: 16, mass: 0.6 } });
 
-  // Cursor simulation
+  // Cursor simulation. After the click it HOLDS on the Claude card and fades
+  // out in place — it must never drift off the window into empty linen
+  // (the QA-flagged "floats into space" bug).
   const cursorX =
     local < 130
       ? interpolate(local, [100, 128], [500, 348], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-      : local < 210
-      ? interpolate(local, [150, 200], [348, 300], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-      : interpolate(local, [210, 240], [300, -100], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+      : interpolate(local, [150, 200], [348, 300], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   const cursorY =
     local < 130
       ? interpolate(local, [100, 128], [350, 140], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-      : local < 210
-      ? interpolate(local, [150, 200], [140, 280], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-      : interpolate(local, [210, 240], [280, -100], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+      : interpolate(local, [150, 200], [140, 280], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  const showCursor = local >= 100 && local < 240;
+  // Click feedback on the Claude card, then fade where it clicked.
+  const cursorClickScale =
+    local >= 198 && local < 212
+      ? interpolate(local, [198, 205, 212], [1, 0.78, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 1;
+  const cursorOpacity =
+    local >= 210
+      ? interpolate(local, [210, 232], [0.7, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 0.7;
+
+  const showCursor = local >= 100 && local < 232;
 
   const filterClickPulse =
     local >= 125 && local < 140
@@ -116,11 +124,13 @@ export const ContentViewer: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: '40px 60px',
         position: 'relative',
         fontFamily,
       }}
     >
+      <SceneAmbient />
       {/* Floating window */}
       <div
         style={{
@@ -456,18 +466,20 @@ export const ContentViewer: React.FC = () => {
         </div>
       </div>
 
-      {/* Animated cursor */}
+      {/* Animated cursor — window is vertically centered now (top 230, not 40),
+          so the overlay base shifts down by 190 to stay glued to the window. */}
       {showCursor && (
         <div
           style={{
             position: 'absolute',
             left: 460 + cursorX,
-            top: 200 + cursorY,
+            top: 390 + cursorY,
             width: 16,
             height: 16,
             borderRadius: '50%',
             backgroundColor: ACCENT,
-            opacity: 0.7,
+            opacity: cursorOpacity,
+            transform: `scale(${cursorClickScale})`,
             boxShadow: `0 0 12px ${ACCENT}60`,
             pointerEvents: 'none',
           }}

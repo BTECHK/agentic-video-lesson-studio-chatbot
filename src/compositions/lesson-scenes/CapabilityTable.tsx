@@ -110,6 +110,13 @@ export const CapabilityTable: React.FC<SceneComponentProps> = ({ scene }) => {
           style={{
             ...footnote,
             marginTop: 10,
+            // LessonChrome's pagination-dot strip sits at left:96, spanning up to
+            // ~96+180px depending on scene count (26px active dot + N-1 * 14px).
+            // A tall table (many rows) centers this footnote low enough to land in
+            // the dots' y-band; without clearance the dots print through the first
+            // word (an 8-row table, defect: Gate C watch-gate). 120px
+            // clears the strip for every current capability-table lesson (6/7/9 scenes).
+            marginLeft: 120,
             fontWeight: BRAND.font.weights.regular,
             fontSize: 22,
             fontStyle: 'italic',

@@ -9,6 +9,13 @@ import { MUTED, SceneFrame, Eyebrow, Glide, useGlideIn, usePopIn, renderAccented
  * `cover` — opening hero of every lesson. Eyebrow kicker, multi-line hero
  * title (each array entry is one line, `*word*` accented), sub-copy, and an
  * optional stat grid that counts up. Beats follow scene-catalog §cover.
+ *
+ * Per-topic cover VARIANTS were prototyped for v4 (accent bar, stat alignment,
+ * title width) but held back: variants 1-3 are content-height-unaware and
+ * overflow the frame for long titles (variant 3 narrows the title, wrapping it
+ * taller; with SceneFrame's vertical centering the column exceeds 1080 — Gate L
+ * fail on topic-1-lesson-1: title above top, stats below bottom). This single
+ * proven layout ships; a bounded, content-aware variant pass is a future revisit.
  */
 export const Cover: React.FC<SceneComponentProps> = ({ scene }) => {
   const c = scene.content as unknown as CoverContent;

@@ -12,15 +12,36 @@ agreeing.
 
 ## 0. The two models and the roles
 
-- **Claude Code = lead implementer + orchestrator.** The premium orchestrator model
-  (efficient-fable) keeps the hard calls. Subagents: `builder` (writes/fixes code,
-  ponytail style), `checker` (runs checks + captures proof artifacts). Drop subagents to
-  a cheaper tier to save budget.
+- **Claude Code = lead implementer + orchestrator.** The orchestrator keeps the hard
+  calls (decomposition, priority, reconciling subagent reports, final judgment).
+  Subagents: `builder` (writes/fixes code, ponytail style), `checker` (runs checks +
+  captures proof artifacts).
 - **Codex = independent reviewer + verifier.** A different model family, so it
   catches what a single model misses. Invoked via `codex exec` (read-only) at the
   gates. **Nothing pinned** — Codex uses its current best default per task (a strong
   reasoning model for reviews, a coding-optimized one when delegated) and delegates basic
   passes to cheaper models natively. Reach for higher reasoning effort on milestone audits.
+
+### Model tiering (updated 2026-07-05 — token-efficiency policy, OVERRIDES older "Fable orchestrates" framing)
+
+Default cheap, escalate only on evidence. Three tiers:
+
+- **Opus = orchestrator.** Runs the main loop: plans waves, dispatches/reconciles
+  subagents, owns priority and the gate verdicts, writes the specs and the recaps.
+  This is the default driver — not Fable.
+- **Sonnet = execution.** ALL `builder` and `checker` subagents run on Sonnet
+  (`model: 'sonnet'`), plus research/inventory/persona scans. This is where the bulk of
+  the tokens go, so it must be the cheapest tier that does the job. Only drop a *scan* to
+  Haiku when it is pure enumeration.
+- **Fable = reserved escalation, not the default.** Spend Fable ONLY on the genuinely
+  hard: a bug two Sonnet build↔check rounds couldn't crack, a subtle correctness/security
+  review Opus wants a stronger second read on, an architecture/algorithm call where a
+  wrong choice is expensive, or a final adversarial pass on high-risk work. Name the
+  reason when you escalate (log it). If Sonnet+Opus already resolved it, do NOT re-run on
+  Fable to "double-check" — that is the waste this policy exists to kill.
+
+Escalation ladder for a stuck item: Sonnet builder → Sonnet builder (fresh approach) →
+Opus reasons about the diagnosis itself → only then a Fable pass. Never start at Fable.
 
 Keep the writer and the certifier separate, AND keep them from sharing a model.
 The builder/checker split alone failed because both share Claude's blind spots;
@@ -181,5 +202,9 @@ completions; BLOCK or PASS."`); (4) final checkpoint commit — **do not push**;
 - **Hard deadline: 2026-06-21 10:00 local.** Check `date` between tasks; near it,
   finish/checkpoint the current task and run wrap-up so there is always a clean
   commit + recap.
-- **Tokens.** Claude token spend is fine; hanging is not — favor liveness. Codex
-  spend is the constrained one — gate it (section 7).
+- **Tokens (updated 2026-07-05).** Token budget is now a real constraint (owner
+  approaching plan limits). Spend the cheapest tier that does the job per the model
+  tiering in section 0: Sonnet does the volume, Opus orchestrates, Fable only on the hard
+  escalations named there. Still never hang — liveness beats frugality on a stall — but do
+  not burn Fable tokens on work Sonnet+Opus already closed, and do not re-run green work to
+  "make sure." Codex spend stays separately gated (section 7).

@@ -1,15 +1,5 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-const MODULE_TOPICS = [
-  { number: '01', title: 'Getting Started with AI Assistants' },
-  { number: '02', title: 'Picking the Right Assistant' },
-  { number: '03', title: 'Making the Assistant Yours' },
-  { number: '04', title: 'Checking the Output' },
-  { number: '05', title: 'Mapping a Repetitive Task' },
-];
+import { getMarketingTopics } from '@/lib/marketing-topics';
 
 const FEATURES = [
   {
@@ -48,16 +38,30 @@ const FEATURES = [
 ];
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Intentional mount-in trigger: drives the entrance fade/slide animation below.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  const moduleTopics = getMarketingTopics();
 
   return (
     <div style={{ minHeight: 'calc(100vh - 49px)', backgroundColor: 'var(--bg-base)' }}>
+      {/* Entrance animation — server-rendered, no client JS. */}
+      <style>{`
+        @keyframes marketing-rise {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes marketing-rise-lg {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes marketing-slide {
+          from { opacity: 0; transform: translateX(8px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes marketing-fade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
+
       {/* Hero */}
       <section
         style={{
@@ -68,9 +72,7 @@ export default function Home() {
       >
         <div
           style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? 'translateY(0)' : 'translateY(12px)',
-            transition: 'opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
+            animation: 'marketing-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both',
           }}
         >
           <p
@@ -126,9 +128,7 @@ export default function Home() {
       >
         <div
           style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s',
+            animation: 'marketing-rise-lg 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both',
           }}
         >
           <div
@@ -192,7 +192,7 @@ export default function Home() {
 
             {/* Topic list */}
             <div style={{ padding: '8px 0' }}>
-              {MODULE_TOPICS.map((topic, i) => (
+              {moduleTopics.map((topic, i) => (
                 <div
                   key={topic.number}
                   style={{
@@ -200,9 +200,7 @@ export default function Home() {
                     alignItems: 'baseline',
                     gap: 16,
                     padding: '12px 24px',
-                    opacity: mounted ? 1 : 0,
-                    transform: mounted ? 'translateX(0)' : 'translateX(8px)',
-                    transition: `opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1) ${0.3 + i * 0.06}s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) ${0.3 + i * 0.06}s`,
+                    animation: `marketing-slide 0.4s cubic-bezier(0.22, 1, 0.36, 1) ${0.3 + i * 0.06}s both`,
                   }}
                 >
                   <span
@@ -249,8 +247,7 @@ export default function Home() {
             textTransform: 'uppercase' as const,
             color: 'var(--text-muted)',
             marginBottom: 16,
-            opacity: mounted ? 1 : 0,
-            transition: 'opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s',
+            animation: 'marketing-fade 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both',
           }}
         >
           Explore the platform
@@ -274,17 +271,7 @@ export default function Home() {
                 borderRadius: 'var(--radius)',
                 textDecoration: 'none',
                 color: 'inherit',
-                transition: `border-color 0.2s, box-shadow 0.2s, opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${0.55 + i * 0.08}s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${0.55 + i * 0.08}s`,
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(12px)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent)';
-                e.currentTarget.style.boxShadow = '0 2px 12px rgba(139, 38, 53, 0.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border)';
-                e.currentTarget.style.boxShadow = 'none';
+                animation: `marketing-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${0.55 + i * 0.08}s both`,
               }}
             >
               <div style={{ color: 'var(--accent)', marginBottom: 14 }}>
@@ -323,8 +310,7 @@ export default function Home() {
           maxWidth: 960,
           margin: '0 auto',
           textAlign: 'center',
-          opacity: mounted ? 1 : 0,
-          transition: 'opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s',
+          animation: 'marketing-fade 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both',
         }}
       >
         <Link
@@ -341,13 +327,6 @@ export default function Home() {
             fontFamily: 'var(--font)',
             textDecoration: 'none',
             letterSpacing: '-0.01em',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--accent-hover)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--accent)';
           }}
         >
           Start Learning

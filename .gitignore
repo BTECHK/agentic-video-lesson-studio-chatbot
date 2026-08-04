@@ -92,3 +92,10 @@ claude-design-delta/claude-design-delta-upload/
 
 # Keyframe-review PNGs (regenerable via scripts/keyframes-review.ts; reviewed on Drive)
 artifacts/keyframes-review/
+agent-ops/overnight/HEARTBEAT
+agent-ops/overnight/*.diff
+agent-ops/overnight/*.log
+agent-ops/overnight/run-*.err.log
+
+# regenerable keyframe review output (186MB+ PNG dumps)
+artifacts/keyframes-review-*/

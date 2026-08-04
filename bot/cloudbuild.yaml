@@ -8,6 +8,18 @@
 # Run from the repo root (replace PROJECT_ID; us-central1 is the example region):
 #   gcloud builds submit --config bot/cloudbuild.yaml \
 #     --substitutions=_IMAGE=us-central1-docker.pkg.dev/PROJECT_ID/tutor/tutor-bot:latest .
+#
+# DEPLOY POSTURE (why the service is public-invoker, not IAM-locked):
+# Telegram's webhook caller cannot attach a Google OIDC identity token, so
+# `--no-allow-unauthenticated` would make Telegram's own POSTs 403 — the bot could
+# never receive a message. The authorization boundary is therefore in-app, not IAM:
+#   1. `--allow-unauthenticated` (public invoker) — Telegram + browsers must reach it.
+#   2. Header secret — every /telegram/webhook POST is auth'd by the timing-safe
+#      X-Telegram-Bot-Api-Secret-Token check in server.ts (403 on missing/mismatch;
+#      the secret rides Telegram's registered header, never the URL).
+#   3. TELEGRAM_ALLOWED_CHAT_IDS set in prod — only approved chats are answered.
+#   4. Per-IP + global daily rate caps (rate-limit.ts) — abuse/cost backstop.
+# See bot/README.md "Deploy posture" for the same summary in prose.
 steps:
   - name: gcr.io/cloud-builders/docker
     args: ['build', '-f', 'bot/Dockerfile', '-t', '${_IMAGE}', '.']

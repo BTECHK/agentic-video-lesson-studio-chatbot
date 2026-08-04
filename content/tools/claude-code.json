@@ -7,7 +7,7 @@
   "isPrimarySurface": false,
   "priority": "P0",
   "description": "Anthropic's agentic coding tool available across the Terminal CLI, VS Code/Cursor and JetBrains extensions, a Desktop app, and the web (claude.ai/code). Powered by Opus 4.8 and Sonnet 4.6 with 1M-token context, it reads, edits, and creates files across entire codebases with tool use, MCP server integration, hooks, background agents, and CI integrations.",
-  "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+  "url": "https://code.claude.com/docs/en/overview",
   "capabilities": {
     "writing-chat": {
       "category": "writing-chat",

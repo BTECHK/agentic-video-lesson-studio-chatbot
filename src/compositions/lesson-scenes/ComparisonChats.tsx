@@ -8,7 +8,12 @@ import { SceneFrame, Eyebrow, renderAccented, useGlideIn, MUTED, SimDisclaimer }
 import { TypeOn, Pinwheel, Tether } from './primitives';
 
 const ROW_W = 1680; // 1920 − 2×120 paddingX
-const WIN_H = 600;
+// 472 (was 600): with eyebrow+title+caption all present, the fixed-height card
+// row's bottom edge measured ~122px from the frame bottom at WIN_H=600 — inside
+// the LessonChrome dots/counter band (defect: composer "Ask anything…" row and
+// the crimson tether drawn through the pagination dots, 11 lessons). Shrunk so
+// the card bottom clears CONTENT_SAFE_BOTTOM in that worst case.
+const WIN_H = 472;
 const GAP = 28;
 
 /** Smooth wavy path connecting the bottom of each window — the tether. */
@@ -32,7 +37,7 @@ function tetherPath(n: number): string {
  * "same prompt → different voices" point physical. All motion settles in the
  * first ~7s; the scene then holds (narration runs long).
  */
-export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
+export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene, showSimDisclaimer }) => {
   const c = scene.content as unknown as ComparisonChatsContent;
   const title = useGlideIn(10, 22);
   const caption = useGlideIn(150, 16);
@@ -61,7 +66,9 @@ export const ComparisonChats: React.FC<SceneComponentProps> = ({ scene }) => {
       )}
 
       <div style={{ position: 'relative', width: ROW_W, height: WIN_H, marginTop: 8 }}>
-        <SimDisclaimer text={c.disclaimer} style={{ position: 'absolute', top: -34, right: 0 }} />
+        {showSimDisclaimer !== false && (
+          <SimDisclaimer text={c.disclaimer} style={{ position: 'absolute', top: -34, right: 0 }} />
+        )}
         <div style={{ display: 'flex', gap: GAP, width: '100%', height: '100%' }}>
           {c.tools.map((tool, i) => (
             <ChatWindow
@@ -144,7 +151,17 @@ const ChatWindow: React.FC<{
       </div>
 
       {/* body */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 18, padding: '22px 24px' }}>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 18,
+          padding: '22px 24px',
+        }}
+      >
         {/* prompt, as a centered neutral pill */}
         <div
           style={{

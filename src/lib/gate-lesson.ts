@@ -37,7 +37,8 @@ export function gatePaths(lessonId: string, cwd: string = process.cwd()): GatePa
   const reviewDir = path.join(lessonDir, 'review');
   const sensorsDir = path.join(reviewDir, '_sensors');
   return {
-    mp4: path.join(cwd, 'out', `${lessonId}.mp4`),
+    // Honors RENDER_OUT_DIR like render-lesson.ts (renders live in out/v3)
+    mp4: path.join(cwd, process.env.RENDER_OUT_DIR ?? 'out', `${lessonId}.mp4`),
     lessonDir,
     reviewDir,
     sensorsDir,

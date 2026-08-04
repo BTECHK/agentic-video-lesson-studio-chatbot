@@ -1,4 +1,5 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { timingSafeEqual } from 'node:crypto';
 import type { BrainDeps } from './brain.js';
 import { respond } from './brain.js';
 import { SessionStore } from './session.js';
@@ -45,11 +46,18 @@ function json(res: ServerResponse, code: number, body: unknown): void {
   res.end(JSON.stringify(body));
 }
 
+/** Constant-time string compare, length-guarded first (timingSafeEqual throws on
+ * mismatched lengths rather than returning false). */
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
+
 /** Build the HTTP handler. Routes:
  *   GET  /            → web chat test page (text-only rendering)
  *   GET  /healthz     → liveness
  *   POST /chat        → { message, sessionId } → grounded reply (browser testers)
- *   POST /telegram/<secret> → Telegram webhook
+ *   POST /telegram/webhook → Telegram webhook (auth via X-Telegram-Bot-Api-Secret-Token header only)
  */
 export function createApp(deps: ServerDeps) {
   const webSession = deps.webSession ?? new SessionStore();
@@ -105,10 +113,11 @@ export function createApp(deps: ServerDeps) {
       });
     }
 
-    if (req.method === 'POST' && deps.telegram && path === `/telegram/${deps.webhookSecret}`) {
-      // Verify Telegram's secret-token header too (defense in depth).
+    if (req.method === 'POST' && deps.telegram && path === '/telegram/webhook') {
+      // Fixed path; auth is ONLY the secret-token header (never the URL — URLs leak
+      // via logs/proxies/history). No secret configured = no valid caller, ever.
       const headerSecret = req.headers['x-telegram-bot-api-secret-token'];
-      if (deps.webhookSecret && headerSecret !== deps.webhookSecret) {
+      if (typeof headerSecret !== 'string' || !deps.webhookSecret || !safeEqual(headerSecret, deps.webhookSecret)) {
         return json(res, 403, { error: 'forbidden' });
       }
       const body = await readBody(req).catch(() => '');

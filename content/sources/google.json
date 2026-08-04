@@ -80,6 +80,11 @@
       "id": "google-gemini-release-notes",
       "url": "https://gemini.google/release-notes/",
       "title": "Gemini App Release Notes"
+    },
+    {
+      "id": "workspace-studio-product-page",
+      "url": "https://workspace.google.com/studio/",
+      "title": "Google Workspace Studio — Product Page"
     }
   ]
 }

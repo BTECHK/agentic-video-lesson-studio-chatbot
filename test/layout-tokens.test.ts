@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { BRAND, LEADING, SAFE_AREA, SPACE_BASE, space, SHADOW } from '../src/brand/tokens';
-import { sceneTitleStyle, sceneSubStyle, eyebrowStyle } from '../src/compositions/lesson-scenes/shared';
+import { BRAND, LEADING, SAFE_AREA, CONTENT_SAFE_BOTTOM, SPACE_BASE, space, SHADOW } from '../src/brand/tokens';
+import { sceneTitleStyle, sceneSubStyle, eyebrowStyle, listGap } from '../src/compositions/lesson-scenes/shared';
 import { quoteStyles, QUOTE_MARKS } from '../src/compositions/lesson-scenes/QuoteCard';
+import { CAPTION_BOTTOM } from '../src/compositions/lesson-scenes/LessonCaptions';
+import { densityTier } from '../src/compositions/lesson-scenes/AssignmentList';
 
 // #72 — systematic typography/spacing/safe-area contracts. These are the
 // design-system floors that prevented defects (title line collision, glyph
@@ -32,6 +34,96 @@ describe('safe area', () => {
     expect(SAFE_AREA.y).toBeGreaterThan(0);
     expect(SAFE_AREA.x * 2).toBeLessThan(BRAND.video.width);
     expect(SAFE_AREA.y * 2).toBeLessThan(BRAND.video.height);
+  });
+});
+
+// Shared-layout-collisions fix wave: scene content (card stacks, checklists,
+// transcripts) invading the bottom chrome band (pagination dots, scene
+// counter, caption chip) — 11+ lessons. Locks the clearance so it can't
+// silently drift back down to CHROME_BOTTOM (or below).
+describe('content-safe bottom clearance', () => {
+  it('clears the LessonChrome pagination/counter row with a real margin', () => {
+    const CHROME_BOTTOM = CAPTION_BOTTOM + 90; // mirrors LessonChrome.tsx
+    // Chrome row's own visual top edge (counter text, ~16px font, ~1.2 line-height).
+    const chromeRowTop = CHROME_BOTTOM + 16 * 1.2;
+    expect(CONTENT_SAFE_BOTTOM).toBeGreaterThan(chromeRowTop);
+  });
+  it('sits on the 4px spacing scale', () => {
+    expect(CONTENT_SAFE_BOTTOM % SPACE_BASE).toBe(0);
+  });
+});
+
+describe('listGap (tightens long lists so they respect the content-safe bottom)', () => {
+  it('uses the base gap under the length threshold', () => {
+    expect(listGap(2, 12, 6)).toBe(12);
+    expect(listGap(3, 12, 6)).toBe(12);
+  });
+  it('tightens at 4+ items', () => {
+    expect(listGap(4, 12, 6)).toBe(6);
+    expect(listGap(5, 12, 6)).toBe(6);
+  });
+});
+
+// wave-3b — AssignmentList's callout invaded the bottom chrome band even at
+// "acceptable" task counts (a 5-task lesson: 5 tasks, eyebrow ALSO
+// collided with the LessonChrome watermark). AssignmentList is now
+// top-anchored (SceneFrame `justify="flex-start"`, content top fixed at the
+// frame's own 120px padding) instead of vertically centered, so this test
+// hand-derives the same worst-case content height the component itself
+// computes and locks its bottom edge inside CONTENT_SAFE_BOTTOM — a silent
+// re-loosening of any tier's gap/padding constant fails here before it ever
+// reaches a render.
+describe('AssignmentList content-safe-bottom clearance (a 5-task lesson regression)', () => {
+  const FRAME_TOP = 120; // SceneFrame's own padding-top; fixed once top-anchored
+  const FRAME_HEIGHT = BRAND.video.height;
+
+  // Mirrors AssignmentList's per-tier constants exactly (sectionGap, rowGap,
+  // rowLineHeight, calloutPadY, calloutGap) and its line-box height math
+  // (fontSize * lineHeight, the CSS layout box — not glyph ink).
+  function calloutBottomFromTop(taskCount: number, calloutBodyLines: number): number {
+    const tier = densityTier(taskCount);
+    const sectionGap = [40, 24, 20][tier];
+    const rowGap = [12, 6, 4][tier];
+    const rowLineHeight = tier > 0 ? LEADING.heading : 1.35;
+    const calloutPadY = [24, 16, 14][tier];
+    const calloutGap = [8, 4, 4][tier];
+
+    const eyebrowH = 14 * LEADING.caps;
+    const titleH = 72 * LEADING.title;
+    const subH = 26 * 1.5;
+    const headerH = eyebrowH + sectionGap + titleH + sectionGap + subH;
+
+    const rowH = 32 * rowLineHeight + 4 + 32 * rowLineHeight; // bold + 4px gap + context
+    const listH = taskCount * rowH + (taskCount - 1) * rowGap;
+
+    const calloutLabelH = 14 * LEADING.caps;
+    const calloutBodyH = calloutBodyLines * (28 * 1.3);
+    const calloutH = calloutPadY * 2 + calloutLabelH + calloutGap + calloutBodyH;
+
+    return FRAME_TOP + headerH + sectionGap + listH + sectionGap + calloutH;
+  }
+
+  it('clears CONTENT_SAFE_BOTTOM for the reported defect case (a 5-task lesson: 5 tasks, 2-line callout)', () => {
+    const bottom = calloutBottomFromTop(5, 2);
+    expect(bottom).toBeLessThanOrEqual(FRAME_HEIGHT - CONTENT_SAFE_BOTTOM);
+  });
+
+  it('clears CONTENT_SAFE_BOTTOM for the common 4-task case', () => {
+    const bottom = calloutBottomFromTop(4, 2);
+    expect(bottom).toBeLessThanOrEqual(FRAME_HEIGHT - CONTENT_SAFE_BOTTOM);
+  });
+
+  it('clears CONTENT_SAFE_BOTTOM for short lists (2-3 tasks)', () => {
+    expect(calloutBottomFromTop(2, 1)).toBeLessThanOrEqual(FRAME_HEIGHT - CONTENT_SAFE_BOTTOM);
+    expect(calloutBottomFromTop(3, 2)).toBeLessThanOrEqual(FRAME_HEIGHT - CONTENT_SAFE_BOTTOM);
+  });
+
+  it('top-anchors well clear of the LessonChrome watermark regardless of task count', () => {
+    // Watermark ("Sample Academy") bottom edge measures ~92px from frame top
+    // (pixel-verified against the real render); the fixed content top must
+    // clear it with a real margin, not graze it.
+    const WATERMARK_BOTTOM = 92;
+    expect(FRAME_TOP).toBeGreaterThan(WATERMARK_BOTTOM + 20);
   });
 });
 
