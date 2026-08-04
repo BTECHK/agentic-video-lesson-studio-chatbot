@@ -96,3 +96,6 @@ agent-ops/overnight/HEARTBEAT
 agent-ops/overnight/*.diff
 agent-ops/overnight/*.log
 agent-ops/overnight/run-*.err.log
+
+# regenerable keyframe review output (186MB+ PNG dumps)
+artifacts/keyframes-review-*/
