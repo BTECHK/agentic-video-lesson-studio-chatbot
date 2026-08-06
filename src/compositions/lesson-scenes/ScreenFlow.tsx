@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 import type { SceneComponentProps } from '../../lib/scene-types';
 import type { ScreenFlowContent } from './content-types';
-import { BRAND, SHADOW, MOTION } from '../../brand/tokens';
+import { BRAND, SHADOW, MOTION, LEADING } from '../../brand/tokens';
 import {
   MUTED,
   HAIRLINE,
@@ -596,9 +596,21 @@ interface FullPanelProps {
 const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepStartFrames, stepDurations }) => {
   const long = c.steps.length >= LONG_STEP_LIST;
   const veryLong = c.steps.length >= VERY_LONG_STEP_LIST;
-  const panelPad = veryLong ? 12 : long ? 16 : 24;
-  const listGap = veryLong ? 4 : long ? 6 : 12;
-  const rowPad = veryLong ? '6px 16px' : long ? '8px 16px' : '12px 16px';
+  const panelPad = veryLong ? 8 : long ? 16 : 24;
+  const listGap = veryLong ? 3 : long ? 6 : 12;
+  const rowPad = veryLong ? '4px 14px' : long ? '8px 16px' : '12px 16px';
+  // One tier deeper than long/veryLong's whitespace-only compaction: at 8
+  // rows the countdown rows also carry a second line (the honesty framing
+  // caption below the digits, watch-gate defect 1+2), which whitespace
+  // compaction alone can't absorb without the panel crossing CONTENT_SAFE_BOTTOM.
+  // Font-tier reduction at this one density tier is explicitly sanctioned by
+  // the fix (unlike LONG_STEP_LIST's whitespace-only rule) — labels/body stay
+  // legible, just tighter. No other corpus scene reaches VERY_LONG_STEP_LIST
+  // (grep: only one scene uses the full-layout 8-step density).
+  const rowInnerGap = veryLong ? 2 : 4;
+  const labelFontSize = veryLong ? 13 : 15;
+  const bodyFontSize = veryLong ? 16 : 19;
+  const countdownFontSize = veryLong ? 22 : 30;
   return (
     <div
       style={{
@@ -672,14 +684,14 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
               backgroundColor: isActive ? BRAND.colors.accentSoft : BRAND.colors.bgCard,
               display: 'flex',
               flexDirection: 'column',
-              gap: 4,
+              gap: rowInnerGap,
               boxShadow: isActive ? SHADOW.cardHover : SHADOW.card,
               transform: isActive ? 'translateY(-6px)' : 'none',
             }}
           >
             <div
               style={{
-                fontSize: 15,
+                fontSize: labelFontSize,
                 fontWeight: BRAND.font.weights.bold,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
@@ -688,10 +700,22 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
             >
               {step.label ?? step.target}
             </div>
-            <div style={{ fontSize: 19, color: BRAND.colors.text, lineHeight: 1.4 }}>
+            <div style={{ fontSize: bodyFontSize, color: BRAND.colors.text, lineHeight: 1.4 }}>
               {step.countdownSeconds !== undefined ? (
                 countdownRemaining !== null ? (
-                  <CountdownAtom secondsRemaining={countdownRemaining} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: rowInnerGap }}>
+                    <CountdownAtom secondsRemaining={countdownRemaining} fontSize={countdownFontSize} />
+                    <div
+                      style={{
+                        fontSize: 13,
+                        fontWeight: BRAND.font.weights.medium,
+                        lineHeight: LEADING.caps,
+                        color: MUTED,
+                      }}
+                    >
+                      {step.uiState}
+                    </div>
+                  </div>
                 ) : (
                   ' '
                 )
@@ -709,11 +733,14 @@ const FullPanel: React.FC<FullPanelProps> = ({ c, frame, fps, activeStep, stepSt
 };
 
 /** Live mm:ss countdown digits -- mirrors VoiceDemo's mono recording Timer. */
-const CountdownAtom: React.FC<{ secondsRemaining: number }> = ({ secondsRemaining }) => (
+const CountdownAtom: React.FC<{ secondsRemaining: number; fontSize?: number }> = ({
+  secondsRemaining,
+  fontSize = 30,
+}) => (
   <div
     style={{
       fontFamily: BRAND.font.mono,
-      fontSize: 30,
+      fontSize,
       fontWeight: BRAND.font.weights.bold,
       color: BRAND.colors.accent,
       fontVariantNumeric: 'tabular-nums',
