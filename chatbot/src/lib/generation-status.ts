@@ -1,12 +1,17 @@
+import path from 'node:path';
+
 /**
  * Pure status resolver for the decoupled Studio Generate job (#44).
  *
  * Generation runs as a detached background child, not coupled to the HTTP
  * request, so navigating away no longer kills it. The status file records the
- * job; this function maps the file + filesystem facts to a settled state. It
- * deliberately has NO fs/Next imports so it is trivially unit-testable — the
- * route does the fs reads and the pid-liveness probe and feeds the booleans in.
+ * job; this function maps the file + filesystem facts to a settled state.
  */
+
+/** Path to the per-lesson generation status file. */
+export function statusFilePath(root: string, lessonId: string): string {
+  return path.join(root, 'content', 'lessons', lessonId, '.generate-status.json');
+}
 
 /** Settled states surfaced to the client. */
 export type GenerationStatus = 'idle' | 'running' | 'done' | 'error' | 'canceled';

@@ -5,6 +5,7 @@ import path from 'node:path';
 import { requireOperator } from '@/lib/operator-auth';
 import { readIdempotentReplay, writeIdempotentResult } from '@/lib/idempotency';
 import { logEvent } from '@/lib/log';
+import { statusFilePath } from '@/lib/generation-status';
 
 /**
  * Studio Generate (CC-passthrough), decoupled from the HTTP request (#44).
@@ -25,11 +26,6 @@ interface StatusFile {
   status: 'running' | 'done' | 'error' | 'canceled';
   pid?: number;
   startedAt?: string;
-}
-
-/** Path to the per-lesson generation status file. */
-export function statusFilePath(root: string, lessonId: string): string {
-  return path.join(root, 'content', 'lessons', lessonId, '.generate-status.json');
 }
 
 /** True if a process with this pid is currently alive. */

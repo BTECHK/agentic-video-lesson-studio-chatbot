@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
-import { isTerminalStatus, type RecordedStatus } from '@/lib/generation-status';
+import { isTerminalStatus, statusFilePath, type RecordedStatus } from '@/lib/generation-status';
 import { logEvent } from '@/lib/log';
-import { statusFilePath } from '../route';
 import { requireOperator } from '@/lib/operator-auth';
 import { killProcessTree, waitForExit } from '@/lib/process-tree';
 

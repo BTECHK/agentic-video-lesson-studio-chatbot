@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { resolveGenerationStatus, type RecordedStatus } from '@/lib/generation-status';
-import { statusFilePath } from '../route';
+import { resolveGenerationStatus, statusFilePath, type RecordedStatus } from '@/lib/generation-status';
 import { logEvent } from '@/lib/log';
 
 /**

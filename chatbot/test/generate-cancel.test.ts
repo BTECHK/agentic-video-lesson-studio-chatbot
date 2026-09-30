@@ -51,7 +51,8 @@ describe('POST /api/generate — detached background spawn (#44)', () => {
         return { pid: 4242, unref };
       },
     }));
-    const { POST, statusFilePath } = await import('../src/app/api/generate/route');
+    const { POST } = await import('../src/app/api/generate/route');
+    const { statusFilePath } = await import('../src/lib/generation-status');
 
     const res = await POST(makeReq({ lessonId: 'module-1' }));
     expect(await res.json()).toEqual({ status: 'running' });
@@ -78,7 +79,8 @@ describe('POST /api/generate — detached background spawn (#44)', () => {
         return { pid: process.pid, unref: vi.fn() }; // our own pid → guaranteed alive
       },
     }));
-    const { POST, statusFilePath } = await import('../src/app/api/generate/route');
+    const { POST } = await import('../src/app/api/generate/route');
+    const { statusFilePath } = await import('../src/lib/generation-status');
 
     // Pre-seed a running status file with a live pid (this test process).
     const statusFile = statusFilePath(root, 'module-1');
@@ -125,7 +127,7 @@ describe('POST /api/generate/cancel (#44)', () => {
       },
       waitForExit: async () => true,
     }));
-    const { statusFilePath } = await import('../src/app/api/generate/route');
+    const { statusFilePath } = await import('../src/lib/generation-status');
     const { POST: cancel } = await import('../src/app/api/generate/cancel/route');
 
     const statusFile = statusFilePath(root, 'module-1');
